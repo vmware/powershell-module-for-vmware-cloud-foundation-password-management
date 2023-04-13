@@ -8,7 +8,7 @@
 
 ## Overview
 
-`VMware.CloudFoundation.PasswordManagement` is a PowerShell module that has been written to support the ability to report and configure the password policy settings across your VMware Cloud Foundatiоn instance.
+`VMware.CloudFoundation.PasswordManagement` is a PowerShell module that has been written to support the ability to report and configure the password policy settings across your VMware Cloud Foundation instance.
 
 With these cmdlets, you can:
 
