@@ -6271,13 +6271,14 @@ Function Test-VcfPasswordManagementPrereq {
 
         $modules = @(
             @{ Name=("VMware.PowerCLI"); MinimumVersion=("13.0.0")}
+            @{ Name=("VMware.vSphere.SsoAdmin"); MinimumVersion=("1.3.9")}
             @{ Name=("PowerVCF"); MinimumVersion=("2.2.0")}
             @{ Name=("PowerValidatedSolutions"); MinimumVersion=("2.2.0")}
         )
 
         foreach ($module in $modules ) {
             if ((Get-InstalledModule -ErrorAction SilentlyContinue -Name $module.Name).Version -lt $module.MinimumVersion) {
-                $message = "PowerShell Module: $($module.Name) $($module.MinimumVersion) is not installed."
+                $message = "PowerShell Module: $($module.Name) $($module.MinimumVersion) minimum required version is not installed."
                 Show-PasswordManagementOutput -type ERROR -message $message
                 Break
             } else {

@@ -12,7 +12,7 @@
     RootModule = '.\VMware.CloudFoundation.PasswordManagement.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0.0.1001'
+    ModuleVersion = '1.0.0.1002'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -30,7 +30,7 @@
     Copyright = '(c) 2023 VMware All rights reserved'
     
     # Description of the functionality provided by this module
-    Description = 'A PowerShell module for VMware Cloud Foundation password management.'
+    Description = 'PowerShell Module for VMware Cloud Foundation Password Management'
     
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '5.1'
