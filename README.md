@@ -45,10 +45,10 @@ The module provides coverage for the following components:
 
 ### PowerShell Modules
 
-- [`VMware.PowerCLI`][module-vmware-powercli] 12.7.0 or later
-- [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.8 or later
+- [`VMware.PowerCLI`][module-vmware-powercli] 13.0.0 or later
+- [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.9 or later
 - [`PowerVCF`][module-powervcf] 2.2.0 or later
-- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.1.0 or later
+- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.2.0 or later
 
 ## Installing the Module
 
@@ -58,10 +58,10 @@ Install the supporting PowerShell modules from the PowerShell Gallery by running
 
 ```powershell
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-Install-Module -Name VMware.PowerCLI -MinimumVersion 12.7.0
-Install-Module -Name VMware.vSphere.SsoAdmin -MinimumVersion 1.3.8
+Install-Module -Name VMware.PowerCLI -MinimumVersion 13.0.0
+Install-Module -Name VMware.vSphere.SsoAdmin -MinimumVersion 1.3.9
 Install-Module -Name PowerVCF -MinimumVersion 2.2.0
-Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.1.0
+Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.2.0
 Install-Module -Name VMware.CloudFoundation.PasswordManagement
 ```
 
@@ -75,6 +75,12 @@ Import-Module -Name VMware.vSphere.SsoAdmin
 Import-Module -Name PowerVCF
 Import-Module -Name PowerValidatedSolutions
 Import-Module -Name VMware.CloudFoundation.PasswordManagement
+```
+
+To verify the modules are installed, run the following command in the PowerShell console.
+
+```powershell
+Test-VcfPasswordManagementPrereq
 ```
 
 Once installed, any cmdlets associated with `VMware.CloudFoundation.PasswordManagement` and the supporting PowerShell modules will be available for use.
