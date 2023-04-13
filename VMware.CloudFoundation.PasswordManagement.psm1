@@ -6291,6 +6291,7 @@ Function Test-VcfPasswordManagementPrereq {
         Write-Error $_.Exception.Message
     }
 }
+Export-ModuleMember -Function Test-VcfPasswordManagementPrereq
 
 Function Show-PasswordManagementOutput {
     Param (
@@ -6320,6 +6321,7 @@ Function Show-PasswordManagementOutput {
         Write-Host "$ESC[${timestampcolour} [$timestamp]$ESC[${threadColour} $ESC[${messageColour} [$type] $message$ESC[0m"
     }
 }
+Export-ModuleMember -Function Show-PasswordManagementOutput
 
 #EndRegion  End Supporting Functions                                ######
 ##########################################################################
