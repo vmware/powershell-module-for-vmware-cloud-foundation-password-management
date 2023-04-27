@@ -12,13 +12,13 @@
     RootModule = '.\VMware.CloudFoundation.PasswordManagement.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0.0.1002'
+    ModuleVersion = '1.1.0.1000'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
     
     # ID used to uniquely identify this module
-    GUID = 'a3e32400-15f4-4852-aa7b-3d82e90ecd20'
+    GUID = '34e5a0b7-6e6e-4f72-8b3c-1c28048f5dd8'
     
     # Author of this module
     Author = 'Gary Blake, Ryan Johnson - Cloud Infrastructure Business Group (CIBG)'
