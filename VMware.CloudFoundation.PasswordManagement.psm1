@@ -1914,8 +1914,7 @@ Function Request-SsoPasswordExpiration {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                                 return $SsoPasswordExpirationObject
-                            }
-                            Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+                            }                            
                         }
                     }
                 } else {
@@ -1925,6 +1924,8 @@ Function Request-SsoPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
     }
 }
 Export-ModuleMember -Function Request-SsoPasswordExpiration
@@ -1998,7 +1999,6 @@ Function Request-SsoPasswordComplexity {
                                 }
                                 return $SsoPasswordComplexityObject
                             }
-                            Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
 						}
 					}
 				} else {
@@ -2008,7 +2008,9 @@ Function Request-SsoPasswordComplexity {
 		}
 	} Catch {
 		Debug-ExceptionWriter -object $_
-	}
+	} Finally {
+        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+    }
 }
 Export-ModuleMember -Function Request-SsoPasswordComplexity
 
@@ -2075,7 +2077,6 @@ Function Request-SsoAccountLockout {
                                 }
                                 return $SsoAccountLockoutObject
                             }
-                            Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
 						}
 					}
 				} else {
@@ -2085,7 +2086,9 @@ Function Request-SsoAccountLockout {
 		}
 	} Catch {
 		Debug-ExceptionWriter -object $_
-	}
+	} Finally {
+        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+    }
 }
 Export-ModuleMember -Function Request-SsoAccountLockout
 
@@ -2132,7 +2135,6 @@ Function Update-SsoPasswordExpiration {
                                     Write-Warning "Update Single Sign-On Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
-                            Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
                         }
                     }
                 } else {
@@ -2142,6 +2144,8 @@ Function Update-SsoPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
     }
 }
 Export-ModuleMember -Function Update-SsoPasswordExpiration
@@ -2197,7 +2201,6 @@ Function Update-SsoPasswordComplexity {
                                     Write-Warning "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
-                            Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
                         }
                     }
                 } else {
@@ -2207,6 +2210,8 @@ Function Update-SsoPasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
     }
 }
 Export-ModuleMember -Function Update-SsoPasswordComplexity
@@ -2257,7 +2262,6 @@ Function Update-SsoAccountLockout {
                                     Write-Warning "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
-                            Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
                         }
                     }
                 } else {
@@ -2267,6 +2271,8 @@ Function Update-SsoAccountLockout {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
     }
 }
 Export-ModuleMember -Function Update-SsoAccountLockout
