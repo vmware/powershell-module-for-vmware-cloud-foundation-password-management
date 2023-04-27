@@ -4,7 +4,9 @@
 
 # PowerShell Module for VMware Cloud Foundation Password Management
 
+[<img src="https://img.shields.io/powershellgallery/v/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery">][module-passwordmanagement]&nbsp;&nbsp;
 [<img src="https://img.shields.io/badge/Changelog-Read-blue?style=for-the-badge&logo=github&logoColor=white" alt="CHANGELOG" >][changelog]&nbsp;&nbsp;
+[<img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">][module-passwordmanagement]&nbsp;&nbsp;
 
 ## Overview
 
@@ -30,7 +32,7 @@ The module provides coverage for the following components:
 
 ### Platforms
 
-- [VMware Cloud Foundation][vmware-cloud-foundation] 4.4 or later
+- [VMware Cloud Foundation][vmware-cloud-foundation] 4.3 or later
 
 ### Operating Systems
 
@@ -54,7 +56,7 @@ The module provides coverage for the following components:
 
 Verify that your system has a supported edition and version of PowerShell installed.
 
-Install the supporting PowerShell modules from the PowerShell Gallery by running the following commands:
+Install the supporting PowerShell modules from the Microsoft PowerShell Gallery by running the following commands in the PowerShell console:
 
 ```powershell
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -65,9 +67,7 @@ Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.2.0
 Install-Module -Name VMware.CloudFoundation.PasswordManagement
 ```
 
-If using PowerShell Core, import the modules before proceeding:
-
-For example:
+If using PowerShell Core, import the modules by running the following commands in the PowerShell console before proceeding:
 
 ```powershell
 Import-Module -Name VMware.PowerCLI
@@ -77,7 +77,9 @@ Import-Module -Name PowerValidatedSolutions
 Import-Module -Name VMware.CloudFoundation.PasswordManagement
 ```
 
-To verify the modules are installed, run the following command in the PowerShell console.
+## Verifying the Module
+
+To verify the correct versions of the supporting modules are installed, run the following command in the PowerShell console.
 
 ```powershell
 Test-VcfPasswordManagementPrereq
@@ -85,7 +87,23 @@ Test-VcfPasswordManagementPrereq
 
 Once installed, any cmdlets associated with `VMware.CloudFoundation.PasswordManagement` and the supporting PowerShell modules will be available for use.
 
-To view the cmdlets for available in the module, run the following command in the PowerShell console.
+## Updating the Module
+
+Update the PowerShell module to the latest release from the Microsoft PowerShell Gallery by running the following command in the PowerShell console:
+
+```powershell
+Update-Module -Name VMware.CloudFoundation.PasswordManagement
+```
+
+To verify the version of the PowerShell module, run the following command in the PowerShell console.
+
+```powershell
+Get-InstalledModule -Name VMware.CloudFoundation.PasswordManagement
+```
+
+## Getting Help
+
+To view the cmdlets available in the module, run the following command in the PowerShell console.
 
 ```powershell
 Get-Command -Module VMware.CloudFoundation.PasswordManagement
@@ -96,34 +114,24 @@ To view the help for any cmdlet, run the `Get-Help` command in the PowerShell co
 For example:
 
 ```powershell
-Get-Help -Name <cmdlet-name>
+Get-Help -Name Invoke-PasswordPolicyManager
 ```
 
 ```powershell
-Get-Help -Name <cmdlet-name> -Examples
+Get-Help -Name Invoke-PasswordPolicyManager -examples
 ```
 
-## Updating the Module
-
-Update the PowerShell module from the PowerShell Gallery by running the following commands:
-
 ```powershell
-Update-Module -Name VMware.CloudFoundation.PasswordManagement
-```
-
-To verify that the PowerShell module is updated, run the following command in the PowerShell console.
-
-```powershell
-Get-InstalledModule -Name VMware.CloudFoundation.PasswordManagement
+Get-Help -Name Invoke-PasswordPolicyManager -full
 ```
 
 ## User Access
 
 Each cmdlet may provide one or more usage examples. Many of the cmdlets require that credentials are provided to output to the PowerShell console or a report.
 
-The cmdlets in this module, and its dependencies, return data from multple platform components. The credentials for most of the platform components are returned to the cmdlets by retrieving credentials from the SDDC Manager inventory and using these credentials, as needed, within cmdlet operations.
+The cmdlets in this module, and its dependencies, return data from multiple platform components. The credentials for most of the platform components are returned to the cmdlets by retrieving credentials from the SDDC Manager inventory and using these credentials, as needed, within cmdlet operations.
 
-For the best expereince, for cmdlets that connect to SDDC Manager, use the VMware Cloud Foundation API user `admin@local` or an account with the **ADMIN** role in SDDC Manager (e.g., `administrator@vsphere.local`).
+For the best experience, for cmdlets that connect to SDDC Manager, use the VMware Cloud Foundation API user `admin@local` or an account with the **ADMIN** role in SDDC Manager (e.g., `administrator@vsphere.local`).
 
 ## Contributing
 
