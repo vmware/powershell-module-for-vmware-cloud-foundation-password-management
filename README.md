@@ -174,6 +174,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
 [module-vmware-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [module-vmware-vsphere-ssoadmin]: https://www.powershellgallery.com/packages/VMware.vSphere.SsoAdmin
+[module-passwordmanagement]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
 [module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF/2.2.0
 [module-reporting]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
 [module-powervalidatedsolutions]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
