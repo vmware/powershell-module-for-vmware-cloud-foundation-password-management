@@ -1522,11 +1522,25 @@ Function Update-SddcManagerPasswordComplexity {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             $existingConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                            if ($existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Min Classes' -ne $minClass -or $existingConfiguration.'Max Sequence' -ne $maxSequence -or $existingConfiguration.'History' -ne $history -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
+                            $condition1 = $existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or  $existingConfiguration.'History' -ne $history -or $existingConfiguration.'Max Retries' -ne $maxRetry                            
+                            if($existingConfiguration.'Max Sequence') {
+                                $condition1 = $condition1 -or $existingConfiguration.'Max Sequence' -ne $maxSequence
+                            }
+                            if($existingConfiguration.'Min Classes') {
+                                $condition1 = $condition1 -or $existingConfiguration.'Min Classes' -ne $minClass
+                            }
+                            if ($condition1) {
                                 Set-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -class $minClass -sequence $maxSequence -history $history -retry $maxRetry | Out-Null
                                 $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                                if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'Min Classes' -eq $minClass -and $updatedConfiguration.'Max Sequence' -eq $maxSequence -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry) {
-                                    Write-Output "Update Password Complexity Policy on SDDC Manager ($server): SUCCESSFUL"
+                                $condition = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry                            
+                                if($updatedConfiguration.'Max Sequence') {
+                                    $condition = $condition -and $updatedConfiguration.'Max Sequence' -eq $maxSequence
+                                }
+                                if($updatedConfiguration.'Min Classes') {
+                                    $condition = $condition -and $updatedConfiguration.'Min Classes' -eq $minClass
+                                }
+                                if ($condition) {
+                                    Write-Output "Update Password Complexity Policy on SDDC Manasger ($server): SUCCESSFUL"
                                 } else {
                                     Write-Error "Update Password Complexity Policy on SDDC Manager ($server): POST_VALIDATION_FAILED"
                                 }
