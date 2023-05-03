@@ -2508,10 +2508,25 @@ Function Request-VcenterPasswordComplexity {
 	)
     
 	Try {
+        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        $vcenterDomain = $vcfVcenterDetails.type
+                        if ($vcenterDomain -ne "MANAGEMENT") {
+                            if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                    if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                            $mgmtConnected = $true
+                                        }
+                                    }        
+                                }                                
+                            } else {
+                                Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                            }
+                        }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if ($drift) {
@@ -2524,7 +2539,6 @@ Function Request-VcenterPasswordComplexity {
                                     Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -2534,6 +2548,11 @@ Function Request-VcenterPasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($mgmtConnected) {
+            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        }
     }
 }
 Export-ModuleMember -Function Request-VcenterPasswordComplexity
@@ -2574,10 +2593,25 @@ Function Request-VcenterAccountLockout {
 	)
     
 	Try {
+        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        $vcenterDomain = $vcfVcenterDetails.type
+                        if ($vcenterDomain -ne "MANAGEMENT") {
+                            if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                    if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                            $mgmtConnected = $true
+                                        }
+                                    }        
+                                }
+                            } else {
+                                Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                            }
+                        }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if ($drift) {
@@ -2590,7 +2624,7 @@ Function Request-VcenterAccountLockout {
                                     Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+                            
                         }
                     }
                 } else {
@@ -2600,6 +2634,12 @@ Function Request-VcenterAccountLockout {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($mgmtConnected) {
+            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        }
+
     }
 }
 Export-ModuleMember -Function Request-VcenterAccountLockout
@@ -2694,10 +2734,25 @@ Function Update-VcenterPasswordComplexity {
 	)
     
 	Try {
+        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
-                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "MANAGEMENT")) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        $vcenterDomain = $vcfVcenterDetails.type
+                        if ($vcenterDomain -ne "MANAGEMENT") {
+                            if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                    if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                            $mgmtConnected = $true
+                                        }
+                                    }        
+                                }
+                            } else {
+                                Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                            }
+                        }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $existingConfiguration = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
@@ -2713,7 +2768,6 @@ Function Update-VcenterPasswordComplexity {
                                     Write-Warning "Update Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -2723,6 +2777,11 @@ Function Update-VcenterPasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($mgmtConnected) {
+            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        }
     }
 }
 Export-ModuleMember -Function Update-VcenterPasswordComplexity
@@ -2755,10 +2814,25 @@ Function Update-VcenterAccountLockout {
 	)
     
 	Try {
+        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
-                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "MANAGEMENT")) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        $vcenterDomain = $vcfVcenterDetails.type
+                        if ($vcenterDomain -ne "MANAGEMENT") {
+                            if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                    if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                            $mgmtConnected = $true
+                                        }
+                                    }        
+                                }
+                            } else {
+                                Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                            }
+                        }                        
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
@@ -2774,7 +2848,6 @@ Function Update-VcenterAccountLockout {
                                     Write-Warning "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -2784,7 +2857,12 @@ Function Update-VcenterAccountLockout {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
-    }
+    } Finally {
+        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($mgmtConnected) {
+            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        }
+    }    
 }
 Export-ModuleMember -Function Update-VcenterAccountLockout
 
