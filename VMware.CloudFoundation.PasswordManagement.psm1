@@ -2513,7 +2513,6 @@ Function Request-VcenterPasswordComplexity {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-                        $vcenterSSOName = $vcfVcenterDetails.ssoName
                         $vcenterDomain = $vcfVcenterDetails.type
                         if ($vcenterDomain -ne "MANAGEMENT") {
                             if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
@@ -2599,7 +2598,6 @@ Function Request-VcenterAccountLockout {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-                        $vcenterSSOName = $vcfVcenterDetails.ssoName
                         $vcenterDomain = $vcfVcenterDetails.type
                         if ($vcenterDomain -ne "MANAGEMENT") {
                             if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
@@ -2741,7 +2739,6 @@ Function Update-VcenterPasswordComplexity {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-                        $vcenterSSOName = $vcfVcenterDetails.ssoName
                         $vcenterDomain = $vcfVcenterDetails.type
                         if ($vcenterDomain -ne "MANAGEMENT") {
                             if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
@@ -2822,7 +2819,6 @@ Function Update-VcenterAccountLockout {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-                        $vcenterSSOName = $vcfVcenterDetails.ssoName
                         $vcenterDomain = $vcfVcenterDetails.type
                         if ($vcenterDomain -ne "MANAGEMENT") {
                             if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
