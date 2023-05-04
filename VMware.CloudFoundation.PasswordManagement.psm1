@@ -1919,7 +1919,7 @@ Function Request-SsoPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                try {
+                                Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
@@ -1929,7 +1929,7 @@ Function Request-SsoPasswordExpiration {
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
                                     $certificateValidator)
-                                } catch {
+                                } Catch {
                                     Write-Error $_.Exception
                                 }
                                 if ($SsoPasswordExpiration = Get-SsoPasswordPolicy -server $ssoAdminServer) {
@@ -2008,7 +2008,7 @@ Function Request-SsoPasswordComplexity {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                try {
+                                Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
@@ -2018,7 +2018,7 @@ Function Request-SsoPasswordComplexity {
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
                                     $certificateValidator)
-                                } catch {
+                                } Catch {
                                     Write-Error $_.Exception
                                 }                                
                                 if ($SsoPasswordComplexity = Get-SsoPasswordPolicy -server $ssoAdminServer) {
@@ -2105,7 +2105,7 @@ Function Request-SsoAccountLockout {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                try {
+                                Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
@@ -2115,7 +2115,7 @@ Function Request-SsoAccountLockout {
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
                                     $certificateValidator)
-                                } catch {
+                                } Catch {
                                     Write-Error $_.Exception
                                 } 
                                 if ($SsoAccountLockout = Get-SsoLockoutPolicy -server $ssoAdminServer) {
@@ -2177,7 +2177,7 @@ Function Update-SsoPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                try {
+                                Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
@@ -2187,7 +2187,7 @@ Function Update-SsoPasswordExpiration {
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
                                     $certificateValidator)
-                                } catch {
+                                } Catch {
                                     Write-Error $_.Exception
                                 } 
                                 if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -ne $maxDays) {
@@ -2256,7 +2256,7 @@ Function Update-SsoPasswordComplexity {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                try {
+                                Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
@@ -2266,7 +2266,7 @@ Function Update-SsoPasswordComplexity {
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
                                     $certificateValidator)
-                                } catch {
+                                } Catch {
                                     Write-Error $_.Exception
                                 }
                                 $passwordComplexityConfigBefore =  Get-SsoPasswordPolicy -server $ssoAdminServer
@@ -2332,7 +2332,7 @@ Function Update-SsoAccountLockout {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                try {
+                                Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
@@ -2342,7 +2342,7 @@ Function Update-SsoAccountLockout {
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
                                     $certificateValidator)
-                                } catch {
+                                } Catch {
                                     Write-Error $_.Exception
                                 }
                                 $lockoutPolicyBefore =  Get-SsoLockoutPolicy -server $ssoAdminServer
