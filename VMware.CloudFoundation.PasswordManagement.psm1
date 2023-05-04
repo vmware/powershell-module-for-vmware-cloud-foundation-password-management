@@ -1919,7 +1919,20 @@ Function Request-SsoPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ($SsoPasswordExpiration = Get-SsoPasswordPolicy) {
+                                Try {
+                                    $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
+                                    $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
+                                    $ssoAdminServer = New-Object `
+                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                    -ArgumentList @(
+                                        $vcfVcenterDetails.fqdn,
+                                        $vcfVcenterDetails.ssoAdmin,
+                                        $securePass,
+                                    $certificateValidator)
+                                } Catch {
+                                    Write-Error $_.Exception
+                                }
+                                if ($SsoPasswordExpiration = Get-SsoPasswordPolicy -server $ssoAdminServer) {
                                     $SsoPasswordExpirationObject = New-Object -TypeName psobject
                                     $SsoPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
@@ -1995,7 +2008,20 @@ Function Request-SsoPasswordComplexity {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ($SsoPasswordComplexity = Get-SsoPasswordPolicy) {
+                                Try {
+                                    $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
+                                    $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
+                                    $ssoAdminServer = New-Object `
+                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                    -ArgumentList @(
+                                        $vcfVcenterDetails.fqdn,
+                                        $vcfVcenterDetails.ssoAdmin,
+                                        $securePass,
+                                    $certificateValidator)
+                                } Catch {
+                                    Write-Error $_.Exception
+                                }                                
+                                if ($SsoPasswordComplexity = Get-SsoPasswordPolicy -server $ssoAdminServer) {
                                     $SsoPasswordComplexityObject = New-Object -TypeName psobject
                                     $SsoPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
@@ -2079,7 +2105,20 @@ Function Request-SsoAccountLockout {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ($SsoAccountLockout = Get-SsoLockoutPolicy) {
+                                Try {
+                                    $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
+                                    $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
+                                    $ssoAdminServer = New-Object `
+                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                    -ArgumentList @(
+                                        $vcfVcenterDetails.fqdn,
+                                        $vcfVcenterDetails.ssoAdmin,
+                                        $securePass,
+                                    $certificateValidator)
+                                } Catch {
+                                    Write-Error $_.Exception
+                                } 
+                                if ($SsoAccountLockout = Get-SsoLockoutPolicy -server $ssoAdminServer) {
                                     $SsoAccountLockoutObject = New-Object -TypeName psobject
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
@@ -2138,9 +2177,22 @@ Function Update-SsoPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ((Get-SsoPasswordPolicy).PasswordLifetimeDays -ne $maxDays) {
-                                    Get-SsoPasswordPolicy | Set-SsoPasswordPolicy -PasswordLifetimeDays $maxDays | Out-Null
-                                    if ((Get-SsoPasswordPolicy).PasswordLifetimeDays -eq $maxDays) {
+                                Try {
+                                    $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
+                                    $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
+                                    $ssoAdminServer = New-Object `
+                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                    -ArgumentList @(
+                                        $vcfVcenterDetails.fqdn,
+                                        $vcfVcenterDetails.ssoAdmin,
+                                        $securePass,
+                                    $certificateValidator)
+                                } Catch {
+                                    Write-Error $_.Exception
+                                } 
+                                if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -ne $maxDays) {
+                                    Get-SsoPasswordPolicy -server $ssoAdminServer | Set-SsoPasswordPolicy -PasswordLifetimeDays $maxDays | Out-Null
+                                    if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -eq $maxDays) {
                                         Write-Output "Update Single Sign-On Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
                                         Write-Error "Update Single Sign-On Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
@@ -2204,9 +2256,24 @@ Function Update-SsoPasswordComplexity {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ((Get-SsoPasswordPolicy).MinLength -ne $minLength -or (Get-SsoPasswordPolicy).MaxLength -ne $maxLength -or (Get-SsoPasswordPolicy).MinAlphabeticCount -ne $minAlphabetic -or (Get-SsoPasswordPolicy).MinLowercaseCount -ne $minLowercase -or (Get-SsoPasswordPolicy).MinUppercaseCount -ne $minUppercase -or (Get-SsoPasswordPolicy).MinNumericCount -ne $minNumeric -or (Get-SsoPasswordPolicy).MinSpecialCharCount -ne $minSpecial -or (Get-SsoPasswordPolicy).MaxIdenticalAdjacentCharacters -ne $maxIdenticalAdjacent -or (Get-SsoPasswordPolicy).ProhibitedPreviousPasswordsCount -ne $history) {
-                                    Get-SsoPasswordPolicy | Set-SsoPasswordPolicy -MinLength $minLength -MaxLength $maxLength -MinAlphabeticCount $minAlphabetic -MinLowercaseCount $minLowercase -MinUppercaseCount $minUppercase -MinNumericCount $minNumeric -MinSpecialCharCount $minSpecial -MaxIdenticalAdjacentCharacters $maxIdenticalAdjacent -ProhibitedPreviousPasswordsCount $history | Out-Null
-                                    if ((Get-SsoPasswordPolicy).MinLength -eq $minLength -and (Get-SsoPasswordPolicy).MaxLength -eq $maxLength -and (Get-SsoPasswordPolicy).MinAlphabeticCount -eq $minAlphabetic -and (Get-SsoPasswordPolicy).MinLowercaseCount -eq $minLowercase -and (Get-SsoPasswordPolicy).MinUppercaseCount -eq $minUppercase -and (Get-SsoPasswordPolicy).MinNumericCount -eq $minNumeric -and (Get-SsoPasswordPolicy).MinSpecialCharCount -eq $minSpecial -and (Get-SsoPasswordPolicy).MaxIdenticalAdjacentCharacters -eq $maxIdenticalAdjacent -and (Get-SsoPasswordPolicy).ProhibitedPreviousPasswordsCount -eq $history) {
+                                Try {
+                                    $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
+                                    $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
+                                    $ssoAdminServer = New-Object `
+                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                    -ArgumentList @(
+                                        $vcfVcenterDetails.fqdn,
+                                        $vcfVcenterDetails.ssoAdmin,
+                                        $securePass,
+                                    $certificateValidator)
+                                } Catch {
+                                    Write-Error $_.Exception
+                                }
+                                $passwordComplexityConfigBefore =  Get-SsoPasswordPolicy -server $ssoAdminServer
+                                if ($passwordComplexityConfigBefore.MinLength -ne $minLength -or $passwordComplexityConfigBefore.MaxLength -ne $maxLength -or $passwordComplexityConfigBefore.MinAlphabeticCount -ne $minAlphabetic -or $passwordComplexityConfigBefore.MinLowercaseCount -ne $minLowercase -or $passwordComplexityConfigBefore.MinUppercaseCount -ne $minUppercase -or $passwordComplexityConfigBefore.MinNumericCount -ne $minNumeric -or $passwordComplexityConfigBefore.MinSpecialCharCount -ne $minSpecial -or $passwordComplexityConfigBefore.MaxIdenticalAdjacentCharacters -ne $maxIdenticalAdjacent -or $passwordComplexityConfigBefore.ProhibitedPreviousPasswordsCount -ne $history) {
+                                    Get-SsoPasswordPolicy -server $ssoAdminServer| Set-SsoPasswordPolicy -MinLength $minLength -MaxLength $maxLength -MinAlphabeticCount $minAlphabetic -MinLowercaseCount $minLowercase -MinUppercaseCount $minUppercase -MinNumericCount $minNumeric -MinSpecialCharCount $minSpecial -MaxIdenticalAdjacentCharacters $maxIdenticalAdjacent -ProhibitedPreviousPasswordsCount $history | Out-Null
+                                    $passwordComplexityConfigAfter =  Get-SsoPasswordPolicy -server $ssoAdminServer
+                                    if ($passwordComplexityConfigAfter.MinLength -eq $minLength -and $passwordComplexityConfigAfter.MaxLength -eq $maxLength -and $passwordComplexityConfigAfter.MinAlphabeticCount -eq $minAlphabetic -and $passwordComplexityConfigAfter.MinLowercaseCount -eq $minLowercase -and $passwordComplexityConfigAfter.MinUppercaseCount -eq $minUppercase -and $passwordComplexityConfigAfter.MinNumericCount -eq $minNumeric -and $passwordComplexityConfigAfter.MinSpecialCharCount -eq $minSpecial -and $passwordComplexityConfigAfter.MaxIdenticalAdjacentCharacters -eq $maxIdenticalAdjacent -and $passwordComplexityConfigAfter.ProhibitedPreviousPasswordsCount -eq $history) {
                                         Write-Output "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
                                         Write-Error "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
@@ -2265,9 +2332,24 @@ Function Update-SsoAccountLockout {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ((Get-SsoLockoutPolicy).MaxFailedAttempts -ne $failures -or (Get-SsoLockoutPolicy).FailedAttemptIntervalSec -ne $failureInterval -or (Get-SsoLockoutPolicy).AutoUnlockIntervalSec -ne $unlockInterval) {
-                                    Get-SsoLockoutPolicy | Set-SsoLockoutPolicy  -AutoUnlockIntervalSec $unlockInterval -FailedAttemptIntervalSec $failureInterval -MaxFailedAttempts $failures | Out-Null
-                                    if ((Get-SsoLockoutPolicy).MaxFailedAttempts -eq $failures -and (Get-SsoLockoutPolicy).FailedAttemptIntervalSec -eq $failureInterval -and (Get-SsoLockoutPolicy).AutoUnlockIntervalSec -eq $unlockInterval) {
+                                Try {
+                                    $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
+                                    $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
+                                    $ssoAdminServer = New-Object `
+                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                    -ArgumentList @(
+                                        $vcfVcenterDetails.fqdn,
+                                        $vcfVcenterDetails.ssoAdmin,
+                                        $securePass,
+                                    $certificateValidator)
+                                } Catch {
+                                    Write-Error $_.Exception
+                                }
+                                $lockoutPolicyBefore =  Get-SsoLockoutPolicy -server $ssoAdminServer
+                                if ($lockoutPolicyBefore.MaxFailedAttempts -ne $failures -or $lockoutPolicyBefore.FailedAttemptIntervalSec -ne $failureInterval -or $lockoutPolicyBefore.AutoUnlockIntervalSec -ne $unlockInterval) {
+                                    Get-SsoLockoutPolicy -server $ssoAdminServer | Set-SsoLockoutPolicy  -AutoUnlockIntervalSec $unlockInterval -FailedAttemptIntervalSec $failureInterval -MaxFailedAttempts $failures | Out-Null
+                                    $lockoutPolicyAfter =  Get-SsoLockoutPolicy -server $ssoAdminServer
+                                    if ($lockoutPolicyAfter.MaxFailedAttempts -eq $failures -and $lockoutPolicyAfter.FailedAttemptIntervalSec -eq $failureInterval -and $lockoutPolicyAfter.AutoUnlockIntervalSec -eq $unlockInterval) {
                                         Write-Output "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
                                         Write-Error "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
