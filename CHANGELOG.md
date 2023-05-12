@@ -8,7 +8,7 @@ Bugfixes:
 
 - Fixed the placement for the use of `Disconnect-SSOserver`. [GH-26](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/26)
 
-- Fixed drift option error for `Request-VcenterAccountLockout`. [GH-31](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/31)
+- Fixed drift option error for `Request-VcenterAccountLockout`. [GH-32](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32)
 
 Enhancements:
 
