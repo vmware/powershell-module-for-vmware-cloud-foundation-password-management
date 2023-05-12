@@ -3210,7 +3210,7 @@ Function Publish-VcenterLocalPasswordExpiration {
     )
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift -reportPath '$reportPath'" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -3283,7 +3283,7 @@ Function Publish-VcenterLocalPasswordComplexity {
     )
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift -reportPath '$reportPath'" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -3356,7 +3356,7 @@ Function Publish-VcenterLocalAccountLockout {
     )
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift -reportPath '$reportPath'" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift " }} else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {

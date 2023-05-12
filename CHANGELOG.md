@@ -12,6 +12,12 @@ Bugfixes:
 
 - Exported `Get-PasswordPolicyConfig`. [GH-32](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32)
 
+- Fixed error while using drift option in `Publish-VcenterLocalAccountLockout`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
+
+- Fixed error while using drift option in `Publish-VcenterLocalPasswordExpiration`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
+
+- Fixed error while using drift option in `Publish-VcenterLocalPasswordComplexity`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
+
 
 Enhancements:
 
