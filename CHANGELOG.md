@@ -8,6 +8,11 @@ Bugfixes:
 
 - Fixed the placement for the use of `Disconnect-SSOserver`. [GH-26](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/26)
 
+- Fixed drift option error for `Request-VcenterAccountLockout`. [GH-32](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32)
+
+- Exported `Get-PasswordPolicyConfig`. [GH-32](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32)
+
+
 Enhancements:
 
 - Updated `Update-SDDCManagerPasswordComplexity` to handle all structural changes of the common-password file on SDDC Manager. [GH-28](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/28)
