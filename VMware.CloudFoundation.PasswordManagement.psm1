@@ -306,7 +306,7 @@ Function Start-PasswordPolicyConfig {
         Configures all Password Policies
 
         .DESCRIPTION
-        The Invoke-PasswordPolicyConfig configures the password policies across all components of the VMware Cloud
+        The Start-PasswordPolicyConfig configures the password policies across all components of the VMware Cloud
         Foundation instance using the JSON configuration file procided.
 
         .EXAMPLE
@@ -822,7 +822,7 @@ Function Test-PasswordPolicyConfig {
                             Write-Error "Found Unknown Parameter ($($parameterName.Name)) Under Section ($($section.Name)) for Product ($($product.Name)), Please Check the Password Policy Configuration File and Run Again"
                             $encounterError = "True"
                             Break
-                        } elseif ($customConfig.($product.Name).($section.Name).($parameterName.Name) -eq "") {
+                        } elseif ($parameterName.Name -ne "email" -and $customConfig.($product.Name).($section.Name).($parameterName.Name) -eq "") {
                             Write-Error "Parameter ($($product.Name):$($section.Name):$($parameterName.Name)) Not Configured, Please Check the Password Policy Configuration File and Run Again."
                             $encounterError = "True"
                             Break
@@ -845,7 +845,7 @@ Function Test-PasswordPolicyConfig {
                     Switch ($parameterName.Name)  {
                         # Password Expiration Section
                         "maxDays"
-{
+                        {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxDays" -value $customConfig.($product.Name).($section.Name)."maxDays" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
@@ -861,22 +861,37 @@ Function Test-PasswordPolicyConfig {
                         }
                         "email"
                         {
-                            $checkReturn = checkEmailString -name "$($product.Name):$($section.Name):email" -address $customConfig.($product.Name).($section.Name)."email" -required $true
-                            if (-Not $checkReturn) { $encounterError = "True" }
+                            $emailVariable = $customConfig.($product.Name).($section.Name)."email"
+                            if($emailVariable) {
+                                $checkReturn = checkEmailString -name "$($product.Name):$($section.Name):email" -address $customConfig.($product.Name).($section.Name)."email" -required $false
+                                if (-Not $checkReturn) { $encounterError = "True" }
+                            }
                         }
                         "passwordLifetime"
                         {
-                            $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordLifetime" -value $customConfig.($product.Name).($section.Name)."passwordLifetime" -minRange 1 -maxRange 99999 -required $true
+                            if ($product.Name -eq "wsaDirectory") {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordLifetime" -value $customConfig.($product.Name).($section.Name)."passwordLifetime" -minRange 0 -maxRange 99999 -required $true
+                            } else {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordLifetime" -value $customConfig.($product.Name).($section.Name)."passwordLifetime" -minRange 1 -maxRange 99999 -required $true
+                            }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
                         "passwordReminder"
                         {
-                            $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminder" -value $customConfig.($product.Name).($section.Name)."passwordReminder" -minRange 1 -maxRange 99999 -required $true
+                            if ($product.Name -eq "wsaDirectory") {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminder" -value $customConfig.($product.Name).($section.Name)."passwordReminder" -minRange 0 -maxRange 99999 -required $true
+                            } else {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminder" -value $customConfig.($product.Name).($section.Name)."passwordReminder" -minRange 1 -maxRange 99999 -required $true
+                            }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
                         "passwordReminderFrequency"
                         {
-                            $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminderFrequency" -value $customConfig.($product.Name).($section.Name)."passwordReminderFrequency" -minRange 1 -maxRange 99999 -required $true
+                            if ($product.Name -eq "wsaDirectory") {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminderFrequency" -value $customConfig.($product.Name).($section.Name)."passwordReminderFrequency" -minRange 0 -maxRange 99999 -required $true
+                            } else {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminderFrequency" -value $customConfig.($product.Name).($section.Name)."passwordReminderFrequency" -minRange 1 -maxRange 99999 -required $true
+                            }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
                         "temporaryPassword"
@@ -987,7 +1002,11 @@ Function Test-PasswordPolicyConfig {
                         }
                         "maxIdenticalAdjacent"
                         {
-                            $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxIdenticalAdjacent" -value $customConfig.($product.Name).($section.Name)."maxIdenticalAdjacent" -minRange 1 -maxRange 99999 -required $true
+                            if ($product.Name -eq "wsaDirectory") {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxIdenticalAdjacent" -value $customConfig.($product.Name).($section.Name)."maxIdenticalAdjacent" -minRange 0 -maxRange 99999 -required $true
+                            } else {
+                                $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxIdenticalAdjacent" -value $customConfig.($product.Name).($section.Name)."maxIdenticalAdjacent" -minRange 1 -maxRange 99999 -required $true
+                            }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
                         # Account Lockout section

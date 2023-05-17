@@ -18,6 +18,10 @@ Bugfixes:
 
 - Fixed drift option error for  `Publish-VcenterLocalPasswordComplexity`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
 
+- Handled empty email string values and  "0" value for WSADirectory feilds coming from JSON file  `Test-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
+
+- Corrected Description in  `Start-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
+
 
 Enhancements:
 
