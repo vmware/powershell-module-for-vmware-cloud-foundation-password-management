@@ -9,7 +9,7 @@
 # scenarios. It is recommended you don't use it for any production environment without testing extensively!
 
 # Allow communication with self-signed certificates when using Powershell Core. If you require all communications to be
-# secure and do not wish to allow communication with self-signed certificates, remove lines 13-36 before importing the
+# secure and do not wish to allow communication with self-signed certificates, remove lines 15-41 before importing the
 # module.
 
 if ($PSEdition -eq 'Core') {
@@ -70,6 +70,48 @@ Function Invoke-PasswordPolicyManager {
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift
         This example runs a password policy report for all Workload Domain within an SDDC Manager instance and compares the configuration against the product defaults
+
+        .PARAMETER sddcManagerFqdn
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER sddcManagerUser
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcManagerPass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcRootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER reportPath
+        The path to save the report to.
+
+        .PARAMETER allDomains
+        Switch to run the report for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to run the report for a specific workload domain.
+
+        .PARAMETER darkMode
+        Switch to use dark mode for the report.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER policyFile
+        The path to the JSON file containing the policy configuration.
+
+        .PARAMETER json
+        Switch to output the report in JSON format.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER wsaAdminPass
+        The password for the Workspace ONE Access admin account.
     #>
 
     Param (
@@ -108,7 +150,7 @@ Function Invoke-PasswordPolicyManager {
                     $workflowMessage = "Workload Domain ($workloadDomain)"
                     $commandSwitch = "-workloadDomain $workloadDomain"
                 }
-                if ($PsBoundParameters.ContainsKey('drift')) { 
+                if ($PsBoundParameters.ContainsKey('drift')) {
                     if ($PsBoundParameters.ContainsKey('policyFile')) {
                         $commandSwitch = $commandSwitch + " -drift -reportPath '$reportPath' -policyFile '$policyFile'"
                     } else {
@@ -129,7 +171,7 @@ Function Invoke-PasswordPolicyManager {
                 $sddcManagerPasswordExpiration = Invoke-Expression "Publish-SddcManagerPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -sddcRootPass $sddcRootPass $($commandSwitch)"
                 $sddcManagerPasswordComplexity = Invoke-Expression "Publish-SddcManagerPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -sddcRootPass $sddcRootPass $($commandSwitch)"
                 $sddcManagerAccountLockout = Invoke-Expression "Publish-SddcManagerAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -sddcRootPass $sddcRootPass $($commandSwitch)"
-                
+
                 Write-LogMessage -Type INFO -Message "Collecting vCenter Single Sign-On Password Policies for $workflowMessage."
                 $ssoPasswordExpiration = Invoke-Expression "Publish-SsoPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordExpiration $($commandSwitch)"
                 $ssoPasswordComplexity = Invoke-Expression "Publish-SsoPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
@@ -316,6 +358,33 @@ Function Start-PasswordPolicyConfig {
         .EXAMPLE
         Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
         This example configures all password policies for all components across a VMware Cloud Foundation instance and Workspace ONE Access
+
+        .PARAMETER sddcManagerFqdn
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER sddcManagerUser
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcManagerPass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcRootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the JSON file containing the policy configuration.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER wsaAdminPass
+        The password for the Workspace ONE Access admin account.
     #>
 
     Param (
@@ -342,7 +411,7 @@ Function Start-PasswordPolicyConfig {
                 $customPolicy = Get-Content -Path $($reportPath + '\' + $policyFile) | ConvertFrom-Json
                 $sddcDomainMgmt = (Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name
                 $allWorkloadDomains = Get-VCFWorkloadDomain
-                
+
                 # Configuring Password Policies for SDDC Manager
                 Write-LogMessage -Type INFO -Message "Configuring Password Policies for SDDC Manager Instance ($sddcManagerFqdn)" -Colour Yellow
                 Write-LogMessage -Type INFO -Message "Configuring SDDC Manager Instance ($sddcManagerFqdn): Password Expiration Policy"
@@ -511,6 +580,12 @@ Function Get-PasswordPolicyDefault {
         .EXAMPLE
         Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json
         This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings
+
+        .PARAMETER generateJson
+        Switch to generate a JSON file.
+
+        .PARAMETER jsonFile
+        The name of the JSON file to generate.
     #>
 
     [CmdletBinding(DefaultParametersetName = "All")][OutputType('System.Management.Automation.PSObject')]
@@ -770,7 +845,7 @@ Function checkEmailString {
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$address,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Bool]$required
 	)
-	
+
 	if (($address -eq "Null") -and ($required -eq $true)) {
 		Write-Error "$name variable has not been configured."
 		return $false
@@ -797,7 +872,7 @@ Function Test-PasswordPolicyConfig {
     $defaultProductList = $defaultConfig | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
     $customProductList = $customConfig | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
     $defaultSection = "passwordExpiration", "passwordComplexity", "accountLockout"
-	
+
     foreach ($product in $customProductList) {
         if (-Not $defaultProductList.Name.Contains($product.Name)) {
             Write-Error "Found Unknown Product ($($product.Name)), Please check the Password Policy Configuration File and Run Again"
@@ -901,7 +976,7 @@ Function Test-PasswordPolicyConfig {
                         }
                         # Password Complexity section
                         "policy"
-                        {	
+                        {
 							$policyString = $customConfig.($product.Name).($section.Name)."policy"
                             $customConfig.($product.Name).($section.Name)."policy" | Select-String -Pattern "^retry=(\d+)\s+min=(.+),(.+),(.+),(.+),(.+)" | Foreach-Object {$PasswdPolicyRetryValue, $PasswdPolicyMinValue1, $PasswdPolicyMinValue2, $PasswdPolicyMinValue3, $PasswdPolicyMinValue4, $PasswdPolicyMinValue5 = $_.Matches[0].Groups[1..6].Value}
                             if ($PasswdPolicyRetryValue -eq "" -or $PasswdPolicyMinValue1 -eq "" -or $PasswdPolicyMinValue2 -eq "" -or $PasswdPolicyMinValue3 -eq "" -or $PasswdPolicyMinValue4 -eq "" -or $PasswdPolicyMinValue5 -eq "") {
@@ -1311,7 +1386,7 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
                 </ul>
-            </section>           
+            </section>
             <section class="nav-group collapsible">
                 <input id="complexity" type="checkbox"/>
                 <label for="complexity">Password Complexity</label>
@@ -1398,9 +1473,31 @@ Function Request-SddcManagerPasswordComplexity {
         .EXAMPLE
         Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for SDDC Manager and compares the configuration against passwordPolicyConfig.json
+
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift 
+        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
         This example retrieves the password complexity policy for SDDC Manager and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER rootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the password policy file to compare against.
     #>
 
     Param (
@@ -1412,7 +1509,7 @@ Function Request-SddcManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -1463,6 +1560,27 @@ Function Request-SddcManagerAccountLockout {
         .EXAMPLE
         Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
         This example retrieves the account lockout policy for SDDC Manager and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER rootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the password policy file to compare against.
     #>
 
     Param (
@@ -1474,14 +1592,14 @@ Function Request-SddcManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                            if ($drift) { 
+                            if ($drift) {
                                 if ($PsBoundParameters.ContainsKey('policyFile')) {
                                     Get-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift -reportPath $reportPath -policyFile $policyFile
                                 } else {
@@ -1516,6 +1634,48 @@ Function Update-SddcManagerPasswordComplexity {
         .EXAMPLE
         Update-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
         This example configures the password complexity policy for SDDC Manager
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER rootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER minLength
+        The minimum length of the password.
+
+        .PARAMETER minLowercase
+        The minimum number of lowercase characters in the password.
+
+        .PARAMETER minUppercase
+        The minimum number of uppercase characters in the password.
+
+        .PARAMETER minNumerical
+        The minimum number of numerical characters in the password.
+
+        .PARAMETER minSpecial
+        The minimum number of special characters in the password.
+
+        .PARAMETER minUnique
+        The minimum number of unique characters in the password.
+
+        .PARAMETER minClass
+        The minimum number of character classes in the password.
+
+        .PARAMETER maxSequence
+        The maximum number of sequential characters in the password.
+
+        .PARAMETER history
+        The number of previous passwords that a password cannot match.
+
+        .PARAMETER maxRetry
+        The number of failed login attempts before the account is locked.
     #>
 
     Param (
@@ -1542,7 +1702,7 @@ Function Update-SddcManagerPasswordComplexity {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             $existingConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                            $chkExistingConfig = $existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or  $existingConfiguration.'History' -ne $history -or $existingConfiguration.'Max Retries' -ne $maxRetry                            
+                            $chkExistingConfig = $existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or  $existingConfiguration.'History' -ne $history -or $existingConfiguration.'Max Retries' -ne $maxRetry
                             if($existingConfiguration.'Max Sequence') {
                                 $chkExistingConfig = $chkExistingConfig -or $existingConfiguration.'Max Sequence' -ne $maxSequence
                             }
@@ -1552,7 +1712,7 @@ Function Update-SddcManagerPasswordComplexity {
                             if ($chkExistingConfig) {
                                 Set-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -class $minClass -sequence $maxSequence -history $history -retry $maxRetry | Out-Null
                                 $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry                            
+                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
                                 if($updatedConfiguration.'Max Sequence') {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Max Sequence' -eq $maxSequence
                                 }
@@ -1594,6 +1754,27 @@ Function Update-SddcManagerAccountLockout {
         .EXAMPLE
         Update-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
         This example configures the account lockout policy for SDDC Manager
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER rootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked account is unlocked.
+
+        .PARAMETER rootUnlockInterval
+        The number of seconds before a locked root account is unlocked.
     #>
 
     Param (
@@ -1605,7 +1786,7 @@ Function Update-SddcManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -1663,6 +1844,36 @@ Function Publish-SddcManagerPasswordExpiration {
         .EXAMPLE
         Publish-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
         This example will return the password expiration policy for each local user of SDDC Manager and compare the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcRootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -1746,6 +1957,36 @@ Function Publish-SddcManagerPasswordComplexity {
         .EXAMPLE
         Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
         This example will return the password complexity policy for SDDC Manager and compare the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcRootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER allDomains
+        Switch to return the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to return the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -1828,6 +2069,36 @@ Function Publish-SddcManagerAccountLockout {
         .EXAMPLE
         Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
         This example will return the account lockout policy for SDDC Manager and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER sddcRootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -1912,6 +2183,27 @@ Function Request-SsoPasswordExpiration {
         .EXAMPLE
         Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -1961,7 +2253,7 @@ Function Request-SsoPasswordExpiration {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                                 return $SsoPasswordExpirationObject
-                            }                            
+                            }
                         }
                     }
                 } else {
@@ -2001,6 +2293,27 @@ Function Request-SsoPasswordComplexity {
         .EXAMPLE
         Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -2020,7 +2333,7 @@ Function Request-SsoPasswordComplexity {
             $requiredConfig = (Get-PasswordPolicyConfig).sso.passwordComplexity
         }
     }
-	
+
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -2040,7 +2353,7 @@ Function Request-SsoPasswordComplexity {
                                     $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
-                                }                                
+                                }
                                 if ($SsoPasswordComplexity = Get-SsoPasswordPolicy -server $ssoAdminServer) {
                                     $SsoPasswordComplexityObject = New-Object -TypeName psobject
                                     $SsoPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
@@ -2098,6 +2411,27 @@ Function Request-SsoAccountLockout {
         .EXAMPLE
         Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -2117,7 +2451,7 @@ Function Request-SsoAccountLockout {
             $requiredConfig = (Get-PasswordPolicyConfig).sso.accountLockout
         }
     }
-	
+
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -2137,14 +2471,14 @@ Function Request-SsoAccountLockout {
                                     $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
-                                } 
+                                }
                                 if ($SsoAccountLockout = Get-SsoLockoutPolicy -server $ssoAdminServer) {
                                     $SsoAccountLockoutObject = New-Object -TypeName psobject
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.MaxFailedAttempts -ne $requiredConfig.maxFailures) { "$($SsoAccountLockout.MaxFailedAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($SsoAccountLockout.MaxFailedAttempts)" }} else { "$($SsoAccountLockout.MaxFailedAttempts)" })
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.AutoUnlockIntervalSec -ne $requiredConfig.unlockInterval) { "$($SsoAccountLockout.AutoUnlockIntervalSec) [ $($requiredConfig.unlockInterval) ]" } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" }} else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" })
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.FailedAttemptIntervalSec -ne $requiredConfig.failedAttemptInterval) { "$($SsoAccountLockout.FailedAttemptIntervalSec) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" }} else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" })       
+                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.FailedAttemptIntervalSec -ne $requiredConfig.failedAttemptInterval) { "$($SsoAccountLockout.FailedAttemptIntervalSec) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" }} else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" })
                                 } else {
                                     Write-Error "Unable to retrieve account lockout policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -2180,6 +2514,21 @@ Function Update-SsoPasswordExpiration {
         .EXAMPLE
         Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999
         This example configures the password expiration policy for a vCenter Single Sign-On domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER maxDays
+        The maximum number of days that a password is valid for.
     #>
 
     Param (
@@ -2209,7 +2558,7 @@ Function Update-SsoPasswordExpiration {
                                     $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
-                                } 
+                                }
                                 if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -ne $maxDays) {
                                     Get-SsoPasswordPolicy -server $ssoAdminServer | Set-SsoPasswordPolicy -PasswordLifetimeDays $maxDays | Out-Null
                                     if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -eq $maxDays) {
@@ -2251,6 +2600,45 @@ Function Update-SsoPasswordComplexity {
         .EXAMPLE
         Update-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
         This example configures the password complexity policy for a vCenter Single Sign-On domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER minLength
+        The minimum length of the password.
+
+        .PARAMETER maxLength
+        The maximum length of the password.
+
+        .PARAMETER minAlphabetic
+        The minimum number of alphabetic characters in the password.
+
+        .PARAMETER minLowercase
+        The minimum number of lowercase characters in the password.
+
+        .PARAMETER minUppercase
+        The minimum number of uppercase characters in the password.
+
+        .PARAMETER minNumeric
+        The minimum number of numeric characters in the password.
+
+        .PARAMETER minSpecial
+        The minimum number of special characters in the password.
+
+        .PARAMETER maxIdenticalAdjacent
+        The maximum number of identical adjacent characters in the password.
+
+        .PARAMETER history
+        The number of previous passwords that a password cannot match.
     #>
 
     Param (
@@ -2332,6 +2720,27 @@ Function Update-SsoAccountLockout {
         .EXAMPLE
         Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 5 -failureInterval 180 -unlockInterval 900
         This example configures the account lockout policy for a vCenter Single Sign-On domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER failureInterval
+        The number of seconds before the failed login attempts counter is reset.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked account is unlocked.
     #>
 
     Param (
@@ -2432,6 +2841,36 @@ Function Publish-SsoPasswordPolicy {
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example will return password expiration policy for vCenter Single Sign-On across for a Workload Domains and compare the configuration against the passwordPolicyConfig.json
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER policy
+        The policy to publish. One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -2520,8 +2959,29 @@ Function Request-VcenterPasswordExpiration {
         This example retrieves the global password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the global password expiration policy for the vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -2595,8 +3055,29 @@ Function Request-VcenterPasswordComplexity {
         This example retrieves the password complexity policy for the vCenter Server based on the workload domain and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password complexity policy for the vCenter Server based on the workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -2608,7 +3089,7 @@ Function Request-VcenterPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-    
+
 	Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
@@ -2623,8 +3104,8 @@ Function Request-VcenterPasswordComplexity {
                                         if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
                                             $mgmtConnected = $true
                                         }
-                                    }        
-                                }                                
+                                    }
+                                }
                             } else {
                                 Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                             }
@@ -2680,8 +3161,29 @@ Function Request-VcenterAccountLockout {
         This example retrieves the account lockout policy for the vCenter Server based on the workload domain and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the account lockout policy for the vCenter Server based on the workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -2693,7 +3195,7 @@ Function Request-VcenterAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-    
+
 	Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
@@ -2708,7 +3210,7 @@ Function Request-VcenterAccountLockout {
                                         if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
                                             $mgmtConnected = $true
                                         }
-                                    }        
+                                    }
                                 }
                             } else {
                                 Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
@@ -2720,13 +3222,13 @@ Function Request-VcenterAccountLockout {
                                     if ($PsBoundParameters.ContainsKey('policyFile')) {
                                         Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
                                     } else {
-                                        Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift 
+                                        Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
                                     }
                                 } else {
                                     Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                 }
                             }
-                            
+
                         }
                     }
                 } else {
@@ -2761,6 +3263,27 @@ Function Update-VcenterPasswordExpiration {
         .EXAMPLE
         Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
         This example configures the global password expiration policy for the vCenter Server
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER maxDays
+        The maximum number of days that a password is valid.
+
+        .PARAMETER minDays
+        The minimum number of days that a password is valid.
+
+        .PARAMETER warnDays
+        The number of days before a password expires that a warning is issued.
     #>
 
     Param (
@@ -2819,6 +3342,39 @@ Function Update-VcenterPasswordComplexity {
         .EXAMPLE
         Update-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
         This example configures the password complexity policy for the vCenter Server based on the workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER minLength
+        The minimum length of a password.
+
+        .PARAMETER minLowercase
+        The minimum number of lowercase characters in a password.
+
+        .PARAMETER minUppercase
+        The minimum number of uppercase characters in a password.
+
+        .PARAMETER minNumerical
+        The minimum number of numerical characters in a password.
+
+        .PARAMETER minSpecial
+        The minimum number of special characters in a password.
+
+        .PARAMETER minUnique
+        The minimum number of unique characters in a password.
+
+        .PARAMETER history
+        The number of previous passwords that a password cannot match.
     #>
 
     Param (
@@ -2834,7 +3390,7 @@ Function Update-VcenterPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUnique,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history
 	)
-    
+
 	Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
@@ -2849,7 +3405,7 @@ Function Update-VcenterPasswordComplexity {
                                         if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
                                             $mgmtConnected = $true
                                         }
-                                    }        
+                                    }
                                 }
                             } else {
                                 Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
@@ -2903,6 +3459,27 @@ Function Update-VcenterAccountLockout {
         .EXAMPLE
         Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
         This example configures the account lockout policy for the vCenter Server based on the workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked out account is unlocked.
+
+        .PARAMETER rootUnlockInterval
+        The number of seconds before a locked out root account is unlocked.
     #>
 
     Param (
@@ -2914,7 +3491,7 @@ Function Update-VcenterAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
 	)
-    
+
 	Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
@@ -2929,12 +3506,12 @@ Function Update-VcenterAccountLockout {
                                         if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
                                             $mgmtConnected = $true
                                         }
-                                    }        
+                                    }
                                 }
                             } else {
                                 Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                             }
-                        }                        
+                        }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
@@ -2964,7 +3541,7 @@ Function Update-VcenterAccountLockout {
         if ($mgmtConnected) {
             Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
         }
-    }    
+    }
 }
 Export-ModuleMember -Function Update-VcenterAccountLockout
 
@@ -2989,8 +3566,29 @@ Function Request-VcenterRootPasswordExpiration {
         This example retrieves the root user password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the root user password expiration policy for the vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -3064,6 +3662,30 @@ Function Update-VcenterRootPasswordExpiration {
         .EXAMPLE
         Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -neverexpire
         This example configures the configures password expiration settings for the vCenter Server root account to never expire
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER email
+        The email address to send password expiration warnings to.
+
+        .PARAMETER maxDays
+        The maximum number of days before the root user password expires.
+
+        .PARAMETER warnDays
+        The number of days before the root user password expires in which to send a warning email.
+
+        .PARAMETER neverexpire
+        Switch to configure the root user password to never expire.
     #>
 
     Param (
@@ -3084,7 +3706,7 @@ Function Update-VcenterRootPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereApiConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereApiAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if ($PsBoundParameters.ContainsKey("neverexpire")) { 
+                                if ($PsBoundParameters.ContainsKey("neverexpire")) {
                                     if ((Get-VcenterRootPasswordExpiration).max_days_between_password_change -ne -1) {
                                         Set-VcenterRootPasswordExpiration -neverexpire | Out-Null
                                         if ((Get-VcenterRootPasswordExpiration).max_days_between_password_change -ne -1) {
@@ -3142,8 +3764,35 @@ Function Publish-VcenterPasswordExpiration {
         This example will return password expiration policy for a vCenter Server and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift 
+        Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password expiration policy for a vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -3214,6 +3863,33 @@ Function Publish-VcenterLocalPasswordExpiration {
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password expiration policy for each local user of vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -3287,6 +3963,33 @@ Function Publish-VcenterLocalPasswordComplexity {
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password complexity policy for a vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -3360,6 +4063,33 @@ Function Publish-VcenterLocalAccountLockout {
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password account lockout for a vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -3434,8 +4164,29 @@ Function Request-NsxtManagerPasswordExpiration {
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -3455,7 +4206,7 @@ Function Request-NsxtManagerPasswordExpiration {
             $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.passwordExpiration
         }
     }
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -3509,8 +4260,29 @@ Function Request-NsxtManagerPasswordComplexity {
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -3530,7 +4302,7 @@ Function Request-NsxtManagerPasswordComplexity {
             $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.passwordComplexity
         }
     }
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -3589,7 +4361,7 @@ Function Request-NsxtManagerAccountLockout {
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Retrieves the account lockpout policy
-        
+
         .EXAMPLE
         Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
         This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain
@@ -3599,8 +4371,29 @@ Function Request-NsxtManagerAccountLockout {
         This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -3674,6 +4467,24 @@ Function Update-NsxtManagerPasswordExpiration {
         .EXAMPLE
         Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
         This example configures the password expiration policy in NSX Local Manager for all local users in the sfo-m01 workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER maxdays
+        The maximum number of days that a password is valid for.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -3742,6 +4553,42 @@ Function Update-NsxtManagerPasswordComplexity {
         .EXAMPLE
         Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Local Manager node for a workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER minLength
+        The minimum length of a password.
+
+        .PARAMETER minLowercase
+        The minimum number of lowercase characters in a password.
+
+        .PARAMETER minUppercase
+        The minimum number of uppercase characters in a password.
+
+        .PARAMETER minNumerical
+        The minimum number of numerical characters in a password.
+
+        .PARAMETER minSpecial
+        The minimum number of special characters in a password.
+
+        .PARAMETER minUnique
+        The minimum number of unique characters in a password.
+
+        .PARAMETER maxRetry
+        The maximum number of retries for a password.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -3758,7 +4605,7 @@ Function Update-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -3823,6 +4670,36 @@ Function Update-NsxtManagerAccountLockout {
         .EXAMPLE
         Update-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900 -apiFailures 5 -apiFailureInterval 120 -apiUnlockInterval 900
         This example configures the account lockout policy in NSX Local Manager nodes in the sfo-m01 workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER cliFailures
+        The number of failed login attempts before the account is locked out for the CLI.
+
+        .PARAMETER cliUnlockInterval
+        The number of seconds before the account is unlocked for the CLI.
+
+        .PARAMETER apiFailures
+        The number of failed login attempts before the account is locked out for the API.
+
+        .PARAMETER apiFailureInterval
+        The number of seconds before the account is unlocked for the API.
+
+        .PARAMETER apiUnlockInterval
+        The number of seconds before the account is unlocked for the API.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -3924,6 +4801,33 @@ Function Publish-NsxManagerPasswordExpiration {
         .EXAMPLE
         Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -4005,6 +4909,33 @@ Function Publish-NsxManagerPasswordComplexity {
         .EXAMPLE
         Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -drift
         This example will return password complexity policy of NSX Local Manager for a Workload Domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -4076,8 +5007,35 @@ Function Publish-NsxManagerAccountLockout {
         This example will return account lockout policy for each NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
-        Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift 
+        Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return account lockout policy for each NSX Local Manager for a Workload Domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -4152,8 +5110,29 @@ Function Request-NsxtEdgePasswordExpiration {
         This example retrieves the password expiration policy for all users for the NSX Edge for a workload domain and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift 
+        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password expiration policy for all users for the NSX Edge for a workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -4173,7 +5152,7 @@ Function Request-NsxtEdgePasswordExpiration {
             $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.passwordExpiration
         }
     }
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4232,6 +5211,27 @@ Function Request-NsxtEdgePasswordComplexity {
         .EXAMPLE
         Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -4248,10 +5248,10 @@ Function Request-NsxtEdgePasswordComplexity {
         if ($PsBoundParameters.ContainsKey('policyFile')) {
             $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxEdge.passwordComplexity
         } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxEdge.passwordComplexity 
+            $requiredConfig = (Get-PasswordPolicyConfig).nsxEdge.passwordComplexity
         }
     }
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4324,6 +5324,27 @@ Function Request-NsxtEdgeAccountLockout {
         .EXAMPLE
         Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
         This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -4373,7 +5394,7 @@ Function Request-NsxtEdgeAccountLockout {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
             }
-        }   
+        }
     } Catch {
         Debug-ExceptionWriter -object $_
     }
@@ -4395,6 +5416,24 @@ Function Update-NsxtEdgePasswordExpiration {
         .EXAMPLE
         Update-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
         This example configures the password expiration policy in NSX Edge for all local users in the sfo-m01 workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER maxDays
+        The maximum number of days before the password expires.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -4466,6 +5505,42 @@ Function Update-NsxtEdgePasswordComplexity {
         .EXAMPLE
         Update-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Edge node for a workload domain
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER minLength
+        The minimum length of the password.
+
+        .PARAMETER minLowercase
+        The minimum number of lowercase characters in the password.
+
+        .PARAMETER minUppercase
+        The minimum number of uppercase characters in the password.
+
+        .PARAMETER minNumerical
+        The minimum number of numerical characters in the password.
+
+        .PARAMETER minSpecial
+        The minimum number of special characters in the password.
+
+        .PARAMETER minUnique
+        The minimum number of unique characters in the password.
+
+        .PARAMETER maxRetry
+        The maximum number of retries before the account is locked.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -4482,7 +5557,7 @@ Function Update-NsxtEdgePasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4547,8 +5622,26 @@ Function Update-NsxtEdgeAccountLockout {
         - Configure the account lockout policy
 
         .EXAMPLE
-        Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900 
+        Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900
         This example configures the account lockout policy of the NSX Edges nodes in sfo-m01 workload domain
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER cliFailures
+        The number of failed login attempts before the account is locked for the CLI
+
+        .PARAMETER cliUnlockInterval
+        The number of seconds before the account is unlocked for the CLI.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -4638,6 +5731,33 @@ Function Publish-NsxEdgePasswordExpiration {
         .EXAMPLE
         Publish-NsxEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password expiration policy for each local user of NSX Edge nodes for a Workload Domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -4729,6 +5849,33 @@ Function Publish-NsxEdgePasswordComplexity {
         .EXAMPLE
         Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return password complexity policy for each local user of NSX Edge nodes for a Workload Domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -4802,6 +5949,33 @@ Function Publish-NsxEdgeAccountLockout {
         .EXAMPLE
         Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
         This example will return account lockout policy for each NSX Edge nodes for a Workload Domain and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -4880,6 +6054,30 @@ Function Request-EsxiPasswordExpiration {
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
         This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER cluster
+        The name of the cluster to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -4900,7 +6098,7 @@ Function Request-EsxiPasswordExpiration {
             $requiredConfig = (Get-PasswordPolicyConfig).esxi.passwordExpiration
         }
     }
-	
+
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4975,6 +6173,30 @@ Function Request-EsxiPasswordComplexity {
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
         This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER cluster
+        The name of the cluster to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -4987,7 +6209,7 @@ Function Request-EsxiPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-	
+
     if ($drift) {
         if ($PsBoundParameters.ContainsKey("policyFile")) {
             $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).esxi.passwordComplexity
@@ -4995,7 +6217,7 @@ Function Request-EsxiPasswordComplexity {
             $requiredConfig = (Get-PasswordPolicyConfig).esxi.passwordComplexity
         }
     }
-	
+
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -5074,6 +6296,30 @@ Function Request-EsxiAccountLockout {
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
         This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the policy from.
+
+        .PARAMETER cluster
+        The name of the cluster to retrieve the policy from.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -5086,15 +6332,15 @@ Function Request-EsxiAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-	
+
     if ($drift) {
         if ($PsBoundParameters.ContainsKey("policyFile")) {
             $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).esxi.accountLockout
         } else {
             $requiredConfig = (Get-PasswordPolicyConfig).esxi.accountLockout
-        } 
+        }
     }
-	
+
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -5167,6 +6413,27 @@ Function Update-EsxiPasswordExpiration {
         .EXAMPLE
         Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999 -detail false
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01 but does not show the detail per host
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER cluster
+        The name of the cluster to update the policy for.
+
+        .PARAMETER maxDays
+        The maximum number of days before the password expires.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
 	Param (
@@ -5178,7 +6445,7 @@ Function Update-EsxiPasswordExpiration {
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
-	
+
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -5201,7 +6468,7 @@ Function Update-EsxiPasswordExpiration {
                                             }
 										} else {
                                             if ($detail -eq "true") {
-                                                Write-Warning "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost), already set: SKIPPED"										
+                                                Write-Warning "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
 									}
@@ -5247,6 +6514,30 @@ Function Update-EsxiPasswordComplexity {
         .EXAMPLE
         Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER cluster
+        The name of the cluster to update the policy for.
+
+        .PARAMETER policy
+        The policy to apply to the ESXi hosts.
+
+        .PARAMETER history
+        The number of previous passwords that a password cannot match.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -5308,7 +6599,7 @@ Function Update-EsxiPasswordComplexity {
                             }
                             Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
-                    }    
+                    }
                 } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
@@ -5341,6 +6632,30 @@ Function Update-EsxiAccountLockout {
         .EXAMPLE
         Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900 -detail false
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to update the policy for.
+
+        .PARAMETER cluster
+        The name of the cluster to update the policy for.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked out account is unlocked.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -5402,7 +6717,7 @@ Function Update-EsxiAccountLockout {
                             }
                             Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
-                    }    
+                    }
                 } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
@@ -5457,6 +6772,36 @@ Function Publish-EsxiPasswordPolicy {
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift
         This example will return password expiration policy for all ESXi Hosts across all Workload Domains and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER policy
+        The policy to publish. One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -5555,6 +6900,24 @@ Function Request-WsaPasswordExpiration {
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
         This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER user
+        The username to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER pass
+        The password to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -5565,7 +6928,7 @@ Function Request-WsaPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-	
+
     if ($drift) {
         if ($PsBoundParameters.ContainsKey("policyFile")) {
             $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordExpiration
@@ -5617,6 +6980,24 @@ Function Request-WsaPasswordComplexity {
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
         This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER user
+        The username to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER pass
+        The password to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -5637,7 +7018,7 @@ Function Request-WsaPasswordComplexity {
     }
 
     $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" }} else { "$($WsaPasswordComplexity.History)" })
-	
+
 	Try {
 		if (Test-WsaConnection -server $server) {
 			if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
@@ -5686,6 +7067,30 @@ Function Request-WsaLocalUserPasswordComplexity {
         .EXAMPLE
         Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -5698,7 +7103,7 @@ Function Request-WsaLocalUserPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -5748,6 +7153,30 @@ Function Request-WsaLocalUserAccountLockout {
         .EXAMPLE
         Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -5760,14 +7189,14 @@ Function Request-WsaLocalUserAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                            if ($drift) { 
+                            if ($drift) {
                                 if ($PsBoundParameters.ContainsKey('policyFile')) {
                                     Get-LocalAccountLockout -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal -drift -reportPath $reportPath -policyFile $policyFile
                                 } else {
@@ -5809,6 +7238,24 @@ Function Request-WsaAccountLockout {
         .EXAMPLE
         Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER user
+        The username to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER pass
+        The password to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
 	Param (
@@ -5827,9 +7274,9 @@ Function Request-WsaAccountLockout {
             $requiredConfig = (Get-PasswordPolicyConfig).wsaDirectory.accountLockout
         }
     }
-	
+
     $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" }} else { "$($WsaAccountLockout.numAttempts)" })
-	
+
     Try {
 		if (Test-WsaConnection -server $server) {
 			if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
@@ -5838,7 +7285,7 @@ Function Request-WsaAccountLockout {
                     $WsaAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
                     $WsaAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" }} else { "$($WsaAccountLockout.numAttempts)" })
                     $WsaAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (min)" -notepropertyvalue $WsaAccountLockout.unlockInterval
-                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (min)" -notepropertyvalue $WsaAccountLockout.attemptInterval                   
+                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (min)" -notepropertyvalue $WsaAccountLockout.attemptInterval
                 } else {
                     Write-Error "Unable to retrieve account lockout policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
@@ -5864,7 +7311,28 @@ Function Update-WsaPasswordExpiration {
 
         .EXAMPLE
         Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
-        This example configures the password expiration policy for a Workspace ONE Access
+        This example configures the password expiration policy for Workspace ONE Access
+
+        .PARAMETER server
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER user
+        The username to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER pass
+        The password to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER maxDays
+        The maximum number of days that a password is valid.
+
+        .PARAMETER warnDays
+        The number of days before a password expires that a warning is issued.
+
+        .PARAMETER reminderDays
+        The number of days before a password expires that a reminder is issued.
+
+        .PARAMETER tempPasswordHours
+        The number of hours that a temporary password is valid.
     #>
 
     Param (
@@ -5914,7 +7382,40 @@ Function Update-WsaPasswordComplexity {
 
         .EXAMPLE
         Update-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
-        This example configures the password complexity policy for a Workspace ONE Access
+        This example configures the password complexity policy for Workspace ONE Access
+
+        .PARAMETER server
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER user
+        The username to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER pass
+        The password to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER minLength
+        The minimum number of characters that a password must contain.
+
+        .PARAMETER minLowercase
+        The minimum number of lowercase characters that a password must contain.
+
+        .PARAMETER minUppercase
+        The minimum number of uppercase characters that a password must contain.
+
+        .PARAMETER minNumeric
+        The minimum number of numeric characters that a password must contain.
+
+        .PARAMETER minSpecial
+        The minimum number of special characters that a password must contain.
+
+        .PARAMETER maxIdenticalAdjacent
+        The maximum number of identical adjacent characters that a password can contain.
+
+        .PARAMETER maxPreviousCharacters
+        The maximum number of previous characters that a password can contain.
+
+        .PARAMETER history
+        The number of previous passwords that a password cannot match.
     #>
 
     Param (
@@ -5971,6 +7472,30 @@ Function Update-WsaLocalUserPasswordComplexity {
         .EXAMPLE
         Update-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -minLength 1 -history 5 -maxRetry 3
         This example configures the local user password complexity policy for Workspace ONE Access
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER minLength
+        The minimum length of the password.
+
+        .PARAMETER history
+        The number of previous passwords that a password cannot match.
+
+        .PARAMETER maxRetry
+        The number of failed login attempts before the account is locked.
     #>
 
     Param (
@@ -6026,7 +7551,25 @@ Function Update-WsaAccountLockout {
 
         .EXAMPLE
         Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
-        This example configures the account lockout policy for a Workspace ONE Access instance
+        This example configures the account lockout policy for Workspace ONE Access
+
+        .PARAMETER server
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER user
+        The username to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER pass
+        The password to authenticate to the Workspace ONE Access instance.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER failureInterval
+        The number of seconds before the failed login attempts counter is reset.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked account is unlocked.
     #>
 
     Param (
@@ -6077,6 +7620,30 @@ Function Update-WsaLocalUserAccountLockout {
         .EXAMPLE
         Update-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -failures 3 -unlockInterval 900 -rootUnlockInterval 900
         This example configures the account lockout policy for Workspace ONE Access
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked account is unlocked.
+
+        .PARAMETER rootUnlockInterval
+        The number of seconds before a locked root account is unlocked.
     #>
 
     Param (
@@ -6089,7 +7656,7 @@ Function Update-WsaLocalUserAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
 	)
-    
+
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -6151,6 +7718,36 @@ Function Publish-WsaDirectoryPasswordPolicy {
         .EXAMPLE
         Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift
         This example will return the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER policy
+        The policy to publish. One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -6183,7 +7780,7 @@ Function Publish-WsaDirectoryPasswordPolicy {
                 $wsaDirectoryPasswordPolicyObject = $wsaDirectoryPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Workspace ONE Access Not Requested</p>'
             } else {
                 $wsaDirectoryPasswordPolicyObject = $wsaDirectoryPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-            }   
+            }
             $wsaDirectoryPasswordPolicyObject = Convert-CssClassStyle -htmldata $wsaDirectoryPasswordPolicyObject
             $wsaDirectoryPasswordPolicyObject
         }
@@ -6224,6 +7821,42 @@ Function Publish-WsaLocalPasswordPolicy {
         .EXAMPLE
         Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift
         This example will return password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER wsaFqdn
+        The fully qualified domain name of the Workspace ONE Access instance.
+
+        .PARAMETER wsaRootPass
+        The password for the Workspace ONE Access appliance root account.
+
+        .PARAMETER policy
+        The policy to publish. One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
     #>
 
     Param (
@@ -6261,7 +7894,7 @@ Function Publish-WsaLocalPasswordPolicy {
                         $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Workspace ONE Access Not Requested</p>'
                     } else {
                         $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                    }   
+                    }
                     $wsaLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $wsaLocalPasswordPolicyObject
                     $wsaLocalPasswordPolicyObject
                 }
@@ -6300,8 +7933,44 @@ Function Request-LocalUserPasswordExpiration {
         This example retrieves the global password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift 
+        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
         This example retrieves the global password expiration policy for the vCenter Server and compares the configuration against the product defaults
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain which the product is deployed for.
+
+        .PARAMETER vmName
+        The name of the virtual machine to retrieve the policy from.
+
+        .PARAMETER guestUser
+        The username to authenticate to the virtual machine guest operating system.
+
+        .PARAMETER guestPassword
+        The password to authenticate to the virtual machine guest operating system.
+
+        .PARAMETER localUser
+        The local user to retrieve the password expiration policy for.
+
+        .PARAMETER product
+        The product to retrieve the password expiration policy for. One of: sddcManager, vcenterServer, nsxManager, nsxEdge, wsaLocal.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
     #>
 
     Param (
@@ -6320,7 +7989,7 @@ Function Request-LocalUserPasswordExpiration {
 	)
 
     if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) { 
+        if ($PsBoundParameters.ContainsKey('policyFile')) {
             $command = '(Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
         } else {
             $command = '(Get-PasswordPolicyConfig).' + $product + '.passwordExpiration'
@@ -6381,6 +8050,42 @@ Function Update-LocalUserPasswordExpiration {
         .EXAMPLE
         Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
         This example updates the global password expiration policy for the vCenter Server
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain which the product is deployed for.
+
+        .PARAMETER vmName
+        The name of the virtual machine to retrieve the policy from.
+
+        .PARAMETER guestUser
+        The username to authenticate to the virtual machine guest operating system.
+
+        .PARAMETER guestPassword
+        The password to authenticate to the virtual machine guest operating system.
+
+        .PARAMETER localUser
+        The local user to retrieve the password expiration policy for.
+
+        .PARAMETER minDays
+        The minimum number of days between password changes.
+
+        .PARAMETER maxDays
+        The maximum number of days between password changes.
+
+        .PARAMETER warnDays
+        The number of days of warning before password expires.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
     #>
 
     Param (
@@ -6486,7 +8191,7 @@ Function Test-VcfPasswordManagementPrereq {
                 $message = "PowerShell Module: $($module.Name) $($moduleCurrentVersion) is installed and supports the minimum required version."
                 Show-PasswordManagementOutput -type INFO -message $message
             }
-        } 
+        }
     }
     Catch {
         Write-Error $_.Exception.Message

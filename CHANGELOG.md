@@ -12,16 +12,15 @@ Bugfixes:
 
 - Exported `Get-PasswordPolicyConfig`. [GH-32](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32)
 
-- Fixed drift option error for  `Publish-VcenterLocalAccountLockout`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
+- Fixed drift option error for `Publish-VcenterLocalAccountLockout`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
 
-- Fixed drift option error for  `Publish-VcenterLocalPasswordExpiration`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
+- Fixed drift option error for `Publish-VcenterLocalPasswordExpiration`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
 
-- Fixed drift option error for  `Publish-VcenterLocalPasswordComplexity`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
+- Fixed drift option error for `Publish-VcenterLocalPasswordComplexity`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
 
-- Handled empty email string values and  "0" value for WSADirectory feilds coming from JSON file  `Test-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
+- Handled empty email string values and "0" value for WSADirectory feilds coming from JSON file  `Test-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
 
-- Corrected Description in  `Start-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
-
+- Corrected Description in `Start-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
 
 Enhancements:
 
@@ -46,6 +45,10 @@ Enhancements:
 - Updated `Request-SsoPasswordComplexity` to handle isolated VI Workload Domains. [GH-30](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30)
 
 - Updated `Request-SsoPasswordExpiration` to handle isolated VI Workload Domains. [GH-30](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30)
+
+Chores:
+
+- Added `.PARAMETER` entries for user-facing functions. [GH-37](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/37)
 
 ## [v1.0.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.0.0)
 
