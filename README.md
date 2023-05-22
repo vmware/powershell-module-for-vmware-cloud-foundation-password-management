@@ -32,8 +32,12 @@ The module provides coverage for the following components:
 
 ### Platforms
 
-- [VMware Cloud Foundation][vmware-cloud-foundation] 4.3 or later
+- [VMware Cloud Foundation][vmware-cloud-foundation] 5.0.x <sup>1</sup>
+- [VMware Cloud Foundation][vmware-cloud-foundation] 4.5.x
+- [VMware Cloud Foundation][vmware-cloud-foundation] 4.4.x
+- [VMware Cloud Foundation][vmware-cloud-foundation] 4.3.x
 
+> <sup>1</sup> Password complexity for NSX 4.x is not supported in this module. Please use the NSX 4.x product documentation to configure password complexity. Reference: [GH-38](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues/38)
 ### Operating Systems
 
 - Microsoft Windows Server 2019 and 2022
