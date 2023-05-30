@@ -8178,7 +8178,7 @@ Function Test-VcfPasswordManagementPrereq {
             @{ Name=("VMware.PowerCLI"); MinimumVersion=("13.0.0")}
             @{ Name=("VMware.vSphere.SsoAdmin"); MinimumVersion=("1.3.9")}
             @{ Name=("PowerVCF"); MinimumVersion=("2.3.0")}
-            @{ Name=("PowerValidatedSolutions"); MinimumVersion=("2.2.0")}
+            @{ Name=("PowerValidatedSolutions"); MinimumVersion=("2.3.0")}
         )
 
         foreach ($module in $modules ) {

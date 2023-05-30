@@ -54,7 +54,7 @@ The module provides coverage for the following components:
 - [`VMware.PowerCLI`][module-vmware-powercli] 13.0.0 or later
 - [`VMware.vSphere.SsoAdmin`][module-vmware-vsphere-ssoadmin] 1.3.9 or later
 - [`PowerVCF`][module-powervcf] 2.3.0 or later
-- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.2.0 or later
+- [`PowerValidatedSolutions`][module-powervalidatedsolutions] 2.3.0 or later
 
 ## Installing the Module
 
@@ -67,7 +67,7 @@ Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 Install-Module -Name VMware.PowerCLI -MinimumVersion 13.0.0
 Install-Module -Name VMware.vSphere.SsoAdmin -MinimumVersion 1.3.9
 Install-Module -Name PowerVCF -MinimumVersion 2.3.0
-Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.2.0
+Install-Module -Name PowerValidatedSolutions -MinimumVersion 2.3.0
 Install-Module -Name VMware.CloudFoundation.PasswordManagement
 ```
 
@@ -179,7 +179,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [module-vmware-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [module-vmware-vsphere-ssoadmin]: https://www.powershellgallery.com/packages/VMware.vSphere.SsoAdmin
 [module-passwordmanagement]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
-[module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF/2.2.0
+[module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF
 [module-reporting]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
 [module-powervalidatedsolutions]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
 [vmware-photon]: https://vmware.github.io/photon/
