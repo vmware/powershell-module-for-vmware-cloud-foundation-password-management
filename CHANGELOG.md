@@ -1,5 +1,51 @@
 # Release History
 
+## v1.2.0 (Not Released)
+
+Enhancement:
+
+- Enhanced `Update-NsxtManagerPasswordComplexity` to handle VCF5.0 and NSX4.x changes. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Get-PasswordPolicyDefault` to handle VCF versions as defaults are changing accordingly. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Get-PasswordPolicyConfig` to handled version parameter as it internally calls `Get-PasswordPolicyDefault`. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Test-PasswordPolicyConfig` to check if right version of the json file is used for comparison. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SddcManagerPasswordComplexity` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SddcManagerAccountLockout` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SsoPasswordExpiration` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SsoPasswordComplexity` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SsoAccountLockout` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-VcenterPasswordExpiration` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-VcenterPasswordComplexity` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-VcenterAccountLockout` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-VcenterRootPasswordExpiration` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-NsxtManagerPasswordComplexity` to handle password complexity policies to be read from API than static file for VCF5.0. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-NsxtManagerAccountLockout` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-NsxtManagerPasswordComplexity` mainly, where all new parameters added with reference to NSX 4.X, are handled and also API is used to get all configurations than static common-password file. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-NsxtEdgePasswordExpiration` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-NsxtEdgePasswordComplexity` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-NsxtEdgeAccountLockout` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-EsxiPasswordExpiration` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-EsxiPasswordComplexity` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-EsxiAccountLockout` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-LocalUserPasswordExpirationt` to handle VCF version specific JSON file during drift option. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-LocalUserPasswordExpiration` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-WsaLocalUserAccountLockout` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-WsaLocalUserPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-WsaLocalUserPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Publish-EsxiPasswordPolicy` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-EsxiAccountLockout` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-EsxiPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-EsxiPasswordExpiration` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-NsxtEdgePasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-NsxtManagerPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-VcenterAccountLockout` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-SsoPasswordExpiration` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-SsoPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-SsoAccountLockout` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SsoAccountLockout` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SsoPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Request-SsoPasswordExpiration` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Update-SddcManagerPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+
 ## v1.1.0
 
 > Release Date: 2023-05-30
