@@ -213,6 +213,9 @@ Function Invoke-PasswordPolicyManager {
                 }
 
                 if ($PsBoundParameters.ContainsKey("json")) {
+                    # Add VCF version into JSON file
+                    $vcfVersion = New-Object -TypeName psobject
+                    $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
                     $sddcManagerPasswordPolicy = New-Object -TypeName psobject
                     $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $sddcManagerPasswordExpiration
                     $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $sddcManagerPasswordComplexity
@@ -252,6 +255,7 @@ Function Invoke-PasswordPolicyManager {
 
                     # Build Final Default Password Policy Object
                     $outputJsonObject = New-Object -TypeName psobject
+                    $outputJsonObject | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
                     $outputJsonObject | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordPolicy
                     $outputJsonObject | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordPolicy
                     $outputJsonObject | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterPasswordPolicy
@@ -574,15 +578,18 @@ Function Get-PasswordPolicyDefault {
         - VMware Workspace ONE Access
 
         .EXAMPLE
-        Get-PasswordPolicyDefault
-        This example returns the default password policy settings
+        Get-PasswordPolicyDefault -version '5.0.0'
+        This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0
 
         .EXAMPLE
-        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json
-        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings
+        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
+        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation
 
         .PARAMETER generateJson
         Switch to generate a JSON file.
+
+        .PARAMETER version
+        The VMware Cloud Foundation version to get policy defaults for the JSON file.
 
         .PARAMETER jsonFile
         The name of the JSON file to generate.
@@ -592,8 +599,13 @@ Function Get-PasswordPolicyDefault {
 
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version='5.0.0',
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile
     )
+
+    # Add VCF version into JSON file
+    $vcfVersion = New-Object -TypeName psobject
+    $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
 
     # Build Default ESXi Password Policy Settings
     $esxiPasswordExpiration = New-Object -TypeName psobject
@@ -666,13 +678,23 @@ Function Get-PasswordPolicyDefault {
     $nsxManagerPasswordExpiration = New-Object -TypeName psobject
     $nsxManagerPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
     $nsxManagerPasswordComplexity = New-Object -TypeName psobject
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
+    if($version -ge "5.0") {
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "12"
+    } else {
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
+    }    
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "0"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    if($version -ge "5.0") {
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxLength' -notepropertyvalue "128"
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxRepeat' -notepropertyvalue "0"
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'passwordRemembrance' -notepropertyvalue "0"
+    }
     $nsxManagerAccountLockout = New-Object -TypeName psobject
     $nsxManagerAccountLockout | Add-Member -notepropertyname 'apiMaxFailures' -notepropertyvalue "5"
     $nsxManagerAccountLockout | Add-Member -notepropertyname 'apiUnlockInterval' -notepropertyvalue "900"
@@ -771,6 +793,7 @@ Function Get-PasswordPolicyDefault {
 
     # Build Final Default Password Policy Object
     $defaultConfig = New-Object -TypeName psobject
+    $defaultConfig | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
     $defaultConfig | Add-Member -notepropertyname 'esxi' -notepropertyvalue $esxiPasswordPolicy
     $defaultConfig | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordPolicy
     $defaultConfig | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterPasswordPolicy
@@ -793,6 +816,7 @@ Export-ModuleMember -Function Get-PasswordPolicyDefault
 Function Get-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version='5.0.0',
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
@@ -801,19 +825,24 @@ Function Get-PasswordPolicyConfig {
         if (Test-Path $policyFilePath) {
             Write-Output "Found the Password Policy Configuration File ($policyFilePath)."
             $customConfig = Get-Content -Path $policyFilePath | ConvertFrom-Json
-            $result = Test-PasswordPolicyConfig -customConfig $customConfig
-            if ($result -eq "true") {
-				Write-Output "Validation of Password Policy Configuration File: PASSED"
-			} else {
-                Write-Error "Validation of Password Policy Configuration File: FAILED"
+            if ($customConfig.vcf.vcfVersion -eq $version) {
+                $result = Test-PasswordPolicyConfig -customConfig $customConfig -version $version
+                if ($result -eq "true") {
+                    Write-Output "Validation of Password Policy Configuration File: PASSED"
+                } else {
+                    Write-Error "Validation of Password Policy Configuration File: FAILED"
+                    Break
+                }
+            } else {
+                Write-Error "Password Policy Configuration File version is $($customConfig.vcf.vcfVersion) and version provided is $version : FAILED "
                 Break
-			}
+            }
         } else {
             Write-Error "Unable to Locate Password Policy Configuration File. Check the path ($policyFilePath)."
             Break
         }
     } else {
-        $customConfig = Get-PasswordPolicyDefault
+        $customConfig = Get-PasswordPolicyDefault -version $version
     }
     $customConfig
 }
@@ -861,17 +890,18 @@ Function checkEmailString {
 
 Function Test-PasswordPolicyConfig {
     Param (
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [psobject]$customConfig
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [psobject]$customConfig,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [psobject]$version
     )
 
     # Import default configuration JSON for compare parameters
-    $defaultConfig = Get-PasswordPolicyDefault
+    $defaultConfig = Get-PasswordPolicyDefault -version $version
     $encounterError = "False"
 
     # Validating Product Types in the Password Policy Configuration File
     $defaultProductList = $defaultConfig | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
     $customProductList = $customConfig | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
-    $defaultSection = "passwordExpiration", "passwordComplexity", "accountLockout"
+    $defaultSection = "passwordExpiration", "passwordComplexity", "accountLockout", "vcfVersion"
 
     foreach ($product in $customProductList) {
         if (-Not $defaultProductList.Name.Contains($product.Name)) {
@@ -1517,22 +1547,29 @@ Function Request-SddcManagerPasswordComplexity {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             if ($drift) {
+                                $version = ""
+                                if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                                    $version = $Matches[0]
+                                } 
                                 if ($PsBoundParameters.ContainsKey('policyFile')) {
-                                    Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift -reportPath $reportPath -policyFile $policyFile
+                                    Get-LocalPasswordComplexity -version $version -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift -reportPath $reportPath -policyFile $policyFile
                                 } else {
-                                    Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift
+                                    Get-LocalPasswordComplexity -version $version -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift
                                 }
                             } else {
                                 Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false -WarningAction SilentlyContinue
+        }
     }
 }
 Export-ModuleMember -Function Request-SddcManagerPasswordComplexity
@@ -1600,22 +1637,29 @@ Function Request-SddcManagerAccountLockout {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             if ($drift) {
+                                $version = ""
+                                if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                                    $version = $Matches[0]
+                                } 
                                 if ($PsBoundParameters.ContainsKey('policyFile')) {
-                                    Get-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift -reportPath $reportPath -policyFile $policyFile
+                                    Get-LocalAccountLockout -version $version -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift -reportPath $reportPath -policyFile $policyFile
                                 } else {
-                                    Get-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift
+                                    Get-LocalAccountLockout -version $version -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager -drift
                                 }
                             } else {
                                 Get-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-SddcManagerAccountLockout
@@ -1728,13 +1772,16 @@ Function Update-SddcManagerPasswordComplexity {
                                 Write-Warning "Update Password Complexity Policy on SDDC Manager ($server), already set: SKIPPED"
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-SddcManagerPasswordComplexity
@@ -1806,13 +1853,16 @@ Function Update-SddcManagerAccountLockout {
                                 Write-Warning "Update Account Lockout Policy on SDDC Manager ($server), already set: SKIPPED"
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-SddcManagerAccountLockout
@@ -2216,17 +2266,22 @@ Function Request-SsoPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).sso.passwordExpiration
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).sso.passwordExpiration
-        }
-    }
+
 
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).sso.passwordExpiration
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).sso.passwordExpiration
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -2264,8 +2319,10 @@ Function Request-SsoPasswordExpiration {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
-    }
+        if ($Global:DefaultSsoAdminServers) {
+            Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
+        }
+    } 
 }
 Export-ModuleMember -Function Request-SsoPasswordExpiration
 
@@ -2326,17 +2383,21 @@ Function Request-SsoPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).sso.passwordComplexity
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).sso.passwordComplexity
-        }
-    }
 
 	Try {
 		if (Test-Connection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {              
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).sso.passwordComplexity
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).sso.passwordComplexity
+                    }
+                }
 				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -2382,7 +2443,9 @@ Function Request-SsoPasswordComplexity {
 	} Catch {
 		Debug-ExceptionWriter -object $_
 	} Finally {
-        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+        if ($Global:DefaultSsoAdminServers) {
+            Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
+        }
     }
 }
 Export-ModuleMember -Function Request-SsoPasswordComplexity
@@ -2444,17 +2507,22 @@ Function Request-SsoAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).sso.accountLockout
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).sso.accountLockout
-        }
-    }
+
 
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).sso.accountLockout
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).sso.accountLockout
+                    }
+                }
 				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -2494,7 +2562,9 @@ Function Request-SsoAccountLockout {
 	} Catch {
 		Debug-ExceptionWriter -object $_
 	} Finally {
-        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+        if ($Global:DefaultSsoAdminServers) {
+            Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
+        }
     }
 }
 Export-ModuleMember -Function Request-SsoAccountLockout
@@ -2580,7 +2650,9 @@ Function Update-SsoPasswordExpiration {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+        if ($Global:DefaultSsoAdminServers) {
+            Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
+        }
     }
 }
 Export-ModuleMember -Function Update-SsoPasswordExpiration
@@ -2700,7 +2772,9 @@ Function Update-SsoPasswordComplexity {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+        if ($Global:DefaultSsoAdminServers) {
+            Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
+        }
     }
 }
 Export-ModuleMember -Function Update-SsoPasswordComplexity
@@ -2797,7 +2871,9 @@ Function Update-SsoAccountLockout {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-SsoAdminServer -Server $vcfVcenterDetails.fqdn
+        if ($Global:DefaultSsoAdminServers) {
+            Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
+        }
     }
 }
 Export-ModuleMember -Function Update-SsoAccountLockout
@@ -2994,17 +3070,20 @@ Function Request-VcenterPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).vcenterServer.passwordExpiration
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).vcenterServer.passwordExpiration
-        }
-    }
-
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).vcenterServer.passwordExpiration
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).vcenterServer.passwordExpiration
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereApiConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -3030,6 +3109,10 @@ Function Request-VcenterPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-VcenterPasswordExpiration
@@ -3113,10 +3196,14 @@ Function Request-VcenterPasswordComplexity {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if ($drift) {
+                                    $version = ""
+                                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                                        $version = $Matches[0]
+                                    } 
                                     if ($PsBoundParameters.ContainsKey('policyFile')) {
-                                        Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
+                                        Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
                                     } else {
-                                        Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
+                                        Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
                                     }
                                 } else {
                                     Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
@@ -3132,9 +3219,8 @@ Function Request-VcenterPasswordComplexity {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
-        if ($mgmtConnected) {
-            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
     }
 }
@@ -3199,7 +3285,7 @@ Function Request-VcenterAccountLockout {
 	Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {                
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         $vcenterDomain = $vcfVcenterDetails.type
@@ -3219,10 +3305,14 @@ Function Request-VcenterAccountLockout {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if ($drift) {
+                                    $version = ""
+                                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                                        $version = $Matches[0]
+                                    } 
                                     if ($PsBoundParameters.ContainsKey('policyFile')) {
-                                        Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
+                                        Get-LocalAccountLockout -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
                                     } else {
-                                        Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
+                                        Get-LocalAccountLockout -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
                                     }
                                 } else {
                                     Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
@@ -3239,11 +3329,9 @@ Function Request-VcenterAccountLockout {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
-        if ($mgmtConnected) {
-            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
-
     }
 }
 Export-ModuleMember -Function Request-VcenterAccountLockout
@@ -3436,9 +3524,8 @@ Function Update-VcenterPasswordComplexity {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
-        if ($mgmtConnected) {
-            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
     }
 }
@@ -3537,9 +3624,8 @@ Function Update-VcenterAccountLockout {
 	} Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
-        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
-        if ($mgmtConnected) {
-            Disconnect-VIServer $vcfMgmtVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
     }
 }
@@ -3601,17 +3687,20 @@ Function Request-VcenterRootPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).vcenterServerLocal.passwordExpiration
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).vcenterServerLocal.passwordExpiration
-        }
-    }
-
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).vcenterServerLocal.passwordExpiration
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).vcenterServerLocal.passwordExpiration
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereApiConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -3639,6 +3728,10 @@ Function Request-VcenterRootPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-VcenterRootPasswordExpiration
@@ -4199,17 +4292,20 @@ Function Request-NsxtManagerPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordExpiration
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.passwordExpiration
-        }
-    }
-
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordExpiration
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxManager.passwordExpiration
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $($vcfNsxDetails.fqdn)) {
@@ -4235,7 +4331,7 @@ Function Request-NsxtManagerPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
-    }
+    } 
 }
 Export-ModuleMember -Function Request-NsxtManagerPasswordExpiration
 
@@ -4295,17 +4391,22 @@ Function Request-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordComplexity
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.passwordComplexity
-        }
-    }
+
 
 	Try {
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {                
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordComplexity
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxManager.passwordComplexity
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -4315,20 +4416,41 @@ Function Request-NsxtManagerPasswordComplexity {
                                     foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
                                         if (Test-NSXTConnection -server $nsxtManagerNode.fqdn) {
                                             if (Test-NSXTAuthentication -server $nsxtManagerNode.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
-                                                if ($nsxtManagerNodePolicy = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx ) {
-                                                    $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.'Min Length')" }} else { "$($nsxtManagerNodePolicy.'Min Length')" })
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" }} else { "$($nsxtManagerNodePolicy.'Min Lowercase')" })
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" }} else { "$($nsxtManagerNodePolicy.'Min Uppercase')" })
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.'Min Numerical')" }} else { "$($nsxtManagerNodePolicy.'Min Numerical')" })
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" }} else { "$($nsxtManagerNodePolicy.'Min Special')" })
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" }} else { "$($nsxtManagerNodePolicy.'Min Unique')" })
-                                                    $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" }} else { "$($nsxtManagerNodePolicy.'Max Retries')" })
-                                                    $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
+                                                if ($version -lt "5.0") {
+                                                    if ($nsxtManagerNodePolicy = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx ) {
+                                                        $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.'Min Length')" }} else { "$($nsxtManagerNodePolicy.'Min Length')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" }} else { "$($nsxtManagerNodePolicy.'Min Lowercase')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" }} else { "$($nsxtManagerNodePolicy.'Min Uppercase')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.'Min Numerical')" }} else { "$($nsxtManagerNodePolicy.'Min Numerical')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" }} else { "$($nsxtManagerNodePolicy.'Min Special')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" }} else { "$($nsxtManagerNodePolicy.'Min Unique')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" }} else { "$($nsxtManagerNodePolicy.'Max Retries')" })
+                                                        $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
+                                                    } else {
+                                                        Write-Error "Unable to retrieve Password Complexity Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
+                                                    }
                                                 } else {
-                                                    Write-Error "Unable to retrieve Password Complexity Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
+                                                    if ($nsxtManagerNodePolicy = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn) {
+                                                        $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_password_length -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.minimum_password_length) [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.minimum_password_length)" }} else { "$($nsxtManagerNodePolicy.minimum_password_length)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.maximum_password_length -ne $requiredConfig.maxLength) { "$($nsxtManagerNodePolicy.maximum_password_length) [ $($requiredConfig.maxLength) ]" } else { "$($nsxtManagerNodePolicy.maximum_password_length)" }} else { "$($nsxtManagerNodePolicy.maximum_password_length)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.lower_chars -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.lower_chars) [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.lower_chars)" }} else { "$($nsxtManagerNodePolicy.lower_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.upper_chars -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.upper_chars) [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.upper_chars)" }} else { "$($nsxtManagerNodePolicy.upper_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.digits -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.digits) [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.digits)" }} else { "$($nsxtManagerNodePolicy.digits)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.special_chars -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.special_chars) [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.special_chars)" }} else { "$($nsxtManagerNodePolicy.special_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_unique_chars -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.minimum_unique_chars) [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" }} else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Repeats" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_repeats -ne $requiredConfig.maxRepeat) { "$($nsxtManagerNodePolicy.max_repeats) [ $($requiredConfig.maxRepeat) ]" } else { "$($nsxtManagerNodePolicy.max_repeats)" }} else { "$($nsxtManagerNodePolicy.max_repeats)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" }} else { "$($nsxtManagerNodePolicy.max_sequence)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" }} else { "$($nsxtManagerNodePolicy.password_remembrance)" })
+                                                        $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
+                                                    } else {
+                                                        Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
+                                                    }
                                                 }
                                             }
                                         }
@@ -4336,7 +4458,6 @@ Function Request-NsxtManagerPasswordComplexity {
                                     return $nsxtPasswordComplexityPolicy
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -4346,6 +4467,10 @@ Function Request-NsxtManagerPasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-NsxtManagerPasswordComplexity
@@ -4406,17 +4531,20 @@ Function Request-NsxtManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxManager.accountLockout
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.accountLockout
-        }
-    }
-
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxManager.accountLockout
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxManager.accountLockout
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         $nsxtAccountLockoutPolicy = New-Object System.Collections.ArrayList
@@ -4569,6 +4697,9 @@ Function Update-NsxtManagerPasswordComplexity {
         .PARAMETER minLength
         The minimum length of a password.
 
+        .PARAMETER maxLength
+        The maximum length of a password.
+
         .PARAMETER minLowercase
         The minimum number of lowercase characters in a password.
 
@@ -4587,6 +4718,15 @@ Function Update-NsxtManagerPasswordComplexity {
         .PARAMETER maxRetry
         The maximum number of retries for a password.
 
+        .PARAMETER maxRepeats
+        The maximum number of times a single charecter may be repeated in a password.
+
+        .PARAMETER maxSequence
+        The maximum number of monotonic sequence in a password.
+
+        .PARAMETER history
+        The maximum number of passwords the system remembers.
+
         .PARAMETER detail
         Return the details of the policy. One of true or false. Default is true.
     #>
@@ -4597,16 +4737,21 @@ Function Update-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minLowercase,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUppercase,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minNumerical,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minSpecial,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUnique,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRepeats,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxSequence,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
 
 	Try {
+        $chkVersion = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4614,34 +4759,90 @@ Function Update-NsxtManagerPasswordComplexity {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
+                                    $chkVersion = ((Get-VCFManager).version -gt "5.0") -and ((Get-VCFNsxtcluster | where-object {$_.vipFqdn -eq $vcfNsxDetails.fqdn}).version -gt "4.0")
                                     foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
                                         if (Test-NSXTConnection -server $nsxtManagerNode.fqdn) {
                                             if (Test-NSXTAuthentication -server $nsxtManagerNode.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
-                                                $existingConfiguration = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx
-                                                if ($existingConfiguration.'Min Length' -ne $minLength  -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
-                                                    Set-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -retry $maxRetry| Out-Null
-                                                    $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx
-                                                    if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'Max Retries' -eq $maxRetry) {
-                                                        if ($detail -eq "true") {
-                                                            Write-Output "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)): SUCCESSFUL"
+                                                if ($chkVersion) {
+                                                    $existingConfiguration = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn
+                                                    if (!$PsBoundParameters.ContainsKey("minLength")){
+                                                        $minLength = [int]$existingConfiguration.minimum_password_length
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("maxLength")){
+                                                        $maxLength = [int]$existingConfiguration.maximum_password_length
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("minNumerical")){
+                                                        $minNumerical = [int]$existingConfiguration.digits
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("minLowercase")){
+                                                        $minLowercase = [int]$existingConfiguration.lower_chars
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("minUppercase")){
+                                                        $minUppercase = [int]$existingConfiguration.upper_chars
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("minSpecial")){
+                                                        $minSpecial = [int]$existingConfiguration.special_chars
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("history")){
+                                                        $history = [int]$existingConfiguration.password_remembrance
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("minUnique")){
+                                                        $minUnique = [int]$existingConfiguration.minimum_unique_chars
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("maxRepeats")){
+                                                        $maxRepeats = [int]$existingConfiguration.max_repeats
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("maxSequence")){
+                                                        $maxSequence = [int]$existingConfiguration.max_sequence
+                                                    }
+                                                    if ($PsBoundParameters.ContainsKey("maxRetry")){
+                                                        Write-Warning "'maxRetry' on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain) is not configurable for VCF5.0"
+                                                    }
+                                                    
+                                                    if (($existingConfiguration).minimum_password_length -ne $minLength -or ($existingConfiguration).maximum_password_length -ne $maxLength -or ($existingConfiguration).digits -ne $minNumerical -or ($existingConfiguration).lower_chars -ne $minLowercase -or ($existingConfiguration).upper_chars -ne $minUppercase -or ($existingConfiguration).special_chars -ne $minSpecial -or ($existingConfiguration).max_repeats -ne $maxRepeats -or ($existingConfiguration).max_sequence -ne $maxSequence -or ($existingConfiguration).minimum_unique_chars -ne $minUnique -or ($existingConfiguration).password_remembrance -ne $history) {
+                                                        Set-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn -min_passwd_length $minLength -maximum_password_length $maxLength -digits $minNumerical -lower_chars $minLowercase -upper_chars $minUppercase -special_chars $minSpecial -max_repeats $maxRepeats -max_sequence $maxSequence -minimum_unique_chars $minUnique -password_remembrance $history | Out-Null
+                                                        $updatedConfiguration = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn
+                                                        if (($updatedConfiguration).minimum_password_length -eq $minLength -and ($updatedConfiguration).maximum_password_length -eq $maxLength -and ($updatedConfiguration).digits -eq $minNumerical -and ($updatedConfiguration).lower_chars -eq $minLowercase -and ($updatedConfiguration).upper_chars -eq $minUppercase -and ($updatedConfiguration).special_chars -eq $minSpecial -and ($updatedConfiguration).max_repeats -eq $maxRepeats -and ($updatedConfiguration).max_sequence -eq $maxSequence -and ($updatedConfiguration).minimum_unique_chars -eq $minUnique -and ($updatedConfiguration).password_remembrance -eq $history) {
+                                                            if ($detail -eq "true") {
+                                                                Write-Output "Update Password Complexity Policy on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain): SUCCESSFUL"
+                                                            }
+                                                        } else {
+                                                            Write-Error "Update Password Complexity Policy on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain): POST_VALIDATION_FAILED"
                                                         }
                                                     } else {
-                                                        Write-Error "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)): POST_VALIDATION_FAILED"
+                                                        if ($detail -eq "true") {
+                                                            Write-Warning "Update Password Complexity Policy on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain):, already set: SKIPPED"
+                                                        }
                                                     }
                                                 } else {
-                                                    if ($detail -eq "true") {
-                                                        Write-Warning "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)), already set: SKIPPED"
+                                                    if($PsBoundParameters.ContainsKey("maxSequence") -or $PsBoundParameters.ContainsKey("maxRepeats") -or $PsBoundParameters.ContainsKey("history") -or $PsBoundParameters.ContainsKey("maxLength")) {
+                                                        Write-Warning "Update for 'maxSequence' or 'maxRepeats' or 'history' or 'maxLength' parameters on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain) is not supported. Requires VMware Cloud Foundation 5.0 or later: SKIPPING"
+                                                    }
+                                                    $existingConfiguration = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx
+                                                    if ($existingConfiguration.'Min Length' -ne $minLength  -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
+                                                        Set-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -retry $maxRetry| Out-Null
+                                                        $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx
+                                                        if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'Max Retries' -eq $maxRetry) {
+                                                            if ($detail -eq "true") {
+                                                                Write-Output "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)): SUCCESSFUL"
+                                                            }
+                                                        } else {
+                                                            Write-Error "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)): POST_VALIDATION_FAILED"
+                                                        }
+                                                    } else {
+                                                        if ($detail -eq "true") {
+                                                            Write-Warning "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)), already set: SKIPPED"
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    if ($detail -eq "false") {
+                                    if ($detail -eq "true") {
                                         Write-Output "Update Password Complexity Policy for all NSX Local Manager Nodes in Workload Domain ($domain): SUCCESSFUL"
                                     }
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -4651,6 +4852,10 @@ Function Update-NsxtManagerPasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-NsxtManagerPasswordComplexity
@@ -5145,17 +5350,20 @@ Function Request-NsxtEdgePasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordExpiration
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxManager.passwordExpiration
-        }
-    }
-
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordExpiration
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxManager.passwordExpiration
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $($vcfNsxDetails.fqdn)) {
@@ -5244,17 +5452,20 @@ Function Request-NsxtEdgePasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxEdge.passwordComplexity
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxEdge.passwordComplexity
-        }
-    }
-
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxEdge.passwordComplexity
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxEdge.passwordComplexity
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -5287,7 +5498,6 @@ Function Request-NsxtEdgePasswordComplexity {
                                     return $nsxtPasswordComplexityPolicy
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -5297,6 +5507,10 @@ Function Request-NsxtEdgePasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-NsxtEdgePasswordComplexity
@@ -5357,17 +5571,22 @@ Function Request-NsxtEdgeAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).nsxEdge.accountLockout
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).nsxEdge.accountLockout
-        }
-    }
+
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxEdge.accountLockout
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxEdge.accountLockout
+                    }
+                }
                 if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $vcfNsxDetails.fqdn) {
@@ -5595,7 +5814,6 @@ Function Update-NsxtEdgePasswordComplexity {
                                     }
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -5605,6 +5823,10 @@ Function Update-NsxtEdgePasswordComplexity {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-NsxtEdgePasswordComplexity
@@ -6091,17 +6313,20 @@ Function Request-EsxiPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).esxi.passwordExpiration
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).esxi.passwordExpiration
-        }
-    }
-
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).esxi.passwordExpiration
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).esxi.passwordExpiration
+                    }
+                }
 				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -6132,7 +6357,6 @@ Function Request-EsxiPasswordExpiration {
                                     Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
 								}
 							}
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
 						}
 					}
 				} else {
@@ -6142,7 +6366,11 @@ Function Request-EsxiPasswordExpiration {
 		}
 	} Catch {
 		Debug-ExceptionWriter -object $_
-	}
+	} Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
+    }
 }
 Export-ModuleMember -Function Request-EsxiPasswordExpiration
 
@@ -6210,17 +6438,20 @@ Function Request-EsxiPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).esxi.passwordComplexity
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).esxi.passwordComplexity
-        }
-    }
-
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).esxi.passwordComplexity
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).esxi.passwordComplexity
+                    }
+                }
 				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -6255,7 +6486,6 @@ Function Request-EsxiPasswordComplexity {
                                     Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
 								}
 							}
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
 						}
 					}
 				} else {
@@ -6265,7 +6495,11 @@ Function Request-EsxiPasswordComplexity {
 		}
 	} Catch {
 		Debug-ExceptionWriter -object $_
-	}
+	} Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
+    }
 }
 Export-ModuleMember -Function Request-EsxiPasswordComplexity
 
@@ -6333,17 +6567,20 @@ Function Request-EsxiAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).esxi.accountLockout
-        } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).esxi.accountLockout
-        }
-    }
-
 	Try {
 		if (Test-Connection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).esxi.accountLockout
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).esxi.accountLockout
+                    }
+                }
 				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
 						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -6378,7 +6615,6 @@ Function Request-EsxiAccountLockout {
                                     Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
 								}
 							}
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
 						}
 					}
 				} else {
@@ -6388,7 +6624,11 @@ Function Request-EsxiAccountLockout {
 		}
 	} Catch {
 		Debug-ExceptionWriter -object $_
-	}
+	} Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
+    }
 }
 Export-ModuleMember -Function Request-EsxiAccountLockout
 
@@ -6479,7 +6719,6 @@ Function Update-EsxiPasswordExpiration {
                                     Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($vcfVcenterDetails.fqdn), check details and retry: PRE_VALIDATION_FAILED"
                                 }
 							}
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
 						}
 					}
 				} else {
@@ -6489,7 +6728,11 @@ Function Update-EsxiPasswordExpiration {
 		}
 	} Catch {
 		Debug-ExceptionWriter -object $_
-	}
+	} Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
+    }
 }
 Export-ModuleMember -Function Update-EsxiPasswordExpiration
 
@@ -6597,7 +6840,6 @@ Function Update-EsxiPasswordComplexity {
                                     Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)), check details and retry: PRE_VALIDATION_FOUND"
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -6607,6 +6849,10 @@ Function Update-EsxiPasswordComplexity {
         }
     } Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-EsxiPasswordComplexity
@@ -6715,7 +6961,6 @@ Function Update-EsxiAccountLockout {
                                     Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)), check details and retry: PRE_VALIDATION_FOUND"
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -6725,6 +6970,10 @@ Function Update-EsxiAccountLockout {
         }
     } Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-EsxiAccountLockout
@@ -6838,7 +7087,6 @@ Function Publish-EsxiPasswordPolicy {
                                     $esxiPolicy = Invoke-Expression $command ; $esxiPasswordPolicyObject += $esxiPolicy
                                 }
                             }
-                            Disconnect-VIServer -Server $vcfVcenterDetails.fqdn -Confirm:$false | Out-Null
                         }
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
@@ -6853,7 +7101,6 @@ Function Publish-EsxiPasswordPolicy {
                                         $esxiPolicy = Invoke-Expression $command; $esxiPasswordPolicyObject += $esxiPolicy
                                     }
                                 }
-                                Disconnect-VIServer -Server $vcfVcenterDetails.fqdn -Confirm:$false | Out-Null
                             }
                         }
                     }
@@ -6869,6 +7116,10 @@ Function Publish-EsxiPasswordPolicy {
         }
     } Catch {
         Debug-CatchWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Publish-EsxiPasswordPolicy
@@ -7120,13 +7371,16 @@ Function Request-WsaLocalUserPasswordComplexity {
                                 Get-LocalPasswordComplexity -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-WsaLocalUserPasswordComplexity
@@ -7206,7 +7460,6 @@ Function Request-WsaLocalUserAccountLockout {
                                 Get-LocalAccountLockout -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
@@ -7528,13 +7781,16 @@ Function Update-WsaLocalUserPasswordComplexity {
                                 Write-Warning "Update Local User Password Complexity Policy on Workspace ONE Access ($wsaFqdn), already set: SKIPPED"
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-WsaLocalUserPasswordComplexity
@@ -7676,7 +7932,6 @@ Function Update-WsaLocalUserAccountLockout {
                                 Write-Warning "Update Account Lockout Policy on Workspace ONE Access ($wsaFqdn), already set: SKIPPED"
                             }
                         }
-                        Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                     }
                 }
             }
@@ -7988,18 +8243,21 @@ Function Request-LocalUserPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-    if ($drift) {
-        if ($PsBoundParameters.ContainsKey('policyFile')) {
-            $command = '(Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
-        } else {
-            $command = '(Get-PasswordPolicyConfig).' + $product + '.passwordExpiration'
-        }
-        $requiredConfig = Invoke-Expression $command
-    }
-
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = ""
+                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                        $version = $Matches[0]
+                    } 
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $command = '(Get-PasswordPolicyConfig  -version $version -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
+                    } else {
+                        $command = '(Get-PasswordPolicyConfig -version $version).' + $product + '.passwordExpiration'
+                    }
+                    $requiredConfig = Invoke-Expression $command
+                }
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -8021,7 +8279,6 @@ Function Request-LocalUserPasswordExpiration {
                                 }
                                 return $allLocalUserExpirationObject
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -8031,6 +8288,10 @@ Function Request-LocalUserPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Request-LocalUserPasswordExpiration
@@ -8138,7 +8399,6 @@ Function Update-LocalUserPasswordExpiration {
                                     Write-Output "Update Local Users to Max Days ($maxDays), Min Days ($minDays) and Warn Days ($warnDays) on Virtual Machine ($vmName): SUCCESSFUL"
                                 }
                             }
-                            Disconnect-VIServer $vcfVcenterDetails.fqdn -Confirm:$false -WarningAction SilentlyContinue
                         }
                     }
                 } else {
@@ -8148,6 +8408,10 @@ Function Update-LocalUserPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
     }
 }
 Export-ModuleMember -Function Update-LocalUserPasswordExpiration
@@ -8178,7 +8442,7 @@ Function Test-VcfPasswordManagementPrereq {
             @{ Name=("VMware.PowerCLI"); MinimumVersion=("13.0.0")}
             @{ Name=("VMware.vSphere.SsoAdmin"); MinimumVersion=("1.3.9")}
             @{ Name=("PowerVCF"); MinimumVersion=("2.3.0")}
-            @{ Name=("PowerValidatedSolutions"); MinimumVersion=("2.3.0")}
+            @{ Name=("PowerValidatedSolutions"); MinimumVersion=("2.4.0")}
         )
 
         foreach ($module in $modules ) {
