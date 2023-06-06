@@ -45,6 +45,12 @@ Enhancement:
 - Enhanced `Request-SsoPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
 - Enhanced `Request-SsoPasswordExpiration` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
 - Enhanced `Update-SddcManagerPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
+- Enhanced `Get-PasswordPolicyConfig` as there is no significance of default value while parameter is mandatory. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
+- Enhanced `Get-PasswordPolicyDefault` as there is no significance of default value while parameter is mandatory. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
+
+Bugfix:
+
+- Fixed default values for `unlockInterval` adnd `rootUnlockInterval` for  `VcenterLocalAccountLockout` setting in `Get-PasswordPolicyDefault` cmdlet. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
 
 ## v1.1.0
 
