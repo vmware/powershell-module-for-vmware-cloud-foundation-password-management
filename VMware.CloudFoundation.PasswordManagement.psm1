@@ -599,7 +599,7 @@ Function Get-PasswordPolicyDefault {
 
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version='5.0.0',
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version,
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile
     )
 
@@ -667,8 +667,8 @@ Function Get-PasswordPolicyDefault {
     $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
     $vcenterLocalAccountLockout = New-Object -TypeName psobject
     $vcenterLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "300"
-    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
+    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
+    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "300"
     $vcenterLocalPasswordPolicy = New-Object -TypeName psobject
     $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vcenterLocalPasswordExpiration
     $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vcenterLocalPasswordComplexity
@@ -816,7 +816,7 @@ Export-ModuleMember -Function Get-PasswordPolicyDefault
 Function Get-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version='5.0.0',
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
