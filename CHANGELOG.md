@@ -47,10 +47,14 @@ Enhancement:
 - Enhanced `Update-SddcManagerPasswordComplexity` to handle disconnects gracefully. [GH-42](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42)
 - Enhanced `Get-PasswordPolicyConfig` as there is no significance of default value while parameter is mandatory. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
 - Enhanced `Get-PasswordPolicyDefault` as there is no significance of default value while parameter is mandatory. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
+- Enhanced `Update-NsxtManagerPasswordComplexity` cmdlet to handle `hash_algorithm` parameter for NSX4.x. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
+- Enhanced `Request-NsxtManagerPasswordComplexity` cmdlet to handle `hash_algorithm` parameter for NSX4.x. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
+- Enhanced `Request-NsxtManagerPasswordComplexity` cmdlet to handle connection to management domain vCenter Server instance as NSX Manager virtual machines are placed on the management network. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
+- Enhanced `Get-PasswordPolicyDefault` cmdlet to handle `hash_algorithm` parameter for NSX4.x. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
 
 Bugfix:
 
-- Fixed default values for `unlockInterval` adnd `rootUnlockInterval` for  `VcenterLocalAccountLockout` setting in `Get-PasswordPolicyDefault` cmdlet. [GH-45](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
+- Fixed default values for `unlockInterval` and `rootUnlockInterval` for  `VcenterLocalAccountLockout` setting in `Get-PasswordPolicyDefault` cmdlet. [GH-47](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
 
 ## v1.1.0
 

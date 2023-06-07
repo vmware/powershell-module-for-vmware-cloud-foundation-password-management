@@ -9,7 +9,7 @@ Configure the password complexity policy for NSX Local Manager.
 ```powershell
 Update-NsxtManagerPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
  [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>]
- [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-maxRetry] <Int32>] [[-detail] <String>] [<CommonParameters>]
+ [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-maxRetry] <Int32>] [-hash_algorithm] <String> [[-detail] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,7 +27,7 @@ The cmdlet connects to SDDC Manager using the -server, -user, and -password valu
 ### EXAMPLE 1
 
 ```powershell
-Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 -hash_algorithm "sha256"
 ```
 
 This example updates the password complexity policy for each NSX Local Manager node for a workload domain.
@@ -209,6 +209,22 @@ Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+### -detail
+
+The hash/cryptographic algorithm 
+type for new passwords.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 12
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -detail
 
@@ -222,7 +238,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 12
+Position: 13
 Default value: True
 Accept pipeline input: False
 Accept wildcard characters: False
