@@ -694,6 +694,7 @@ Function Get-PasswordPolicyDefault {
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxRepeat' -notepropertyvalue "0"
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'passwordRemembrance' -notepropertyvalue "0"
+        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'hashAlgorithm' -notepropertyvalue "sha512"
     }
     $nsxManagerAccountLockout = New-Object -TypeName psobject
     $nsxManagerAccountLockout | Add-Member -notepropertyname 'apiMaxFailures' -notepropertyvalue "5"
@@ -4395,12 +4396,12 @@ Function Request-NsxtManagerPasswordComplexity {
 
 	Try {
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {                
-                if ($drift) {
-                    $version = ""
-                    if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
-                        $version = $Matches[0]
-                    } 
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {   
+                $version = ""
+                if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                    $version = $Matches[0]
+                }             
+                if ($drift) { 
                     if ($PsBoundParameters.ContainsKey('policyFile')) {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordComplexity
                     } else {
@@ -4411,6 +4412,23 @@ Function Request-NsxtManagerPasswordComplexity {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                                    $vcenterDomain = $vcfVcenterDetails.type
+                                    if ($vcenterDomain -ne "MANAGEMENT") {
+                                        if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                            if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                                if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                                        $mgmtConnected = $true
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                                        }
+                                    }
+                                
+                                }
                                 if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                                     $nsxtPasswordComplexityPolicy = New-Object System.Collections.ArrayList
                                     foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
@@ -4447,6 +4465,7 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Repeats" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_repeats -ne $requiredConfig.maxRepeat) { "$($nsxtManagerNodePolicy.max_repeats) [ $($requiredConfig.maxRepeat) ]" } else { "$($nsxtManagerNodePolicy.max_repeats)" }} else { "$($nsxtManagerNodePolicy.max_repeats)" })
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" }} else { "$($nsxtManagerNodePolicy.max_sequence)" })
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" }} else { "$($nsxtManagerNodePolicy.password_remembrance)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Hash Algorithm" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.hash_algorithm -ne $requiredConfig.hashAlgorithm) { "$($nsxtManagerNodePolicy.hash_algorithm) [ $($requiredConfig.hashAlgorithm) ]" } else { "$($nsxtManagerNodePolicy.hash_algorithm)" }} else { "$($nsxtManagerNodePolicy.hash_algorithm)" })
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -4679,7 +4698,7 @@ Function Update-NsxtManagerPasswordComplexity {
 		- Updates the password complexity policy
 
         .EXAMPLE
-        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 -hash_algorithm "sha256"
         This example updates the password complexity policy for each NSX Local Manager node for a workload domain
 
         .PARAMETER server
@@ -4726,6 +4745,9 @@ Function Update-NsxtManagerPasswordComplexity {
 
         .PARAMETER history
         The maximum number of passwords the system remembers.
+        
+        .PARAMETER hash_algorithm
+        The hash/cryptographic algorithm type for new passwords.
 
         .PARAMETER detail
         Return the details of the policy. One of true or false. Default is true.
@@ -4747,11 +4769,13 @@ Function Update-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRepeats,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxSequence,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [string]$hash_algorithm,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
 
 	Try {
         $chkVersion = $false
+        $error_presence = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4795,18 +4819,24 @@ Function Update-NsxtManagerPasswordComplexity {
                                                     if (!$PsBoundParameters.ContainsKey("maxSequence")){
                                                         $maxSequence = [int]$existingConfiguration.max_sequence
                                                     }
+                                                    if (!$PsBoundParameters.ContainsKey("maxSequence")){
+                                                        $maxSequence = [int]$existingConfiguration.max_sequence
+                                                    }
+                                                    if (!$PsBoundParameters.ContainsKey("hash_algorithm")){
+                                                        $hash_algorithm = $existingConfiguration.hash_algorithm
+                                                    }
                                                     if ($PsBoundParameters.ContainsKey("maxRetry")){
                                                         Write-Warning "'maxRetry' on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain) is not configurable for VCF5.0"
-                                                    }
-                                                    
-                                                    if (($existingConfiguration).minimum_password_length -ne $minLength -or ($existingConfiguration).maximum_password_length -ne $maxLength -or ($existingConfiguration).digits -ne $minNumerical -or ($existingConfiguration).lower_chars -ne $minLowercase -or ($existingConfiguration).upper_chars -ne $minUppercase -or ($existingConfiguration).special_chars -ne $minSpecial -or ($existingConfiguration).max_repeats -ne $maxRepeats -or ($existingConfiguration).max_sequence -ne $maxSequence -or ($existingConfiguration).minimum_unique_chars -ne $minUnique -or ($existingConfiguration).password_remembrance -ne $history) {
-                                                        Set-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn -min_passwd_length $minLength -maximum_password_length $maxLength -digits $minNumerical -lower_chars $minLowercase -upper_chars $minUppercase -special_chars $minSpecial -max_repeats $maxRepeats -max_sequence $maxSequence -minimum_unique_chars $minUnique -password_remembrance $history | Out-Null
+                                                    }                                                                                                    
+                                                    if (($existingConfiguration).hash_algorithm -ne $hash_algorithm -or ($existingConfiguration).minimum_password_length -ne $minLength -or ($existingConfiguration).maximum_password_length -ne $maxLength -or ($existingConfiguration).digits -ne $minNumerical -or ($existingConfiguration).lower_chars -ne $minLowercase -or ($existingConfiguration).upper_chars -ne $minUppercase -or ($existingConfiguration).special_chars -ne $minSpecial -or ($existingConfiguration).max_repeats -ne $maxRepeats -or ($existingConfiguration).max_sequence -ne $maxSequence -or ($existingConfiguration).minimum_unique_chars -ne $minUnique -or ($existingConfiguration).password_remembrance -ne $history) {
+                                                        Set-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn -hash_algorithm $hash_algorithm -min_passwd_length $minLength -maximum_password_length $maxLength -digits $minNumerical -lower_chars $minLowercase -upper_chars $minUppercase -special_chars $minSpecial -max_repeats $maxRepeats -max_sequence $maxSequence -minimum_unique_chars $minUnique -password_remembrance $history | Out-Null
                                                         $updatedConfiguration = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn
-                                                        if (($updatedConfiguration).minimum_password_length -eq $minLength -and ($updatedConfiguration).maximum_password_length -eq $maxLength -and ($updatedConfiguration).digits -eq $minNumerical -and ($updatedConfiguration).lower_chars -eq $minLowercase -and ($updatedConfiguration).upper_chars -eq $minUppercase -and ($updatedConfiguration).special_chars -eq $minSpecial -and ($updatedConfiguration).max_repeats -eq $maxRepeats -and ($updatedConfiguration).max_sequence -eq $maxSequence -and ($updatedConfiguration).minimum_unique_chars -eq $minUnique -and ($updatedConfiguration).password_remembrance -eq $history) {
+                                                        if (($updatedConfiguration).hash_algorithm -eq $hash_algorithm -and ($updatedConfiguration).minimum_password_length -eq $minLength -and ($updatedConfiguration).maximum_password_length -eq $maxLength -and ($updatedConfiguration).digits -eq $minNumerical -and ($updatedConfiguration).lower_chars -eq $minLowercase -and ($updatedConfiguration).upper_chars -eq $minUppercase -and ($updatedConfiguration).special_chars -eq $minSpecial -and ($updatedConfiguration).max_repeats -eq $maxRepeats -and ($updatedConfiguration).max_sequence -eq $maxSequence -and ($updatedConfiguration).minimum_unique_chars -eq $minUnique -and ($updatedConfiguration).password_remembrance -eq $history) {
                                                             if ($detail -eq "true") {
                                                                 Write-Output "Update Password Complexity Policy on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain): SUCCESSFUL"
                                                             }
                                                         } else {
+                                                            $error_presence = $true
                                                             Write-Error "Update Password Complexity Policy on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain): POST_VALIDATION_FAILED"
                                                         }
                                                     } else {
@@ -4827,6 +4857,7 @@ Function Update-NsxtManagerPasswordComplexity {
                                                                 Write-Output "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)): SUCCESSFUL"
                                                             }
                                                         } else {
+                                                            $error_presence = $true
                                                             Write-Error "Update Password Complexity Policy on NSX Local Manager Node ($($nsxtManagerNode.fqdn)): POST_VALIDATION_FAILED"
                                                         }
                                                     } else {
@@ -4838,7 +4869,7 @@ Function Update-NsxtManagerPasswordComplexity {
                                             }
                                         }
                                     }
-                                    if ($detail -eq "true") {
+                                    if (($detail -eq "true") -and ($error_presence-eq $false)) {
                                         Write-Output "Update Password Complexity Policy for all NSX Local Manager Nodes in Workload Domain ($domain): SUCCESSFUL"
                                     }
                                 }
