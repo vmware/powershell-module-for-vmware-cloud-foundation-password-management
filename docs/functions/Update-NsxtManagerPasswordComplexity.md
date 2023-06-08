@@ -211,7 +211,7 @@ Accept wildcard characters: False
 ```
 ### -detail
 
-The hash/cryptographic algorithm 
+The hash/cryptographic algorithm type for new passwords.
 
 ```yaml
 Type: String
