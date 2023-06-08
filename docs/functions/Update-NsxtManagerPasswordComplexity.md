@@ -27,7 +27,7 @@ The cmdlet connects to SDDC Manager using the -server, -user, and -password valu
 ### EXAMPLE 1
 
 ```powershell
-Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 -hash_algorithm "sha256"
+Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 
 ```
 
 This example updates the password complexity policy for each NSX Local Manager node for a workload domain.
@@ -209,7 +209,8 @@ Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-### -detail
+### -hash_algorithm
+
 
 The hash/cryptographic algorithm type for new passwords.
 

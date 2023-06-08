@@ -50,7 +50,9 @@ Enhancement:
 - Enhanced `Update-NsxtManagerPasswordComplexity` cmdlet to handle `hash_algorithm` parameter for NSX4.x. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
 - Enhanced `Request-NsxtManagerPasswordComplexity` cmdlet to handle `hash_algorithm` parameter for NSX4.x. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
 - Enhanced `Request-NsxtManagerPasswordComplexity` cmdlet to handle connection to management domain vCenter Server instance as NSX Manager virtual machines are placed on the management network. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
+- Enhanced `Request-LocalUserPasswordExpiration` cmdlet to handle connection to management domain vCenter Server instance as NSX Manager virtual machines are placed on the management network. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
 - Enhanced `Get-PasswordPolicyDefault` cmdlet to handle `hash_algorithm` parameter for NSX4.x. [GH-48](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/48)
+
 
 Bugfix:
 
