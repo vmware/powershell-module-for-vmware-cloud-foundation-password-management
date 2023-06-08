@@ -4698,7 +4698,7 @@ Function Update-NsxtManagerPasswordComplexity {
 		- Updates the password complexity policy
 
         .EXAMPLE
-        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 -hash_algorithm "sha256"
+        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 
         This example updates the password complexity policy for each NSX Local Manager node for a workload domain
 
         .PARAMETER server
@@ -4759,7 +4759,7 @@ Function Update-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxLength,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minLowercase,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUppercase,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minNumerical,
@@ -4815,9 +4815,6 @@ Function Update-NsxtManagerPasswordComplexity {
                                                     }
                                                     if (!$PsBoundParameters.ContainsKey("maxRepeats")){
                                                         $maxRepeats = [int]$existingConfiguration.max_repeats
-                                                    }
-                                                    if (!$PsBoundParameters.ContainsKey("maxSequence")){
-                                                        $maxSequence = [int]$existingConfiguration.max_sequence
                                                     }
                                                     if (!$PsBoundParameters.ContainsKey("maxSequence")){
                                                         $maxSequence = [int]$existingConfiguration.max_sequence
@@ -8293,6 +8290,23 @@ Function Request-LocalUserPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                                    $vcenterDomain = $vcfVcenterDetails.type
+                                    if ($vcenterDomain -ne "MANAGEMENT") {
+                                        if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                            if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                                if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                                        $mgmtConnected = $true
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                                        }
+                                    }
+                                
+                                }
                                 $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
                                 foreach ($user in $localUser) {
                                     if ($localUserPasswordExpiration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user) {
@@ -8300,7 +8314,7 @@ Function Request-LocalUserPasswordExpiration {
                                         $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                         $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
                                         $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.midDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
+                                        $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
                                         $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
                                         $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
                                         $allLocalUserExpirationObject += $localUserExpirationObject
@@ -8402,6 +8416,22 @@ Function Update-LocalUserPasswordExpiration {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                                    $vcenterDomain = $vcfVcenterDetails.type
+                                    if ($vcenterDomain -ne "MANAGEMENT") {
+                                        if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                            if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                                if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                                        $mgmtConnected = $true
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                                        }
+                                    }
+                                }
                                 foreach ($user in $localUser) {
                                     $existingConfiguration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user
                                     $currentMinDays = ($existingConfiguration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()
