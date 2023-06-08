@@ -14,9 +14,7 @@ Update-NsxtManagerPasswordComplexity [-server] <String> [-user] <String> [-pass]
 
 ## DESCRIPTION
 
-The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager
-node for a workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager node for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
@@ -209,8 +207,8 @@ Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-### -hash_algorithm
 
+### -hash_algorithm
 
 The hash/cryptographic algorithm type for new passwords.
 
