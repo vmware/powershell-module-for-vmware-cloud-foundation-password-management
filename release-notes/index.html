@@ -1967,10 +1967,17 @@
 <li>Enhanced <code>Update-SddcManagerPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
 <li>Enhanced <code>Get-PasswordPolicyConfig</code> as there is no significance of default value while parameter is mandatory. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-45</a></li>
 <li>Enhanced <code>Get-PasswordPolicyDefault</code> as there is no significance of default value while parameter is mandatory. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-45</a></li>
+<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
+<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
+<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> cmdlet to handle connection to management domain vCenter Server instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
+<li>Enhanced <code>Request-LocalUserPasswordExpiration</code> cmdlet to handle connection to management domain vCenter Server instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
+<li>Enhanced <code>Update-LocalUserPasswordComplexity</code> cmdlet to handle connection to management domain vCenter Server instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
+<li>Enhanced <code>Get-PasswordPolicyConfig</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
-<li>Fixed default values for <code>unlockInterval</code> adnd <code>rootUnlockInterval</code> for  <code>VcenterLocalAccountLockout</code> setting in <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-45</a></li>
+<li>Fixed default values for <code>unlockInterval</code> and <code>rootUnlockInterval</code> for <code>VcenterLocalAccountLockout</code> setting in <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-47</a></li>
+<li>Fixed <code>Request-LocalUserPasswordExpiration</code> cmdlet to display the value for <code>minDays</code> while <code>drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
 </ul>
 <h2 id="v110">v1.1.0<a class="headerlink" href="#v110" title="Permanent link">&para;</a></h2>
 <blockquote>
