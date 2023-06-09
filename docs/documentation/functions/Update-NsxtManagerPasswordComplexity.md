@@ -8,17 +8,13 @@ Configure the password complexity policy for NSX Local Manager.
 
 ```powershell
 Update-NsxtManagerPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-minLength] <Int32> [-maxLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>]
- [[-minNumerical] <Int32>] [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-maxRetry] <Int32>]
- [[-history] <Int32>] [[-maxRepeats] <Int32>] [[-maxSequence] <Int32>] [[-detail] <String>]
- [<CommonParameters>]
+ [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>]
+ [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-maxRetry] <Int32>] [-hash_algorithm] <String> [[-detail] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager
-node for a workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager node for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
@@ -29,7 +25,7 @@ The cmdlet connects to SDDC Manager using the -server, -user, and -password valu
 ### EXAMPLE 1
 
 ```powershell
-Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 
 ```
 
 This example updates the password complexity policy for each NSX Local Manager node for a workload domain.
@@ -116,22 +112,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -maxLength
-
-The maximum length of a password.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 6
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -minLowercase
 
 The minimum number of lowercase characters in a password.
@@ -142,7 +122,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 7
+Position: 6
 Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -158,7 +138,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 8
+Position: 7
 Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -174,7 +154,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 9
+Position: 8
 Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -190,7 +170,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 10
+Position: 9
 Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -206,7 +186,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 11
+Position: 10
 Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -222,56 +202,24 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
+Position: 11
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -hash_algorithm
+
+The hash/cryptographic algorithm type for new passwords.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
 Position: 12
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -history
-
-The maximum number of passwords the system remembers.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 13
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -maxRepeats
-
-The maximum number of times a single charecter may be repeated in a password.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 14
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -maxSequence
-
-The maximum number of monotonic sequence in a password.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 15
-Default value: 0
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -288,7 +236,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 16
+Position: 13
 Default value: True
 Accept pipeline input: False
 Accept wildcard characters: False
