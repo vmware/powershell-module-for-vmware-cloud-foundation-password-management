@@ -55,6 +55,7 @@ Enhancement:
 - Enhanced `Get-PasswordPolicyConfig` cmdlet to handle `hash_algorithm` parameter for NSX 4.x. [GH-49](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49)
 - Enhanced `Get-PasswordPolicyDefault` cmdlet to handle `jsonFile` parameter cleanly. [GH-51](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51)
 - Enhanced `Publish-SSO*` cmdlet to handle isolated workload domain in VMware Cloud Foundation 5.0 environment. [GH-51](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51)
+- Enhanced `Get-PasswordPolicyDefault` cmdlet to handle existing JSON file overriding using `force` parameter. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/52)
 
 Bugfix:
 

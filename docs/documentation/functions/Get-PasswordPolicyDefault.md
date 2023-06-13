@@ -15,7 +15,7 @@ Get-PasswordPolicyDefault -version <String> [<CommonParameters>]
 ### json
 
 ```powershell
-Get-PasswordPolicyDefault [-generateJson] -version <String> [-jsonFile <String>] [<CommonParameters>]
+Get-PasswordPolicyDefault [-generateJson] -version <String> [-jsonFile <String>] [-force <Switch>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,6 +50,15 @@ Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -ver
 ```
 
 This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
+
+### EXAMPLE 3
+
+```powershell
+Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0' -force
+```
+
+This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
+If passwordPolicyConfig.json is already present, it is overwritten due to 'force' parameter.
 
 ## PARAMETERS
 
@@ -91,6 +100,22 @@ The name of the JSON file to generate.
 
 ```yaml
 Type: String
+Parameter Sets: json
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -force
+
+The switch used to overwrite the JSON file if already exists.
+
+```yaml
+Type: Switch
 Parameter Sets: json
 Aliases:
 

@@ -584,6 +584,11 @@ Function Get-PasswordPolicyDefault {
         .EXAMPLE
         Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
         This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation
+        
+        .EXAMPLE
+        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
+        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation. 
+        If passwordPolicyConfig.json is already present, it is overwritten due to 'force' parameter.
 
         .PARAMETER generateJson
         Switch to generate a JSON file.
@@ -593,6 +598,9 @@ Function Get-PasswordPolicyDefault {
 
         .PARAMETER jsonFile
         The name of the JSON file to generate.
+        
+        .PARAMETER force
+        The switch used to overwrite the JSON file if already exists.
     #>
 
     [CmdletBinding(DefaultParametersetName = "All")][OutputType('System.Management.Automation.PSObject')]
