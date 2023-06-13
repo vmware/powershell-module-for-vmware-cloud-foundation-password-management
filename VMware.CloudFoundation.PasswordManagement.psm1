@@ -600,8 +600,31 @@ Function Get-PasswordPolicyDefault {
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
         [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version,
-        [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile
+        [Parameter (Mandatory = $true, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile,
+        [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$force
     )
+    if ($PSBoundParameters.ContainsKey('jsonFile')) {
+        if (Test-Path -Path $jsonFile -PathType Container) {
+            Write-Error "The -jsonfile parameter ($jsonfile) contains a folder name and no filename. Please retry."
+            Break
+        } else {
+            if ((split-path -Path $jsonFile -leaf).split(".")[1] -ne "json") {
+                Write-Error "The filename provided  doesn't contain a .json extension, please retry."
+                Break
+            } else {
+                if(Test-Path $jsonFile -PathType leaf) {
+                    if ($PSBoundParameters.ContainsKey('force')) {
+                        Write-Warning "The filename provided ($jsonFile) already exists, the file will be overwritten."
+                    } else {
+                        Write-Error "The filename provided ($jsonFile) already exists. Delete or use the -force switch to replace the file."
+                        Break
+                    }
+                }
+            }
+        }
+    }
+
+
 
     # Add VCF version into JSON file
     $vcfVersion = New-Object -TypeName psobject
@@ -2976,7 +2999,7 @@ Function Publish-SsoPasswordPolicy {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $ssoPasswordPolicyObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT"}) {
+                    if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}) {
                         $command = $command + " -domain " + $workloadDomain + $commandSwitch
                         $ssoPolicy = Invoke-Expression $command ; $ssoPasswordPolicyObject += $ssoPolicy
                     }
