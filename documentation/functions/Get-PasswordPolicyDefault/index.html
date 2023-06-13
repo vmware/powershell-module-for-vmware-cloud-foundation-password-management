@@ -775,6 +775,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#example-3" class="md-nav__link">
+    EXAMPLE 3
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -805,6 +812,13 @@
           <li class="md-nav__item">
   <a href="#-jsonfile" class="md-nav__link">
     -jsonFile
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-force" class="md-nav__link">
+    -force
   </a>
   
 </li>
@@ -2019,6 +2033,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#example-3" class="md-nav__link">
+    EXAMPLE 3
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2049,6 +2070,13 @@
           <li class="md-nav__item">
   <a href="#-jsonfile" class="md-nav__link">
     -jsonFile
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-force" class="md-nav__link">
+    -force
   </a>
   
 </li>
@@ -2104,7 +2132,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">Get-PasswordPolicyDefault</span> <span class="n">-version</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
 <h3 id="json">json<a class="headerlink" href="#json" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">Get-PasswordPolicyDefault</span> <span class="p">[</span><span class="n">-generateJson</span><span class="p">]</span> <span class="n">-version</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-jsonFile</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-PasswordPolicyDefault</span> <span class="p">[</span><span class="n">-generateJson</span><span class="p">]</span> <span class="n">-version</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-jsonFile</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[</span><span class="n">-force</span> <span class="p">&lt;</span><span class="k">Switch</span><span class="p">&gt;]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
 <h2 id="description">DESCRIPTION<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>The Get-PasswordPolicyDefault cmdlet returns the default password policy settings, it can also be used to
@@ -2128,6 +2156,11 @@ generate the base JSON file used with Password Policy Manager.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">Get-PasswordPolicyDefault</span> <span class="n">-generateJson</span> <span class="n">-jsonFile</span> <span class="n">passwordPolicyConfig</span><span class="p">.</span><span class="n">json</span> <span class="n">-version</span> <span class="s1">&#39;5.0.0&#39;</span>
 </code></pre></div>
 <p>This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.</p>
+<h3 id="example-3">EXAMPLE 3<a class="headerlink" href="#example-3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-PasswordPolicyDefault</span> <span class="n">-generateJson</span> <span class="n">-jsonFile</span> <span class="n">passwordPolicyConfig</span><span class="p">.</span><span class="n">json</span> <span class="n">-version</span> <span class="s1">&#39;5.0.0&#39;</span> <span class="n">-force</span>
+</code></pre></div>
+<p>This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
+If passwordPolicyConfig.json is already present, it is overwritten due to 'force' parameter.</p>
 <h2 id="parameters">PARAMETERS<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <h3 id="-generatejson">-generateJson<a class="headerlink" href="#-generatejson" title="Permanent link">&para;</a></h3>
 <p>Switch to generate a JSON file.</p>
@@ -2159,6 +2192,18 @@ generate the base JSON file used with Password Policy Manager.</p>
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
 <span class="nt">Aliases</span><span class="p">:</span>
 
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+</code></pre></div>
+<h3 id="-force">-force<a class="headerlink" href="#-force" title="Permanent link">&para;</a></h3>
+<p>The switch used to overwrite the JSON file if already exists.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch</span>
+<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="nt">Aliases</span><span class="p">:</span>
+
 <span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 <span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span>
 <span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
@@ -2173,7 +2218,7 @@ generate the base JSON file used with Password Policy Manager.</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-06-06T11:55:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-06-06</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-06-13T13:45:41+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-06-13</span>
       
     
   </small>
