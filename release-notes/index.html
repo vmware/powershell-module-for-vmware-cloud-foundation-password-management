@@ -21,7 +21,7 @@
         <link rel="next" href="../license/">
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
     
     
       
@@ -1976,11 +1976,13 @@
 <li>Enhanced <code>Get-PasswordPolicyDefault</code> cmdlet to handle <code>jsonFile</code> parameter cleanly. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51">GH-51</a></li>
 <li>Enhanced <code>Publish-SSO*</code> cmdlet to handle isolated workload domain in VMware Cloud Foundation 5.0 environment. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51">GH-51</a></li>
 <li>Enhanced <code>Get-PasswordPolicyDefault</code> cmdlet to handle existing JSON file overriding using <code>force</code> parameter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/52">GH-52</a></li>
+<li>Enhanced <code>Update-SsoPasswordComplexity</code> cmdlet to add validation on parameter values. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">GH-56</a></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
 <li>Fixed default values for <code>unlockInterval</code> and <code>rootUnlockInterval</code> for <code>VcenterLocalAccountLockout</code> setting in <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-47</a></li>
 <li>Fixed <code>Request-LocalUserPasswordExpiration</code> cmdlet to display the value for <code>minDays</code> while <code>drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
+<li>Fixed small typo in <code>Request-SsoPasswordComplexity</code> and <code>Request-WsaPasswordComplexity</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">GH-56</a></li>
 </ul>
 <h2 id="v110">v1.1.0<a class="headerlink" href="#v110" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -2188,11 +2190,15 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.expand", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../assets/javascripts/bundle.a51614de.min.js"></script>
       
-        <script src="../js/timeago.min.js"></script>
+        
+          <script src="../js/timeago.min.js"></script>
+        
       
-        <script src="../js/timeago_mkdocs_material.js"></script>
+        
+          <script src="../js/timeago_mkdocs_material.js"></script>
+        
       
     
   </body>
