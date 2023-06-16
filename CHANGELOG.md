@@ -56,11 +56,13 @@ Enhancement:
 - Enhanced `Get-PasswordPolicyDefault` cmdlet to handle `jsonFile` parameter cleanly. [GH-51](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51)
 - Enhanced `Publish-SSO*` cmdlet to handle isolated workload domain in VMware Cloud Foundation 5.0 environment. [GH-51](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51)
 - Enhanced `Get-PasswordPolicyDefault` cmdlet to handle existing JSON file overriding using `force` parameter. [GH-52](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/52)
+- Enhanced `Update-SsoPasswordComplexity` cmdlet to add validation on parameter values. [GH-56](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56)
 
 Bugfix:
 
 - Fixed default values for `unlockInterval` and `rootUnlockInterval` for `VcenterLocalAccountLockout` setting in `Get-PasswordPolicyDefault` cmdlet. [GH-47](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45)
 - Fixed `Request-LocalUserPasswordExpiration` cmdlet to display the value for `minDays` while `drift` option is used. [GH-49](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49)
+- Fixed small typo in `Request-SsoPasswordComplexity` and `Request-WsaPasswordComplexity` cmdlets. [GH-56](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56)
 
 ## v1.1.0
 
