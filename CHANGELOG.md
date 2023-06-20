@@ -1,6 +1,8 @@
 # Release History
 
-## v1.2.0 (Not Released)
+## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0)
+
+> Release Date: 2023-06-27
 
 Enhancement:
 
@@ -64,7 +66,7 @@ Bugfix:
 - Fixed `Request-LocalUserPasswordExpiration` cmdlet to display the value for `minDays` while `drift` option is used. [GH-49](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49)
 - Fixed small typo in `Request-SsoPasswordComplexity` and `Request-WsaPasswordComplexity` cmdlets. [GH-56](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56)
 
-## v1.1.0
+## [v1.1.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.1.0)
 
 > Release Date: 2023-05-30
 
