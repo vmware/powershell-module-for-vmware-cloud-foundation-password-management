@@ -30,15 +30,12 @@ The module provides coverage for the following components:
 
 The following table lists the supported platforms for this module.
 
-Platform                                                         | Support
------------------------------------------------------------------|------------------------------------
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0[^1] | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5     | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4     | :fontawesome-solid-check:{ .green }
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3     | :fontawesome-solid-x:{ .red }
-
-[^1]:
-    Password complexity for NSX 4.x in VMware Cloud Foundation 5.0 is not currently supported in this module. Please use the NSX 4.x product documentation to configure password complexity. Reference: [GH-38](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues/38)
+Platform                                                     | Support                             | Reference
+-------------------------------------------------------------|-------------------------------------|--------------------------------------------------------------------------------------
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-0]
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-4-5]
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-check:{ .green } | Not Available
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }       | Not Applicable
 
 ### Operating Systems
 
@@ -68,9 +65,11 @@ PowerShell Module                                    | Version   | Publisher    
 [VMware.PowerCLI][psgallery-module-powercli]         | >= 13.0.0 | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
 [VMware.vSphere.SsoAdmin][psgallery-module-ssoadmin] | >= 1.3.9  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-ssoadmin]
 [PowerVCF][psgallery-module-powervcf]                | >= 2.3.0  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.2.0  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-pvs]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.4.0  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
+[docs-vmware-cloud-foundation-ppm-5-0]: https://docs.vmware.com/en/VMware-Cloud-Foundation/5.0/vcf-operations/GUID-18A95158-30F5-460F-AF80-33F25B6533D0.html
+[docs-vmware-cloud-foundation-ppm-4-5]: https://docs.vmware.com/en/VMware-Cloud-Foundation/4.5/vcf-operations/GUID-18A95158-30F5-460F-AF80-33F25B6533D0.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
 [psgallery-module-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [psgallery-module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF
@@ -81,3 +80,4 @@ PowerShell Module                                    | Version   | Publisher    
 [github-module-powervcf]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation
 [github-module-pvs]: https://github.com/vmware-samples/power-validated-solutions-for-cloud-foundation
 [github-module-ssoadmin]: https://github.com/vmware/PowerCLI-Example-Scripts/tree/master/Modules/VMware.vSphere.SsoAdmin
+[github-os-photon]: https://vmware.github.io/photon/
