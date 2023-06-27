@@ -1,5 +1,18 @@
 # Release History
 
+## v1.2.1 (Unreleased)
+
+> Release Date: Unreleased
+
+Bug Fixes:
+
+- Updated `Request-SsoPasswordComplexity` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+- Updated `Request-SsoAccountLockout` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+- Updated `Request-EsxiPasswordExpiration` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+- Updated `Request-EsxiPasswordComplexity` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+- Updated `Request-EsxiAccountLockout` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+- Updated `Update-EsxiPasswordExpiration` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+
 ## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0)
 
 > Release Date: 2023-06-27
