@@ -2417,7 +2417,7 @@ Function Request-SsoPasswordComplexity {
 
 
 	Try {
-		if (Test-Connection -server $server) {
+		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {              
                 if ($drift) {
                     $version = ""
@@ -2542,7 +2542,7 @@ Function Request-SsoAccountLockout {
 
 
 	Try {
-		if (Test-Connection -server $server) {
+		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = ""
@@ -6383,7 +6383,7 @@ Function Request-EsxiPasswordExpiration {
 	)
 
 	Try {
-		if (Test-Connection -server $server) {
+		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = ""
@@ -6508,7 +6508,7 @@ Function Request-EsxiPasswordComplexity {
 	)
 
 	Try {
-		if (Test-Connection -server $server) {
+		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = ""
@@ -6637,7 +6637,7 @@ Function Request-EsxiAccountLockout {
 	)
 
 	Try {
-		if (Test-Connection -server $server) {
+		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = ""
@@ -6756,7 +6756,7 @@ Function Update-EsxiPasswordExpiration {
 	)
 
 	Try {
-		if (Test-Connection -server $server) {
+		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
 				if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
 					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
@@ -8594,6 +8594,8 @@ Function Show-PasswordManagementOutput {
     }
 }
 Export-ModuleMember -Function Show-PasswordManagementOutput
+
+
 
 #EndRegion  End Supporting Functions                                ######
 ##########################################################################
