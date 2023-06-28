@@ -2,397 +2,397 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/install/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/license/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/release-notes/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/update/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/user-access/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/community/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/community/code-of-conduct/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/community/contributing/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/community/support/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Get-PasswordPolicyDefault/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Invoke-PasswordPolicyManager/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-EsxiPasswordPolicy/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-NsxEdgeAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-NsxEdgePasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-NsxEdgePasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-NsxManagerAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-NsxManagerPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-NsxManagerPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-SddcManagerAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-SddcManagerPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-SddcManagerPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-SsoPasswordPolicy/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-VcenterLocalAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-VcenterLocalPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-VcenterLocalPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-VcenterPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-WsaDirectoryPasswordPolicy/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Publish-WsaLocalPasswordPolicy/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-EsxiAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-EsxiPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-EsxiPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-LocalUserPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-NsxtEdgeAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-NsxtEdgePasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-NsxtEdgePasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-NsxtManagerAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-NsxtManagerPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-NsxtManagerPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-SddcManagerAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-SddcManagerPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-SsoAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-SsoPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-SsoPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-VcenterAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-VcenterPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-VcenterPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-VcenterRootPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-WsaAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-WsaLocalUserAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-WsaLocalUserPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-WsaPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Request-WsaPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Start-PasswordPolicyConfig/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Test-VcfPasswordManagementPrereq/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-EsxiAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-EsxiPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-EsxiPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-LocalUserPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-NsxtEdgeAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-NsxtEdgePasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-NsxtEdgePasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-NsxtManagerAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-NsxtManagerPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-NsxtManagerPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-SddcManagerAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-SddcManagerPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-SsoAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-SsoPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-SsoPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-VcenterAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-VcenterPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-VcenterPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-VcenterRootPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-WsaAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-WsaLocalUserAccountLockout/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-WsaLocalUserPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-WsaPasswordComplexity/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Update-WsaPasswordExpiration/</loc>
-         <lastmod>2023-06-27</lastmod>
+         <lastmod>2023-06-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
