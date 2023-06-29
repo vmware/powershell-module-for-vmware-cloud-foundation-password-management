@@ -12,7 +12,7 @@
     RootModule = '.\VMware.CloudFoundation.PasswordManagement.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.2.1.1000'
+    ModuleVersion = '1.2.1.1001'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -51,7 +51,24 @@
     # ProcessorArchitecture = ''
     
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    RequiredModules   = @(
+        @{
+            ModuleName    = 'VMware.PowerCLI'
+            ModuleVersion = '13.0.0'
+        }
+        @{
+            ModuleName    = 'VMware.vSphere.SsoAdmin'
+            ModuleVersion = '1.3.9'            
+        }
+        @{
+            ModuleName    = 'PowerVCF'
+            ModuleVersion = '2.3.0'
+        }
+        @{
+            ModuleName    = 'PowerValidatedSolutions'
+            ModuleVersion = '2.5.0'
+        }
+    )
     
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()

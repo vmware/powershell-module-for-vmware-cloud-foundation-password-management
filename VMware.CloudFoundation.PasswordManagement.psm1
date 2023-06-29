@@ -8524,42 +8524,54 @@ Export-ModuleMember -Function Update-LocalUserPasswordExpiration
 ##########################################################################
 #Region     Begin Supporting Functions                              ######
 
+
 Function Test-VcfPasswordManagementPrereq {
     <#
 		.SYNOPSIS
-        Validate prerequisites to run the PowerShell module.
+        Verifies that the minimum dependencies are met to run the PowerShell module.
 
         .DESCRIPTION
-        The Test-VcfPasswordManagementPrereq cmdlet checks that all the prerequisites have been met to run the PowerShell module.
+        The Test-VcfPasswordManagementPrereq cmdlet verifies that the minimum dependencies are met to
+        run the the PowerShell module.
 
         .EXAMPLE
         Test-VcfPasswordManagementPrereq
-        This example runs the prerequisite validation.
+        This example shows how to verify that the minimum dependencies are met to run the PowerShell module.
     #>
 
     Try {
-        Clear-Host; Write-Host ""
+        $moduleName = $myInvocation.myCommand.ModuleName
+        $moduleData = (Get-Module -Name $moduleName)
 
-        $modules = @(
-            @{ Name=("VMware.PowerCLI"); MinimumVersion=("13.0.0")}
-            @{ Name=("VMware.vSphere.SsoAdmin"); MinimumVersion=("1.3.9")}
-            @{ Name=("PowerVCF"); MinimumVersion=("2.3.0")}
-            @{ Name=("PowerValidatedSolutions"); MinimumVersion=("2.4.0")}
-        )
+        if ($PSEdition -eq 'Core' -and ($PSVersionTable.OS).Split(' ')[0] -eq 'Linux') {
+            $moduleManifestPath = $moduleData.ModuleBase + '/' + $moduleData.Name + '.psd1'
+        } else {
+            $moduleManifestPath = $moduleData.ModuleBase + '\' + $moduleData.Name + '.psd1'
+        }
 
-        foreach ($module in $modules ) {
-            if ((Get-InstalledModule -ErrorAction SilentlyContinue -Name $module.Name).Version -lt $module.MinimumVersion) {
-                $message = "PowerShell Module: $($module.Name) $($module.MinimumVersion) minimum required version is not installed."
-                Show-PasswordManagementOutput -type ERROR -message $message
-                Break
+        $moduleManifest = Import-PowerShellDataFile -Path $moduleManifestPath
+        $requiredModules = $moduleManifest.RequiredModules
+
+        foreach ($module in $requiredModules) {
+            $moduleName = $module.ModuleName
+            $requiredVersion = $module.ModuleVersion
+            $installedModule = Get-Module -ListAvailable -Name $moduleName
+
+            if ($installedModule) {
+                $installedVersion = $installedModule.Version
+                if ($installedVersion -lt $requiredVersion) {
+                    $message = "$($moduleName) $($installedVersion) is installed. Install $($moduleName) $($requiredVersion) or higher."
+                    Show-PasswordManagementOutput -type ERROR -message $message
+                } elseif ($installedVersion -ge $requiredVersion) {
+                    $message = "$($moduleName) $($installedVersion) is installed version and meets the minimum required version of $($moduleName) $($requiredVersion)."
+                    Show-PasswordManagementOutput -type INFO -message $message
+                }
             } else {
-                $moduleCurrentVersion = (Get-InstalledModule -Name $module.Name).Version
-                $message = "PowerShell Module: $($module.Name) $($moduleCurrentVersion) is installed and supports the minimum required version."
-                Show-PasswordManagementOutput -type INFO -message $message
+                $message = "$($moduleName) is not installed. Install $($moduleName) $($requiredVersion) or higher."
+                Show-PasswordManagementOutput -type ERROR -message $message
             }
         }
-    }
-    Catch {
+    } Catch {
         Write-Error $_.Exception.Message
     }
 }
