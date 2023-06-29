@@ -1951,6 +1951,11 @@
 <blockquote>
 <p>Release Date: Unreleased</p>
 </blockquote>
+<p>Enhancement:</p>
+<ul>
+<li>Added the <code>RequiredModules</code> key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
+<li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
+</ul>
 <p>Bug Fixes:</p>
 <ul>
 <li>Updated <code>Request-SsoPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
