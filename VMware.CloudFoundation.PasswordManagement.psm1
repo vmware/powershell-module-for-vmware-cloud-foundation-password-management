@@ -137,6 +137,10 @@ Function Invoke-PasswordPolicyManager {
 
         if (Test-VCFConnection -server $sddcManagerFqdn) {
             if (Test-VCFAuthentication -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass) {
+                $version = ""
+                if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
+                    $version = $Matches[0]
+                } 
                 if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath, enter a valid path and try again"; Write-Host ""; Break }
                 if (!(Test-Path -Path $($reportPath + '\' + $policyFile))) {Write-Warning "Unable to locate policy file $policyFile, enter a valid path and try again"; Write-Host ""; Break }
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
@@ -267,7 +271,7 @@ Function Invoke-PasswordPolicyManager {
                     $outputJsonObject | Add-Member -notepropertyname 'wsaLocal' -notepropertyvalue $wsaLocalPasswordPolicy
                     $jsonFile = ($reportFolder + "passwordPolicyManager" + ".json")
                     Write-LogMessage -Type INFO -Message "Generating the Final JSON and Saving to ($jsonFile)."
-                    $outputJsonObject | ConvertTo-Json | Out-File -FilePath $jsonFile
+                    $outputJsonObject | ConvertTo-Json -Depth 25| Out-File -FilePath $jsonFile
                 } else {
                     # Combine all information gathered into a single HTML report
                     if ($PsBoundParameters.ContainsKey("allDomains")) {
@@ -607,7 +611,7 @@ Function Get-PasswordPolicyDefault {
 
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.0','4.5.1','5.0.0')] [String]$version,
         [Parameter (Mandatory = $true, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile,
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$force
     )
@@ -837,7 +841,7 @@ Function Get-PasswordPolicyDefault {
     $defaultConfig | Add-Member -notepropertyname 'wsaDirectory' -notepropertyvalue $wsaDirectoryPasswordPolicy
 
     if ($PSBoundParameters.ContainsKey('generateJson')) {
-        $defaultConfig | ConvertTo-Json | Out-File -FilePath $jsonFile
+        $defaultConfig | ConvertTo-Json -Depth 25| Out-File -FilePath $jsonFile
         Write-Output "Generated JSON File ($jsonFile) with Product Password Policy Default Values"
     } else {
         $defaultConfig
@@ -848,7 +852,7 @@ Export-ModuleMember -Function Get-PasswordPolicyDefault
 Function Get-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.1','5.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0','4.5.0','4.5.1','5.0.0')] [String]$version,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
