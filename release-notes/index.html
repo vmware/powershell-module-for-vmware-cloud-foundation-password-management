@@ -21,7 +21,7 @@
         <link rel="next" href="../license/">
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
     
     
       
@@ -1964,6 +1964,9 @@
 <li>Updated <code>Request-EsxiPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
 <li>Updated <code>Request-EsxiAccountLockout</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
 <li>Updated <code>Update-EsxiPasswordExpiration</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
+<li>Updated <code>Invoke-PasswordPolicyManager</code> to handle version infromation update in json file and json file depth handling. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
+<li>Updated <code>Get-PasswordPolicyDefault</code> to handle VCF4.5.0 version. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
+<li>Updated <code>Get-PasswordPolicyConfig</code> to handle VCF4.5.0 version. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
 </ul>
 <h2 id="v120"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0">v1.2.0</a><a class="headerlink" href="#v120" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -2234,10 +2237,10 @@
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.expand", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.expand", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.b425cdc4.min.js"></script>
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
       
         
           <script src="../js/timeago.min.js"></script>
