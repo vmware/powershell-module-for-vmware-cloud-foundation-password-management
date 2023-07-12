@@ -459,8 +459,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v121-unreleased" class="md-nav__link">
-    v1.2.1 (Unreleased)
+  <a href="#v130-unreleased" class="md-nav__link">
+    v1.3.0 (Unreleased)
   </a>
   
 </li>
@@ -1888,8 +1888,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v121-unreleased" class="md-nav__link">
-    v1.2.1 (Unreleased)
+  <a href="#v130-unreleased" class="md-nav__link">
+    v1.3.0 (Unreleased)
   </a>
   
 </li>
@@ -1947,7 +1947,7 @@
 
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
-<h2 id="v121-unreleased">v1.2.1 (Unreleased)<a class="headerlink" href="#v121-unreleased" title="Permanent link">&para;</a></h2>
+<h2 id="v130-unreleased">v1.3.0 (Unreleased)<a class="headerlink" href="#v130-unreleased" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: Unreleased</p>
 </blockquote>
@@ -1964,9 +1964,15 @@
 <li>Updated <code>Request-EsxiPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
 <li>Updated <code>Request-EsxiAccountLockout</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
 <li>Updated <code>Update-EsxiPasswordExpiration</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Invoke-PasswordPolicyManager</code> to handle version infromation update in json file and json file depth handling. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
-<li>Updated <code>Get-PasswordPolicyDefault</code> to handle VCF4.5.0 version. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
-<li>Updated <code>Get-PasswordPolicyConfig</code> to handle VCF4.5.0 version. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
+<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for version 4.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
+<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for version 4.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
+<li>Updated <code>Invoke-PasswordPolicyManager</code> to address version support updates and JSON file depth handling. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
+</ul>
+<p>Chore:</p>
+<ul>
+<li>Added the <code>RequiredModules</code> key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
+<li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
+<li>Updated <code>PowerValidatedSolution</code> module dependency from v2.4.0 to v2.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
 </ul>
 <h2 id="v120"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0">v1.2.0</a><a class="headerlink" href="#v120" title="Permanent link">&para;</a></h2>
 <blockquote>
