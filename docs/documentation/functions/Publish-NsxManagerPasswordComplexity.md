@@ -1,70 +1,67 @@
 # Publish-NsxManagerPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Publish password complexity policy for NSX Local Manager.
+Publishes the password complexity policy for NSX Local Manager for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-NsxManagerPasswordComplexity -server <String> -user <String> -pass <String> [-allDomains] [-drift]
- [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-NsxManagerPasswordComplexity -server <String> -user <String> -pass <String> [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-NsxManagerPasswordComplexity -server <String> -user <String> -pass <String> -workloadDomain <String>
- [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-NsxManagerPasswordComplexity -server <String> -user <String> -pass <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-NsxManagerPasswordComplexity cmdlet returns password complexity policy for local users of NSX Local
-Manager.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-NsxManagerPasswordComplexity` cmdlet returns password complexity policy for local users of NSX Local Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Collects password complexity policy for each NSX Local Manager
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
 ```
 
-This example will return password complexity policy for each NSX Local Manager for all Workload Domains.
+This example returns password complexity policy for each NSX Local Manager for all workload domains.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
 ```
 
-This example will return password complexity policy for each NSX Local Manager for a Workload Domain.
+This example returns password complexity policy for each NSX Local Manager for a workload domain.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return password complexity policy of NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json.
+This example returns password complexity policy of NSX Local Manager for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -drift
 ```
 
-This example will return password complexity policy of NSX Local Manager for a Workload Domain and compares the configuration against the product defaults.
+This example returns password complexity policy of NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

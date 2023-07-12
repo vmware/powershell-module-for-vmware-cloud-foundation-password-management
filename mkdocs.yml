@@ -47,7 +47,6 @@ theme:
   - content.code.annotate
   - content.code.copy
   - content.tabs.link
-  - navigation.expand
   - navigation.footer
   - navigation.header
   - navigation.indexes
@@ -140,77 +139,110 @@ nav:
   - Release Notes: release-notes.md
   - Release Milestones: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/milestones
   - License: license.md
-- Documentation:
+- Reference:
+  - documentation/index.md
   - Functions:
-    - Get-PasswordPolicyDefault: documentation/functions/Get-PasswordPolicyDefault.md
-    - Invoke-PasswordPolicyManager: documentation/functions/Invoke-PasswordPolicyManager.md
-    - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
-    - Publish-NsxEdgeAccountLockout: documentation/functions/Publish-NsxEdgeAccountLockout.md
-    - Publish-NsxEdgePasswordComplexity: documentation/functions/Publish-NsxEdgePasswordComplexity.md
-    - Publish-NsxEdgePasswordExpiration: documentation/functions/Publish-NsxEdgePasswordExpiration.md
-    - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md
-    - Publish-NsxManagerPasswordComplexity: documentation/functions/Publish-NsxManagerPasswordComplexity.md
-    - Publish-NsxManagerPasswordExpiration: documentation/functions/Publish-NsxManagerPasswordExpiration.md
-    - Publish-SddcManagerAccountLockout: documentation/functions/Publish-SddcManagerAccountLockout.md
-    - Publish-SddcManagerPasswordComplexity: documentation/functions/Publish-SddcManagerPasswordComplexity.md
-    - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
-    - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
-    - Publish-VcenterLocalAccountLockout: documentation/functions/Publish-VcenterLocalAccountLockout.md
-    - Publish-VcenterLocalPasswordComplexity: documentation/functions/Publish-VcenterLocalPasswordComplexity.md
-    - Publish-VcenterLocalPasswordExpiration: documentation/functions/Publish-VcenterLocalPasswordExpiration.md
-    - Publish-VcenterPasswordExpiration: documentation/functions/Publish-VcenterPasswordExpiration.md
-    - Publish-WsaDirectoryPasswordPolicy: documentation/functions/Publish-WsaDirectoryPasswordPolicy.md
-    - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
-    - Request-EsxiAccountLockout: documentation/functions/Request-EsxiAccountLockout.md
-    - Request-EsxiPasswordComplexity: documentation/functions/Request-EsxiPasswordComplexity.md
-    - Request-EsxiPasswordExpiration: documentation/functions/Request-EsxiPasswordExpiration.md
-    - Request-LocalUserPasswordExpiration: documentation/functions/Request-LocalUserPasswordExpiration.md
-    - Request-NsxtEdgeAccountLockout: documentation/functions/Request-NsxtEdgeAccountLockout.md
-    - Request-NsxtEdgePasswordComplexity: documentation/functions/Request-NsxtEdgePasswordComplexity.md
-    - Request-NsxtEdgePasswordExpiration: documentation/functions/Request-NsxtEdgePasswordExpiration.md
-    - Request-NsxtManagerAccountLockout: documentation/functions/Request-NsxtManagerAccountLockout.md
-    - Request-NsxtManagerPasswordComplexity: documentation/functions/Request-NsxtManagerPasswordComplexity.md
-    - Request-NsxtManagerPasswordExpiration: documentation/functions/Request-NsxtManagerPasswordExpiration.md
-    - Request-SddcManagerAccountLockout: documentation/functions/Request-SddcManagerAccountLockout.md
-    - Request-SddcManagerPasswordComplexity: documentation/functions/Request-SddcManagerPasswordComplexity.md
-    - Request-SsoAccountLockout: documentation/functions/Request-SsoAccountLockout.md
-    - Request-SsoPasswordComplexity: documentation/functions/Request-SsoPasswordComplexity.md
-    - Request-SsoPasswordExpiration: documentation/functions/Request-SsoPasswordExpiration.md
-    - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
-    - Request-VcenterPasswordComplexity: documentation/functions/Request-VcenterPasswordComplexity.md
-    - Request-VcenterPasswordExpiration: documentation/functions/Request-VcenterPasswordExpiration.md
-    - Request-VcenterRootPasswordExpiration: documentation/functions/Request-VcenterRootPasswordExpiration.md
-    - Request-WsaAccountLockout: documentation/functions/Request-WsaAccountLockout.md
-    - Request-WsaLocalUserAccountLockout: documentation/functions/Request-WsaLocalUserAccountLockout.md
-    - Request-WsaLocalUserPasswordComplexity: documentation/functions/Request-WsaLocalUserPasswordComplexity.md
-    - Request-WsaPasswordComplexity: documentation/functions/Request-WsaPasswordComplexity.md
-    - Request-WsaPasswordExpiration: documentation/functions/Request-WsaPasswordExpiration.md
-    - Start-PasswordPolicyConfig: documentation/functions/Start-PasswordPolicyConfig.md
-    - Test-VcfPasswordManagementPrereq: documentation/functions/Test-VcfPasswordManagementPrereq.md
-    - Update-EsxiAccountLockout: documentation/functions/Update-EsxiAccountLockout.md
-    - Update-EsxiPasswordComplexity: documentation/functions/Update-EsxiPasswordComplexity.md
-    - Update-EsxiPasswordExpiration: documentation/functions/Update-EsxiPasswordExpiration.md
-    - Update-LocalUserPasswordExpiration: documentation/functions/Update-LocalUserPasswordExpiration.md
-    - Update-NsxtEdgeAccountLockout: documentation/functions/Update-NsxtEdgeAccountLockout.md
-    - Update-NsxtEdgePasswordComplexity: documentation/functions/Update-NsxtEdgePasswordComplexity.md
-    - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md
-    - Update-NsxtManagerAccountLockout: documentation/functions/Update-NsxtManagerAccountLockout.md
-    - Update-NsxtManagerPasswordComplexity: documentation/functions/Update-NsxtManagerPasswordComplexity.md
-    - Update-NsxtManagerPasswordExpiration: documentation/functions/Update-NsxtManagerPasswordExpiration.md
-    - Update-SddcManagerAccountLockout: documentation/functions/Update-SddcManagerAccountLockout.md
-    - Update-SddcManagerPasswordComplexity: documentation/functions/Update-SddcManagerPasswordComplexity.md
-    - Update-SsoAccountLockout: documentation/functions/Update-SsoAccountLockout.md
-    - Update-SsoPasswordComplexity: documentation/functions/Update-SsoPasswordComplexity.md
-    - Update-SsoPasswordExpiration: documentation/functions/Update-SsoPasswordExpiration.md
-    - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
-    - Update-VcenterPasswordComplexity: documentation/functions/Update-VcenterPasswordComplexity.md
-    - Update-VcenterPasswordExpiration: documentation/functions/Update-VcenterPasswordExpiration.md
-    - Update-VcenterRootPasswordExpiration: documentation/functions/Update-VcenterRootPasswordExpiration.md
-    - Update-WsaAccountLockout: documentation/functions/Update-WsaAccountLockout.md
-    - Update-WsaLocalUserAccountLockout: documentation/functions/Update-WsaLocalUserAccountLockout.md
-    - Update-WsaLocalUserPasswordComplexity: documentation/functions/Update-WsaLocalUserPasswordComplexity.md
-    - Update-WsaPasswordComplexity: documentation/functions/Update-WsaPasswordComplexity.md
-    - Update-WsaPasswordExpiration: documentation/functions/Update-WsaPasswordExpiration.md
+    - General:
+      - Get-PasswordPolicyDefault: documentation/functions/Get-PasswordPolicyDefault.md
+      - Invoke-PasswordPolicyManager: documentation/functions/Invoke-PasswordPolicyManager.md
+      - Request-LocalUserPasswordExpiration: documentation/functions/Request-LocalUserPasswordExpiration.md
+      - Start-PasswordPolicyConfig: documentation/functions/Start-PasswordPolicyConfig.md
+      - Test-VcfPasswordManagementPrereq: documentation/functions/Test-VcfPasswordManagementPrereq.md
+      - Update-LocalUserPasswordExpiration: documentation/functions/Update-LocalUserPasswordExpiration.md
+    - Password Expiration:
+      - SDDC Manager:
+        - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
+      - vCenter Server:
+        - Publish-VcenterLocalPasswordExpiration: documentation/functions/Publish-VcenterLocalPasswordExpiration.md
+        - Request-VcenterPasswordExpiration: documentation/functions/Request-VcenterPasswordExpiration.md
+        - Request-VcenterRootPasswordExpiration: documentation/functions/Request-VcenterRootPasswordExpiration.md
+        - Update-VcenterPasswordExpiration: documentation/functions/Update-VcenterPasswordExpiration.md
+        - Update-VcenterRootPasswordExpiration: documentation/functions/Update-VcenterRootPasswordExpiration.md
+      - vCenter Single Sign-On:
+        - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
+        - Request-SsoPasswordExpiration: documentation/functions/Request-SsoPasswordExpiration.md
+        - Update-SsoPasswordExpiration: documentation/functions/Update-SsoPasswordExpiration.md
+      - NSX Manager:
+        - Publish-NsxManagerPasswordExpiration: documentation/functions/Publish-NsxManagerPasswordExpiration.md
+        - Request-NsxtManagerPasswordExpiration: documentation/functions/Request-NsxtManagerPasswordExpiration.md
+        - Update-NsxtManagerPasswordExpiration: documentation/functions/Update-NsxtManagerPasswordExpiration.md
+      - NSX Edge:
+        - Publish-NsxEdgePasswordExpiration: documentation/functions/Publish-NsxEdgePasswordExpiration.md
+        - Request-NsxtEdgePasswordExpiration: documentation/functions/Request-NsxtEdgePasswordExpiration.md
+        - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md 
+      - ESXi:
+        - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
+        - Request-EsxiPasswordExpiration: documentation/functions/Request-EsxiPasswordExpiration.md
+        - Update-EsxiPasswordExpiration: documentation/functions/Update-EsxiPasswordExpiration.md
+      - Workspace ONE Access:
+        - Publish-WsaDirectoryPasswordPolicy: documentation/functions/Publish-WsaDirectoryPasswordPolicy.md
+        - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
+        - Request-WsaPasswordExpiration: documentation/functions/Request-WsaPasswordExpiration.md
+        - Update-WsaPasswordExpiration: documentation/functions/Update-WsaPasswordExpiration.md
+    - Password Complexity:
+      - SDDC Manager:
+        - Publish-SddcManagerPasswordComplexity: documentation/functions/Publish-SddcManagerPasswordComplexity.md
+        - Request-SddcManagerPasswordComplexity: documentation/functions/Request-SddcManagerPasswordComplexity.md
+        - Update-SddcManagerPasswordComplexity: documentation/functions/Update-SddcManagerPasswordComplexity.md
+      - vCenter Server:
+        - Publish-VcenterLocalPasswordComplexity: documentation/functions/Publish-VcenterLocalPasswordComplexity.md
+        - Request-VcenterPasswordComplexity: documentation/functions/Request-VcenterPasswordComplexity.md
+        - Update-VcenterPasswordComplexity: documentation/functions/Update-VcenterPasswordComplexity.md
+      - vCenter Single Sign-On:
+        - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
+        - Request-SsoPasswordComplexity: documentation/functions/Request-SsoPasswordComplexity.md
+        - Update-SsoPasswordComplexity: documentation/functions/Update-SsoPasswordComplexity.md
+      - NSX Manager:
+        - Publish-NsxManagerPasswordComplexity: documentation/functions/Publish-NsxManagerPasswordComplexity.md
+        - Request-NsxtManagerPasswordComplexity: documentation/functions/Request-NsxtManagerPasswordComplexity.md
+        - Update-NsxtManagerPasswordComplexity: documentation/functions/Update-NsxtManagerPasswordComplexity.md
+      - NSX Edge:
+        - Publish-NsxEdgePasswordComplexity: documentation/functions/Publish-NsxEdgePasswordComplexity.md
+        - Request-NsxtEdgePasswordComplexity: documentation/functions/Request-NsxtEdgePasswordComplexity.md
+        - Update-NsxtEdgePasswordComplexity: documentation/functions/Update-NsxtEdgePasswordComplexity.md
+      - ESXi:
+        - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
+        - Request-EsxiPasswordComplexity: documentation/functions/Request-EsxiPasswordComplexity.md
+        - Update-EsxiPasswordComplexity: documentation/functions/Update-EsxiPasswordComplexity.md
+      - Workspace ONE Access:
+        - Publish-WsaDirectoryPasswordPolicy: documentation/functions/Publish-WsaDirectoryPasswordPolicy.md
+        - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
+        - Request-WsaPasswordComplexity: documentation/functions/Request-WsaPasswordComplexity.md
+        - Request-WsaLocalUserPasswordComplexity: documentation/functions/Request-WsaLocalUserPasswordComplexity.md
+        - Update-WsaPasswordComplexity: documentation/functions/Update-WsaPasswordComplexity.md
+        - Update-WsaLocalUserPasswordComplexity: documentation/functions/Update-WsaLocalUserPasswordComplexity.md
+    - Account Lockout:
+      - SDDC Manager:
+        - Publish-SddcManagerAccountLockout: documentation/functions/Publish-SddcManagerAccountLockout.md
+        - Request-SddcManagerAccountLockout: documentation/functions/Request-SddcManagerAccountLockout.md
+        - Update-SddcManagerAccountLockout: documentation/functions/Update-SddcManagerAccountLockout.md
+      - vCenter Single Sign-On:
+        - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
+        - Request-SsoAccountLockout: documentation/functions/Request-SsoAccountLockout.md
+        - Update-SsoAccountLockout: documentation/functions/Update-SsoAccountLockout.md
+      - vCenter Server:
+        - Publish-VcenterLocalAccountLockout: documentation/functions/Publish-VcenterLocalAccountLockout.md
+        - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
+        - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
+      - NSX Manager:
+        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md        
+        - Request-NsxtManagerAccountLockout: documentation/functions/Request-NsxtManagerAccountLockout.md
+        - Update-NsxtManagerAccountLockout: documentation/functions/Update-NsxtManagerAccountLockout.md
+      - NSX Edge:
+        - Publish-NsxEdgeAccountLockout: documentation/functions/Publish-NsxEdgeAccountLockout.md
+        - Request-NsxtEdgeAccountLockout: documentation/functions/Request-NsxtEdgeAccountLockout.md
+        - Update-NsxtEdgeAccountLockout: documentation/functions/Update-NsxtEdgeAccountLockout.md
+      - ESXi:
+        - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
+        - Request-EsxiAccountLockout: documentation/functions/Request-EsxiAccountLockout.md
+        - Update-EsxiAccountLockout: documentation/functions/Update-EsxiAccountLockout.md
+      - Workspace ONE Access:
+        - Publish-WsaDirectoryPasswordPolicy: documentation/functions/Publish-WsaDirectoryPasswordPolicy.md
+        - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
+        - Request-WsaAccountLockout: documentation/functions/Request-WsaAccountLockout.md
+        - Request-WsaLocalUserAccountLockout: documentation/functions/Request-WsaLocalUserAccountLockout.md
+        - Update-WsaAccountLockout: documentation/functions/Update-WsaAccountLockout.md
+        - Update-WsaLocalUserAccountLockout: documentation/functions/Update-WsaLocalUserAccountLockout.md
 - Community:
   - community/index.md
   - Contributing: community/contributing.md

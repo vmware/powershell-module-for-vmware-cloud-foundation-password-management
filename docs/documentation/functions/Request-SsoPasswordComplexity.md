@@ -1,30 +1,28 @@
 # Request-SsoPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Retrieves vCenter Single Sign-On domain password complexity.
+Retrieves the password complexity policy for a vCenter Single Sign-On domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-SsoPasswordComplexity -server <String> -user <String> -pass <String> -domain <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-SsoPasswordComplexity -server <String> -user <String> -pass <String> -domain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-SsoPasswordComplexity cmdlet retrieves the vCenter Single Sign-On domain password complexity
-policy.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-SsoPasswordComplexity` cmdlet retrieves the vCenter Single Sign-On domain password complexity policy.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
 - Validates that network connectivity and authentication is possible to vCenter Single Sign-On domain
-- Retrieve the password complexity policy
+- Retrieves the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -32,7 +30,7 @@ Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -40,7 +38,7 @@ Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
@@ -48,7 +46,7 @@ Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

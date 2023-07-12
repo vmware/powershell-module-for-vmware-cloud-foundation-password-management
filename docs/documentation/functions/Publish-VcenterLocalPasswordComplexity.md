@@ -1,69 +1,67 @@
 # Publish-VcenterLocalPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Publish password complexity policy for each vCenter Server.
+Publishes the password complexity policy for each vCenter Server for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-VcenterLocalPasswordComplexity -server <String> -user <String> -pass <String> [-allDomains] [-drift]
- [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-VcenterLocalPasswordComplexity -server <String> -user <String> -pass <String> [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-VcenterLocalPasswordComplexity -server <String> -user <String> -pass <String> -workloadDomain <String>
- [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-VcenterLocalPasswordComplexity -server <String> -user <String> -pass <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-VcenterLocalPasswordComplexity cmdlet returns password complexity policy for SDDC Manager.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-VcenterLocalPasswordComplexity` cmdlet returns password complexity policy for an SDDC Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Collects password complexity policy for each vCenter Server
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
 ```
 
-This example will return password complexity policy for each vCenter Server for all Workload Domains.
+This example returns password complexity policy for each vCenter Server for all workload domains.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
 ```
 
-This example will return password complexity policy for a vCenter Server.
+This example returns password complexity policy for a vCenter Server.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return password complexity policy for a vCenter Server and checks the configuration drift using the provided configuration JSON.
+This example returns password complexity policy for a vCenter Server and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
 ```
 
-This example will return password complexity policy for a vCenter Server and compares the configuration against the product defaults.
+This example returns password complexity policy for a vCenter Server and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

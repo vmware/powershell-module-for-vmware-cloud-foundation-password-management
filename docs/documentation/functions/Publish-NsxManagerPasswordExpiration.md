@@ -1,70 +1,67 @@
 # Publish-NsxManagerPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Publish password expiration policy for NSX Local Manager.
+Publishes the password expiration policy for NSX Local Manager for a workload domain or all workload domains.   
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-NsxManagerPasswordExpiration -server <String> -user <String> -pass <String> [-allDomains] [-drift]
- [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-NsxManagerPasswordExpiration -server <String> -user <String> -pass <String> [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-NsxManagerPasswordExpiration -server <String> -user <String> -pass <String> -workloadDomain <String>
- [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-NsxManagerPasswordExpiration -server <String> -user <String> -pass <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-NsxManagerPasswordExpiration cmdlet returns password expiration policy for local users of NSX Local
-Manager.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-NsxManagerPasswordExpiration` cmdlet returns password expiration policy for local users of NSX Local Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Collects password expiration policy for each local user of NSX Local Manager
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
 ```
 
-This example will return password expiration policy for each local user of NSX Local Manager for all Workload Domains.
+This example returns password expiration policy for each local user of NSX Local Manager for all workload domains.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
 ```
 
-This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain.
+This example returns password expiration policy for each local user of NSX Local Manager for a workload domain.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json.
+This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
 ```
 
-This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain and compares the configuration against the product defaults.
+This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

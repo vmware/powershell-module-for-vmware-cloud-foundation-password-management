@@ -1,27 +1,27 @@
 # Request-WsaLocalUserAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve the account lockout policy for Workspace ONE Access.
+Retrieves the local user account lockout policy for Workspace ONE Access instance.
 
-## SYNTAX
+
+## Syntax
 
 ```powershell
-Request-WsaLocalUserAccountLockout -server <String> -user <String> -pass <String> -wsaFqdn <String>
- -wsaRootPass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-WsaLocalUserAccountLockout -server <String> -user <String> -pass <String> -wsaFqdn <String> -wsaRootPass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-WsaLocalUserAccountLockout cmdlet retrieves the account lockout policy for SDDC Manager.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-WsaLocalUserAccountLockout` cmdlet retrieves the account lockout policy for an SDDC Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Retrieves the account lockout policy of Workspace ONE Access
+-Retrieves the local user account lockout policy for Workspace ONE Access instance
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
@@ -29,7 +29,7 @@ Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin
 
 This example retrieves the account lockout policy for Workspace ONE Access.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -37,7 +37,7 @@ Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
@@ -45,7 +45,7 @@ Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

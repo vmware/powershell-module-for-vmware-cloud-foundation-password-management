@@ -1,30 +1,27 @@
 # Update-NsxtEdgePasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Configure the password complexity policy for NSX Edge.
+Updates the password complexity policy for NSX Edge nodes.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-NsxtEdgePasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>]
- [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-maxRetry] <Int32>] [[-detail] <String>] [<CommonParameters>]
+Update-NsxtEdgePasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>] [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-maxRetry] <Int32>] [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-NsxtEdgePasswordComplexity cmdlet updates the password complexity policy for each NSX Edge
-node for a workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-NsxtEdgePasswordComplexity` cmdlet updates the password complexity policy for each NSX Edge node for a workload domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
 - Updates the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
@@ -32,7 +29,7 @@ Update-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admini
 
 This example updates the password complexity policy for each NSX Edge node for a workload domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

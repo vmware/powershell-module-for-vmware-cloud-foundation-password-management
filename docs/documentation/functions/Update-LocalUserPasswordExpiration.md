@@ -1,36 +1,35 @@
 # Update-LocalUserPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Configure a local user password expiration policy.
+Updates a local user password expiration period in days.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-LocalUserPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-vmName] <String> [-guestUser] <String> [-guestPassword] <String> [-localUser] <Array> [-minDays] <String>
- [-maxDays] <String> [-warnDays] <String> [[-detail] <String>] [<CommonParameters>]
+Update-LocalUserPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-vmName] <String> [-guestUser] <String> [-guestPassword] <String> [-localUser] <Array> [-minDays] <String> [-maxDays] <String> [-warnDays] <String> [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-LocalUserPasswordExpiration cmdlet configures a local user password expiration policy. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-LocalUserPasswordExpiration` cmdlet configures a local user password expiration policy.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the local user password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
 ```
 
-This example updates the global password expiration policy for the vCenter Server.
+This example updates the global password expiration policy for a vCenter Server instance.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

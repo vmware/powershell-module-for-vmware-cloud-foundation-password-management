@@ -1,40 +1,39 @@
 # Update-NsxtEdgeAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Configure account lockout policy for NSX Edge.
+Updates the account lockout policy for NSX Edge nodes.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-NsxtEdgeAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [[-cliFailures] <Int32>] [[-cliUnlockInterval] <Int32>] [[-detail] <String>] [<CommonParameters>]
+Update-NsxtEdgeAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [[-cliFailures] <Int32>] [[-cliUnlockInterval] <Int32>] [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-NsxtEdgeAccountLockout cmdlet configures the account lockout policy for NSX Edge nodes.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-NsxtEdgeAccountLockout` cmdlet configures the account lockout policy for NSX Edge nodes.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
 - Configure the account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900
 ```
 
-This example configures the account lockout policy of the NSX Edges nodes in sfo-m01 workload domain.
+This example configures the account lockout policy of the NSX Edge nodes in sfo-m01 workload domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
-{{ Fill server Description }}
+The fully qualified domain name of the SDDC Manager instance.
 
 ```yaml
 Type: String
