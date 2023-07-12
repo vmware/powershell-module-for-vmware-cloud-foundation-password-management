@@ -4,6 +4,8 @@
 
 Updates the local user password complexity policy for Workspace ONE Access.
 
+--8<-- "./docs/snippets/wsa-cmdlet-tip.md"
+
 ## Syntax
 
 ```powershell
