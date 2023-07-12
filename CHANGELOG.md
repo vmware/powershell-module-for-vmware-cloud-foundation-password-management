@@ -1,6 +1,6 @@
 # Release History
 
-## v1.2.1 (Unreleased)
+## v1.3.0 (Unreleased)
 
 > Release Date: Unreleased
 
@@ -17,10 +17,15 @@ Bug Fixes:
 - Updated `Request-EsxiPasswordComplexity` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
 - Updated `Request-EsxiAccountLockout` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
 - Updated `Update-EsxiPasswordExpiration` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
-- Updated `Invoke-PasswordPolicyManager` to handle version infromation update in json file and json file depth handling. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
-- Updated `Get-PasswordPolicyDefault` to handle VCF4.5.0 version. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
-- Updated `Get-PasswordPolicyConfig` to handle VCF4.5.0 version. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
- 
+- Updated `Get-PasswordPolicyDefault` to include support for version 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
+- Updated `Get-PasswordPolicyConfig` to include support for version 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
+- Updated `Invoke-PasswordPolicyManager` to address version support updates and JSON file depth handling. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
+
+Chore:
+
+- Added the `RequiredModules` key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. [GH-63](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63)
+- Updated `Test-VcfPasswordManagementPrereq` to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. [GH-63](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63)
+- Updated `PowerValidatedSolution` module dependency from v2.4.0 to v2.5.0. [GH-63](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63)
 
 ## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0)
 
