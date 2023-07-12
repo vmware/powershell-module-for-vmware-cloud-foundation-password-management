@@ -1,57 +1,54 @@
 # Request-EsxiAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Retrieves ESXi host account lockout.
+Retrieves the account lockout policy for all ESXi hosts in a cluster.
 
-## SYNTAX
+
+## Syntax
 
 ```powershell
-Request-EsxiAccountLockout -server <String> -user <String> -pass <String> -domain <String> -cluster <String>
- [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-EsxiAccountLockout -server <String> -user <String> -pass <String> -domain <String> -cluster <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-EsxiAccountLockout cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
-configured account lockout policy (Advanced Settings Security.AccountLockFailures and
-Security.AccountUnlockTime).
-The cmdlet connects to SDDC Manager using the -server, -user, and -password
-values:
+The `Request-EsxiAccountLockout` cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently configured account lockout policy (Advanced Settings `Security.AccountLockFailures` and `Security.AccountUnlockTime`).
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Gathers the ESXi hosts for the cluster specificed
-- Retrieve all ESXi hosts account lockout policy
+- Retrieves the account lockout policy for all ESXi hosts in the cluster
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
 ```
 
-This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01.
+This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
+This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
 ```
 
-This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
+This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

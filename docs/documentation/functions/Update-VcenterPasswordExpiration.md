@@ -1,36 +1,35 @@
 # Update-VcenterPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Update the global password expiration policy.
+Updates the global password expiration policy for a vCenter Server instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-VcenterPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-maxDays] <Int32> [-minDays] <Int32> [-warnDays] <Int32> [<CommonParameters>]
+Update-VcenterPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-maxDays] <Int32> [-minDays] <Int32> [-warnDays] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-VcenterPasswordExpiration cmdlet configures the global password expiration policy of a vCenter Server.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-VcenterPasswordExpiration` cmdlet configures the global password expiration policy of a vCenter Server.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the global password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
 ```
 
-This example configures the global password expiration policy for the vCenter Server.
+This example configures the global password expiration policy for a vCenter Server instance.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

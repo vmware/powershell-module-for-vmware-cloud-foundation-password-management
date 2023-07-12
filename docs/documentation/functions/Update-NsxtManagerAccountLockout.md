@@ -1,30 +1,27 @@
 # Update-NsxtManagerAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Configure account lockout policy for NSX Local Manager.
+Updates the account lockout policy for NSX Local Manager.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-NsxtManagerAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [[-cliFailures] <Int32>] [[-cliUnlockInterval] <Int32>] [[-apiFailures] <Int32>]
- [[-apiFailureInterval] <Int32>] [[-apiUnlockInterval] <Int32>] [[-detail] <String>] [<CommonParameters>]
+Update-NsxtManagerAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [[-cliFailures] <Int32>] [[-cliUnlockInterval] <Int32>] [[-apiFailures] <Int32>] [[-apiFailureInterval] <Int32>] [[-apiUnlockInterval] <Int32>] [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-NsxtManagerAccountLockout cmdlet configures the account lockout policy for NSX Local Manager nodes within
-a workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-NsxtManagerAccountLockout` cmdlet configures the account lockout policy for NSX Local Manager nodes within a workload domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
 - Configure the account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900 -apiFailures 5 -apiFailureInterval 120 -apiUnlockInterval 900
@@ -32,7 +29,7 @@ Update-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user adminis
 
 This example configures the account lockout policy in NSX Local Manager nodes in the sfo-m01 workload domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

@@ -1,26 +1,25 @@
 # Update-WsaAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Update the Workspace ONE Access account lockout policy.
+Updates the account lockout policy for a Workspace ONE Access instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-WsaAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-failures] <Int32>
- [-failureInterval] <Int32> [-unlockInterval] <Int32> [<CommonParameters>]
+Update-WsaAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-failures] <Int32> [-failureInterval] <Int32> [-unlockInterval] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-WsaAccountLockout cmdlet configures the account lockout policy for Workspace ONE Access.
+The `Update-WsaAccountLockout` cmdlet configures the account lockout policy for Workspace ONE Access.
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
 - Configures the Workspace ONE Access account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
@@ -28,7 +27,7 @@ Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw
 
 This example configures the account lockout policy for Workspace ONE Access.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

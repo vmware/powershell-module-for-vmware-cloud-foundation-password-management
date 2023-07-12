@@ -1,22 +1,22 @@
 # Test-VcfPasswordManagementPrereq
 
-## SYNOPSIS
+## Synopsis
 
 Validate prerequisites to run the PowerShell module.
 
-## SYNTAX
+## Syntax
 
 ```powershell
 Test-VcfPasswordManagementPrereq
 ```
 
-## DESCRIPTION
+## Description
 
-The Test-VcfPasswordManagementPrereq cmdlet checks that all the prerequisites have been met to run the PowerShell module.
+The `Test-VcfPasswordManagementPrereq` cmdlet checks that all the prerequisites have been met to run the PowerShell module.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Test-VcfPasswordManagementPrereq

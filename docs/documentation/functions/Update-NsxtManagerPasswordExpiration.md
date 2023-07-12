@@ -1,29 +1,27 @@
 # Update-NsxtManagerPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Configure password expiration policy for NSX Local Manager Users.
+Updates the password expiration policy for NSX Local Manager.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-NsxtManagerPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-maxDays] <Int32> [[-detail] <String>] [<CommonParameters>]
+Update-NsxtManagerPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-maxDays] <Int32> [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-NsxtManagerPasswordExpiration cmdlet configures the password expiration policy for NSX Local Manager
-local users for a workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-NsxtManagerPasswordExpiration` cmdlet configures the password expiration policy for NSX Local Manager local users for a workload domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
-- Configure the password expiration policy
+- Updates the password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
@@ -31,7 +29,7 @@ Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user adm
 
 This example configures the password expiration policy in NSX Local Manager for all local users in the sfo-m01 workload domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

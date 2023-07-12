@@ -1,16 +1,15 @@
 # Update-VcenterRootPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Update the root user password expiration policy.
+Updates the `root` user password expiration policy for a vCenter Server instance.
 
-## SYNTAX
+## Syntax
 
 ### expire
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server <String> -user <String> -pass <String> -domain <String>
- [-email <String>] [-maxDays <String>] [-warnDays <String>] [<CommonParameters>]
+Update-VcenterRootPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> [-email <String>] [-maxDays <String>] [-warnDays <String>] [<CommonParameters>]
 ```
 
 ### neverexpire
@@ -20,35 +19,34 @@ Update-VcenterRootPasswordExpiration -server <String> -user <String> -pass <Stri
  [-neverexpire] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-VcenterRootPasswordExpiration cmdlet configures the root user password expiration policy of a
-vCenter Server.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-VcenterRootPasswordExpiration` cmdlet configures the `root` user password expiration policy of a vCenter Server.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Configures the root user password expiration policy
+- Configures the `root` user password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
 ```
 
-This example configures the configures password expiration settings for the vCenter Server root account to expire after 999 days with email for warning set to "<admin@rainpole.io>".
+This example configures the configures password expiration settings for a vCenter Server instance `root` account to expire after 999 days with email for warning set to "<admin@rainpole.io>".
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -neverexpire
 ```
 
-This example configures the configures password expiration settings for the vCenter Server root account to never expire.
+This example configures the configures password expiration settings for a vCenter Server instance `root` account to never expire.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
@@ -132,7 +130,7 @@ Accept wildcard characters: False
 
 ### -maxDays
 
-The maximum number of days before the root user password expires.
+The maximum number of days before the `root` user password expires.
 
 ```yaml
 Type: String
@@ -148,7 +146,7 @@ Accept wildcard characters: False
 
 ### -warnDays
 
-The number of days before the root user password expires in which to send a warning email.
+The number of days before the `root` user password expires in which to send a warning email.
 
 ```yaml
 Type: String
@@ -164,7 +162,7 @@ Accept wildcard characters: False
 
 ### -neverexpire
 
-Switch to configure the root user password to never expire.
+Switch to configure the `root` user password to never expire.
 
 ```yaml
 Type: SwitchParameter

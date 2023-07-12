@@ -1,25 +1,22 @@
 # Start-PasswordPolicyConfig
 
-## SYNOPSIS
+## Synopsis
 
-Configures all Password Policies.
+Configures all password policies.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Start-PasswordPolicyConfig -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String>
- -sddcRootPass <String> -reportPath <String> -policyFile <String> [-wsaFqdn <String>] [-wsaRootPass <String>]
- [-wsaAdminPass <String>] [<CommonParameters>]
+Start-PasswordPolicyConfig -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String> -sddcRootPass <String> -reportPath <String> -policyFile <String> [-wsaFqdn <String>] [-wsaRootPass <String>] [-wsaAdminPass <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Start-PasswordPolicyConfig configures the password policies across all components of the VMware Cloud
-Foundation instance using the JSON configuration file procided.
+The `Start-PasswordPolicyConfig` configures the password policies across all components of the VMware Cloud Foundation instance using the JSON configuration file provided.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json
@@ -27,15 +24,15 @@ Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManag
 
 This examples configures all password policies for all components across a VMware Cloud Foundation instance.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
 ```
 
-This example configures all password policies for all components across a VMware Cloud Foundation instance and Workspace ONE Access.
+This example configures all password policies for all components across a VMware Cloud Foundation instance and a Workspace ONE Access instance.
 
-## PARAMETERS
+## Parameters
 
 ### -sddcManagerFqdn
 

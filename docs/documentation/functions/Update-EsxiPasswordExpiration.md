@@ -1,30 +1,29 @@
 # Update-EsxiPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Update ESXi password expiration period in days.
+Updates the password expiration period in days for all ESXi hosts in a cluster.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-EsxiPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [-maxDays] <String> [[-detail] <String>] [<CommonParameters>]
+Update-EsxiPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-maxDays] <String> [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-EsxiPasswordExpiration cmdlet configures the password expiration policy on ESXi.
-The cmdlet connects
-      to SDDC Manager using the -server, -user, and -password values:
-      - Validates that network connectivity and authentication is possible to SDDC Manager
-      - Validates that the workload domain exists in the SDDC Manager inventory
-      - Validates that network connectivity and authentication is possible to vCenter Server
-      - Gathers the ESXi hosts for the cluster specificed
-      - Configures the password expiration policy for all ESXi hosts in the cluster
+The `Update-EsxiPasswordExpiration` cmdlet configures the password expiration policy on ESXi.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
-## EXAMPLES
+- Validates that network connectivity and authentication is possible to SDDC Manager
+- Validates that the workload domain exists in the SDDC Manager inventory
+- Validates that network connectivity and authentication is possible to vCenter Server
+- Gathers the ESXi hosts for the cluster specificed
+- Configures the password expiration policy for all ESXi hosts in the cluster
 
-### EXAMPLE 1
+## Examples
+
+### Example 1
 
 ```powershell
 Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999
@@ -32,7 +31,7 @@ Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999 -detail false
@@ -40,7 +39,7 @@ Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01 but does not show the detail per host.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

@@ -1,78 +1,74 @@
 # Publish-WsaDirectoryPasswordPolicy
 
-## SYNOPSIS
+## Synopsis
 
-Publish password policies for Workspace ONE Access Directory.
+Publishes the password policies for Workspace ONE Access Directory.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [-json] [-allDomains] [<CommonParameters>]
+Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [-allDomains] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [-json] -workloadDomain <String> [<CommonParameters>]
+Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] -workloadDomain <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for Workspace ONE Access
-and converts the output to HTML.
-The cmdlet connects to the SDDC Manager using the -server, -user, and
--password values:
+The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for Workspace ONE Accessand converts the output to HTML.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
 - Retrieves the requested password policy for Workspace ONE Access and converts to HTML
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains
 ```
 
-This example will return the password expiration policy for Workspace ONE Access Directory Users.
+This example returns the password expiration policy for Workspace ONE Access Directory Users.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordComplexity -allDomains
 ```
 
-This example will return the password complexity policy for Workspace ONE Access Directory Users.
+This example returns the password complexity policy for Workspace ONE Access Directory Users.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy AccountLockout -allDomains
 ```
 
-This example will return the account lockout policy for Workspace ONE Access Directory Users.
+This example returns the account lockout policy for Workspace ONE Access Directory Users.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return the password expiration policy for Workspace ONE Access Directory Users and compare the configuration against the passwordPolicyConfig.json.
+This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the `passwordPolicyConfig.json` file.
 
-### EXAMPLE 5
+### Example 5
 
 ```powershell
 Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift
 ```
 
-This example will return the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
+This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

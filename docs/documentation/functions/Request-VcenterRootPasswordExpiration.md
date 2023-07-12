@@ -1,53 +1,51 @@
 # Request-VcenterRootPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Retrieves the root user password expiration policy.
+Retrieves the `root` user password expiration policy for a vCenter Server instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-VcenterRootPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-VcenterRootPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-VcenterRootPasswordExpiration cmdlet retrieves the root user password expiration policy for a
-vCenter Server.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-VcenterRootPasswordExpiration` cmdlet retrieves the `root` user password expiration policy for a vCenter Server.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Retrives the root user password expiration policy
+- Retrives the `root` user password expiration policy for a vCenter Server instance
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
 ```
 
-This example retrieves the root user password expiration policy for the vCenter Server.
+This example retrieves the `root` user password expiration policy for a vCenter Server instance.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example retrieves the root user password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON.
+This example retrieves the `root` user password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
 ```
 
-This example retrieves the root user password expiration policy for the vCenter Server and compares the configuration against the product defaults.
+This example retrieves the `root` user password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

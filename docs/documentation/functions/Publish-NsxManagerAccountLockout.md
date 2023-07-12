@@ -1,70 +1,67 @@
 # Publish-NsxManagerAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Publish account lockout policy for NSX Local Manager.
+Publish account lockout policy for NSX Local Manager for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-NsxManagerAccountLockout -server <String> -user <String> -pass <String> [-allDomains] [-drift]
- [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-NsxManagerAccountLockout -server <String> -user <String> -pass <String> [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-NsxManagerAccountLockout -server <String> -user <String> -pass <String> -workloadDomain <String>
- [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-NsxManagerAccountLockout -server <String> -user <String> -pass <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-NsxManagerAccountLockout cmdlet returns account lockout policy for local users of NSX Local
-Manager.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-NsxManagerAccountLockout` cmdlet returns account lockout policy for local users of NSX Local Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Collects account lockout policy for each NSX Local Manager
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
 ```
 
-This example will return account lockout policy for each NSX Local Manager for all Workload Domains.
+This example returns account lockout policy for each NSX Local Manager for all workload domains.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
 ```
 
-This example will return account lockout policy for each NSX Local Manager for a Workload Domain.
+This example returns account lockout policy for each NSX Local Manager for a workload domain.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return account lockout policy for each NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json.
+This example returns account lockout policy for each NSX Local Manager for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
 ```
 
-This example will return account lockout policy for each NSX Local Manager for a Workload Domain and compares the configuration against the product defaults.
+This example returns account lockout policy for each NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

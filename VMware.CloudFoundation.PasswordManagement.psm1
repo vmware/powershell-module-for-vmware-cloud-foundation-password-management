@@ -46,18 +46,18 @@ if ($PSEdition -eq 'Desktop') {
 Function Invoke-PasswordPolicyManager {
     <#
         .SYNOPSIS
-        Generate the Password Policy Manager Report
+        Generates a Password Policy Manager Report for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Invoke-PasswordPolicyManager generates a Password Policy Manager Report for a VMware Cloud Foundation instance
+        The Invoke-PasswordPolicyManager generates a Password Policy Manager Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains
-        This example runs a password policy report for all Workload Domain within an SDDC Manager instance.
+        This example runs a password policy report for all workload domains within an SDDC Manager instance.
 
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
-        This example runs a password policy report for all Workload Domain within an SDDC Manager instance and Workspace ONE Access
+        This example runs a password policy report for all workload domains within an SDDC Manager instance and Workspace ONE Access.
 
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -workloadDomain sfo-w01
@@ -65,11 +65,11 @@ Function Invoke-PasswordPolicyManager {
 
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift -policyFile "PasswordPolicyConfig.json"
-        This example runs a password policy report for all Workload Domain within an SDDC Manager instance and compares the configuration against the JSON provided
+        This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the JSON provided.
 
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift
-        This example runs a password policy report for all Workload Domain within an SDDC Manager instance and compares the configuration against the product defaults
+        This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the product defaults.
 
         .PARAMETER sddcManagerFqdn
         The fully qualified domain name of the SDDC Manager instance.
@@ -353,19 +353,19 @@ Export-ModuleMember -Function Invoke-PasswordPolicyManager
 Function Start-PasswordPolicyConfig {
     <#
         .SYNOPSIS
-        Configures all Password Policies
+        Configures all password policies.
 
         .DESCRIPTION
         The Start-PasswordPolicyConfig configures the password policies across all components of the VMware Cloud
-        Foundation instance using the JSON configuration file procided.
+        Foundation instance using the JSON configuration file provided.
 
         .EXAMPLE
         Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json
-        This examples configures all password policies for all components across a VMware Cloud Foundation instance
+        This examples configures all password policies for all components across a VMware Cloud Foundation instance.
 
         .EXAMPLE
         Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
-        This example configures all password policies for all components across a VMware Cloud Foundation instance and Workspace ONE Access
+        This example configures all password policies for all components across a VMware Cloud Foundation instance and a Workspace ONE Access instance.
 
         .PARAMETER sddcManagerFqdn
         The fully qualified domain name of the SDDC Manager instance.
@@ -568,7 +568,7 @@ Export-ModuleMember -Function Start-PasswordPolicyConfig
 Function Get-PasswordPolicyDefault {
     <#
 		.SYNOPSIS
-        Get password policy default settings
+        Get password policy default settings.
 
         .DESCRIPTION
         The Get-PasswordPolicyDefault cmdlet returns the default password policy settings, it can also be used to
@@ -583,11 +583,11 @@ Function Get-PasswordPolicyDefault {
 
         .EXAMPLE
         Get-PasswordPolicyDefault -version '5.0.0'
-        This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0
+        This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0.
 
         .EXAMPLE
         Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
-        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation
+        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
         
         .EXAMPLE
         Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
@@ -1524,25 +1524,25 @@ Function Convert-CssClassStyle {
 Function Request-SddcManagerPasswordComplexity {
     <#
 		.SYNOPSIS
-		Retrieve the password complexity policy for SDDC Manager
+		Retrieves the password complexity policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Request-SddcManagerPasswordComplexity cmdlet retrieves the password complexity policy for SDDC Manager.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Request-SddcManagerPasswordComplexity cmdlet retrieves the password complexity policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
 		- Retrieves the password complexity policy
 
         .EXAMPLE
         Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
-        This example retrieves the password complexity policy for SDDC Manager
+        This example retrieves the password complexity policy for an SDDC Manager.
 
         .EXAMPLE
         Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for SDDC Manager and compares the configuration against passwordPolicyConfig.json
+        This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
-        This example retrieves the password complexity policy for SDDC Manager and compares the configuration against the product defaults
+        This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1613,26 +1613,26 @@ Export-ModuleMember -Function Request-SddcManagerPasswordComplexity
 Function Request-SddcManagerAccountLockout {
     <#
 		.SYNOPSIS
-		Retrieve the account lockout policy for SDDC Manager
+		Retrieves the account lockout policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Request-SddcManagerAccountLockout cmdlet retrieves the account lockout policy for SDDC Manager.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Request-SddcManagerAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		- Retrieves the account lockout policy of SDDC Manager
+		- Retrieves the account lockout policy for an SDDC Manager
 
         .EXAMPLE
         Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
-        This example retrieves the account lockout policy for SDDC Manager
+        This example retrieves the account lockout policy for an SDDC Manager.
 
         .EXAMPLE
         Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the account lockout policy for SDDC Manager and and compares the configuration against passwordPolicyConfig.json
+        This example retrieves the account lockout policy for an SDDC Manager and and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
-        This example retrieves the account lockout policy for SDDC Manager and compares the configuration against the product defaults
+        This example retrieves the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1703,17 +1703,17 @@ Export-ModuleMember -Function Request-SddcManagerAccountLockout
 Function Update-SddcManagerPasswordComplexity {
     <#
 		.SYNOPSIS
-		Update the password complexity policy for SDDC Manager
+		Updates the password complexity policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Update-SddcManagerPasswordComplexity cmdlet configures the password complexity policy for SDDC Manager.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Update-SddcManagerPasswordComplexity cmdlet configures the password complexity policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
 		- Configures the password complexity policy
 
         .EXAMPLE
         Update-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
-        This example configures the password complexity policy for SDDC Manager
+        This example configures the password complexity policy for an SDDC Manager.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1825,10 +1825,10 @@ Export-ModuleMember -Function Update-SddcManagerPasswordComplexity
 Function Update-SddcManagerAccountLockout {
     <#
 		.SYNOPSIS
-		Update the account lockout policy of SDDC Manager
+		Updates the account lockout policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Update-SddcManagerAccountLockout cmdlet configures the account lockout policy of SDDC Manager. The cmdlet
+        The Update-SddcManagerAccountLockout cmdlet configures the account lockout policy for an SDDC Manager. The cmdlet
         connects to SDDC Manager using the -server, -user, and -password values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
@@ -1836,7 +1836,7 @@ Function Update-SddcManagerAccountLockout {
 
         .EXAMPLE
         Update-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
-        This example configures the account lockout policy for SDDC Manager
+        This example configures the account lockout policy for an SDDC Manager.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -1906,30 +1906,30 @@ Export-ModuleMember -Function Update-SddcManagerAccountLockout
 Function Publish-SddcManagerPasswordExpiration {
     <#
         .SYNOPSIS
-        Publish password expiration policy for SDDC Manager.
+        Publishes the password expiration policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Publish-SddcManagerPasswordExpiration cmdlet returns password expiration policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-SddcManagerPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of SDDC Manager
 
         .EXAMPLE
         Publish-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -allDomains
-        This example will return password expiration policy for each local user of SDDC Manager
+        This example returns password expiration policy for each local user of SDDC Manager.
 
         .EXAMPLE
         Publish-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-w01
-        This example will NOT return the password expiration policy for each local user of SDDC Manager as the Workload Domain provided is not the Management Domain
+        This example will NOT return the password expiration policy for each local user of SDDC Manager as the workload domain provided is not the management domain.
 
         .EXAMPLE
         Publish-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return the password expiration policy for each local user of SDDC Manager and compare the configuration against passwordPolicyConfig.json
+        This example returns the password expiration policy for each local user of SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Publish-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
-        This example will return the password expiration policy for each local user of SDDC Manager and compare the configuration against the product defaults
+        This example returns the password expiration policy for each local user of SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2019,30 +2019,30 @@ Export-ModuleMember -Function Publish-SddcManagerPasswordExpiration
 Function Publish-SddcManagerPasswordComplexity {
     <#
         .SYNOPSIS
-        Publish password complexity policy for SDDC Manager.
+        Publishes the password complexity policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Publish-SddcManagerPasswordComplexity cmdlet returns password complexity policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-SddcManagerPasswordComplexity cmdlet returns password complexity policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-        - Collects password complexity policy for SDDC Manager
+        - Collects password complexity policy for an SDDC Manager
 
         .EXAMPLE
         Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -allDomains
-        This example will return password complexity policy for SDDC Manager
+        This example returns password complexity policy for an SDDC Manager.
 
         .EXAMPLE
         Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-w01
-        This example will NOT return the password complexity policy for SDDC Manager as the Workload Domain provided is not the Management Domain
+        This example will NOT return the password complexity policy for an SDDC Manager as the workload domain provided is not the management domain.
 
         .EXAMPLE
         Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return the password complexity policy for SDDC Manager and compare the configuration against passwordPolicyConfig.json
+        This example returns the password complexity policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
-        This example will return the password complexity policy for SDDC Manager and compare the configuration against the product defaults
+        This example returns the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2131,30 +2131,30 @@ Export-ModuleMember -Function Publish-SddcManagerPasswordComplexity
 Function Publish-SddcManagerAccountLockout {
     <#
         .SYNOPSIS
-        Publish password complexity policy for SDDC Manager.
+        Publishes the password complexity policy for an SDDC Manager.
 
         .DESCRIPTION
-        The Publish-SddcManagerAccountLockout cmdlet returns account lockout policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-SddcManagerAccountLockout cmdlet returns account lockout policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects account lockout policy forSDDC Manager
 
         .EXAMPLE
         Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -allDomains
-        This example will return account lockout policy for SDDC Manager
+        This example returns account lockout policy for an SDDC Manager.
 
         .EXAMPLE
         Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-w01
-        This example will NOT return the account lockout policy for SDDC Manager as the Workload Domain provided is not the Management Domain
+        This example will NOT return the account lockout policy for an SDDC Manager as the workload domain provided is not the management domain.
 
         .EXAMPLE
         Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return the account lockout policy for SDDC Manager and compares the configuration against passwordPolicyConfig.json
+        This example returns the account lockout policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
-        This example will return the account lockout policy for SDDC Manager and compares the configuration against the product defaults
+        This example returns the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2249,26 +2249,26 @@ Export-ModuleMember -Function Publish-SddcManagerAccountLockout
 Function Request-SsoPasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieve the password expiration policy
+		Retrieves the password expiration policy for a vCenter Single Sign-On domain.
 
         .DESCRIPTION
         The Request-SsoPasswordExpiration cmdlet retrieves the password expiration policy for a vCenter Single Sign-On
-        domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrives the global password expiration policy
 
         .EXAMPLE
         Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the password expiration policy for the vCenter Single Sign-On domain
+        This example retrieves the password expiration policy for the vCenter Single Sign-On domain.
 
         .EXAMPLE
         Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against passwordPolicyConfig.json
+        This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults
+        This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2365,27 +2365,27 @@ Export-ModuleMember -Function Request-SsoPasswordExpiration
 Function Request-SsoPasswordComplexity {
 	<#
         .SYNOPSIS
-        Retrieves vCenter Single Sign-On domain password complexity
+        Retrieves the password complexity policy for a vCenter Single Sign-On domain.
 
         .DESCRIPTION
-        The Request-SsoPasswordComplexity cmdlet retrieves the vCenter Single Sign-On domain password complexity
-        policy. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Request-SsoPasswordComplexity cmdlet retrieves password complexity policy for a vCenter Single Sign-On domain.
+        policy. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Single Sign-On domain
-        - Retrieve the password complexity policy
+        - Retrieves the password complexity policy
 
         .EXAMPLE
         Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01
+        This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01.
 
         .EXAMPLE
         Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json
+        This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against the product defaults
+        This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2489,27 +2489,27 @@ Export-ModuleMember -Function Request-SsoPasswordComplexity
 Function Request-SsoAccountLockout {
 	<#
         .SYNOPSIS
-        Retrieves vCenter Single Sign-On domain account lockout policy
+        Retrieves the account lockout policy policy for a vCenter Single Sign-On domain.
 
         .DESCRIPTION
         The Request-SsoAccountLockout cmdlet retrieves the vCenter Single Sign-On domain account lockout policy.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Single Sign-On domain
-        - Retrieve the account lockout policy
+        - Retrieves the account lockout policy
 
         .EXAMPLE
         Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01
+        This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01.
 
         .EXAMPLE
         Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json
+        This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
         Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults
+        This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2608,18 +2608,18 @@ Export-ModuleMember -Function Request-SsoAccountLockout
 Function Update-SsoPasswordExpiration {
     <#
 		.SYNOPSIS
-		Update the vCenter Single Sign-On password expiration policy
+		Updates the password expiration policy for a vCenter Single Sign-On domain.
 
         .DESCRIPTION
-        The Update-SsoPasswordExpiration cmdlet configures the password expiration policy of a vCenter Single Sign-On
-        domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Update-SsoPasswordExpiration cmdlet configures the password expiration policy for a vCenter Single Sign-On
+        domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the vCenter Single Sign-On password expiration policy
 
         .EXAMPLE
         Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999
-        This example configures the password expiration policy for a vCenter Single Sign-On domain
+        This example configures the password expiration policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2696,18 +2696,18 @@ Export-ModuleMember -Function Update-SsoPasswordExpiration
 Function Update-SsoPasswordComplexity {
     <#
 		.SYNOPSIS
-		Update the vCenter Single Sign-On password complexity policy
+		Updates the password complexity policy for a vCenter Single Sign-On domain.
 
         .DESCRIPTION
         The Update-SsoPasswordComplexity cmdlet configures the password complexity policy of a vCenter Single Sign-On
-        domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the vCenter Single Sign-On password complexity policy
 
         .EXAMPLE
         Update-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
-        This example configures the password complexity policy for a vCenter Single Sign-On domain
+        This example configures the password complexity policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2828,18 +2828,18 @@ Export-ModuleMember -Function Update-SsoPasswordComplexity
 Function Update-SsoAccountLockout {
     <#
 		.SYNOPSIS
-		Update the vCenter Single Sign-On account lockout policy
+		Updates the account lockout policy of a vCenter Single Sign-On domain.
 
         .DESCRIPTION
         The Update-SsoAccountLockout cmdlet configures the account lockout policy of a vCenter Single Sign-On domain.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the vCenter Single Sign-On account lockout policy
 
         .EXAMPLE
         Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 5 -failureInterval 180 -unlockInterval 900
-        This example configures the account lockout policy for a vCenter Single Sign-On domain
+        This example configures the account lockout policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -2927,42 +2927,42 @@ Export-ModuleMember -Function Update-SsoAccountLockout
 Function Publish-SsoPasswordPolicy {
     <#
         .SYNOPSIS
-        Publish password policies for vCenter Single Sign-On
+        Publishes a requested password policy for vCenter Single Sign-On for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-SsoPasswordPolicy cmdlet retrieves the requested password policy for vCenter Single Sign-On and
-        converts the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        converts the output to HTML. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Retrieves the requested password policy for vCenter Single Sign-On and converts to HTML
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
-        This example will return password expiration policy for vCenter Single Sign-On across all Workload Domains
+        This example returns password expiration policy for vCenter Single Sign-On across all workload domains.
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01
-        This example will return password expiration policy for vCenter Single Sign-On for a Workload Domain
+        This example returns password expiration policy for vCenter Single Sign-On for a workload domain.
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
-        This example will return password complexity policy for vCenter Single Sign-On across all Workload Domains
+        This example returns password complexity policy for vCenter Single Sign-On across all workload domains.
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-w01
-        This example will return password complexity policy for vCenter Single Sign-On for a Workload Domain
+        This example returns password complexity policy for vCenter Single Sign-On for a workload domain.
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
-        This example will return account lockout policy for vCenter Single Sign-On across all Workload Domains
+        This example returns account lockout policy for vCenter Single Sign-On across all workload domains.
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-w01
-        This example will return account lockout policy for vCenter Single Sign-On for a Workload Domain
+        This example returns account lockout policy for vCenter Single Sign-On for a workload domain.
 
         .EXAMPLE
         Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for vCenter Single Sign-On across for a Workload Domains and compare the configuration against the passwordPolicyConfig.json
+        This example returns password expiration policy for vCenter Single Sign-On for a workload domain and compares the configuration against the passwordPolicyConfig.json.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3063,26 +3063,26 @@ Export-ModuleMember -Function Publish-SsoPasswordPolicy
 Function Request-VcenterPasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieve the global password expiration policy
+		Retrieves the global password expiration policy for a vCenter Server instance.
 
         .DESCRIPTION
         The Request-VcenterPasswordExpiration cmdlet retrieves the global password expiration policy for a vCenter
-        Server. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        Server. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrives the global password expiration policy
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the global password expiration policy for the vCenter Server
+        This example retrieves the global password expiration policy for a vCenter Server instance
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the global password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the global password expiration policy for the vCenter Server and compares the configuration against the product defaults
+        This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3166,26 +3166,26 @@ Export-ModuleMember -Function Request-VcenterPasswordExpiration
 Function Request-VcenterPasswordComplexity {
     <#
 		.SYNOPSIS
-		Retrieve the password complexity policy
+		Retrieves the password complexity policy.
 
         .DESCRIPTION
         The Request-VcenterPasswordComplexity cmdlet retrieves the password complexity policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrieves the password complexity policy
 
         .EXAMPLE
         Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the password complexity policy for the vCenter Server based on the workload domain
+        This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain.
 
         .EXAMPLE
         Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for the vCenter Server based on the workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password complexity policy for the vCenter Server based on the workload domain and compares the configuration against the product defaults
+        This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3275,26 +3275,26 @@ Export-ModuleMember -Function Request-VcenterPasswordComplexity
 Function Request-VcenterAccountLockout {
     <#
 		.SYNOPSIS
-		Retrieve the account lockout policy for vCenter Server
+		Retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
 
         .DESCRIPTION
         The Request-VcenterAccountLockout cmdlet retrieves the account lockout policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrieves the account lockout policy
 
         .EXAMPLE
         Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the account lockout policy for the vCenter Server based on the workload domain
+        This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
 
         .EXAMPLE
         Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the account lockout policy for the vCenter Server based on the workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the account lockout policy for the vCenter Server based on the workload domain and compares the configuration against the product defaults
+        This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3385,18 +3385,18 @@ Export-ModuleMember -Function Request-VcenterAccountLockout
 Function Update-VcenterPasswordExpiration {
     <#
 		.SYNOPSIS
-		Update the global password expiration policy
+		Updates the global password expiration policy.
 
         .DESCRIPTION
         The Update-VcenterPasswordExpiration cmdlet configures the global password expiration policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the global password expiration policy
 
         .EXAMPLE
         Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
-        This example configures the global password expiration policy for the vCenter Server
+        This example configures the global password expiration policy for a vCenter Server instance
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3464,18 +3464,18 @@ Export-ModuleMember -Function Update-VcenterPasswordExpiration
 Function Update-VcenterPasswordComplexity {
     <#
 		.SYNOPSIS
-		Update the password complexity policy
+		Updates the password complexity policy.
 
         .DESCRIPTION
         The Update-VcenterPasswordComplexity cmdlet configures the password complexity policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the password complexity policy
 
         .EXAMPLE
         Update-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
-        This example configures the password complexity policy for the vCenter Server based on the workload domain
+        This example configures the password complexity policy for a vCenter Server instance based on the workload domain
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3580,7 +3580,7 @@ Export-ModuleMember -Function Update-VcenterPasswordComplexity
 Function Update-VcenterAccountLockout {
     <#
 		.SYNOPSIS
-		Update the account lockout policy of vCenter Server
+		Updates the account lockout policy of vCenter Server.
 
         .DESCRIPTION
         The Update-VcenterAccountLockout cmdlet configures the account lockout policy of a vCenter Server. The cmdlet
@@ -3591,7 +3591,7 @@ Function Update-VcenterAccountLockout {
 
         .EXAMPLE
         Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
-        This example configures the account lockout policy for the vCenter Server based on the workload domain
+        This example configures the account lockout policy for a vCenter Server instance based on the workload domain
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3680,26 +3680,26 @@ Export-ModuleMember -Function Update-VcenterAccountLockout
 Function Request-VcenterRootPasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieves the root user password expiration policy
+		Retrieves the root user password expiration policy.
 
         .DESCRIPTION
         The Request-VcenterRootPasswordExpiration cmdlet retrieves the root user password expiration policy for a
-        vCenter Server. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        vCenter Server. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrives the root user password expiration policy
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the root user password expiration policy for the vCenter Server
+        This example retrieves the root user password expiration policy for a vCenter Server instance
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the root user password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example retrieves the root user password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the root user password expiration policy for the vCenter Server and compares the configuration against the product defaults
+        This example retrieves the root user password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3785,22 +3785,22 @@ Export-ModuleMember -Function Request-VcenterRootPasswordExpiration
 Function Update-VcenterRootPasswordExpiration {
     <#
 		.SYNOPSIS
-		Update the root user password expiration policy
+		Updates the root user password expiration policy.
 
         .DESCRIPTION
         The Update-VcenterRootPasswordExpiration cmdlet configures the root user password expiration policy of a
-        vCenter Server. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        vCenter Server. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the root user password expiration policy
 
         .EXAMPLE
         Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
-        This example configures the configures password expiration settings for the vCenter Server root account to expire after 999 days with email for warning set to "admin@rainpole.io"
+        This example configures the configures password expiration settings for a vCenter Server instance root account to expire after 999 days with email for warning set to "admin@rainpole.io"
 
         .EXAMPLE
         Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -neverexpire
-        This example configures the configures password expiration settings for the vCenter Server root account to never expire
+        This example configures the configures password expiration settings for a vCenter Server instance root account to never expire
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3885,26 +3885,26 @@ Export-ModuleMember -Function Update-VcenterRootPasswordExpiration
 Function Publish-VcenterPasswordExpiration {
     <#
         .SYNOPSIS
-        Publish password expiration policy for vCenter Server.
+        Publishes the password expiration policy for vCenter Server for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-VcenterPasswordExpiration cmdlet returns password expiration policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-VcenterPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for vCenter Server
 
         .EXAMPLE
         Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password expiration policy for each vCenter Server
+        This example returns password expiration policy for each vCenter Server
 
         .EXAMPLE
         Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for a vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example returns password expiration policy for a vCenter Server and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password expiration policy for a vCenter Server and compares the configuration against the product defaults
+        This example returns password expiration policy for a vCenter Server and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -3982,26 +3982,26 @@ Export-ModuleMember -Function Publish-VcenterPasswordExpiration
 Function Publish-VcenterLocalPasswordExpiration {
     <#
         .SYNOPSIS
-        Publish password expiration policy for each local user of vCenter Server.
+        Publishes the password expiration policy for each local user of vCenter Server for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-VcenterLocalPasswordExpiration cmdlet returns password expiration policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-VcenterLocalPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of vCenter Server
 
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password expiration policy for each local user of vCenter Server for all Workload Domains
+        This example returns password expiration policy for each local user of vCenter Server for all workload domains.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for each local user of vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example returns password expiration policy for each local user of vCenter Server and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password expiration policy for each local user of vCenter Server and compares the configuration against the product defaults
+        This example returns password expiration policy for each local user of vCenter Server and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4078,30 +4078,30 @@ Export-ModuleMember -Function Publish-VcenterLocalPasswordExpiration
 Function Publish-VcenterLocalPasswordComplexity {
     <#
         .SYNOPSIS
-        Publish password complexity policy for each vCenter Server.
+        Publishes the password complexity policy for each vCenter Server instance for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-VcenterLocalPasswordComplexity cmdlet returns password complexity policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-VcenterLocalPasswordComplexity cmdlet returns password complexity policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for each vCenter Server
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password complexity policy for each vCenter Server for all Workload Domains
+        This example returns password complexity policy for each vCenter Server for all workload domains.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return password complexity policy for a vCenter Server
+        This example returns password complexity policy for a vCenter Server
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password complexity policy for a vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example returns password complexity policy for a vCenter Server and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password complexity policy for a vCenter Server and compares the configuration against the product defaults
+        This example returns password complexity policy for a vCenter Server and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4178,30 +4178,30 @@ Export-ModuleMember -Function Publish-VcenterLocalPasswordComplexity
 Function Publish-VcenterLocalAccountLockout {
     <#
         .SYNOPSIS
-        Publish account lockout policy for each vCenter Server.
+        Publish account lockout policy for each vCenter Server instance for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-VcenterLocalAccountLockout cmdlet returns account lockout policy for SDDC Manager.
-        The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-VcenterLocalAccountLockout cmdlet returns account lockout policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password account lockout for each vCenter Server
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password account lockout for each vCenter Server for all Workload Domains
+        This example returns password account lockout for each vCenter Server for all workload domains.
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return password account lockout for a vCenter Server
+        This example returns password account lockout for a vCenter Server
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password account lockout for a vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example returns password account lockout for a vCenter Server and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password account lockout for a vCenter Server and compares the configuration against the product defaults
+        This example returns password account lockout for a vCenter Server and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4284,7 +4284,7 @@ Export-ModuleMember -Function Publish-VcenterLocalAccountLockout
 Function Request-NsxtManagerPasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieve the password expiration policy for NSX Local Manager Users
+		Retrieves the password expiration policy for NSX Local Manager.
 
         .DESCRIPTION
         The Request-NsxtManagerPasswordExpiration cmdlet retrieves the password complexity policy for all NSX Local
@@ -4300,11 +4300,11 @@ Function Request-NsxtManagerPasswordExpiration {
 
         .EXAMPLE
         Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and compares the configuration against the product defaults
+        This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4384,11 +4384,11 @@ Export-ModuleMember -Function Request-NsxtManagerPasswordExpiration
 Function Request-NsxtManagerPasswordComplexity {
     <#
 		.SYNOPSIS
-		Retrieve the password complexity policy for NSX Local Manager
+		Retrieves the password complexity policy for NSX Local Manager.
 
         .DESCRIPTION
         The Request-NsxtManagerPasswordComplexity cmdlet retrieves the password complexity policy for each NSX Local Manager
-        node for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Retrieves the password complexity policy
@@ -4399,11 +4399,11 @@ Function Request-NsxtManagerPasswordComplexity {
 
         .EXAMPLE
         Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults
+        This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4542,11 +4542,11 @@ Export-ModuleMember -Function Request-NsxtManagerPasswordComplexity
 Function Request-NsxtManagerAccountLockout {
     <#
 		.SYNOPSIS
-        Retrieve account lockout policy for NSX Local Manager
+        Retrieves the account lockout policy for NSX Local Manager.
 
         .DESCRIPTION
         The Request-NsxtManagerAccountLockout cmdlet retrieves the account lockout policy for each NSX Local Manager node for
-        a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Retrieves the account lockpout policy
@@ -4557,11 +4557,11 @@ Function Request-NsxtManagerAccountLockout {
 
         .EXAMPLE
         Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and compares the configuration against the product defaults
+        This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4647,14 +4647,14 @@ Export-ModuleMember -Function Request-NsxtManagerAccountLockout
 Function Update-NsxtManagerPasswordExpiration {
     <#
 		.SYNOPSIS
-        Configure password expiration policy for NSX Local Manager Users
+        Updates the password expiration policy for NSX Local Manager.
 
         .DESCRIPTION
         The Update-NsxtManagerPasswordExpiration cmdlet configures the password expiration policy for NSX Local Manager
-        local users for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        local users for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
-        - Configure the password expiration policy
+        - Updates the password expiration policy
 
         .EXAMPLE
         Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
@@ -4733,11 +4733,11 @@ Export-ModuleMember -Function Update-NsxtManagerPasswordExpiration
 Function Update-NsxtManagerPasswordComplexity {
     <#
 		.SYNOPSIS
-		Configure the password complexity policy for NSX Local Manager
+		Updates the password complexity policy for NSX Local Manager.
 
         .DESCRIPTION
         The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager
-        node for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Updates the password complexity policy
@@ -4936,11 +4936,11 @@ Export-ModuleMember -Function Update-NsxtManagerPasswordComplexity
 Function Update-NsxtManagerAccountLockout {
     <#
 		.SYNOPSIS
-        Configure account lockout policy for NSX Local Manager
+        Updates the account lockout policy for NSX Local Manager.
 
         .DESCRIPTION
         The Update-NsxtManagerAccountLockout cmdlet configures the account lockout policy for NSX Local Manager nodes within
-        a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Configure the account lockout policy
@@ -5055,30 +5055,30 @@ Export-ModuleMember -Function Update-NsxtManagerAccountLockout
 Function Publish-NsxManagerPasswordExpiration {
     <#
         .SYNOPSIS
-        Publish password expiration policy for NSX Local Manager.
+        Publishes the password expiration policy for NSX Local Manager for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-NsxManagerPasswordExpiration cmdlet returns password expiration policy for local users of NSX Local
-        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        Manager. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of NSX Local Manager
 
         .EXAMPLE
         Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password expiration policy for each local user of NSX Local Manager for all Workload Domains
+        This example returns password expiration policy for each local user of NSX Local Manager for all workload domains.
 
         .EXAMPLE
         Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain
+        This example returns password expiration policy for each local user of NSX Local Manager for a workload domain
 
         .EXAMPLE
         Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
+        This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-NsxManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password expiration policy for each local user of NSX Local Manager for a Workload Domain and compares the configuration against the product defaults
+        This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5163,30 +5163,30 @@ Export-ModuleMember -Function Publish-NsxManagerPasswordExpiration
 Function Publish-NsxManagerPasswordComplexity {
     <#
         .SYNOPSIS
-        Publish password complexity policy for NSX Local Manager.
+        Publishes the password complexity policy for NSX Local Manager for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-NsxManagerPasswordComplexity cmdlet returns password complexity policy for local users of NSX Local
-        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        Manager. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for each NSX Local Manager
 
         .EXAMPLE
         Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password complexity policy for each NSX Local Manager for all Workload Domains
+        This example returns password complexity policy for each NSX Local Manager for all workload domains.
 
         .EXAMPLE
         Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return password complexity policy for each NSX Local Manager for a Workload Domain
+        This example returns password complexity policy for each NSX Local Manager for a workload domain
 
         .EXAMPLE
         Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password complexity policy of NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
+        This example returns password complexity policy of NSX Local Manager for a workload domain and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-NsxManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -drift
-        This example will return password complexity policy of NSX Local Manager for a Workload Domain and compares the configuration against the product defaults
+        This example returns password complexity policy of NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5263,30 +5263,30 @@ Export-ModuleMember -Function Publish-NsxManagerPasswordComplexity
 Function Publish-NsxManagerAccountLockout {
     <#
         .SYNOPSIS
-        Publish account lockout policy for NSX Local Manager.
+        Publish account lockout policy for NSX Local Manager for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-NsxManagerAccountLockout cmdlet returns account lockout policy for local users of NSX Local
-        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        Manager. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects account lockout policy for each NSX Local Manager
 
         .EXAMPLE
         Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return account lockout policy for each NSX Local Manager for all Workload Domains
+        This example returns account lockout policy for each NSX Local Manager for all workload domains.
 
         .EXAMPLE
         Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return account lockout policy for each NSX Local Manager for a Workload Domain
+        This example returns account lockout policy for each NSX Local Manager for a workload domain
 
         .EXAMPLE
         Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return account lockout policy for each NSX Local Manager for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
+        This example returns account lockout policy for each NSX Local Manager for a workload domain and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-NsxManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return account lockout policy for each NSX Local Manager for a Workload Domain and compares the configuration against the product defaults
+        This example returns account lockout policy for each NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5369,10 +5369,10 @@ Export-ModuleMember -Function Publish-NsxManagerAccountLockout
 Function Request-NsxtEdgePasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieve the password expiration policy for NSX Edge Users
+		Retrieves the password expiration policy for NSX Edge node users.
 
         .DESCRIPTION
-        The Request-NsxtEdgePasswordExpiration cmdlet retrieves the password complexity policy for all NSX Edge users
+        The Request-NsxtEdgePasswordExpiration cmdlet retrieves the password complexity policy for all NSX Edge node users
         for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and
         -password values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
@@ -5381,15 +5381,15 @@ Function Request-NsxtEdgePasswordExpiration {
 
         .EXAMPLE
         Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the password expiration policy for all users for the NSX Edge for a workload domain
+        This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain
 
         .EXAMPLE
         Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password expiration policy for all users for the NSX Edge for a workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password expiration policy for all users for the NSX Edge for a workload domain and compares the configuration against the product defaults
+        This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5472,11 +5472,11 @@ Export-ModuleMember -Function Request-NsxtEdgePasswordExpiration
 Function Request-NsxtEdgePasswordComplexity {
     <#
 		.SYNOPSIS
-		Retrieve the password complexity policy for NSX Edge
+		Retrieves the password complexity policy for NSX Edge nodes.=.
 
         .DESCRIPTION
         The Request-NsxtEdgePasswordComplexity cmdlet retrieves the password complexity policy for each NSX Edge
-        nodes for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Retrieves the password complexity policy
@@ -5487,11 +5487,11 @@ Function Request-NsxtEdgePasswordComplexity {
 
         .EXAMPLE
         Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for each NSX Edge node for a workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password complexity policy for each NSX Edge node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults
+        This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5591,11 +5591,11 @@ Export-ModuleMember -Function Request-NsxtEdgePasswordComplexity
 Function Request-NsxtEdgeAccountLockout {
     <#
 		.SYNOPSIS
-        Retrieve account lockout policy from NSX Edge
+        Retrieves the account lockout policy for NSX Edge nodes based on the workload domain.
 
         .DESCRIPTION
-        The Request-NsxtEdgeAccountLockout cmdlet retrieves the account lockout policy from NSX Edge nodes within a
-        workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Request-NsxtEdgeAccountLockout cmdlet retrieves the account lockout policy for NSX Edge nodes within a
+        workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Retrieves the account lockout policy
@@ -5606,11 +5606,11 @@ Function Request-NsxtEdgeAccountLockout {
 
         .EXAMPLE
         Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON
+        This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
-        This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and compares the configuration against the product defaults
+        This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5696,18 +5696,18 @@ Export-ModuleMember -Function Request-NsxtEdgeAccountLockout
 Function Update-NsxtEdgePasswordExpiration {
     <#
 		.SYNOPSIS
-        Configure password expiration policy for NSX Edge Local Users
+        Updates the local user password expiration policy for NSX Edge node local users.
 
         .DESCRIPTION
-        The Update-NsxtEdgePasswordExpiration cmdlet configures the password expiration policy for NSX Edge local users
-        for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Update-NsxtEdgePasswordExpiration cmdlet configures the password expiration policy for NSX Edge node local users
+        for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
-        - Configure the password expiration policy
+        - Updates the password expiration policy
 
         .EXAMPLE
         Update-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
-        This example configures the password expiration policy in NSX Edge for all local users in the sfo-m01 workload domain
+        This example configures the password expiration policy for NSX Edge node local users in the sfo-m01 workload domain
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5785,11 +5785,11 @@ Export-ModuleMember -Function Update-NsxtEdgePasswordExpiration
 Function Update-NsxtEdgePasswordComplexity {
     <#
 		.SYNOPSIS
-		Configure the password complexity policy for NSX Edge
+		Updates the password complexity policy for NSX Edge nodes based on the workload domain.
 
         .DESCRIPTION
         The Update-NsxtEdgePasswordComplexity cmdlet updates the password complexity policy for each NSX Edge
-        node for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Updates the password complexity policy
@@ -5907,18 +5907,18 @@ Export-ModuleMember -Function Update-NsxtEdgePasswordComplexity
 Function Update-NsxtEdgeAccountLockout {
     <#
 		.SYNOPSIS
-        Configure account lockout policy for NSX Edge
+        Updates the account lockout policy for NSX Edge nodes based on the workload domain.
 
         .DESCRIPTION
         The Update-NsxtEdgeAccountLockout cmdlet configures the account lockout policy for NSX Edge nodes.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Configure the account lockout policy
 
         .EXAMPLE
         Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900
-        This example configures the account lockout policy of the NSX Edges nodes in sfo-m01 workload domain
+        This example configures the account lockout policy of the NSX Edge nodes in sfo-m01 workload domain
 
         .PARAMETER user
         The username to authenticate to the SDDC Manager instance.
@@ -6002,30 +6002,30 @@ Export-ModuleMember -Function Update-NsxtEdgeAccountLockout
 Function Publish-NsxEdgePasswordExpiration {
     <#
         .SYNOPSIS
-        Publish password expiration policy for NSX Edge.
+        Publishes the password expiration policy for NSX Edge nodes for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-NsxEdgePasswordExpiration cmdlet returns password expiration policy for local users of NSX Local
-        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-NsxEdgePasswordExpiration cmdlet returns password expiration policy for local users of NSX Edge
+        nodes. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of NSX Edge
 
         .EXAMPLE
         Publish-NsxEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password expiration policy for each local user of NSX Edge nodes for all Workload Domains
+        This example returns password expiration policy for each local user of NSX Edge nodes for all workload domains.
 
         .EXAMPLE
         Publish-NsxEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return password expiration policy for each local user of NSX Edge nodes for a Workload Domain
+        This example returns password expiration policy for each local user of NSX Edge nodes for a workload domain
 
         .EXAMPLE
         Publish-NsxEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for each local user of NSX Edge nodes for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
+        This example returns password expiration policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-NsxEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password expiration policy for each local user of NSX Edge nodes for a Workload Domain and compares the configuration against the product defaults
+        This example returns password expiration policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -6120,30 +6120,30 @@ Export-ModuleMember -Function Publish-NsxEdgePasswordExpiration
 Function Publish-NsxEdgePasswordComplexity {
     <#
         .SYNOPSIS
-        Publish password complexity policy for NSX Edge.
+        Publishes the password complexity policy for NSX Edge nodes for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-NsxEdgePasswordComplexity cmdlet returns password complexity policy for local users of NSX Local
-        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-NsxEdgePasswordComplexity cmdlet returns password complexity policy for local users of NSX Edge
+        Mnodes. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for each local user of NSX Edge
 
         .EXAMPLE
         Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return password complexity policy for each local user of NSX Edge nodes for all Workload Domains
+        This example returns password complexity policy for each local user of NSX Edge nodes for all workload domains.
 
         .EXAMPLE
         Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return password complexity policy for each local user of NSX Edge nodes for a Workload Domain
+        This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain
 
         .EXAMPLE
         Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password complexity policy for each local user of NSX Edge nodes for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
+        This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return password complexity policy for each local user of NSX Edge nodes for a Workload Domain and compares the configuration against the product defaults
+        This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -6220,30 +6220,30 @@ Export-ModuleMember -Function Publish-NsxEdgePasswordComplexity
 Function Publish-NsxEdgeAccountLockout {
     <#
         .SYNOPSIS
-        Publish account lockout policy for NSX Edge.
+        Publishes the account lockout policy for NSX Edge nodes for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-NsxEdgeAccountLockout cmdlet returns account lockout policy for local users of NSX Local
-        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        The Publish-NsxEdgeAccountLockout cmdlet returns account lockout policy for local users of NSX Edge
+        nodes. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects account lockout policy for NSX Edge node
 
         .EXAMPLE
         Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example will return account lockout policy for each NSX Edge nodes for all Workload Domains
+        This example returns account lockout policy for each NSX Edge nodes for all workload domains.
 
         .EXAMPLE
         Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example will return account lockout policy for each NSX Edge nodes for a Workload Domain
+        This example returns account lockout policy for each NSX Edge nodes for a workload domain
 
         .EXAMPLE
         Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return account lockout policy for each NSX Edge nodes for a Workload Domain and compare the configuration against the passwordPolicyConfig.json
+        This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example will return account lockout policy for each NSX Edge nodes for a Workload Domain and compares the configuration against the product defaults
+        This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -6326,7 +6326,7 @@ Export-ModuleMember -Function Publish-NsxEdgeAccountLockout
 Function Request-EsxiPasswordExpiration {
 	<#
         .SYNOPSIS
-        Retrieves ESXi host password expiration
+        Retrieves the password expiration policy for ESXi hosts in a cluster.
 
         .DESCRIPTION
         The Request-EsxiPasswordExpiration cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
@@ -6336,7 +6336,7 @@ Function Request-EsxiPasswordExpiration {
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Gathers the ESXi hosts for the cluster specificed
-        - Retrieve all ESXi hosts password expiration policy
+        - Retrieves the password expiration policy for all ESXi hosts in a cluster
 
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
@@ -6344,11 +6344,11 @@ Function Request-EsxiPasswordExpiration {
 
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON
+        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
-        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults
+        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -6450,7 +6450,7 @@ Export-ModuleMember -Function Request-EsxiPasswordExpiration
 Function Request-EsxiPasswordComplexity {
 	<#
         .SYNOPSIS
-        Retrieves ESXi host password complexity
+        Retrieves the password complexity policy for all ESXi hosts in a cluster.
 
         .DESCRIPTION
         The Request-EsxiPasswordComplexity cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
@@ -6461,7 +6461,7 @@ Function Request-EsxiPasswordComplexity {
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Gathers the ESXi hosts for the cluster specificed
-        - Retrieve all ESXi hosts password complexity policy
+        - Retrieves the password complexity policy for all ESXi hosts in a cluster
 
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
@@ -6469,11 +6469,11 @@ Function Request-EsxiPasswordComplexity {
 
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON
+        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
-        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults
+        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -6579,7 +6579,7 @@ Export-ModuleMember -Function Request-EsxiPasswordComplexity
 Function Request-EsxiAccountLockout {
 	<#
         .SYNOPSIS
-        Retrieves ESXi host account lockout
+        Retrieves the account lockout policy for all ESXi hosts in a cluster.
 
         .DESCRIPTION
         The Request-EsxiAccountLockout cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
@@ -6590,19 +6590,19 @@ Function Request-EsxiAccountLockout {
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Gathers the ESXi hosts for the cluster specificed
-        - Retrieve all ESXi hosts account lockout policy
+        - Retrieves the account lockout policy for all ESXi hosts in the cluster
 
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
-        This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
+        This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON
+        This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
-        This example retrieves all ESXi hosts account lockout policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults
+        This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -6708,7 +6708,7 @@ Export-ModuleMember -Function Request-EsxiAccountLockout
 Function Update-EsxiPasswordExpiration {
 	<#
 		.SYNOPSIS
-        Update ESXi password expiration period in days
+        Updates the password expiration period in days for all ESXi hosts in a cluster.
 
         .DESCRIPTION
 		The Update-EsxiPasswordExpiration cmdlet configures the password expiration policy on ESXi. The cmdlet connects
@@ -6812,7 +6812,7 @@ Export-ModuleMember -Function Update-EsxiPasswordExpiration
 Function Update-EsxiPasswordComplexity {
     <#
 		.SYNOPSIS
-        Update ESXi password complexity policy
+        Updates ESXi password complexity policy.
 
         .DESCRIPTION
         The Update-EsxiPasswordComplexity cmdlet configures the password complexity policy on ESXi. The cmdlet connects
@@ -6933,7 +6933,7 @@ Export-ModuleMember -Function Update-EsxiPasswordComplexity
 Function Update-EsxiAccountLockout {
     <#
 		.SYNOPSIS
-        Update ESXi account lockout policy
+        Updates ESXi account lockout policy.
 
         .DESCRIPTION
         The Update-EsxiAccountLockout cmdlet configures the account lockout policy on ESXi. The cmdlet connects
@@ -7054,46 +7054,46 @@ Export-ModuleMember -Function Update-EsxiAccountLockout
 Function Publish-EsxiPasswordPolicy {
     <#
         .SYNOPSIS
-        Publish password policies for ESXi Hosts
+        Publishes the password policies for ESXi hosts for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-EsxiPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
-        the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        the output to HTML. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-        - Retrieves the requested password policy for all ESXi Hosts and converts to HTML
+        - Retrieves the requested password policy for all ESXi hosts and converts to HTML
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
-        This example will return password expiration policy for all ESXi Hosts across all Workload Domains
+        This example returns password expiration policy for all ESXi hosts across all workload domains.
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01
-        This example will return password expiration policy for all ESXi Hosts for a Workload Domain
+        This example returns password expiration policy for all ESXi hosts for a workload domain
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
-        This example will return password complexity policy for all ESXi Hosts across all Workload Domains
+        This example returns password complexity policy for all ESXi hosts across all workload domains.
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-w01
-        This example will return password complexity policy for all ESXi Hosts for a Workload Domain
+        This example returns password complexity policy for all ESXi hosts for a workload domain
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
-        This example will return account lockout policy for all ESXi Hosts across all Workload Domains
+        This example returns account lockout policy for all ESXi hosts across all workload domains.
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-w01
-        This example will return account lockout policy for all ESXi Hosts for a Workload Domain
+        This example returns account lockout policy for all ESXi hosts for a workload domain
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for all ESXi Hosts across all Workload Domains and compare the configuration against the passwordPolicyConfig.json
+        This example returns password expiration policy for all ESXi hosts across all workload domains and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift
-        This example will return password expiration policy for all ESXi Hosts across all Workload Domains and compares the configuration against the product defaults
+        This example returns password expiration policy for all ESXi hosts across all workload domains and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7206,12 +7206,12 @@ Export-ModuleMember -Function Publish-EsxiPasswordPolicy
 Function Request-WsaPasswordExpiration {
 	<#
         .SYNOPSIS
-        Retrieves Workspace ONE Access password expiration
+        Retrieves Workspace ONE Access password expiration.
 
         .DESCRIPTION
         The Request-WsaPasswordExpiration cmdlet retrieves the Workspace ONE Access password expiration policy.
         - Validates that network connectivity and authentication is possible to Workspace ONE Access
-        - Retrieve the password expiration policy
+        - Retrieves the password expiration policy
 
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
@@ -7219,11 +7219,11 @@ Function Request-WsaPasswordExpiration {
 
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
-        This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and compares the configuration against the product defaults
+        This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the Workspace ONE Access instance.
@@ -7286,12 +7286,12 @@ Export-ModuleMember -Function Request-WsaPasswordExpiration
 Function Request-WsaPasswordComplexity {
 	<#
         .SYNOPSIS
-        Retrieves Workspace ONE Access password complexity
+        Retrieves the password complexity policy for Workspace ONE Access instance.
 
         .DESCRIPTION
         The Request-WsaPasswordComplexity cmdlet retrieves the Workspace ONE Access password complexity policy.
         - Validates that network connectivity and authentication is possible to Workspace ONE Access
-        - Retrieve the password complexity policy
+        - Retrieves the password complexity policy for Workspace ONE Access instance
 
         .EXAMPLE
         Request-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
@@ -7299,11 +7299,11 @@ Function Request-WsaPasswordComplexity {
 
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and checks the configuration drift using the provided configuration JSON
+        This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
-        This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and compares the configuration against the product defaults
+        This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the Workspace ONE Access instance.
@@ -7371,14 +7371,14 @@ Export-ModuleMember -Function Request-WsaPasswordComplexity
 Function Request-WsaLocalUserPasswordComplexity {
     <#
 		.SYNOPSIS
-		Retrieve the local user password complexity policy for Workspace ONE Access
+		Retrieves the local user password complexity policy for Workspace ONE Access for Workspace ONE Access.
 
         .DESCRIPTION
         The Request-WsaLocalUserPasswordComplexity cmdlet retrieves the local user password complexity policy for
-        Workspace ONE Access. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        Workspace ONE Access. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		- Retrieves the local user password complexity policy
+		- Retrieves the local user password complexity policy for Workspace ONE Access
 
         .EXAMPLE
         Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
@@ -7386,11 +7386,11 @@ Function Request-WsaLocalUserPasswordComplexity {
 
         .EXAMPLE
         Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON
+        This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
-        This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults
+        This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7461,11 +7461,11 @@ Export-ModuleMember -Function Request-WsaLocalUserPasswordComplexity
 Function Request-WsaLocalUserAccountLockout {
     <#
 		.SYNOPSIS
-		Retrieve the account lockout policy for Workspace ONE Access
+		Retrieves the local user account lockout policy for Workspace ONE Access instance.
 
         .DESCRIPTION
-        The Request-WsaLocalUserAccountLockout cmdlet retrieves the account lockout policy for SDDC Manager.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The Request-WsaLocalUserAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
 		- Retrieves the account lockout policy of Workspace ONE Access
 
@@ -7475,11 +7475,11 @@ Function Request-WsaLocalUserAccountLockout {
 
         .EXAMPLE
         Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON
+        This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
-        This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults
+        This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7546,12 +7546,12 @@ Export-ModuleMember -Function Request-WsaLocalUserAccountLockout
 Function Request-WsaAccountLockout {
 	<#
         .SYNOPSIS
-        Retrieves Workspace ONE Access account lockout
+        Retrieves the account lockout policy for Workspace ONE Access instance.
 
         .DESCRIPTION
         The Request-WsaAccountLockout cmdlet retrieves the Workspace ONE Access account lockout policy.
         - Validates that network connectivity and authentication is possible to Workspace ONE Access
-        - Retrieve the account lockout policy
+        - Retrieves the account lockout policy
 
         .EXAMPLE
         Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
@@ -7559,11 +7559,11 @@ Function Request-WsaAccountLockout {
 
         .EXAMPLE
         Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON
+        This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
-        This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults
+        This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the Workspace ONE Access instance.
@@ -7627,7 +7627,7 @@ Export-ModuleMember -Function Request-WsaAccountLockout
 Function Update-WsaPasswordExpiration {
     <#
 		.SYNOPSIS
-		Update the Workspace ONE Access password expiration policy
+		Updates the Workspace ONE Access password expiration policy.
 
         .DESCRIPTION
         The Update-WsaPasswordExpiration cmdlet configures the password expiration policy for a Workspace ONE Access
@@ -7698,7 +7698,7 @@ Export-ModuleMember -Function Update-WsaPasswordExpiration
 Function Update-WsaPasswordComplexity {
     <#
 		.SYNOPSIS
-		Update the Workspace ONE Access password complexity policy
+		Updates the password complexity policy for a Workspace ONE Access instance.
 
         .DESCRIPTION
         The Update-WsaPasswordComplexity cmdlet configures the password complexity policy for a Workspace ONE Access
@@ -7786,11 +7786,11 @@ Export-ModuleMember -Function Update-WsaPasswordComplexity
 Function Update-WsaLocalUserPasswordComplexity {
     <#
 		.SYNOPSIS
-		Update the local user password complexity policy for Workspace ONE Access
+		Updates the local user password complexity policy for Workspace ONE Access.
 
         .DESCRIPTION
         The Update-WsaLocalUserPasswordComplexity cmdlet configures the local user password complexity policy for
-        Workspace ONE Access. The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        Workspace ONE Access. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the password complexity policy
@@ -7871,7 +7871,7 @@ Export-ModuleMember -Function Update-WsaLocalUserPasswordComplexity
 Function Update-WsaAccountLockout {
     <#
 		.SYNOPSIS
-		Update the Workspace ONE Access account lockout policy
+		Updates the account lockout policy for a Workspace ONE Access instance.
 
         .DESCRIPTION
         The Update-WsaAccountLockout cmdlet configures the account lockout policy for Workspace ONE Access.
@@ -7937,11 +7937,11 @@ Export-ModuleMember -Function Update-WsaAccountLockout
 Function Update-WsaLocalUserAccountLockout {
     <#
 		.SYNOPSIS
-		Update the account lockout policy of Workspace ONE Access
+		Updates the account lockout policy of Workspace ONE Access.
 
         .DESCRIPTION
         The Update-WsaLocalUserAccountLockout cmdlet configures the account lockout policy of Workspace ONE Access.
-        The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the account lockout policy
@@ -8018,7 +8018,7 @@ Export-ModuleMember -Function Update-WsaLocalUserAccountLockout
 Function Publish-WsaDirectoryPasswordPolicy {
     <#
         .SYNOPSIS
-        Publish password policies for Workspace ONE Access Directory
+        Publishes the password policies for Workspace ONE Access Directory.
 
         .DESCRIPTION
         The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for Workspace ONE Access
@@ -8029,23 +8029,23 @@ Function Publish-WsaDirectoryPasswordPolicy {
 
         .EXAMPLE
         Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains
-        This example will return the password expiration policy for Workspace ONE Access Directory Users
+        This example returns the password expiration policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
         Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordComplexity -allDomains
-        This example will return the password complexity policy for Workspace ONE Access Directory Users
+        This example returns the password complexity policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
         Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy AccountLockout -allDomains
-        This example will return the account lockout policy for Workspace ONE Access Directory Users
+        This example returns the account lockout policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
         Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return the password expiration policy for Workspace ONE Access Directory Users and compare the configuration against the passwordPolicyConfig.json
+        This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift
-        This example will return the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults
+        This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8121,34 +8121,34 @@ Export-ModuleMember -Function Publish-WsaDirectoryPasswordPolicy
 Function Publish-WsaLocalPasswordPolicy {
     <#
         .SYNOPSIS
-        Publish password policies for Workspace ONE Access Local Users
+        Publishes the password policies for Workspace ONE Access Local Users.
 
         .DESCRIPTION
         The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
-        the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+        the output to HTML. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Retrieves the requested password policy for Workspace ONE Access Local Users and converts to HTML
 
         .EXAMPLE
         Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
-        This example will return password expiration policy for Workspace ONE Access Directory Users
+        This example returns password expiration policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
         Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
-        This example will return password complexity policy for Workspace ONE Access Directory Users
+        This example returns password complexity policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
         Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
-        This example will return account lockout policy for Workspace ONE Access Directory Users
+        This example returns account lockout policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
         Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example will return password expiration policy for Workspace ONE Access Directory Users and compare the configuration against the passwordPolicyConfig.json
+        This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift
-        This example will return password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults
+        This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8243,26 +8243,26 @@ Export-ModuleMember -Function Publish-WsaLocalPasswordPolicy
 Function Request-LocalUserPasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieve local user password expiration policy
+		Retrieves the password expiration policy for the specified local user.
 
         .DESCRIPTION
         The Request-LocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy. The cmdlet
         connects to SDDC Manager using the -server, -user, and -password values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		- Retrives the local user password expiration policy
+		Retrieves the password expiration policy for the specified local user
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
-        This example retrieves the global password expiration policy for the vCenter Server
+        This example retrieves the global password expiration policy for a vCenter Server instance
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the global password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON
+        This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
-        This example retrieves the global password expiration policy for the vCenter Server and compares the configuration against the product defaults
+        This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8389,7 +8389,7 @@ Export-ModuleMember -Function Request-LocalUserPasswordExpiration
 Function Update-LocalUserPasswordExpiration {
     <#
 		.SYNOPSIS
-		Configure a local user password expiration policy
+		Updates a local user password expiration period in days.
 
         .DESCRIPTION
         The Update-LocalUserPasswordExpiration cmdlet configures a local user password expiration policy. The cmdlet
@@ -8400,7 +8400,7 @@ Function Update-LocalUserPasswordExpiration {
 
         .EXAMPLE
         Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
-        This example updates the global password expiration policy for the vCenter Server
+        This example updates the global password expiration policy for a vCenter Server instance
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.

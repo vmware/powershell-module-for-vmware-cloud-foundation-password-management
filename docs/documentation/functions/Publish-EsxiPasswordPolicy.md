@@ -1,102 +1,99 @@
 # Publish-EsxiPasswordPolicy
 
-## SYNOPSIS
+## Synopsis
 
-Publish password policies for ESXi Hosts.
+Publishes the password policies for ESXi hosts for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-allDomains]
- [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-EsxiPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <String> -user <String> -pass <String> -policy <String>
- -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-EsxiPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-EsxiPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
-the output to HTML.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-EsxiPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and convert the output to HTML.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Retrieves the requested password policy for all ESXi Hosts and converts to HTML
+- Retrieves the requested password policy for all ESXi hosts and converts to HTML
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
 ```
 
-This example will return password expiration policy for all ESXi Hosts across all Workload Domains.
+This example returns password expiration policy for all ESXi hosts across all for a workload domain.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01
 ```
 
-This example will return password expiration policy for all ESXi Hosts for a Workload Domain.
+This example returns password expiration policy for all ESXi hosts for a workload domain.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
 ```
 
-This example will return password complexity policy for all ESXi Hosts across all Workload Domains.
+This example returns password complexity policy for all ESXi hosts across all for a workload domain.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-w01
 ```
 
-This example will return password complexity policy for all ESXi Hosts for a Workload Domain.
+This example returns password complexity policy for all ESXi hosts for a workload domain.
 
-### EXAMPLE 5
+### Example 5
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
 ```
 
-This example will return account lockout policy for all ESXi Hosts across all Workload Domains.
+This example returns account lockout policy for all ESXi hosts across all for a workload domain.
 
-### EXAMPLE 6
+### Example 6
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-w01
 ```
 
-This example will return account lockout policy for all ESXi Hosts for a Workload Domain.
+This example returns account lockout policy for all ESXi hosts for a workload domain.
 
-### EXAMPLE 7
+### Example 7
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return password expiration policy for all ESXi Hosts across all Workload Domains and compare the configuration against the passwordPolicyConfig.json.
+This example returns password expiration policy for all ESXi hosts across all for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
 
-### EXAMPLE 8
+### Example 8
 
 ```powershell
 Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift
 ```
 
-This example will return password expiration policy for all ESXi Hosts across all Workload Domains and compares the configuration against the product defaults.
+This example returns password expiration policy for all ESXi hosts across all for a workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

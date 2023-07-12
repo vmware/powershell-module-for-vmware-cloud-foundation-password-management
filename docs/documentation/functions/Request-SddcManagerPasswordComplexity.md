@@ -1,51 +1,50 @@
 # Request-SddcManagerPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve the password complexity policy for SDDC Manager.
+Retrieves the password complexity policy for an SDDC Manager.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-SddcManagerPasswordComplexity -server <String> -user <String> -pass <String> -rootPass <String>
- [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-SddcManagerPasswordComplexity -server <String> -user <String> -pass <String> -rootPass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-SddcManagerPasswordComplexity cmdlet retrieves the password complexity policy for SDDC Manager.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-SddcManagerPasswordComplexity` cmdlet retrieves the password complexity policy for an SDDC Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Retrieves the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
 ```
 
-This example retrieves the password complexity policy for SDDC Manager.
+This example retrieves the password complexity policy for an SDDC Manager.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example retrieves the password complexity policy for SDDC Manager and compares the configuration against passwordPolicyConfig.json.
+This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
 ```
 
-This example retrieves the password complexity policy for SDDC Manager and compares the configuration against the product defaults.
+This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

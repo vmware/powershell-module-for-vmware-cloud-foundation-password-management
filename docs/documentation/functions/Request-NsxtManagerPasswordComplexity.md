@@ -1,29 +1,27 @@
 # Request-NsxtManagerPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve the password complexity policy for NSX Local Manager.
+Retrieves the password complexity policy for NSX Local Manager.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-NsxtManagerPasswordComplexity -server <String> -user <String> -pass <String> -domain <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-NsxtManagerPasswordComplexity -server <String> -user <String> -pass <String> -domain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-NsxtManagerPasswordComplexity cmdlet retrieves the password complexity policy for each NSX Local Manager
-node for a workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-NsxtManagerPasswordComplexity` cmdlet retrieves the password complexity policy for each NSX Local Manager node for a workload domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
 - Retrieves the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -31,7 +29,7 @@ Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user ad
 
 This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -39,7 +37,7 @@ Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user ad
 
 This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
@@ -47,7 +45,7 @@ Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user ad
 
 This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

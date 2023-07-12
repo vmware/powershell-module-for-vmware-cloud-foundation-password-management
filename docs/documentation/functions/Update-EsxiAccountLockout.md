@@ -1,21 +1,19 @@
 # Update-EsxiAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Update ESXi account lockout policy.
+Updates ESXi account lockout policy.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-EsxiAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [-failures] <Int32> [-unlockInterval] <Int32> [[-detail] <String>] [<CommonParameters>]
+Update-EsxiAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-failures] <Int32> [-unlockInterval] <Int32> [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-EsxiAccountLockout cmdlet configures the account lockout policy on ESXi.
-The cmdlet connects
-to SDDC Manager using the -server, -user, and -password values:
+The `Update-EsxiAccountLockout` cmdlet configures the account lockout policy on ESXi.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
@@ -23,9 +21,9 @@ to SDDC Manager using the -server, -user, and -password values:
 - Gathers the ESXi hosts for the cluster specificed
 - Configures the account lockout policy for all ESXi hosts in the cluster
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900
@@ -33,7 +31,7 @@ Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@
 
 This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900 -detail false
@@ -41,7 +39,7 @@ Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@
 
 This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

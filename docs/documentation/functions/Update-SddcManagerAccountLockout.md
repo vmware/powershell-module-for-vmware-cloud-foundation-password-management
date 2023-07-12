@@ -1,37 +1,35 @@
 # Update-SddcManagerAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Update the account lockout policy of SDDC Manager.
+Updates the account lockout policy for an SDDC Manager.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-SddcManagerAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-rootPass] <String>
- [-failures] <Int32> [[-unlockInterval] <Int32>] [[-rootUnlockInterval] <Int32>] [<CommonParameters>]
+Update-SddcManagerAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-rootPass] <String> [-failures] <Int32> [[-unlockInterval] <Int32>] [[-rootUnlockInterval] <Int32>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-SddcManagerAccountLockout cmdlet configures the account lockout policy of SDDC Manager.
-The cmdlet
-connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-SddcManagerAccountLockout` cmdlet configures the account lockout policy for an SDDC Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
 ```
 
-This example configures the account lockout policy for SDDC Manager.
+This example configures the account lockout policy for an SDDC Manager.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

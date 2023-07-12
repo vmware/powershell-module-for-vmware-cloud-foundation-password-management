@@ -1,10 +1,10 @@
 # Publish-SsoPasswordPolicy
 
-## SYNOPSIS
+## Synopsis
 
-Publish password policies for vCenter Single Sign-On.
+Publishes a requested password policy for vCenter Single Sign-On for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
@@ -16,79 +16,77 @@ Publish-SsoPasswordPolicy -server <String> -user <String> -pass <String> -policy
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-SsoPasswordPolicy -server <String> -user <String> -pass <String> -policy <String>
- -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-SsoPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-SsoPasswordPolicy cmdlet retrieves the requested password policy for vCenter Single Sign-On and
-converts the output to HTML.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-SsoPasswordPolicy` cmdlet retrieves the requested password policy for vCenter Single Sign-On and converts the output to HTML.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Retrieves the requested password policy for vCenter Single Sign-On and converts to HTML
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
 ```
 
-This example will return password expiration policy for vCenter Single Sign-On across all Workload Domains.
+This example returns password expiration policy for vCenter Single Sign-On across all workload domains.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01
 ```
 
-This example will return password expiration policy for vCenter Single Sign-On for a Workload Domain.
+This example returns password expiration policy for vCenter Single Sign-On for a workload domain.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
 ```
 
-This example will return password complexity policy for vCenter Single Sign-On across all Workload Domains.
+This example returns password complexity policy for vCenter Single Sign-On across all workload domains.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-w01
 ```
 
-This example will return password complexity policy for vCenter Single Sign-On for a Workload Domain.
+This example returns password complexity policy for vCenter Single Sign-On for a workload domain.
 
-### EXAMPLE 5
+### Example 5
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
 ```
 
-This example will return account lockout policy for vCenter Single Sign-On across all Workload Domains.
+This example returns account lockout policy for vCenter Single Sign-On across all workload domains.
 
-### EXAMPLE 6
+### Example 6
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-w01
 ```
 
-This example will return account lockout policy for vCenter Single Sign-On for a Workload Domain.
+This example returns account lockout policy for vCenter Single Sign-On for a workload domain.
 
-### EXAMPLE 7
+### Example 7
 
 ```powershell
 Publish-SsoPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return password expiration policy for vCenter Single Sign-On across for a Workload Domains and compare the configuration against the passwordPolicyConfig.json.
+This example returns password expiration policy for vCenter Single Sign-On for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

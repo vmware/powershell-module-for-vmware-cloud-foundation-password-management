@@ -1,29 +1,27 @@
 # Request-WsaLocalUserPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve the local user password complexity policy for Workspace ONE Access.
+Retrieves the local user password complexity policy for Workspace ONE Access for Workspace ONE Access.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-WsaLocalUserPasswordComplexity -server <String> -user <String> -pass <String> -wsaFqdn <String>
- -wsaRootPass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-WsaLocalUserPasswordComplexity -server <String> -user <String> -pass <String> -wsaFqdn <String> -wsaRootPass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-WsaLocalUserPasswordComplexity cmdlet retrieves the local user password complexity policy for
-Workspace ONE Access.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-WsaLocalUserPasswordComplexity` cmdlet retrieves the local user password complexity policy forWorkspace ONE Access.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Retrieves the local user password complexity policy
+- Retrieves the local user password complexity policy for Workspace ONE Access for Workspace ONE Access
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
@@ -31,7 +29,7 @@ Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user a
 
 This example retrieves the local user password complexity policy for Workspace ONE Access.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -39,7 +37,7 @@ Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user a
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
@@ -47,7 +45,7 @@ Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user a
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

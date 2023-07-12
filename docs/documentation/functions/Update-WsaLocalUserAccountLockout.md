@@ -1,29 +1,27 @@
 # Update-WsaLocalUserAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Update the account lockout policy of Workspace ONE Access.
+Updates the account lockout policy of Workspace ONE Access.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-WsaLocalUserAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-wsaFqdn] <String>
- [-wsaRootPass] <String> [-failures] <Int32> [[-unlockInterval] <Int32>] [[-rootUnlockInterval] <Int32>]
- [<CommonParameters>]
+Update-WsaLocalUserAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-wsaFqdn] <String> [-wsaRootPass] <String> [-failures] <Int32> [[-unlockInterval] <Int32>] [[-rootUnlockInterval] <Int32>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-WsaLocalUserAccountLockout cmdlet configures the account lockout policy of Workspace ONE Access.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-WsaLocalUserAccountLockout` cmdlet configures the account lockout policy of Workspace ONE Access.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -failures 3 -unlockInterval 900 -rootUnlockInterval 900
@@ -31,7 +29,7 @@ Update-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admini
 
 This example configures the account lockout policy for Workspace ONE Access.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

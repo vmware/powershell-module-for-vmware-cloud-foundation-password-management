@@ -1,27 +1,25 @@
 # Update-WsaPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Update the Workspace ONE Access password expiration policy.
+Updates the password expiration policy for a Workspace ONE Access instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-WsaPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-maxDays] <Int32>
- [-warnDays] <Int32> [-reminderDays] <Int32> [-tempPasswordHours] <Int32> [<CommonParameters>]
+Update-WsaPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-maxDays] <Int32> [-warnDays] <Int32> [-reminderDays] <Int32> [-tempPasswordHours] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-WsaPasswordExpiration cmdlet configures the password expiration policy for a Workspace ONE Access
-instance.
+The `Update-WsaPasswordExpiration` cmdlet configures the password expiration policy for a Workspace ONE Access instance.
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
 - Configures the Workspace ONE Access password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
@@ -29,7 +27,7 @@ Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass
 
 This example configures the password expiration policy for Workspace ONE Access.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

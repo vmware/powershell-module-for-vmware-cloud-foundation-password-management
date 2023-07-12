@@ -1,37 +1,34 @@
 # Update-SddcManagerPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Update the password complexity policy for SDDC Manager.
+Updates the password complexity policy for an SDDC Manager.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-SddcManagerPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-rootPass] <String>
- [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>]
- [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [[-minClass] <Int32>] [[-maxSequence] <Int32>]
- [[-history] <Int32>] [[-maxRetry] <Int32>] [<CommonParameters>]
+Update-SddcManagerPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-rootPass] <String> [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>] [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [-minClass] <Int32>] [[-maxSequence] <Int32>] [[-history] <Int32>] [[-maxRetry] <Int32>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-SddcManagerPasswordComplexity cmdlet configures the password complexity policy for SDDC Manager.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-SddcManagerPasswordComplexity` cmdlet configures the password complexity policy for an SDDC Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Configures the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
 ```
 
-This example configures the password complexity policy for SDDC Manager.
+This example configures the password complexity policy for an SDDC Manager.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

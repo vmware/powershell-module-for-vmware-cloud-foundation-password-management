@@ -1,29 +1,27 @@
 # Request-NsxtEdgeAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve account lockout policy from NSX Edge.
+Retrieves the account lockout policy for NSX Edge nodes.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-NsxtEdgeAccountLockout -server <String> -user <String> -pass <String> -domain <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-NsxtEdgeAccountLockout -server <String> -user <String> -pass <String> -domain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-NsxtEdgeAccountLockout cmdlet retrieves the account lockout policy from NSX Edge nodes within a
-workload domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-NsxtEdgeAccountLockout` cmdlet retrieves the account lockout policy for NSX Edge nodes within a workload domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
 - Retrieves the account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -31,7 +29,7 @@ Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administr
 
 This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -39,7 +37,7 @@ Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administr
 
 This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
@@ -47,7 +45,7 @@ Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administr
 
 This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

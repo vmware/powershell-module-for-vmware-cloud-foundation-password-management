@@ -1,31 +1,27 @@
 # Update-SsoPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Update the vCenter Single Sign-On password complexity policy.
+Updates the password complexity policy for a vCenter Single Sign-On domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-SsoPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-minLength] <Int32> [-maxLength] <Int32> [-minAlphabetic] <Int32> [-minLowercase] <Int32>
- [-minUppercase] <Int32> [-minNumeric] <Int32> [-minSpecial] <Int32> [-maxIdenticalAdjacent] <Int32>
- [-history] <Int32> [<CommonParameters>]
+Update-SsoPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-minLength] <Int32> [-maxLength] <Int32> [-minAlphabetic] <Int32> [-minLowercase] <Int32> [-minUppercase] <Int32> [-minNumeric] <Int32> [-minSpecial] <Int32> [-maxIdenticalAdjacent] <Int32> [-history] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-SsoPasswordComplexity cmdlet configures the password complexity policy of a vCenter Single Sign-On
-domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-SsoPasswordComplexity` cmdlet configures the password complexity policy of a vCenter Single Sign-On domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the vCenter Single Sign-On password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
@@ -33,7 +29,7 @@ Update-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrat
 
 This example configures the password complexity policy for a vCenter Single Sign-On domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
