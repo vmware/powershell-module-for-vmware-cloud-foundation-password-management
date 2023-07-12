@@ -1,37 +1,35 @@
 # Update-VcenterAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Update the account lockout policy of vCenter Server.
+Updates the account lockout policy for a vCenter Server instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-VcenterAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-failures] <Int32> [[-unlockInterval] <Int32>] [[-rootUnlockInterval] <Int32>] [<CommonParameters>]
+Update-VcenterAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-failures] <Int32> [[-unlockInterval] <Int32>] [[-rootUnlockInterval] <Int32>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-VcenterAccountLockout cmdlet configures the account lockout policy of a vCenter Server.
-The cmdlet
-connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-VcenterAccountLockout` cmdlet configures the account lockout policy of a vCenter Server.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
 ```
 
-This example configures the account lockout policy for the vCenter Server based on the workload domain.
+This example configures the account lockout policy for a vCenter Server instance based on the workload domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

@@ -1,28 +1,25 @@
 # Update-WsaPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Update the Workspace ONE Access password complexity policy.
+Updates the password complexity policy for a Workspace ONE Access instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-WsaPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-minLength] <Int32>
- [-minLowercase] <Int32> [-minUppercase] <Int32> [-minNumeric] <Int32> [-minSpecial] <Int32>
- [-maxIdenticalAdjacent] <Int32> [-maxPreviousCharacters] <Int32> [-history] <Int32> [<CommonParameters>]
+Update-WsaPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-minLength] <Int32> [-minLowercase] <Int32> [-minUppercase] <Int32> [-minNumeric] <Int32> [-minSpecial] <Int32> [-maxIdenticalAdjacent] <Int32> [-maxPreviousCharacters] <Int32> [-history] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-WsaPasswordComplexity cmdlet configures the password complexity policy for a Workspace ONE Access
-instance.
+The `Update-WsaPasswordComplexity` cmdlet configures the password complexity policy for a Workspace ONE Access instance.
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
 - Configures the Workspace ONE Access password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
@@ -30,7 +27,7 @@ Update-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass
 
 This example configures the password complexity policy for Workspace ONE Access.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

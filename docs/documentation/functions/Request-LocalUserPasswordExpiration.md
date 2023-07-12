@@ -1,54 +1,51 @@
 # Request-LocalUserPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve local user password expiration policy.
+Retrieves the password expiration policy for the specified local user.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-LocalUserPasswordExpiration -server <String> -user <String> -pass <String> -domain <String>
- -vmName <String> -guestUser <String> -guestPassword <String> -localUser <Array> [-product <String>] [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-LocalUserPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> -vmName <String> -guestUser <String> -guestPassword <String> -localUser <Array> [-product <String>] [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-LocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy.
-The cmdlet
-connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-LocalUserPasswordExpiration` cmdlet retrieves a local user password expiration policy.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Retrives the local user password expiration policy
+Retrieves the password expiration policy for the specified local user
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
 ```
 
-This example retrieves the global password expiration policy for the vCenter Server.
+This example retrieves the global password expiration policy for a vCenter Server instance.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example retrieves the global password expiration policy for the vCenter Server and checks the configuration drift using the provided configuration JSON.
+This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
 ```
 
-This example retrieves the global password expiration policy for the vCenter Server and compares the configuration against the product defaults.
+This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

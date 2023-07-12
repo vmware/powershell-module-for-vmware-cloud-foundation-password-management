@@ -1,10 +1,10 @@
 # Get-PasswordPolicyDefault
 
-## SYNOPSIS
+## Synopsis
 
 Get password policy default settings.
 
-## SYNTAX
+## Syntax
 
 ### All (Default)
 
@@ -18,10 +18,9 @@ Get-PasswordPolicyDefault -version <String> [<CommonParameters>]
 Get-PasswordPolicyDefault [-generateJson] -version <String> [-jsonFile <String>] [-force <Switch>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Get-PasswordPolicyDefault cmdlet returns the default password policy settings, it can also be used to
-generate the base JSON file used with Password Policy Manager.
+The `Get-PasswordPolicyDefault` cmdlet returns the default password policy settings, it can also be used to generate the base JSON file used with Password Policy Manager.
 
 Default settings for VMware products include:
 
@@ -33,9 +32,9 @@ Default settings for VMware products include:
 - VMware NSX Edge
 - VMware Workspace ONE Access
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Get-PasswordPolicyDefault -version '5.0.0'
@@ -43,24 +42,24 @@ Get-PasswordPolicyDefault -version '5.0.0'
 
 This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
 ```
 
-This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
+This example creates a JSON file named `passwordPolicyConfig.json` with the default password policy settings for the given version of VMware Cloud Foundation.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0' -force
 ```
 
-This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
-If passwordPolicyConfig.json is already present, it is overwritten due to 'force' parameter.
+This example creates a JSON file named `passwordPolicyConfig.json` with the default password policy settings for the given version of VMware Cloud Foundation.
+If `passwordPolicyConfig.json` is already present, it is overwritten due to 'force' parameter.
 
-## PARAMETERS
+## Parameters
 
 ### -generateJson
 

@@ -1,28 +1,27 @@
 # Update-SsoAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Update the vCenter Single Sign-On account lockout policy.
+Updates the account lockout policy for a vCenter Single Sign-On domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-SsoAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-failures] <Int32> [-failureInterval] <Int32> [-unlockInterval] <Int32> [<CommonParameters>]
+Update-SsoAccountLockout [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-failures] <Int32> [-failureInterval] <Int32> [-unlockInterval] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-SsoAccountLockout cmdlet configures the account lockout policy of a vCenter Single Sign-On domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-SsoAccountLockout` cmdlet configures the account lockout policy of a vCenter Single Sign-On domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the vCenter Single Sign-On account lockout policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 5 -failureInterval 180 -unlockInterval 900
@@ -30,7 +29,7 @@ Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@v
 
 This example configures the account lockout policy for a vCenter Single Sign-On domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

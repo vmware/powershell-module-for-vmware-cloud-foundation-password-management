@@ -1,21 +1,19 @@
 # Update-EsxiPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Update ESXi password complexity policy.
+Updates ESXi password complexity policy.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-EsxiPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-cluster] <String> [-policy] <String> [-history] <Int32> [[-detail] <String>] [<CommonParameters>]
+Update-EsxiPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-cluster] <String> [-policy] <String> [-history] <Int32> [[-detail] <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-EsxiPasswordComplexity cmdlet configures the password complexity policy on ESXi.
-The cmdlet connects
-to SDDC Manager using the -server, -user, and -password values:
+The `Update-EsxiPasswordComplexity` cmdlet configures the password complexity policy on ESXi.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
@@ -23,9 +21,9 @@ to SDDC Manager using the -server, -user, and -password values:
 - Gathers the ESXi hosts for the cluster specificed
 - Configures the password complexity policy for all ESXi hosts in the cluster
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
@@ -33,7 +31,7 @@ Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
@@ -41,7 +39,7 @@ Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

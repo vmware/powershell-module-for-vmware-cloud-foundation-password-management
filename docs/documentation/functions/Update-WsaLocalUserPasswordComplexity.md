@@ -1,29 +1,27 @@
 # Update-WsaLocalUserPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Update the local user password complexity policy for Workspace ONE Access.
+Updates the local user password complexity policy for Workspace ONE Access.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-WsaLocalUserPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-wsaFqdn] <String>
- [-wsaRootPass] <String> [-minLength] <Int32> [[-history] <Int32>] [[-maxRetry] <Int32>] [<CommonParameters>]
+Update-WsaLocalUserPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-wsaFqdn] <String> [-wsaRootPass] <String> [-minLength] <Int32> [[-history] <Int32>] [[-maxRetry] <Int32>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-WsaLocalUserPasswordComplexity cmdlet configures the local user password complexity policy for
-Workspace ONE Access.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-WsaLocalUserPasswordComplexity` cmdlet configures the local user password complexity policy for Workspace ONE Access.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -minLength 1 -history 5 -maxRetry 3
@@ -31,7 +29,7 @@ Update-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user ad
 
 This example configures the local user password complexity policy for Workspace ONE Access.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

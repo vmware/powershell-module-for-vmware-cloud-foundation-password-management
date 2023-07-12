@@ -1,29 +1,27 @@
 # Update-SsoPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Update the vCenter Single Sign-On password expiration policy.
+Updates the password expiration policy for a vCenter Single Sign-On domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Update-SsoPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String>
- [-maxDays] <Int32> [<CommonParameters>]
+Update-SsoPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-domain] <String> [-maxDays] <Int32> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Update-SsoPasswordExpiration cmdlet configures the password expiration policy of a vCenter Single Sign-On
-domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Update-SsoPasswordExpiration` cmdlet configures the password expiration policy for a vCenter Single Sign-On domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Configures the vCenter Single Sign-On password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999
@@ -31,7 +29,7 @@ Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrat
 
 This example configures the password expiration policy for a vCenter Single Sign-On domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

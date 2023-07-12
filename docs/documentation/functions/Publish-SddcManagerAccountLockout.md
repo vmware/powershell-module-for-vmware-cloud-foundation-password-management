@@ -1,69 +1,67 @@
 # Publish-SddcManagerAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Publish password complexity policy for SDDC Manager.
+Publishes the password complexity policy for an SDDC Manager for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-SddcManagerAccountLockout -server <String> -user <String> -pass <String> -sddcRootPass <String>
- [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-SddcManagerAccountLockout -server <String> -user <String> -pass <String> -sddcRootPass <String> [-allDomains] [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-SddcManagerAccountLockout -server <String> -user <String> -pass <String> -sddcRootPass <String>
- -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
+Publish-SddcManagerAccountLockout -server <String> -user <String> -pass <String> -sddcRootPass <String> -workloadDomain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-SddcManagerAccountLockout cmdlet returns account lockout policy for SDDC Manager.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-SddcManagerAccountLockout` cmdlet returns account lockout policy for an SDDC Manager.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Collects account lockout policy forSDDC Manager
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -allDomains
 ```
 
-This example will return account lockout policy for SDDC Manager.
+This example returns account lockout policy for an SDDC Manager.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-w01
 ```
 
-This example will NOT return the account lockout policy for SDDC Manager as the Workload Domain provided is not the Management Domain.
+This example will NOT return the account lockout policy for an SDDC Manager as the workload domain provided is not the management domain.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return the account lockout policy for SDDC Manager and compares the configuration against passwordPolicyConfig.json.
+This example returns the account lockout policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
 ```
 
-This example will return the account lockout policy for SDDC Manager and compares the configuration against the product defaults.
+This example returns the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

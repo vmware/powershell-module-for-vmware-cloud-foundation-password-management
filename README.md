@@ -19,7 +19,7 @@ With these cmdlets, you can:
 
 - Generate a password policy report for your SDDC Manager instance.
 - Generate a password policy report with configuration drift for your SDDC Manager instance by using a password policy configuration file.
-- Configure password polices for your SDDC Manager instance by using a password policy configuration file.
+- Updates the password polices for your SDDC Manager instance by using a password policy configuration file.
 
 The module provides coverage for the following components:
 

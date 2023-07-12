@@ -1,26 +1,25 @@
 # Request-WsaAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Retrieves Workspace ONE Access account lockout.
+Retrieves the account lockout policy for Workspace ONE Access instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-WsaAccountLockout -server <String> -user <String> -pass <String> [-drift] [-reportPath <String>]
- [-policyFile <String>] [<CommonParameters>]
+Request-WsaAccountLockout -server <String> -user <String> -pass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-WsaAccountLockout cmdlet retrieves the Workspace ONE Access account lockout policy.
+The `Request-WsaAccountLockout` cmdlet retrieves the Workspace ONE Access account lockout policy.
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
-- Retrieve the account lockout policy
+- Retrieves the account lockout policy for Workspace ONE Access instance
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
@@ -28,7 +27,7 @@ Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VM
 
 This example retrieves the account lockout policy for Workspace ONE Access instance sfo-wsa01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -36,7 +35,7 @@ Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VM
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
@@ -44,7 +43,7 @@ Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VM
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

@@ -1,80 +1,75 @@
 # Publish-WsaLocalPasswordPolicy
 
-## SYNOPSIS
+## Synopsis
 
-Publish password policies for Workspace ONE Access Local Users.
+Publishes the password policies for Workspace ONE Access local users.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <String> -user <String> -pass <String> -wsaFqdn <String>
- -wsaRootPass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json]
- [-allDomains] [<CommonParameters>]
+Publish-WsaLocalPasswordPolicy -server <String> -user <String> -pass <String> -wsaFqdn <String> -wsaRootPass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [-allDomains] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <String> -user <String> -pass <String> -wsaFqdn <String>
- -wsaRootPass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json]
- -workloadDomain <String> [<CommonParameters>]
+Publish-WsaLocalPasswordPolicy -server <String> -user <String> -pass <String> -wsaFqdn <String> -wsaRootPass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] -workloadDomain <String> [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
-the output to HTML.
-The cmdlet connects to the SDDC Manager using the -server, -user, and -password values:
+The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and converts the output to HTML.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Retrieves the requested password policy for Workspace ONE Access Local Users and converts to HTML
+- Retrieves the requested password policy for Workspace ONE Access local users and converts to HTML
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
 ```
 
-This example will return password expiration policy for Workspace ONE Access Directory Users.
+This example returns password expiration policy for Workspace ONE Access Directory Users.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
 ```
 
-This example will return password complexity policy for Workspace ONE Access Directory Users.
+This example returns password complexity policy for Workspace ONE Access Directory Users.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
 ```
 
-This example will return account lockout policy for Workspace ONE Access Directory Users.
+This example returns account lockout policy for Workspace ONE Access Directory Users.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example will return password expiration policy for Workspace ONE Access Directory Users and compare the configuration against the passwordPolicyConfig.json.
+This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the `passwordPolicyConfig.json` file.
 
-### EXAMPLE 5
+### Example 5
 
 ```powershell
 Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift
 ```
 
-This example will return password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
+This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

@@ -1,52 +1,51 @@
 # Request-VcenterAccountLockout
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve the account lockout policy for vCenter Server.
+Retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-VcenterAccountLockout -server <String> -user <String> -pass <String> -domain <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-VcenterAccountLockout -server <String> -user <String> -pass <String> -domain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-VcenterAccountLockout cmdlet retrieves the account lockout policy of a vCenter Server.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-VcenterAccountLockout` cmdlet retrieves the account lockout policy of a vCenter Server.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
-- Retrieves the account lockout policy
+- Retrieves the account lockout policy for a vCenter Server instance based on the workload domain
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
 ```
 
-This example retrieves the account lockout policy for the vCenter Server based on the workload domain.
+This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example retrieves the account lockout policy for the vCenter Server based on the workload domain and checks the configuration drift using the provided configuration JSON.
+This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
 ```
 
-This example retrieves the account lockout policy for the vCenter Server based on the workload domain and compares the configuration against the product defaults.
+This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

@@ -1,75 +1,70 @@
 # Invoke-PasswordPolicyManager
 
-## SYNOPSIS
+## Synopsis
 
-Generate the Password Policy Manager Report.
+Generates a Password Policy Manager Report for a workload domain or all workload domains.
 
-## SYNTAX
+## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String>
- -sddcRootPass <String> -reportPath <String> [-allDomains] [-darkMode] [-drift] [-policyFile <String>] [-json]
- [-wsaFqdn <String>] [-wsaRootPass <String>] [-wsaAdminPass <String>] [<CommonParameters>]
+Invoke-PasswordPolicyManager -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String> -sddcRootPass <String> -reportPath <String> [-allDomains] [-darkMode] [-drift] [-policyFile <String>] [-json] [-wsaFqdn <String>] [-wsaRootPass <String>] [-wsaAdminPass <String>] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String>
- -sddcRootPass <String> -reportPath <String> -workloadDomain <String> [-darkMode] [-drift]
- [-policyFile <String>] [-json] [-wsaFqdn <String>] [-wsaRootPass <String>] [-wsaAdminPass <String>]
- [<CommonParameters>]
+Invoke-PasswordPolicyManager -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String> -sddcRootPass <String> -reportPath <String> -workloadDomain <String> [-darkMode] [-drift] [-policyFile <String>] [-json] [-wsaFqdn <String>] [-wsaRootPass <String>] [-wsaAdminPass <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Invoke-PasswordPolicyManager generates a Password Policy Manager Report for a VMware Cloud Foundation instance
+The `Invoke-PasswordPolicyManager` generates a Password Policy Manager Report for a workload domain or all workload domains.
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains
 ```
 
-This example runs a password policy report for all Workload Domain within an SDDC Manager instance.
+This example runs a password policy report for all workload domains within an SDDC Manager instance.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
 ```
 
-This example runs a password policy report for all Workload Domain within an SDDC Manager instance and Workspace ONE Access.
+This example runs a password policy report for all workload domains within an SDDC Manager instance and Workspace ONE Access.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -workloadDomain sfo-w01
 ```
 
-This example runs a password policy report for a specific Workload Domain within an SDDC Manager instance.
+This example runs a password policy report for a specific workload domain within an SDDC Manager instance.
 
-### EXAMPLE 4
+### Example 4
 
 ```powershell
 Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift -policyFile "PasswordPolicyConfig.json"
 ```
 
-This example runs a password policy report for all Workload Domain within an SDDC Manager instance and compares the configuration against the JSON provided.
+This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the JSON provided.
 
-### EXAMPLE 5
+### Example 5
 
 ```powershell
 Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift
 ```
 
-This example runs a password policy report for all Workload Domain within an SDDC Manager instance and compares the configuration against the product defaults.
+This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -sddcManagerFqdn
 

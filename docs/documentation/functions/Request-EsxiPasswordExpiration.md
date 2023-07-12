@@ -1,32 +1,29 @@
 # Request-EsxiPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Retrieves ESXi host password expiration.
+Retrieves the password expiration policy for ESXi hosts in a cluster.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-EsxiPasswordExpiration -server <String> -user <String> -pass <String> -domain <String>
- -cluster <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-EsxiPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> -cluster <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-EsxiPasswordExpiration cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
-configured password expiration policy (Advanced Setting Security.PasswordMaxDays).
-The cmdlet connects to SDDC
-Manager using the -server, -user, and -password values:
+The `Request-EsxiPasswordExpiration` cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently configured password expiration policy (Advanced Setting `Security.PasswordMaxDays`).
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Gathers the ESXi hosts for the cluster specificed
-- Retrieve all ESXi hosts password expiration policy
+- Retrieves the password expiration policy for all ESXi hosts in a cluster
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
@@ -34,7 +31,7 @@ Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administr
 
 This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -42,7 +39,7 @@ Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administr
 
 This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
@@ -50,7 +47,7 @@ Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administr
 
 This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

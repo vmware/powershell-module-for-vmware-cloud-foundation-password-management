@@ -1,26 +1,25 @@
 # Request-WsaPasswordComplexity
 
-## SYNOPSIS
+## Synopsis
 
-Retrieves Workspace ONE Access password complexity.
+Retrieves the password complexity policy for Workspace ONE Access instance for Workspace ONE Access instance.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-WsaPasswordComplexity -server <String> -user <String> -pass <String> [-drift] [-reportPath <String>]
- [-policyFile <String>] [<CommonParameters>]
+Request-WsaPasswordComplexity -server <String> -user <String> -pass <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-WsaPasswordComplexity cmdlet retrieves the Workspace ONE Access password complexity policy.
+The `Request-WsaPasswordComplexity` cmdlet retrieves the Workspace ONE Access password complexity policy.
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
-- Retrieve the password complexity policy
+- Retrieves the password complexity policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
@@ -28,7 +27,7 @@ Request-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pas
 
 This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -36,7 +35,7 @@ Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pas
 
 This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and checks the configuration drift using the provided configuration JSON.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
@@ -44,7 +43,7 @@ Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pas
 
 This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 

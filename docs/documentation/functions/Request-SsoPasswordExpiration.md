@@ -1,29 +1,27 @@
 # Request-SsoPasswordExpiration
 
-## SYNOPSIS
+## Synopsis
 
-Retrieve the password expiration policy.
+Retrieves the password expiration policy for a vCenter Single Sign-On domain.
 
-## SYNTAX
+## Syntax
 
 ```powershell
-Request-SsoPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> [-drift]
- [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Request-SsoPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
-## DESCRIPTION
+## Description
 
-The Request-SsoPasswordExpiration cmdlet retrieves the password expiration policy for a vCenter Single Sign-On
-domain.
-The cmdlet connects to SDDC Manager using the -server, -user, and -password values:
+The `Request-SsoPasswordExpiration` cmdlet retrieves the password expiration policy for a vCenter Single Sign-On domain.
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
 - Retrives the global password expiration policy
 
-## EXAMPLES
+## Examples
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -31,7 +29,7 @@ Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain.
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
@@ -39,7 +37,7 @@ Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against passwordPolicyConfig.json.
 
-### EXAMPLE 3
+### Example 3
 
 ```powershell
 Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
@@ -47,7 +45,7 @@ Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administra
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
