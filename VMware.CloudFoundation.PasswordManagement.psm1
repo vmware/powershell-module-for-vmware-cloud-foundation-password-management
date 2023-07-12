@@ -5444,7 +5444,7 @@ Function Request-NsxtEdgePasswordExpiration {
                                 $allNsxEdgePasswordExpirationPolicy = New-Object System.Collections.ArrayList
                                 $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
-                                    $localUsers = Get-NsxtApplianceUser
+                                    $localUsers = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id
                                     foreach ($localUser in $localUsers) {
                                         $nsxEdgePasswordExpirationPolicy = New-Object -TypeName psobject
                                         $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
@@ -5746,11 +5746,11 @@ Function Update-NsxtEdgePasswordExpiration {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                 $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
-                                    $localUsers = Get-NsxtApplianceUser
+                                    $localUsers = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id
                                     foreach ($localUser in $localUsers) {
                                         if ($localUser.password_change_frequency -ne $maxDays) {
-                                            Set-NsxtApplianceUserExpirationPolicy -userId $localUser.userid -maxDays $maxDays | Out-Null
-                                            $updatedConfiguration = Get-NsxtApplianceUser | Where-Object {$_.userid -eq $localUser.userid }
+                                            Set-NsxtApplianceUserExpirationPolicy -transportNodeId $nsxtEdgeNode.transport_node_id -userId $localUser.userid -maxDays $maxDays | Out-Null
+                                            $updatedConfiguration = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id | Where-Object {$_.userid -eq $localUser.userid }
                                             if (($updatedConfiguration).password_change_frequency -eq $maxDays ) {
                                                 if ($detail -eq "true") {
                                                     Write-Output "Update Password Expiration Policy on NSX Edge ($($nsxtEdgeNode.display_name)) for Local User ($($localUser.username)): SUCCESSFUL"
