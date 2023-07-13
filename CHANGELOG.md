@@ -20,6 +20,8 @@ Bug Fixes:
 - Updated `Get-PasswordPolicyDefault` to include support for version 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
 - Updated `Get-PasswordPolicyConfig` to include support for version 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
 - Updated `Invoke-PasswordPolicyManager` to address version support updates and JSON file depth handling. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
+- Updated `Request-NsxtEdgePasswordExpiration` to pass the `-transportNodeId` parameter to `Get-NsxtApplianceUser` to retrieve the NSX Edge node ID. [GH-76](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76)
+- Updated `Update-NsxtEdgePasswordExpiration` to pass the `-transportNodeId` parameter to `Get-NsxtApplianceUser` and `Set-NsxtApplianceUserExpirationPolicy` to retrieve the NSX Edge node ID. [GH-76](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76)
 
 Chore:
 
