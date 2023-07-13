@@ -3194,6 +3194,11 @@
 <h1 id="update-wsalocaluserpasswordcomplexity">Update-WsaLocalUserPasswordComplexity<a class="headerlink" href="#update-wsalocaluserpasswordcomplexity" title="Permanent link">&para;</a></h1>
 <h2 id="synopsis">Synopsis<a class="headerlink" href="#synopsis" title="Permanent link">&para;</a></h2>
 <p>Updates the local user password complexity policy for Workspace ONE Access.</p>
+<details class="tip" open="open">
+<summary>Important</summary>
+<p>This cmdlet is intended to only be used with a Workspace ONE Access deployment that is <strong>not</strong> integrated with SDDC Manager. </p>
+<p>Please avoid using this cmdlet with a Workspace ONE Access deployment from VMware Aria Suite Lifecycle, formerly vRealize Suite Lifecycle Manager, that has been is integrated with SDDC Manager.</p>
+</details>
 <h2 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nb">Update-WsaLocalUserPasswordComplexity</span> <span class="p">[</span><span class="n">-server</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-user</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-pass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-wsaFqdn</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-wsaRootPass</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;</span> <span class="p">[</span><span class="n">-minLength</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;</span> <span class="p">[[</span><span class="n">-history</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[[</span><span class="n">-maxRetry</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
@@ -3315,7 +3320,7 @@ The cmdlet connects to SDDC Manager using the <code>-server</code>, <code>-user<
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-07-12T18:04:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-07-12</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-07-13T00:27:51+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-07-13</span>
       
     
   </small>
