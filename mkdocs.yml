@@ -65,6 +65,7 @@ theme:
 plugins:
 - search:
     separator: '[\s\u200b\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+- open-in-new-tab
 - markdownextradata:
     jinja_options:
       variable_start_string: "${{"
