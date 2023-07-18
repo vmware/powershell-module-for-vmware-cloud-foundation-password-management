@@ -13,7 +13,7 @@ Request-NsxtManagerPasswordExpiration -server <String> -user <String> -pass <Str
 ## Description
 
 The `Request-NsxtManagerPasswordExpiration` cmdlet retrieves the password complexity policy for all NSX Local Manager cluster users for a workload domain.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager

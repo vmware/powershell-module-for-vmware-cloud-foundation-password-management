@@ -21,7 +21,7 @@ Publish-VcenterLocalPasswordComplexity -server <String> -user <String> -pass <St
 ## Description
 
 The `Publish-VcenterLocalPasswordComplexity` cmdlet returns password complexity policy for an SDDC Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

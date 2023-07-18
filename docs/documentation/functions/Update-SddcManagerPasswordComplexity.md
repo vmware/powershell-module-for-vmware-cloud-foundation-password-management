@@ -13,7 +13,7 @@ Update-SddcManagerPasswordComplexity [-server] <String> [-user] <String> [-pass]
 ## Description
 
 The `Update-SddcManagerPasswordComplexity` cmdlet configures the password complexity policy for an SDDC Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Configures the password complexity policy

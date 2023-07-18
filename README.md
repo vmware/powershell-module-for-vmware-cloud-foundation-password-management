@@ -10,7 +10,6 @@
 [<img src="https://img.shields.io/powershellgallery/v/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery">][psgallery-module]&nbsp;&nbsp;
 <img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">
 
-
 ## Overview
 
 `VMware.CloudFoundation.PasswordManagement` is a PowerShell module that has been written to support the ability to report and configure the password policy settings across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
@@ -80,4 +79,3 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [gh-issues]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues
 [psgallery-module]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
 [vmware-cla-dco]: https://cla.vmware.com/dco
-

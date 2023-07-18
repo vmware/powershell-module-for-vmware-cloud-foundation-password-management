@@ -155,6 +155,7 @@ nav:
         - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
       - vCenter Server:
         - Publish-VcenterLocalPasswordExpiration: documentation/functions/Publish-VcenterLocalPasswordExpiration.md
+        - Publish-VcenterPasswordExpiration: documentation/functions/Publish-VcenterPasswordExpiration.md
         - Request-VcenterPasswordExpiration: documentation/functions/Request-VcenterPasswordExpiration.md
         - Request-VcenterRootPasswordExpiration: documentation/functions/Request-VcenterRootPasswordExpiration.md
         - Update-VcenterPasswordExpiration: documentation/functions/Update-VcenterPasswordExpiration.md

@@ -13,7 +13,7 @@ Request-EsxiPasswordExpiration -server <String> -user <String> -pass <String> -d
 ## Description
 
 The `Request-EsxiPasswordExpiration` cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently configured password expiration policy (Advanced Setting `Security.PasswordMaxDays`).
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory

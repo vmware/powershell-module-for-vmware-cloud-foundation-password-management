@@ -21,7 +21,7 @@ Publish-EsxiPasswordPolicy -server <String> -user <String> -pass <String> -polic
 ## Description
 
 The `Publish-EsxiPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and convert the output to HTML.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

@@ -21,7 +21,7 @@ Publish-WsaLocalPasswordPolicy -server <String> -user <String> -pass <String> -w
 ## Description
 
 The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and converts the output to HTML.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

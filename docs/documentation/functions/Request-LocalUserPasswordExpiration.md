@@ -13,7 +13,7 @@ Request-LocalUserPasswordExpiration -server <String> -user <String> -pass <Strin
 ## Description
 
 The `Request-LocalUserPasswordExpiration` cmdlet retrieves a local user password expiration policy.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

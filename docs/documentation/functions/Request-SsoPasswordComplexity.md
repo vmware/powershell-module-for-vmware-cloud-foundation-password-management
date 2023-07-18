@@ -13,7 +13,7 @@ Request-SsoPasswordComplexity -server <String> -user <String> -pass <String> -do
 ## Description
 
 The `Request-SsoPasswordComplexity` cmdlet retrieves the vCenter Single Sign-On domain password complexity policy.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory

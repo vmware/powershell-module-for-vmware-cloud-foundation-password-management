@@ -13,7 +13,7 @@ Request-VcenterRootPasswordExpiration -server <String> -user <String> -pass <Str
 ## Description
 
 The `Request-VcenterRootPasswordExpiration` cmdlet retrieves the `root` user password expiration policy for a vCenter Server.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

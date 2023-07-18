@@ -13,7 +13,7 @@ Request-NsxtEdgeAccountLockout -server <String> -user <String> -pass <String> -d
 ## Description
 
 The `Request-NsxtEdgeAccountLockout` cmdlet retrieves the account lockout policy for NSX Edge nodes within a workload domain.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager
