@@ -13,7 +13,7 @@ Request-NsxtEdgePasswordComplexity -server <String> -user <String> -pass <String
 ## Description
 
 The `Request-NsxtEdgePasswordComplexity` cmdlet retrieves the password complexity policy for each NSX Edge nodes for a workload domain.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager

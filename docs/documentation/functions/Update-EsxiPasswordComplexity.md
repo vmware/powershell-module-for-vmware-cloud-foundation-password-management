@@ -13,7 +13,7 @@ Update-EsxiPasswordComplexity [-server] <String> [-user] <String> [-pass] <Strin
 ## Description
 
 The `Update-EsxiPasswordComplexity` cmdlet configures the password complexity policy on ESXi.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory

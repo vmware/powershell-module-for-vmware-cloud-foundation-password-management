@@ -15,7 +15,7 @@ Update-WsaLocalUserPasswordComplexity [-server] <String> [-user] <String> [-pass
 ## Description
 
 The `Update-WsaLocalUserPasswordComplexity` cmdlet configures the local user password complexity policy for Workspace ONE Access.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

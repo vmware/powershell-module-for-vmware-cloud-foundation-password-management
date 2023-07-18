@@ -21,7 +21,7 @@ Publish-SddcManagerAccountLockout -server <String> -user <String> -pass <String>
 ## Description
 
 The `Publish-SddcManagerAccountLockout` cmdlet returns account lockout policy for an SDDC Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

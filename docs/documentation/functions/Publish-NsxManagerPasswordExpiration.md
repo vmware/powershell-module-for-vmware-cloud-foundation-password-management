@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Publishes the password expiration policy for NSX Local Manager for a workload domain or all workload domains.   
+Publishes the password expiration policy for NSX Local Manager for a workload domain or all workload domains.
 
 ## Syntax
 
@@ -21,7 +21,7 @@ Publish-NsxManagerPasswordExpiration -server <String> -user <String> -pass <Stri
 ## Description
 
 The `Publish-NsxManagerPasswordExpiration` cmdlet returns password expiration policy for local users of NSX Local Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server

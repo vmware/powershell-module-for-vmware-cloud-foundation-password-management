@@ -4,7 +4,6 @@
 
 Retrieves the account lockout policy for all ESXi hosts in a cluster.
 
-
 ## Syntax
 
 ```powershell
@@ -14,7 +13,7 @@ Request-EsxiAccountLockout -server <String> -user <String> -pass <String> -domai
 ## Description
 
 The `Request-EsxiAccountLockout` cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently configured account lockout policy (Advanced Settings `Security.AccountLockFailures` and `Security.AccountUnlockTime`).
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory

@@ -13,7 +13,7 @@ Update-NsxtEdgePasswordComplexity [-server] <String> [-user] <String> [-pass] <S
 ## Description
 
 The `Update-NsxtEdgePasswordComplexity` cmdlet updates the password complexity policy for each NSX Edge node for a workload domain.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to NSX Local Manager

@@ -13,7 +13,7 @@ Request-SddcManagerPasswordComplexity -server <String> -user <String> -pass <Str
 ## Description
 
 The `Request-SddcManagerPasswordComplexity` cmdlet retrieves the password complexity policy for an SDDC Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Retrieves the password complexity policy

@@ -26,7 +26,6 @@ Test-VcfPasswordManagementPrereq
 
 :material-information-slab-circle: &nbsp; [Reference](/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Test-VcfPasswordManagementPrereq/)
 
-
 Once installed, any cmdlets associated with `VMware.CloudFoundation.PasswordManagement` and the its dependencies will be available for use.
 
 To view the cmdlets for available in the module, run the following command in the PowerShell console.

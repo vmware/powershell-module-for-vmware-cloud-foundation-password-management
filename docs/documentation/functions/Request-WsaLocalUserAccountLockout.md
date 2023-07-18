@@ -4,7 +4,6 @@
 
 Retrieves the local user account lockout policy for Workspace ONE Access instance.
 
-
 ## Syntax
 
 ```powershell
@@ -14,7 +13,7 @@ Request-WsaLocalUserAccountLockout -server <String> -user <String> -pass <String
 ## Description
 
 The `Request-WsaLocalUserAccountLockout` cmdlet retrieves the account lockout policy for an SDDC Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 -Retrieves the local user account lockout policy for Workspace ONE Access instance

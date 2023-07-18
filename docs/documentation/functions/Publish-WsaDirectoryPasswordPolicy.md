@@ -21,7 +21,7 @@ Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String
 ## Description
 
 The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for Workspace ONE Accessand converts the output to HTML.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to Workspace ONE Access
 - Retrieves the requested password policy for Workspace ONE Access and converts to HTML

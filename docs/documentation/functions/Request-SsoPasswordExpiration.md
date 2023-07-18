@@ -13,7 +13,7 @@ Request-SsoPasswordExpiration -server <String> -user <String> -pass <String> -do
 ## Description
 
 The `Request-SsoPasswordExpiration` cmdlet retrieves the password expiration policy for a vCenter Single Sign-On domain.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
