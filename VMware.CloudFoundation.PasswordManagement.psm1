@@ -1528,7 +1528,7 @@ Function Request-SddcManagerPasswordComplexity {
 
         .DESCRIPTION
         The Request-SddcManagerPasswordComplexity cmdlet retrieves the password complexity policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
 		- Retrieves the password complexity policy
 
@@ -1617,7 +1617,7 @@ Function Request-SddcManagerAccountLockout {
 
         .DESCRIPTION
         The Request-SddcManagerAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrieves the account lockout policy for an SDDC Manager
@@ -1707,7 +1707,7 @@ Function Update-SddcManagerPasswordComplexity {
 
         .DESCRIPTION
         The Update-SddcManagerPasswordComplexity cmdlet configures the password complexity policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
 		- Configures the password complexity policy
 
@@ -1829,7 +1829,7 @@ Function Update-SddcManagerAccountLockout {
 
         .DESCRIPTION
         The Update-SddcManagerAccountLockout cmdlet configures the account lockout policy for an SDDC Manager. The cmdlet
-        connects to SDDC Manager using the -server, -user, and -password values:
+        connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the account lockout policy
@@ -1910,7 +1910,7 @@ Function Publish-SddcManagerPasswordExpiration {
 
         .DESCRIPTION
         The Publish-SddcManagerPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of SDDC Manager
@@ -2023,7 +2023,7 @@ Function Publish-SddcManagerPasswordComplexity {
 
         .DESCRIPTION
         The Publish-SddcManagerPasswordComplexity cmdlet returns password complexity policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for an SDDC Manager
@@ -2135,7 +2135,7 @@ Function Publish-SddcManagerAccountLockout {
 
         .DESCRIPTION
         The Publish-SddcManagerAccountLockout cmdlet returns account lockout policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects account lockout policy forSDDC Manager
@@ -2253,7 +2253,7 @@ Function Request-SsoPasswordExpiration {
 
         .DESCRIPTION
         The Request-SsoPasswordExpiration cmdlet retrieves the password expiration policy for a vCenter Single Sign-On
-        domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrives the global password expiration policy
@@ -2369,7 +2369,7 @@ Function Request-SsoPasswordComplexity {
 
         .DESCRIPTION
         The Request-SsoPasswordComplexity cmdlet retrieves password complexity policy for a vCenter Single Sign-On domain.
-        policy. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        policy. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Single Sign-On domain
@@ -2493,7 +2493,7 @@ Function Request-SsoAccountLockout {
 
         .DESCRIPTION
         The Request-SsoAccountLockout cmdlet retrieves the vCenter Single Sign-On domain account lockout policy.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Single Sign-On domain
@@ -2612,7 +2612,7 @@ Function Update-SsoPasswordExpiration {
 
         .DESCRIPTION
         The Update-SsoPasswordExpiration cmdlet configures the password expiration policy for a vCenter Single Sign-On
-        domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the vCenter Single Sign-On password expiration policy
@@ -2700,7 +2700,7 @@ Function Update-SsoPasswordComplexity {
 
         .DESCRIPTION
         The Update-SsoPasswordComplexity cmdlet configures the password complexity policy of a vCenter Single Sign-On
-        domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the vCenter Single Sign-On password complexity policy
@@ -2832,7 +2832,7 @@ Function Update-SsoAccountLockout {
 
         .DESCRIPTION
         The Update-SsoAccountLockout cmdlet configures the account lockout policy of a vCenter Single Sign-On domain.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the vCenter Single Sign-On account lockout policy
@@ -2931,7 +2931,7 @@ Function Publish-SsoPasswordPolicy {
 
         .DESCRIPTION
         The Publish-SsoPasswordPolicy cmdlet retrieves the requested password policy for vCenter Single Sign-On and
-        converts the output to HTML. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        converts the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Retrieves the requested password policy for vCenter Single Sign-On and converts to HTML
@@ -3067,7 +3067,7 @@ Function Request-VcenterPasswordExpiration {
 
         .DESCRIPTION
         The Request-VcenterPasswordExpiration cmdlet retrieves the global password expiration policy for a vCenter
-        Server. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrives the global password expiration policy
@@ -3170,7 +3170,7 @@ Function Request-VcenterPasswordComplexity {
 
         .DESCRIPTION
         The Request-VcenterPasswordComplexity cmdlet retrieves the password complexity policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrieves the password complexity policy
@@ -3279,7 +3279,7 @@ Function Request-VcenterAccountLockout {
 
         .DESCRIPTION
         The Request-VcenterAccountLockout cmdlet retrieves the account lockout policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrieves the account lockout policy
@@ -3389,7 +3389,7 @@ Function Update-VcenterPasswordExpiration {
 
         .DESCRIPTION
         The Update-VcenterPasswordExpiration cmdlet configures the global password expiration policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the global password expiration policy
@@ -3468,7 +3468,7 @@ Function Update-VcenterPasswordComplexity {
 
         .DESCRIPTION
         The Update-VcenterPasswordComplexity cmdlet configures the password complexity policy of a vCenter Server.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the password complexity policy
@@ -3584,7 +3584,7 @@ Function Update-VcenterAccountLockout {
 
         .DESCRIPTION
         The Update-VcenterAccountLockout cmdlet configures the account lockout policy of a vCenter Server. The cmdlet
-        connects to SDDC Manager using the -server, -user, and -password values:
+        connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the account lockout policy
@@ -3684,7 +3684,7 @@ Function Request-VcenterRootPasswordExpiration {
 
         .DESCRIPTION
         The Request-VcenterRootPasswordExpiration cmdlet retrieves the root user password expiration policy for a
-        vCenter Server. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        vCenter Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrives the root user password expiration policy
@@ -3789,7 +3789,7 @@ Function Update-VcenterRootPasswordExpiration {
 
         .DESCRIPTION
         The Update-VcenterRootPasswordExpiration cmdlet configures the root user password expiration policy of a
-        vCenter Server. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        vCenter Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the root user password expiration policy
@@ -3889,7 +3889,7 @@ Function Publish-VcenterPasswordExpiration {
 
         .DESCRIPTION
         The Publish-VcenterPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for vCenter Server
@@ -3986,7 +3986,7 @@ Function Publish-VcenterLocalPasswordExpiration {
 
         .DESCRIPTION
         The Publish-VcenterLocalPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of vCenter Server
@@ -4082,7 +4082,7 @@ Function Publish-VcenterLocalPasswordComplexity {
 
         .DESCRIPTION
         The Publish-VcenterLocalPasswordComplexity cmdlet returns password complexity policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for each vCenter Server
@@ -4182,7 +4182,7 @@ Function Publish-VcenterLocalAccountLockout {
 
         .DESCRIPTION
         The Publish-VcenterLocalAccountLockout cmdlet returns account lockout policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password account lockout for each vCenter Server
@@ -4288,8 +4288,8 @@ Function Request-NsxtManagerPasswordExpiration {
 
         .DESCRIPTION
         The Request-NsxtManagerPasswordExpiration cmdlet retrieves the password complexity policy for all NSX Local
-        Manager cluster users for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and
-        -password values:
+        Manager cluster users for a workload domain. The cmdlet connects to th SDDC Manager using the -server, -user,
+        and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Retrieves the password expiration policy for all users
@@ -4388,7 +4388,7 @@ Function Request-NsxtManagerPasswordComplexity {
 
         .DESCRIPTION
         The Request-NsxtManagerPasswordComplexity cmdlet retrieves the password complexity policy for each NSX Local Manager
-        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Retrieves the password complexity policy
@@ -4546,7 +4546,7 @@ Function Request-NsxtManagerAccountLockout {
 
         .DESCRIPTION
         The Request-NsxtManagerAccountLockout cmdlet retrieves the account lockout policy for each NSX Local Manager node for
-        a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Retrieves the account lockpout policy
@@ -4651,7 +4651,7 @@ Function Update-NsxtManagerPasswordExpiration {
 
         .DESCRIPTION
         The Update-NsxtManagerPasswordExpiration cmdlet configures the password expiration policy for NSX Local Manager
-        local users for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        local users for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Updates the password expiration policy
@@ -4737,7 +4737,7 @@ Function Update-NsxtManagerPasswordComplexity {
 
         .DESCRIPTION
         The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager
-        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Updates the password complexity policy
@@ -4940,7 +4940,7 @@ Function Update-NsxtManagerAccountLockout {
 
         .DESCRIPTION
         The Update-NsxtManagerAccountLockout cmdlet configures the account lockout policy for NSX Local Manager nodes within
-        a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Configure the account lockout policy
@@ -5059,7 +5059,7 @@ Function Publish-NsxManagerPasswordExpiration {
 
         .DESCRIPTION
         The Publish-NsxManagerPasswordExpiration cmdlet returns password expiration policy for local users of NSX Local
-        Manager. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of NSX Local Manager
@@ -5167,7 +5167,7 @@ Function Publish-NsxManagerPasswordComplexity {
 
         .DESCRIPTION
         The Publish-NsxManagerPasswordComplexity cmdlet returns password complexity policy for local users of NSX Local
-        Manager. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for each NSX Local Manager
@@ -5267,7 +5267,7 @@ Function Publish-NsxManagerAccountLockout {
 
         .DESCRIPTION
         The Publish-NsxManagerAccountLockout cmdlet returns account lockout policy for local users of NSX Local
-        Manager. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects account lockout policy for each NSX Local Manager
@@ -5373,8 +5373,7 @@ Function Request-NsxtEdgePasswordExpiration {
 
         .DESCRIPTION
         The Request-NsxtEdgePasswordExpiration cmdlet retrieves the password complexity policy for all NSX Edge node users
-        for a workload domain. The cmdlet connects to SDDC Manager using the -server, -user, and
-        -password values:
+        for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Retrieves the password expiration policy for all users
@@ -5476,7 +5475,7 @@ Function Request-NsxtEdgePasswordComplexity {
 
         .DESCRIPTION
         The Request-NsxtEdgePasswordComplexity cmdlet retrieves the password complexity policy for each NSX Edge
-        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Retrieves the password complexity policy
@@ -5595,7 +5594,7 @@ Function Request-NsxtEdgeAccountLockout {
 
         .DESCRIPTION
         The Request-NsxtEdgeAccountLockout cmdlet retrieves the account lockout policy for NSX Edge nodes within a
-        workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Retrieves the account lockout policy
@@ -5700,7 +5699,7 @@ Function Update-NsxtEdgePasswordExpiration {
 
         .DESCRIPTION
         The Update-NsxtEdgePasswordExpiration cmdlet configures the password expiration policy for NSX Edge node local users
-        for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Updates the password expiration policy
@@ -5789,7 +5788,7 @@ Function Update-NsxtEdgePasswordComplexity {
 
         .DESCRIPTION
         The Update-NsxtEdgePasswordComplexity cmdlet updates the password complexity policy for each NSX Edge
-        node for a workload domain. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
 		- Updates the password complexity policy
@@ -5911,7 +5910,7 @@ Function Update-NsxtEdgeAccountLockout {
 
         .DESCRIPTION
         The Update-NsxtEdgeAccountLockout cmdlet configures the account lockout policy for NSX Edge nodes.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
         - Configure the account lockout policy
@@ -6006,7 +6005,7 @@ Function Publish-NsxEdgePasswordExpiration {
 
         .DESCRIPTION
         The Publish-NsxEdgePasswordExpiration cmdlet returns password expiration policy for local users of NSX Edge
-        nodes. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        nodes. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password expiration policy for each local user of NSX Edge
@@ -6124,7 +6123,7 @@ Function Publish-NsxEdgePasswordComplexity {
 
         .DESCRIPTION
         The Publish-NsxEdgePasswordComplexity cmdlet returns password complexity policy for local users of NSX Edge
-        Mnodes. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Mnodes. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects password complexity policy for each local user of NSX Edge
@@ -6224,7 +6223,7 @@ Function Publish-NsxEdgeAccountLockout {
 
         .DESCRIPTION
         The Publish-NsxEdgeAccountLockout cmdlet returns account lockout policy for local users of NSX Edge
-        nodes. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        nodes. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Collects account lockout policy for NSX Edge node
@@ -6331,7 +6330,7 @@ Function Request-EsxiPasswordExpiration {
         .DESCRIPTION
         The Request-EsxiPasswordExpiration cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
         configured password expiration policy (Advanced Setting Security.PasswordMaxDays). The cmdlet connects to SDDC
-        Manager using the -server, -user, and -password values:
+        Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
@@ -6455,7 +6454,7 @@ Function Request-EsxiPasswordComplexity {
         .DESCRIPTION
         The Request-EsxiPasswordComplexity cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
         configured password complexity policy (Advanced Settings Security.PasswordHistory and
-        Security.PasswordQualityControl). The cmdlet connects to SDDC Manager using the -server, -user, and -password
+        Security.PasswordQualityControl). The cmdlet connects to the SDDC Manager using the -server, -user, and -pass
         values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
@@ -6584,7 +6583,7 @@ Function Request-EsxiAccountLockout {
         .DESCRIPTION
         The Request-EsxiAccountLockout cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
         configured account lockout policy (Advanced Settings Security.AccountLockFailures and
-        Security.AccountUnlockTime). The cmdlet connects to SDDC Manager using the -server, -user, and -password
+        Security.AccountUnlockTime). The cmdlet connects to the SDDC Manager using the -server, -user, and -pass
         values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
@@ -6712,7 +6711,7 @@ Function Update-EsxiPasswordExpiration {
 
         .DESCRIPTION
 		The Update-EsxiPasswordExpiration cmdlet configures the password expiration policy on ESXi. The cmdlet connects
-        to SDDC Manager using the -server, -user, and -password values:
+        to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
@@ -6816,7 +6815,7 @@ Function Update-EsxiPasswordComplexity {
 
         .DESCRIPTION
         The Update-EsxiPasswordComplexity cmdlet configures the password complexity policy on ESXi. The cmdlet connects
-        to SDDC Manager using the -server, -user, and -password values:
+        to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
@@ -6937,7 +6936,7 @@ Function Update-EsxiAccountLockout {
 
         .DESCRIPTION
         The Update-EsxiAccountLockout cmdlet configures the account lockout policy on ESXi. The cmdlet connects
-        to SDDC Manager using the -server, -user, and -password values:
+        to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
         - Validates that network connectivity and authentication is possible to vCenter Server
@@ -7058,7 +7057,7 @@ Function Publish-EsxiPasswordPolicy {
 
         .DESCRIPTION
         The Publish-EsxiPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
-        the output to HTML. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Retrieves the requested password policy for all ESXi hosts and converts to HTML
@@ -7375,7 +7374,7 @@ Function Request-WsaLocalUserPasswordComplexity {
 
         .DESCRIPTION
         The Request-WsaLocalUserPasswordComplexity cmdlet retrieves the local user password complexity policy for
-        Workspace ONE Access. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Workspace ONE Access. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Retrieves the local user password complexity policy for Workspace ONE Access
@@ -7465,7 +7464,7 @@ Function Request-WsaLocalUserAccountLockout {
 
         .DESCRIPTION
         The Request-WsaLocalUserAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
 		- Retrieves the account lockout policy of Workspace ONE Access
 
@@ -7790,7 +7789,7 @@ Function Update-WsaLocalUserPasswordComplexity {
 
         .DESCRIPTION
         The Update-WsaLocalUserPasswordComplexity cmdlet configures the local user password complexity policy for
-        Workspace ONE Access. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        Workspace ONE Access. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the password complexity policy
@@ -7941,7 +7940,7 @@ Function Update-WsaLocalUserAccountLockout {
 
         .DESCRIPTION
         The Update-WsaLocalUserAccountLockout cmdlet configures the account lockout policy of Workspace ONE Access.
-        The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the account lockout policy
@@ -8023,7 +8022,7 @@ Function Publish-WsaDirectoryPasswordPolicy {
         .DESCRIPTION
         The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for Workspace ONE Access
         and converts the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and
-        -password values:
+        -pass values:
         - Validates that network connectivity and authentication is possible to Workspace ONE Access
         - Retrieves the requested password policy for Workspace ONE Access and converts to HTML
 
@@ -8125,7 +8124,7 @@ Function Publish-WsaLocalPasswordPolicy {
 
         .DESCRIPTION
         The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
-        the output to HTML. The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-password` values:
+        the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
         - Retrieves the requested password policy for Workspace ONE Access Local Users and converts to HTML
@@ -8247,7 +8246,7 @@ Function Request-LocalUserPasswordExpiration {
 
         .DESCRIPTION
         The Request-LocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy. The cmdlet
-        connects to SDDC Manager using the -server, -user, and -password values:
+        connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		Retrieves the password expiration policy for the specified local user
@@ -8393,7 +8392,7 @@ Function Update-LocalUserPasswordExpiration {
 
         .DESCRIPTION
         The Update-LocalUserPasswordExpiration cmdlet configures a local user password expiration policy. The cmdlet
-        connects to SDDC Manager using the -server, -user, and -password values:
+        connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
 		- Configures the local user password expiration policy
