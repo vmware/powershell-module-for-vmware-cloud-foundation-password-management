@@ -1,8 +1,8 @@
 # Release History
 
-## v1.3.0 (Unreleased)
+## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.3.0)
 
-> Release Date: Unreleased
+> Release Date: 2023-08-15
 
 Enhancement:
 
