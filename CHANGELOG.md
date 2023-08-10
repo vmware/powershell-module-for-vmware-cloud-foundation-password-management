@@ -17,6 +17,8 @@ Bug Fixes:
 - Updated `Request-EsxiPasswordComplexity` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
 - Updated `Request-EsxiAccountLockout` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
 - Updated `Update-EsxiPasswordExpiration` to use `Test-VCFConnection` instead of `Test-Connection` to check the connection. [GH-62](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62)
+- Updated `Get-PasswordPolicyDefault` to include support for version 4.5.2. [GH-91](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91)
+- Updated `Get-PasswordPolicyConfig` to include support for version 4.5.2. [GH-91](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91)
 - Updated `Get-PasswordPolicyDefault` to include support for version 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
 - Updated `Get-PasswordPolicyConfig` to include support for version 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
 - Updated `Invoke-PasswordPolicyManager` to address version support updates and JSON file depth handling. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
