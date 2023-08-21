@@ -12,7 +12,7 @@
     RootModule = '.\VMware.CloudFoundation.PasswordManagement.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.3.0.1005'
+    ModuleVersion = '1.3.1.1000'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
