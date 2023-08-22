@@ -4,6 +4,11 @@
 
 > Release Date: Unreleased
 
+Enhancement:
+
+- Added `Request-SddcManagerPasswordExpiration` cmdlet to retrieve the password expiration policy for the default local users on an SDDC Manager appliance. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97)
+- Added `Update-SddcManagerPasswordExpiration` cmdlet to update the password expiration policy for the default local users on an SDDC Manager appliance. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97)
+
 Bug Fixes:
 
 - Updated `Get-PasswordPolicyDefault` to include support for version 4.4.1. [GH-95](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95)

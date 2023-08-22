@@ -1528,6 +1528,90 @@ Function Convert-CssClassStyle {
 ##########################################################################
 #Region     Begin SDDC Manager Password Management Function         ######
 
+Function Request-SddcManagerPasswordExpiration {
+    <#
+        .SYNOPSIS
+        Retrieves the password expiration policy for an SDDC Manager.
+
+        .DESCRIPTION
+        The Request-SddcManagerPasswordExpiration cmdlet retrieves the password expiration policy for an SDDC Manager.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Retrieves the password expiration policy
+
+        .EXAMPLE
+        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
+        This example retrieves the password expiration policy for an SDDC Manager.
+
+        .EXAMPLE
+        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
+
+        .EXAMPLE
+        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
+        This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against the product defaults.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER rootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the password policy file to compare against.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    # Define the Command Switch
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    [Array]$localUsers = '"root","vcf","backup"'
+    $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product sddcManager -vmName $(($server.Split("."))[-0]) -guestUser root -guestPassword $rootPass -localUser $localUsers"
+    $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch + $customSwitch
+
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
+                    if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                        if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            $sddcManagerLocalPasswordPolicyObject = Invoke-Expression $command
+                            if ($sddcManagerLocalPasswordPolicyObject) { $sddcManagerLocalPasswordPolicyObject }
+                        }
+                    }
+                }
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false -WarningAction SilentlyContinue
+        }
+    }
+}
+Export-ModuleMember -Function Request-SddcManagerPasswordExpiration
+
 Function Request-SddcManagerPasswordComplexity {
     <#
 		.SYNOPSIS
@@ -1706,6 +1790,79 @@ Function Request-SddcManagerAccountLockout {
     }
 }
 Export-ModuleMember -Function Request-SddcManagerAccountLockout
+
+Function Update-SddcManagerPasswordExpiration {
+    <#
+		.SYNOPSIS
+		Updates the password expiration policy for the default local users on an SDDC Manager.
+
+        .DESCRIPTION
+        The Update-SddcManagerPasswordExpiration cmdlet configures the password complexity policy for an SDDC Manager.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+		- Configures the password expiration policy
+
+        .EXAMPLE
+        Update-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minDays 0 -maxDays 90 -warnDays 14
+        This example updates the password expiration policy for the default local users on an SDDC Manager.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER rootPass
+        The password for the SDDC Manager appliance root account.
+
+        .PARAMETER minDays
+        The minimum number of days between password changes.
+
+        .PARAMETER maxDays
+        The maximum number of days between password changes.
+
+        .PARAMETER warnDays
+        The number of days of warning before password expires.
+
+        .PARAMETER detail
+        Return the details of the policy. One of true or false. Default is true.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$minDays,
+        [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$maxDays,
+        [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$warnDays,
+        [Parameter (Mandatory = $false)] [ValidateSet('true', 'false')] [String]$detail = 'true'
+    )
+
+    [Array]$localUsers = '"root","vcf","backup"'
+    $cmdlet = 'Update-LocalUserPasswordExpiration'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq 'MANAGEMENT'}).name) -vmName $(($server.Split('.'))[-0]) -guestUser root -guestPassword $rootPass -localUser $localUsers -minDays $minDays -maxDays $maxDays -warnDays $warnDays -detail $detail"
+    $command = $cmdlet + " -server $server -user $user -pass $pass" + $customSwitch
+
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                Invoke-Expression -Command $command
+            }
+        }
+    }
+    Catch {
+        Debug-ExceptionWriter -object $_
+    }
+    Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
+    }
+}
+Export-ModuleMember -Function Update-SddcManagerPasswordExpiration
 
 Function Update-SddcManagerPasswordComplexity {
     <#
@@ -8406,7 +8563,7 @@ Function Update-LocalUserPasswordExpiration {
 
         .EXAMPLE
         Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
-        This example updates the global password expiration policy for a vCenter Server instance
+        This example updates the password expiration policy for the specified local users on the specified virtual machine.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
