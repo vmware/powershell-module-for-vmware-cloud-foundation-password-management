@@ -140,6 +140,8 @@ nav:
     - Password Expiration:
       - SDDC Manager:
         - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
+        - Request-SddcManagerPasswordExpiration: documentation/functions/Request-SddcManagerPasswordExpiration.md
+        - Update-SddcManagerPasswordExpiration: documentation/functions/Update-SddcManagerPasswordExpiration.md
       - vCenter Server:
         - Publish-VcenterLocalPasswordExpiration: documentation/functions/Publish-VcenterLocalPasswordExpiration.md
         - Publish-VcenterPasswordExpiration: documentation/functions/Publish-VcenterPasswordExpiration.md
