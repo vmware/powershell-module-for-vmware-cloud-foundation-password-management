@@ -14,6 +14,7 @@ Bug Fixes:
 - Updated `Get-PasswordPolicyDefault` to include support for version 4.4.1. [GH-95](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95)
 - Updated `Get-PasswordPolicyConfig` to include support for version 4.4.1. [GH-95](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95)
 - Updated `Invoke-PasswordPolicyManager`, `Start-PasswordPolicyConfig`, and `Get-PasswordPolicyConfig` to better handle use of `Test-Path` and `Get-Content` cmdlets when verifing and consuming the password policy configuration JSON file. [GH-98](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/98)
+- Updated `Test-PasswordPolicyConfig` to better handle validation of ESXi host password complexity policy in the password policy configuration JSON file. [GH-99](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/99)
 
 ## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.3.0)
 

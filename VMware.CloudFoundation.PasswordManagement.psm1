@@ -144,8 +144,8 @@ Function Invoke-PasswordPolicyManager {
                 if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
                     $reportPath = $reportPath.TrimEnd("\", "/")
                 }
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and try again."; Write-Host ""; Break }
-                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and try again."; Write-Host ""; Break }
+                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and retry."; Write-Host ""; Break }
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
                 $defaultReport = Set-CreateReportDirectory -path $reportPath -sddcManagerFqdn $sddcManagerFqdn # Setup Report Location and Report File
                 if ($PsBoundParameters.ContainsKey("allDomains")) {
@@ -420,8 +420,8 @@ Function Start-PasswordPolicyConfig {
                 if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
                     $reportPath = $reportPath.TrimEnd("\", "/")
                 }
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and try again."; Write-Host ""; Break }
-                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and try again".; Write-Host ""; Break }
+                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate password policy configuration file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and retry."; Write-Host ""; Break }
                 Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for SDDC Manager Instance ($sddcManagerFqdn)." -Colour Yellow
                 $customPolicy = Get-Content -Path (Join-Path $reportPath $policyFile) | ConvertFrom-Json
                 $sddcDomainMgmt = (Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name
@@ -624,11 +624,11 @@ Function Get-PasswordPolicyDefault {
     )
     if ($PSBoundParameters.ContainsKey('jsonFile')) {
         if (Test-Path -Path $jsonFile -PathType Container) {
-            Write-Error "The -jsonfile parameter ($jsonfile) contains a folder name and no filename. Please review and retry."
+            Write-Error "The -jsonfile parameter ($jsonfile) contains a folder name and no filename. Review and retry."
             Break
         } else {
             if ((split-path -Path $jsonFile -leaf).split(".")[1] -ne "json") {
-                Write-Error "The filename provided does not contain a .json extension. Please review and retry."
+                Write-Error 'The filename provided does not contain a .json extension. Review and retry.'
                 Break
             } else {
                 if(Test-Path $jsonFile -PathType leaf) {
@@ -642,8 +642,6 @@ Function Get-PasswordPolicyDefault {
             }
         }
     }
-
-
 
     # Add VCF version into JSON file
     $vcfVersion = New-Object -TypeName psobject
@@ -877,11 +875,11 @@ Function Get-PasswordPolicyConfig {
                     Break
                 }
             } else {
-                Write-Error "Password Policy Configuration File version is $($customConfig.vcf.vcfVersion) and version provided is $version : FAILED "
+                Write-Error "Password Policy Configuration File is $($customConfig.vcf.vcfVersion) and Version Provided is $version : FAILED "
                 Break
             }
         } else {
-            Write-Error "Unable to Locate Password Policy Configuration File. Check the path ($policyFilePath)."
+            Write-Error "Unable to locate password policy configuration file $policyFilePath. Enter a valid path and filename and retry."
             Break
         }
     } else {
@@ -901,7 +899,7 @@ Function checkRange {
 	)
 
 	if (($value -eq "Null") -and ($required -eq $true)) {
-		Write-Error "$name parameter has not been configured."
+		Write-Error "The value for $name has not been configured."
 		return $false
 	} elseif (($value -lt $minRange) -or ($value -gt $maxRange)) {
 		Write-Error "The recommended range for $name should be between $minRange and $maxRange. [$value]"
@@ -919,14 +917,14 @@ Function checkEmailString {
 	)
 
 	if (($address -eq "Null") -and ($required -eq $true)) {
-		Write-Error "$name variable has not been configured."
+		Write-Error "The email address for $name has not been configured."
 		return $false
 	}
 	$checkStatement = $address -match "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
 	if ($checkStatement -eq $true) {
 		return $true
 	} else {
-		Write-Error "Please input a valid email address for $name "
+		Write-Error "The email address for $name is not a valid format. [$address]"
 		return $false
 	}
 }
@@ -948,7 +946,7 @@ Function Test-PasswordPolicyConfig {
 
     foreach ($product in $customProductList) {
         if (-Not $defaultProductList.Name.Contains($product.Name)) {
-            Write-Error "Found Unknown Product ($($product.Name)), Please check the Password Policy Configuration File and Run Again"
+            Write-Error "Found Unknown Product ($($product.Name)). Review the password policy configuration file and retry."
             $encounterError = "True"
             Break
         }
@@ -957,7 +955,7 @@ Function Test-PasswordPolicyConfig {
             $customSectionList = $customConfig.($product.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
             foreach ($section in $customSectionList) {
                 if (-Not $defaultSection.Contains($section.Name)) {
-                    Write-Error "Found Unknown Password Policy Section ($($section.Name)) Under Product ($($product.Name)), Please Check the Password Policy Configuration File and Run Again"
+                    Write-Error "Found Unknown Password Policy Section ($($section.Name)) Under Product ($($product.Name)). Review the password policy configuration file and retry."
                     $encounterError = "True"
                     Break
                 }
@@ -967,11 +965,11 @@ Function Test-PasswordPolicyConfig {
                     $customParameterList = $customConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
                     foreach ( $parameterName in $customParameterList) {
                         if ( -Not $defaultParameterList.Name.Contains($parameterName.Name)) {
-                            Write-Error "Found Unknown Parameter ($($parameterName.Name)) Under Section ($($section.Name)) for Product ($($product.Name)), Please Check the Password Policy Configuration File and Run Again"
+                            Write-Error "Found Unknown Parameter ($($parameterName.Name)) Under Section ($($section.Name)) for Product ($($product.Name)). Review the password policy configuration file and retry."
                             $encounterError = "True"
                             Break
                         } elseif ($parameterName.Name -ne "email" -and $customConfig.($product.Name).($section.Name).($parameterName.Name) -eq "") {
-                            Write-Error "Parameter ($($product.Name):$($section.Name):$($parameterName.Name)) Not Configured, Please Check the Password Policy Configuration File and Run Again."
+                            Write-Error "Parameter ($($product.Name):$($section.Name):$($parameterName.Name)) Not Configured. Review the password policy configuration file and retry."
                             $encounterError = "True"
                             Break
                         }
@@ -988,7 +986,7 @@ Function Test-PasswordPolicyConfig {
             foreach ($section in $customSectionList) {
                 $defaultParameterList = $defaultConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
                 $customParameterList = $customConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
-                foreach ( $parameterName in $customParameterList) {
+                foreach ($parameterName in $customParameterList) {
                     # Validating parameter values
                     Switch ($parameterName.Name)  {
                         # Password Expiration Section
@@ -1050,37 +1048,16 @@ Function Test-PasswordPolicyConfig {
                         # Password Complexity section
                         "policy"
                         {
-							$policyString = $customConfig.($product.Name).($section.Name)."policy"
-                            $customConfig.($product.Name).($section.Name)."policy" | Select-String -Pattern "^retry=(\d+)\s+min=(.+),(.+),(.+),(.+),(.+)" | Foreach-Object {$PasswdPolicyRetryValue, $PasswdPolicyMinValue1, $PasswdPolicyMinValue2, $PasswdPolicyMinValue3, $PasswdPolicyMinValue4, $PasswdPolicyMinValue5 = $_.Matches[0].Groups[1..6].Value}
-                            if ($PasswdPolicyRetryValue -eq "" -or $PasswdPolicyMinValue1 -eq "" -or $PasswdPolicyMinValue2 -eq "" -or $PasswdPolicyMinValue3 -eq "" -or $PasswdPolicyMinValue4 -eq "" -or $PasswdPolicyMinValue5 -eq "") {
-                                Write-Error "The recommended policy configuration should be retry=3 min=disabled,disabled,disabled,disbled,15"
-								Write-Error "The custom policy file shows $policyString"
-                                $encounterError = "True"
-                            }
-                            if (($PasswdPolicyRetryValue -lt 0) -or ($PasswdPolicyRetryValue -gt 9999)) {
-                                Write-Error "The recommended range for retry should be between 0 and 9999"
-                                $encounterError = "True"
-                            }
-                            if ((($PasswdPolicyMinValue1 -lt 7) -or ($PasswdPolicyMinValue1 -gt 999)) -and ($PasswdPolicyMinValue1 -ine "disabled")) {
-                                Write-Error "The recommended policy configuration should be retry=3 min=disabled,disabled,disabled,disbled,15"
-								Write-Error "Password Policy Configuration File Defined as ($policyString)"
-                                $encounterError = "True"
-                            } elseif ((($PasswdPolicyMinValue2 -lt 7) -or ($PasswdPolicyMinValue2 -gt 999)) -and ($PasswdPolicyMinValue2 -ine "disabled")) {
-                                Write-Error "The recommended policy configuration should be retry=3 min=disabled,disabled,disabled,disbled,15"
-								Write-Error "Password Policy Configuration File Defined as ($policyString)"
-                                $encounterError = "True"
-                            } elseif ((($PasswdPolicyMinValue3 -lt 7) -or ($PasswdPolicyMinValue3 -gt 999)) -and ($PasswdPolicyMinValue3 -ine "disabled")) {
-                                Write-Error "The recommended policy configuration should be retry=3 min=disabled,disabled,disabled,disbled,15"
-								Write-Error "Password Policy Configuration File Defined as ($policyString)"
-                                $encounterError = "True"
-                            } elseif ((($PasswdPolicyMinValue4 -lt 7) -or ($PasswdPolicyMinValue4 -gt 999)) -and ($PasswdPolicyMinValue4 -ine "disabled")) {
-                                Write-Error "The recommended policy configuration should be retry=3 min=disabled,disabled,disabled,disbled,15"
-								Write-Error "Password Policy Configuration File Defined as ($policyString)"
-                                $encounterError = "True"
-                            } elseif ((($PasswdPolicyMinValue5 -lt 7) -or ($PasswdPolicyMinValue5 -gt 999)) -and ($PasswdPolicyMinValue5 -ine "disabled")) {
-                                Write-Error "The recommended policy configuration should be retry=3 min=disabled,disabled,disabled,disbled,15"
-								Write-Error "Password Policy Configuration File Defined as ($policyString)"
-                                $encounterError = "True"
+							$policyString = $customConfig.($product.Name).($section.Name).'policy'
+                            $policyPattern = '^retry=(\d+)\s+min=(.+),(.+),(.+),(.+),(.+)'
+                            $policyMinRange = 7
+                            $policyMaxRange = 999
+                            if ($policyString -match $policyPattern) {$passwdPolicyMinValues = $matches[2..6]}
+                            foreach ($passwdPolicyMinValue in $passwdPolicyMinValues) {
+                                if ($passwdPolicyMinValue -ine 'disabled') {
+                                    $checkReturn = checkRange -name "$($product.Name):$($section.Name):policy" -value $passwdPolicyMinValue -minRange $policyMinRange -maxRange $policyMaxRange -required $true
+                                    if (-Not $checkReturn) { $encounterError = 'True' }
+                                }
                             }
                         }
                         "history"
@@ -1210,7 +1187,7 @@ Function Test-PasswordPolicyConfig {
     }
     # Check to see if there are any validation errors and exit if any found
     if ($encounterError -eq "True") {
-        Write-Error "Validate Errors Found in the Password Policy Configuration File"
+        Write-Error "Validation errors found in the password policy configuration file. Review the password policy configuration file and retry."
         Return $false
     } else {
         Return $true
