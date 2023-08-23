@@ -52,23 +52,23 @@ Function Invoke-PasswordPolicyManager {
         The Invoke-PasswordPolicyManager generates a Password Policy Manager Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains
+        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains
         This example runs a password policy report for all workload domains within an SDDC Manager instance.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
+        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
         This example runs a password policy report for all workload domains within an SDDC Manager instance and Workspace ONE Access.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -workloadDomain sfo-w01
+        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -workloadDomain sfo-w01
         This example runs a password policy report for a specific Workload Domain within an SDDC Manager instance.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift -policyFile "PasswordPolicyConfig.json"
+        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains -drift -policyFile "passwordPolicyConfig.json"
         This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the JSON provided.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -darkMode -allDomains -drift
+        Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains -drift
         This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the product defaults.
 
         .PARAMETER sddcManagerFqdn
@@ -140,9 +140,12 @@ Function Invoke-PasswordPolicyManager {
                 $version = ""
                 if(((Get-VCFManager).version) -match "\d+\.\d+\.\d+") {
                     $version = $Matches[0]
-                } 
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath, enter a valid path and try again"; Write-Host ""; Break }
-                if (!(Test-Path -Path $($reportPath + '\' + $policyFile))) {Write-Warning "Unable to locate policy file $policyFile, enter a valid path and try again"; Write-Host ""; Break }
+                }
+                if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
+                    $reportPath = $reportPath.TrimEnd("\", "/")
+                }
+                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and try again."; Write-Host ""; Break }
+                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and try again."; Write-Host ""; Break }
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
                 $defaultReport = Set-CreateReportDirectory -path $reportPath -sddcManagerFqdn $sddcManagerFqdn # Setup Report Location and Report File
                 if ($PsBoundParameters.ContainsKey("allDomains")) {
@@ -360,11 +363,11 @@ Function Start-PasswordPolicyConfig {
         Foundation instance using the JSON configuration file provided.
 
         .EXAMPLE
-        Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json
+        Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This examples configures all password policies for all components across a VMware Cloud Foundation instance.
 
         .EXAMPLE
-        Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath F:\Reporting -policyFile passwordPolicyConfig.json -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
+        Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json" -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
         This example configures all password policies for all components across a VMware Cloud Foundation instance and a Workspace ONE Access instance.
 
         .PARAMETER sddcManagerFqdn
@@ -413,10 +416,14 @@ Function Start-PasswordPolicyConfig {
         if (Test-VCFConnection -server $sddcManagerFqdn) {
             if (Test-VCFAuthentication -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass) {
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath, enter a valid path and try again"; Write-Host ""; Break }
-                if (!(Test-Path -Path $($reportPath + '\' + $policyFile))) {Write-Warning "Unable to locate policy file $policyFile, enter a valid path and try again"; Write-Host ""; Break }
+                $reportPath = $reportPath.TrimEnd('\')
+                if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
+                    $reportPath = $reportPath.TrimEnd("\", "/")
+                }
+                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and try again."; Write-Host ""; Break }
+                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and try again".; Write-Host ""; Break }
                 Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for SDDC Manager Instance ($sddcManagerFqdn)." -Colour Yellow
-                $customPolicy = Get-Content -Path $($reportPath + '\' + $policyFile) | ConvertFrom-Json
+                $customPolicy = Get-Content -Path (Join-Path $reportPath $policyFile) | ConvertFrom-Json
                 $sddcDomainMgmt = (Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name
                 $allWorkloadDomains = Get-VCFWorkloadDomain
 
@@ -617,18 +624,18 @@ Function Get-PasswordPolicyDefault {
     )
     if ($PSBoundParameters.ContainsKey('jsonFile')) {
         if (Test-Path -Path $jsonFile -PathType Container) {
-            Write-Error "The -jsonfile parameter ($jsonfile) contains a folder name and no filename. Please retry."
+            Write-Error "The -jsonfile parameter ($jsonfile) contains a folder name and no filename. Please review and retry."
             Break
         } else {
             if ((split-path -Path $jsonFile -leaf).split(".")[1] -ne "json") {
-                Write-Error "The filename provided  doesn't contain a .json extension, please retry."
+                Write-Error "The filename provided does not contain a .json extension. Please review and retry."
                 Break
             } else {
                 if(Test-Path $jsonFile -PathType leaf) {
                     if ($PSBoundParameters.ContainsKey('force')) {
-                        Write-Warning "The filename provided ($jsonFile) already exists, the file will be overwritten."
+                        Write-Warning "The filename provided ($jsonFile) already exists and will be overwritten."
                     } else {
-                        Write-Error "The filename provided ($jsonFile) already exists. Delete or use the -force switch to replace the file."
+                        Write-Error "The filename provided ($jsonFile) already exists. Delete or use the -force switch to overwrite the file."
                         Break
                     }
                 }
@@ -857,7 +864,7 @@ Function Get-PasswordPolicyConfig {
     )
 
     if ($policyFile) {
-        $policyFilePath = $reportPath + '\' + $policyFile
+        $policyFilePath = (Join-Path $reportPath $policyFile)
         if (Test-Path $policyFilePath) {
             Write-Output "Found the Password Policy Configuration File ($policyFilePath)."
             $customConfig = Get-Content -Path $policyFilePath | ConvertFrom-Json
