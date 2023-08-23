@@ -27,7 +27,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
 ```
 
-This example updates the global password expiration policy for a vCenter Server instance.
+This example updates the password expiration policy for the specified local users on the specified virtual machine.
 
 ## Parameters
 
