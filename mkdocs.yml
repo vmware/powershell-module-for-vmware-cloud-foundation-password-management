@@ -137,6 +137,38 @@ nav:
       - Start-PasswordPolicyConfig: documentation/functions/Start-PasswordPolicyConfig.md
       - Test-VcfPasswordManagementPrereq: documentation/functions/Test-VcfPasswordManagementPrereq.md
       - Update-LocalUserPasswordExpiration: documentation/functions/Update-LocalUserPasswordExpiration.md
+    - Account Lockout:
+      - SDDC Manager:
+        - Publish-SddcManagerAccountLockout: documentation/functions/Publish-SddcManagerAccountLockout.md
+        - Request-SddcManagerAccountLockout: documentation/functions/Request-SddcManagerAccountLockout.md
+        - Update-SddcManagerAccountLockout: documentation/functions/Update-SddcManagerAccountLockout.md
+      - vCenter Single Sign-On:
+        - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
+        - Request-SsoAccountLockout: documentation/functions/Request-SsoAccountLockout.md
+        - Update-SsoAccountLockout: documentation/functions/Update-SsoAccountLockout.md
+      - vCenter Server:
+        - Publish-VcenterLocalAccountLockout: documentation/functions/Publish-VcenterLocalAccountLockout.md
+        - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
+        - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
+      - NSX Manager:
+        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md        
+        - Request-NsxtManagerAccountLockout: documentation/functions/Request-NsxtManagerAccountLockout.md
+        - Update-NsxtManagerAccountLockout: documentation/functions/Update-NsxtManagerAccountLockout.md
+      - NSX Edge:
+        - Publish-NsxEdgeAccountLockout: documentation/functions/Publish-NsxEdgeAccountLockout.md
+        - Request-NsxtEdgeAccountLockout: documentation/functions/Request-NsxtEdgeAccountLockout.md
+        - Update-NsxtEdgeAccountLockout: documentation/functions/Update-NsxtEdgeAccountLockout.md
+      - ESXi:
+        - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
+        - Request-EsxiAccountLockout: documentation/functions/Request-EsxiAccountLockout.md
+        - Update-EsxiAccountLockout: documentation/functions/Update-EsxiAccountLockout.md
+      - Workspace ONE Access:
+        - Publish-WsaDirectoryPasswordPolicy: documentation/functions/Publish-WsaDirectoryPasswordPolicy.md
+        - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
+        - Request-WsaAccountLockout: documentation/functions/Request-WsaAccountLockout.md
+        - Request-WsaLocalUserAccountLockout: documentation/functions/Request-WsaLocalUserAccountLockout.md
+        - Update-WsaAccountLockout: documentation/functions/Update-WsaAccountLockout.md
+        - Update-WsaLocalUserAccountLockout: documentation/functions/Update-WsaLocalUserAccountLockout.md
     - Password Expiration:
       - SDDC Manager:
         - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
@@ -202,38 +234,9 @@ nav:
         - Request-WsaLocalUserPasswordComplexity: documentation/functions/Request-WsaLocalUserPasswordComplexity.md
         - Update-WsaPasswordComplexity: documentation/functions/Update-WsaPasswordComplexity.md
         - Update-WsaLocalUserPasswordComplexity: documentation/functions/Update-WsaLocalUserPasswordComplexity.md
-    - Account Lockout:
-      - SDDC Manager:
-        - Publish-SddcManagerAccountLockout: documentation/functions/Publish-SddcManagerAccountLockout.md
-        - Request-SddcManagerAccountLockout: documentation/functions/Request-SddcManagerAccountLockout.md
-        - Update-SddcManagerAccountLockout: documentation/functions/Update-SddcManagerAccountLockout.md
-      - vCenter Single Sign-On:
-        - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
-        - Request-SsoAccountLockout: documentation/functions/Request-SsoAccountLockout.md
-        - Update-SsoAccountLockout: documentation/functions/Update-SsoAccountLockout.md
-      - vCenter Server:
-        - Publish-VcenterLocalAccountLockout: documentation/functions/Publish-VcenterLocalAccountLockout.md
-        - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
-        - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
-      - NSX Manager:
-        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md        
-        - Request-NsxtManagerAccountLockout: documentation/functions/Request-NsxtManagerAccountLockout.md
-        - Update-NsxtManagerAccountLockout: documentation/functions/Update-NsxtManagerAccountLockout.md
-      - NSX Edge:
-        - Publish-NsxEdgeAccountLockout: documentation/functions/Publish-NsxEdgeAccountLockout.md
-        - Request-NsxtEdgeAccountLockout: documentation/functions/Request-NsxtEdgeAccountLockout.md
-        - Update-NsxtEdgeAccountLockout: documentation/functions/Update-NsxtEdgeAccountLockout.md
-      - ESXi:
-        - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
-        - Request-EsxiAccountLockout: documentation/functions/Request-EsxiAccountLockout.md
-        - Update-EsxiAccountLockout: documentation/functions/Update-EsxiAccountLockout.md
-      - Workspace ONE Access:
-        - Publish-WsaDirectoryPasswordPolicy: documentation/functions/Publish-WsaDirectoryPasswordPolicy.md
-        - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
-        - Request-WsaAccountLockout: documentation/functions/Request-WsaAccountLockout.md
-        - Request-WsaLocalUserAccountLockout: documentation/functions/Request-WsaLocalUserAccountLockout.md
-        - Update-WsaAccountLockout: documentation/functions/Update-WsaAccountLockout.md
-        - Update-WsaLocalUserAccountLockout: documentation/functions/Update-WsaLocalUserAccountLockout.md
+    - Password Rotation:
+      - Publish-PasswordRotationPolicy: documentation/functions/Publish-PasswordRotationPolicy.md
+      - Request-PasswordRotationPolicy: documentation/functions/Request-PasswordRotationPolicy.md
 - Community:
   - community/index.md
   - Contributing: community/contributing.md

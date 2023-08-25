@@ -8378,7 +8378,7 @@ Export-ModuleMember -Function Publish-WsaLocalPasswordPolicy
 ##########################################################################
 
 ##########################################################################
-#Region     Begin Shared Password Management Function               ######
+#Region     Begin Shared Password Management Functions               ######
 
 Function Request-LocalUserPasswordExpiration {
     <#
@@ -8662,12 +8662,338 @@ Function Update-LocalUserPasswordExpiration {
 }
 Export-ModuleMember -Function Update-LocalUserPasswordExpiration
 
+Function Publish-PasswordRotationPolicy {
+    <#
+        .SYNOPSIS
+        Publishes the password rotation settings for accounts managed by SDDC Manager based on the resource type
+        for a specified workload domain.
+
+        .DESCRIPTION
+        The Publish-PasswordRotationPolicy cmdlet retrieves the password rotation settings for accounts managed
+        by SDDC Manager.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Retrives the password rotation settings based on the criteria specified by the -domain and -resource
+        values or all resource types for all workload domains if no values are specified.
+
+        .EXAMPLE
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains
+        This example publishes the password rotation settings for all resource types managed by SDDC Manager for all workload domains.
+
+        .EXAMPLE
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01
+        This example publishes the password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+
+        .EXAMPLE
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+        This example publishes the password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
+
+        .EXAMPLE
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
+        This example publishes the password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+
+        .EXAMPLE
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains -json
+        This example publishes the password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER resource
+        The resource type to publish the policy for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
+        [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
+        [Parameter (Mandatory = $false)] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
+    )
+
+    # Determine the resource type.
+    if ($resource) {
+        switch ($resource) {
+            'sso' {$resourceName = 'vCenter Single Sign-On'}
+            'vcenterServer' {$resourceName = 'vCenter Server'}
+            'nsxManager' {$resourceName = 'NSX Manager'}
+            'nsxEdge' {$resourceName = 'NSX Edge'}
+            'ariaLifecycle' {$resourceName = 'Aria Suite Lifecycle'}
+            'ariaOperationsLogs' {$resourceName = 'Aria Operations for Logs'}
+            'ariaOperations' {$resourceName = 'Aria Operations'}
+            'ariaAutomation' {$resourceName = 'Aria Automation'}
+            'workspaceOneAccess' {$resourceName = 'Workspace ONE Access'}
+            'backup' {$resourceName = 'SDDC Manager'}
+        }
+    } else {
+        # If no resource type is specified, retrieve all resource types.
+        $resourceName = 'All Resources'
+    }
+
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                $passwordRotationObject = New-Object System.Collections.ArrayList
+                if ($PsBoundParameters.ContainsKey('workloadDomain')) {
+                    # Get the password rotation policy for a specific workload domain
+                    $command = "Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $workloadDomain"
+                    # If the resource parameter is specified, add it to the command.
+                    if ($PsBoundParameters.ContainsKey('resource')) {
+                        $command += " -resource $resource"
+                    }
+                    # Invoke the command and add the results to the array.
+                    $passwordRotation = Invoke-Expression $command ; $passwordRotationObject += $passwordRotation
+                } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
+                    # Get the password rotation policy for all workload domains.
+                    $allWorkloadDomains = Get-VCFWorkloadDomain
+                    # For each workload domain, get the password rotation policy.
+                    foreach ($domain in $allWorkloadDomains ) {
+                        # Get the password rotation policy for a specific workload domain.
+                        $command = "Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $($domain.name)"
+                        # If the resource parameter is specified, add it to the command.
+                        if ($PsBoundParameters.ContainsKey('resource')) {
+                            $command += " -resource $resource"
+                        }
+                        # Invoke the command and add the results to the array.
+                        $passwordRotation = Invoke-Expression $command ; $passwordRotationObject += $passwordRotation
+                    }
+                }
+
+                # Define the custom sort order for resourceType
+                $resourceTypeOrder = @('SDDC Manager','vCenter Single Sign-On','vCenter Server','NSX Manager','NSX Edge','Aria Suite Lifecycle','Aria Operations for Logs','Aria Operations','Aria Automation','Workspace ONE Access')
+
+                # Sort the array by resourceType using the custom sort order
+                $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression={$resourceTypeOrder.IndexOf($_.Resource)}}, 'System', 'User'
+            
+                # # If the json parameter is specified, return the results as JSON.
+                if ($PsBoundParameters.ContainsKey('json')) {
+                    $passwordRotationObject | ConvertTo-Json
+                } else {
+                    # Otherwise, return the results as HTML.
+                    # $passwordRotationObject = $passwordRotationObject | Sort-Object 'Workload Domain', 'System', 'Resource', 'Type', 'User' | ConvertTo-Html -Fragment -PreContent 
+                    # Return the results as HTML but create an anchor for each resource type.
+                    $passwordRotationObject = $passwordRotationObject | ConvertTo-Html -Fragment -PreContent "<a id=$($resourceName.ToLower() -replace ' ', '-')-password-rotation></a><h3>$($resourceName) - Password Rotation</h3>" -As Table
+                    $passwordRotationObject = Convert-CssClassStyle -htmldata $passwordRotationObject
+                    $passwordRotationObject
+                }
+            }
+        }
+    } Catch {
+        Debug-CatchWriter -object $_
+    }
+}
+Export-ModuleMember -Function Publish-PasswordRotationPolicy
+
+Function Request-PasswordRotationPolicy {
+    <#
+        .SYNOPSIS
+        Retrieves the password rotation settings for accounts managed by SDDC Manager based on the resource type
+        for a specified workload domain.
+
+        .DESCRIPTION
+        The Request-PasswordRotationPolicy cmdlet retrieves the password rotation settings for accounts managed
+        by SDDC Manager.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Retrives the password rotation settings based on the criteria specified by the -domain and -resource
+        values or all resource types for all workload domains if no values are specified.
+
+        .EXAMPLE
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1!
+        This example retrieves the password rotation settings for all resource types managed by SDDC Manager for all workload domains.
+
+        .EXAMPLE
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        This example retrieves the password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+
+        .EXAMPLE
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+        This example retrieves the password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
+
+        .EXAMPLE
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource nsxManager
+        This example retrieves the password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the user password rotation settings for.
+
+        .PARAMETER resource
+        The resource type to retrieve the user password rotation settings for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $false)] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource
+    )
+
+    # Determine the resource type.
+    if ($resource) {
+        switch ($resource) {
+            'sso' {$resourceType = 'PSC'}
+            'vcenterServer' {$resourceType = 'VCENTER'}
+            'nsxManager' {$resourceType = 'NSXT_MANAGER'}
+            'nsxEdge' {$resourceType = 'NSXT_EDGE'}
+            'ariaLifecycle' {$resourceType = 'VRSLCM'}
+            'ariaOperationsLogs' {$resourceType = 'VRLI'}
+            'ariaOperations' {$resourceType = 'VROPS'}
+            'ariaAutomation' {$resourceType = 'VRA'}
+            'workspaceOneAccess' {$resourceType = 'WSA'}
+            'backup' {$resourceType = 'BACKUP'}
+        }
+    } else {
+        # If no resource type is specified, retrieve all resource types.
+        $resourceType = '*'
+    }
+
+    Try {
+        # Validate that network connectivity and authentication is possible to SDDC Manager.
+        if (Test-VCFConnection -server $server) {
+            # Validate that authentication is possible to SDDC Manager.
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                # Retrieve the password rotation settings for the specified resource type on the specified workload domain, if specified.
+                # ESXi host are ineligible for automated password rotation.
+                $passwordRotations = Get-VCFCredentialExpiry | Where-Object { $_.resource.resourceType -like $resourceType -and (!$domain -or $_.resource.domainName -eq $domain -and $_.resource.resourceType -notlike "ESXI") }
+                # Iterate through the password rotation settings.
+                $passwordRotationObject = foreach ($passwordRotation in $passwordRotations) {
+                    # Determine the resource name based on the resource type.
+                    switch ($passwordRotation.resource.resourceType) {
+                        'PSC' {$resourceName = 'vCenter Single Sign-On'}
+                        'VCENTER' {$resourceName = 'vCenter Server'}
+                        'NSXT_MANAGER' {$resourceName = 'NSX Manager'}
+                        'NSXT_EDGE' {$resourceName = 'NSX Edge'}
+                        'VRSLCM' {$resourceName = 'Aria Suite Lifecycle'}
+                        'VRLI' {$resourceName = 'Aria Operations for Logs'}
+                        'VROPS' {$resourceName = 'Aria Operations'}
+                        'VRA' {$resourceName = 'Aria Automation'}
+                        'WSA' {$resourceName = 'Workspace ONE Access'}
+                        'BACKUP' {$resourceName = 'SDDC Manager'}
+                    }
+                    # Determine the frequency and next schedule based on the password rotation settings.
+                    if (!$passwordRotation.autoRotatePolicy) {
+                        # If the password rotation settings are not configured, set the frequency and next schedule to disabled.
+                        $frequencyInDays = 'Disabled'
+                        $nextSchedule = 'Disabled'
+                    } else {
+                        # If the password rotation settings are configured, set the frequency and next schedule to the configured values.
+                        $frequencyInDays = $passwordRotation.autoRotatePolicy.frequencyInDays
+                        $nextSchedule = $passwordRotation.autoRotatePolicy.nextSchedule
+                    }
+                    
+                    # Determine the alert color and message based on the password rotation status.
+
+                    # Check if the password rotation settings are configured.
+                    if ($nextSchedule -eq 'Disabled' -and $frequencyInDays -eq 'Disabled') {
+                        # If the password rotation settings are not configured, set the alert to green and the message to disabled.
+                        $message = 'Automated password rotation is disabled.'
+                        $alert = 'GREEN'
+                    } elseif ($passwordRotation.expiry.expiryDate -lt $nextSchedule -and $passwordRotation.expiry.connectivityStatus -ne 'ERROR') {
+                        # If the password will expire before the scheduled rotation and the connectivity status is not error, set the alert to yellow and the message to will expire before the scheduled rotation.
+                        $message = 'Password will expire before the scheduled rotation.'
+                        $alert = 'RED'
+                    } else {
+                        # If the password rotation settings are configured, set the alert to green and the message to enabled.
+                        $message = 'Automated password rotation is enabled.'
+                        $alert = 'GREEN'
+                    }
+
+                    # Check if the password is expiring or in an unknown state.
+                    if ($passwordRotation.expiry.status -eq 'EXPIRING') {
+                        # If the password is expiring, set the alert to yellow and the message to expiring.
+                        $message = 'Password is approaching expiration.'
+                        $alert = 'YELLOW'
+                    } elseif ($passwordRotation.expiry.status -eq 'UNKNOWN' -and $passwordRotation.expiry.connectivityStatus -ne 'ERROR') {
+                        # If the password status is unknown and the connectivity status is not error, set the alert to yellow and the message to unknown.
+                        $message = 'The resource is in an unknown state.'
+                        $alert = 'YELLOW'
+                    } 
+
+                    if ($null -eq $passwordRotation.expiry.expiryDate) {
+                        # If the password is null set the alert to red and the message to unknown.
+                        $message = 'Password expiration date is unknown.'
+                        $alert = 'RED'
+                    } elseif ($passwordRotation.expiry.connectivityStatus -eq 'ERROR') {
+                        # If the connectivity status is error, set the alert to red and the message to error.
+                        $message = 'The resource is in an error state.'
+                        $alert = 'RED'
+                    } elseif ($passwordRotation.expiry.expiryDate -le (Get-Date).AddDays(7)) {
+                        # If the is expiring in the next 7 days, set the alert to red and the message to expiring in the next 7 days.
+                        $message = 'Password is expiring in next 7 days.'
+                        $alert = 'RED'
+                    } elseif ($passwordRotation.expiry.expiryDate -le (Get-Date)) {
+                        # If the password is expired, set the alert to red and the message to expired.
+                        $message = 'Password is expired.'
+                        $alert = 'RED'   
+                    }
+    
+                    [PSCustomObject]@{
+                        'Workload Domain' = $passwordRotation.resource.domainName
+                        'System'          = $passwordRotation.resource.resourceName
+                        'Resource'        = $resourceName
+                        'Type'            = $passwordRotation.credentialType
+                        'User'            = $passwordRotation.username
+                        'Frequency Days'  = $frequencyInDays
+                        'Next Schedule'   = $nextSchedule
+                        'Expiration'      = $passwordRotation.expiry.expiryDate
+                        'Connection'      = $passwordRotation.expiry.connectivityStatus
+                        'Status'          = $passwordRotation.expiry.status
+                        'Alert'           = $alert
+                        'Message'         = $message
+                    }
+                }
+
+                # Define the custom sort order for resourceType
+                $resourceTypeOrder = @('SDDC Manager','vCenter Single Sign-On','vCenter Server','NSX Manager','NSX Edge','Aria Suite Lifecycle','Aria Operations for Logs','Aria Operations','Aria Automation','Workspace ONE Access')
+
+                # Sort the $passwordRotationObjects array by resourceType using the custom sort order
+                $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression={$resourceTypeOrder.IndexOf($_.Resource)}}, 'System', 'Type', 'User'
+
+                # Return the password rotation objects.
+                return $passwordRotationObject
+                
+            } else {
+                Write-Error "Unable to retrieve password rotation policy for accounts managed by SDDC Manager ($server): PRE_VALIDATION_FAILED"
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    }
+}
+Export-ModuleMember -Function Request-PasswordRotationPolicy
+
 #EndRegion  End Shared Password Management Functions                ######
 ##########################################################################
 
 ##########################################################################
 #Region     Begin Supporting Functions                              ######
-
 
 Function Test-VcfPasswordManagementPrereq {
     <#
@@ -8750,8 +9076,6 @@ Function Show-PasswordManagementOutput {
     }
 }
 Export-ModuleMember -Function Show-PasswordManagementOutput
-
-
 
 #EndRegion  End Supporting Functions                                ######
 ##########################################################################
