@@ -237,6 +237,7 @@ nav:
     - Password Rotation:
       - Publish-PasswordRotationPolicy: documentation/functions/Publish-PasswordRotationPolicy.md
       - Request-PasswordRotationPolicy: documentation/functions/Request-PasswordRotationPolicy.md
+      - Update-PasswordRotationPolicy: documentation/functions/Update-PasswordRotationPolicy.md
 - Community:
   - community/index.md
   - Contributing: community/contributing.md

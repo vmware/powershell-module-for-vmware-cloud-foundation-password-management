@@ -40,6 +40,12 @@ if ($PSEdition -eq 'Desktop') {
     }
 }
 
+Set-Variable -Name "successStatus" -Value "SUCCESSFUL" -Scope Global
+Set-Variable -Name "failureStatus" -Value "FAILED" -Scope Global
+Set-Variable -Name "skippedStatus" -Value "SKIPPED" -Scope Global
+Set-Variable -Name "preValidationFailureStatus" -Value "PRE_VALIDATION_FAILED" -Scope Global
+Set-Variable -Name "postValidationFailureStatus" -Value "POST_VALIDATION_FAILED" -Scope Global
+
 ##########################################################################
 #Region     Begin Password Policy Manager Functions                 ######
 
@@ -8665,36 +8671,36 @@ Export-ModuleMember -Function Update-LocalUserPasswordExpiration
 Function Publish-PasswordRotationPolicy {
     <#
         .SYNOPSIS
-        Publishes the password rotation settings for accounts managed by SDDC Manager based on the resource type
+        Publishes the credential password rotation settings for credentials managed by SDDC Manager based on the resource type
         for a specified workload domain.
 
         .DESCRIPTION
-        The Publish-PasswordRotationPolicy cmdlet retrieves the password rotation settings for accounts managed
+        The Publish-PasswordRotationPolicy cmdlet retrieves the credential password rotation settings for accounts managed
         by SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager.
-        - Retrives the password rotation settings based on the criteria specified by the -domain and -resource
+        - Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
         Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains
-        This example publishes the password rotation settings for all resource types managed by SDDC Manager for all workload domains.
+        This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
         Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01
-        This example publishes the password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+        This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
 
         .EXAMPLE
         Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
-        This example publishes the password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
+        This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
         Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
-        This example publishes the password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+        This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
 
         .EXAMPLE
         Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains -json
-        This example publishes the password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.
+        This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8752,7 +8758,7 @@ Function Publish-PasswordRotationPolicy {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $passwordRotationObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    # Get the password rotation policy for a specific workload domain
+                    # Get the credential password rotation policy for a specific workload domain
                     $command = "Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $workloadDomain"
                     # If the resource parameter is specified, add it to the command.
                     if ($PsBoundParameters.ContainsKey('resource')) {
@@ -8761,11 +8767,11 @@ Function Publish-PasswordRotationPolicy {
                     # Invoke the command and add the results to the array.
                     $passwordRotation = Invoke-Expression $command ; $passwordRotationObject += $passwordRotation
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
-                    # Get the password rotation policy for all workload domains.
+                    # Get the credential password rotation policy for all workload domains.
                     $allWorkloadDomains = Get-VCFWorkloadDomain
-                    # For each workload domain, get the password rotation policy.
+                    # For each workload domain, get the credential password rotation policy.
                     foreach ($domain in $allWorkloadDomains ) {
-                        # Get the password rotation policy for a specific workload domain.
+                        # Get the credential password rotation policy for a specific workload domain.
                         $command = "Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $($domain.name)"
                         # If the resource parameter is specified, add it to the command.
                         if ($PsBoundParameters.ContainsKey('resource')) {
@@ -8804,32 +8810,32 @@ Export-ModuleMember -Function Publish-PasswordRotationPolicy
 Function Request-PasswordRotationPolicy {
     <#
         .SYNOPSIS
-        Retrieves the password rotation settings for accounts managed by SDDC Manager based on the resource type
+        Retrieves the credential password rotation settings for credentials managed by SDDC Manager based on the resource type
         for a specified workload domain.
 
         .DESCRIPTION
-        The Request-PasswordRotationPolicy cmdlet retrieves the password rotation settings for accounts managed
+        The Request-PasswordRotationPolicy cmdlet retrieves the credential password rotation settings for credentials managed
         by SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager.
-        - Retrives the password rotation settings based on the criteria specified by the -domain and -resource
+        - Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
         Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1!
-        This example retrieves the password rotation settings for all resource types managed by SDDC Manager for all workload domains.
+        This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
         Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
-        This example retrieves the password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+        This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
 
         .EXAMPLE
         Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
-        This example retrieves the password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
+        This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
         Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource nsxManager
-        This example retrieves the password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+        This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8841,10 +8847,10 @@ Function Request-PasswordRotationPolicy {
         The password to authenticate to the SDDC Manager instance.
 
         .PARAMETER domain
-        The name of the workload domain to retrieve the user password rotation settings for.
+        The name of the workload domain to retrieve the credential password rotation settings for.
 
         .PARAMETER resource
-        The resource type to retrieve the user password rotation settings for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+        The resource type to retrieve the credential password rotation settings for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
     #>
 
     Param (
@@ -8879,10 +8885,10 @@ Function Request-PasswordRotationPolicy {
         if (Test-VCFConnection -server $server) {
             # Validate that authentication is possible to SDDC Manager.
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                # Retrieve the password rotation settings for the specified resource type on the specified workload domain, if specified.
+                # Retrieve the credential password rotation settings for the specified resource type on the specified workload domain, if specified.
                 # ESXi host are ineligible for automated password rotation.
                 $passwordRotations = Get-VCFCredentialExpiry | Where-Object { $_.resource.resourceType -like $resourceType -and (!$domain -or $_.resource.domainName -eq $domain -and $_.resource.resourceType -notlike "ESXI") }
-                # Iterate through the password rotation settings.
+                # Iterate through the credential password rotation settings.
                 $passwordRotationObject = foreach ($passwordRotation in $passwordRotations) {
                     # Determine the resource name based on the resource type.
                     switch ($passwordRotation.resource.resourceType) {
@@ -8897,22 +8903,22 @@ Function Request-PasswordRotationPolicy {
                         'WSA' {$resourceName = 'Workspace ONE Access'}
                         'BACKUP' {$resourceName = 'SDDC Manager'}
                     }
-                    # Determine the frequency and next schedule based on the password rotation settings.
+                    # Determine the frequency and next schedule based on the credential password rotation settings.
                     if (!$passwordRotation.autoRotatePolicy) {
-                        # If the password rotation settings are not configured, set the frequency and next schedule to disabled.
+                        # If the credential password rotation settings are not configured, set the frequency and next schedule to disabled.
                         $frequencyInDays = 'Disabled'
                         $nextSchedule = 'Disabled'
                     } else {
-                        # If the password rotation settings are configured, set the frequency and next schedule to the configured values.
+                        # If the credential password rotation settings are configured, set the frequency and next schedule to the configured values.
                         $frequencyInDays = $passwordRotation.autoRotatePolicy.frequencyInDays
                         $nextSchedule = $passwordRotation.autoRotatePolicy.nextSchedule
                     }
                     
-                    # Determine the alert color and message based on the password rotation status.
+                    # Determine the alert color and message based on the credential password rotation status.
 
-                    # Check if the password rotation settings are configured.
+                    # Check if the credential password rotation settings are configured.
                     if ($nextSchedule -eq 'Disabled' -and $frequencyInDays -eq 'Disabled') {
-                        # If the password rotation settings are not configured, set the alert to green and the message to disabled.
+                        # If the credential password rotation settings are not configured, set the alert to green and the message to disabled.
                         $message = 'Automated password rotation is disabled.'
                         $alert = 'GREEN'
                     } elseif ($passwordRotation.expiry.expiryDate -lt $nextSchedule -and $passwordRotation.expiry.connectivityStatus -ne 'ERROR') {
@@ -8920,7 +8926,7 @@ Function Request-PasswordRotationPolicy {
                         $message = 'Password will expire before the scheduled rotation.'
                         $alert = 'RED'
                     } else {
-                        # If the password rotation settings are configured, set the alert to green and the message to enabled.
+                        # If the credential password rotation settings are configured, set the alert to green and the message to enabled.
                         $message = 'Automated password rotation is enabled.'
                         $alert = 'GREEN'
                     }
@@ -8976,11 +8982,11 @@ Function Request-PasswordRotationPolicy {
                 # Sort the $passwordRotationObjects array by resourceType using the custom sort order
                 $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression={$resourceTypeOrder.IndexOf($_.Resource)}}, 'System', 'Type', 'User'
 
-                # Return the password rotation objects.
+                # Return the credential password rotation objects.
                 return $passwordRotationObject
                 
             } else {
-                Write-Error "Unable to retrieve password rotation policy for accounts managed by SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                Write-Error "Unable to retrieve password rotation policy for credentials managed by SDDC Manager ($server): PRE_VALIDATION_FAILED"
             }
         }
     } Catch {
@@ -8988,6 +8994,136 @@ Function Request-PasswordRotationPolicy {
     }
 }
 Export-ModuleMember -Function Request-PasswordRotationPolicy
+
+Function Update-PasswordRotationPolicy {
+    <#
+        .SYNOPSIS
+        Updates the credential password rotation settings for a credential managed by SDDC Manager.
+
+        .DESCRIPTION
+        The Update-PasswordRotationPolicy cmdlet updates the credential password rotation settings for a credential managed
+        by SDDC Manager.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
+        - Updates the credential password rotation settings based on the credential criteria specified.
+
+        .EXAMPLE
+        Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate disabled
+        This example disables the credential password rotation settings for a credential managed by SDDC Manager.
+
+        .EXAMPLE
+        Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
+        This example enables the credential password rotation settings for a credential managed by SDDC Manager.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain to retrieve the credential password rotation settings for.
+
+        .PARAMETER resource
+        The resource type to retrieve the credential password rotation settings for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+
+        .PARAMETER resourceName
+        The name of the resource to retrieve the credential password rotation settings for.
+
+        .PARAMETER credential
+        The credential type to retrieve the user password rotation settings for. One of: ssh, api, audit, sso.
+
+        .PARAMETER credentialName
+        The name of the credential to retrieve the user password rotation settings for.
+
+        .PARAMETER autoRotate
+        Enable or disable the credential password rotation for the credential by SDDC Manager. One of: enabled, disabled.
+
+        .PARAMETER frequencyInDays
+        The number of days of warning before credential's password will be automatically rotated by SDDC Manager.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$resourceName,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [ValidateSet('ssh', 'api', 'audit', 'sso')] [String]$credential,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$credentialName,
+        [Parameter (Mandatory = $true)] [ValidateSet('enabled', 'disabled')] [String]$autoRotate,
+        [Parameter (Mandatory = $false)] [ValidateScript({ $autoRotate -eq 'ENABLED' -or $_ -eq $null })] [Int]$frequencyInDays
+    )
+
+    # Set the resource type.
+    switch ($resource) {
+        'sso' {$resourceType = 'PSC'; $resourceDescription = 'vCenter Single Sign-On'}
+        'vcenterServer' {$resourceType = 'VCENTER'; $resourceDescription = 'vCenter Server'}
+        'nsxManager' {$resourceType = 'NSXT_MANAGER'; $resourceDescription = 'NSX Manager'}
+        'nsxEdge' {$resourceType = 'NSXT_EDGE'; $resourceDescription = 'NSX Edge'}
+        'ariaLifecycle' {$resourceType = 'VRSLCM'; $resourceDescription = 'Aria Suite Lifecycle'}
+        'ariaOperationsLogs' {$resourceType = 'VRLI'; $resourceDescription = 'Aria Operations for Logs'}
+        'ariaOperations' {$resourceType = 'VROPS'; $resourceDescription = 'Aria Operations'}
+        'ariaAutomation' {$resourceType = 'VRA'; $resourceDescription = 'Aria Automation'}
+        'workspaceOneAccess' {$resourceType = 'WSA'; $resourceDescription = 'Workspace ONE Access'}
+        'backup' {$resourceType = 'BACKUP'; $resourceDescription = 'SDDC Manager'}
+    }
+
+    # Set the credential type.
+    switch ($credential) {
+        'ssh' {$credentialType = $credential.ToUpper()}
+        'api' {$credentialType = $credential.ToUpper()}
+        'audit' {$credentialType = $credential.ToUpper()}
+        'sso' {$credentialType = $credential.ToUpper()}
+    }
+
+    # Set the username.
+    $username = $credentialName
+
+    Try {
+        # Validate that network connectivity and authentication is possible to SDDC Manager.
+        if (Test-VCFConnection -server $server) {
+            # Validate that authentication is possible to SDDC Manager.
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                # Set the status messages.
+                $message =  "password rotation policy for $credentialType credential ($credentialName) for workload domain ($domain) $resourceDescription resource ($resourceName) managed by SDDC Manager ($server)"
+                $updateMessage = "Updating $message"
+                $locateMessage = "Locating $message"
+                # Update the credential password rotation settings for a credential managed by SDDC Manager.
+                $credentialExpiry = Get-VCFCredentialExpiry | Where-Object { $_.resource.resourceType -eq $resourceType -and $_.resource.resourceName -eq $resourceName -and $_.resource.domainName -eq $domain -and $_.credentialType -eq $credentialType -and $_.username -eq $username }
+                if ($credentialExpiry) {   
+                    if (!$credentialExpiry.autoRotatePolicy -and $autoRotate -eq 'disabled') {
+                        Write-Warning "${updateMessage}: ${skippedStatus}"
+                    } elseif ($credentialExpiry.autoRotatePolicy -and $autoRotate -eq 'enabled' -and $credentialExpiry.autoRotatePolicy.frequencyInDays -eq $frequencyInDays) {
+                        Write-Warning "${updateMessage}: ${skippedStatus}"
+                    } else {
+                        if ($autoRotate -eq 'disabled') {
+                            Set-VCFCredentialAutoRotatePolicy -resourceName $resourceName -resourceType $resourceType -credentialType $credentialType -username $username -autoRotate $autoRotate
+                        } else {
+                            Set-VCFCredentialAutoRotatePolicy -resourceName $resourceName -resourceType $resourceType -credentialType $credentialType -username $username -autoRotate $autoRotate -frequencyInDays $frequencyInDays
+                        }
+                        if (Get-VCFCredentialExpiry | Where-Object { $_.resource.resourceType -eq $resourceType -and $_.resource.resourceName -eq $resourceName -and $_.resource.domainName -eq $domain -and $_.credentialType -eq $credentialType -and $_.username -eq $username }) {
+                            Write-Output "${updateMessage}: ${successStatus}"
+                        } else {
+                            Write-Error "${updateMessage}: ${failureStatus}"
+                        }
+                    }
+                } else {
+                    Write-Error "${locateMessage}: ${preValidationFailureStatus}"
+                }
+            } else {
+                Write-Error "${updateMessage}: ${preValidationFailureStatus}"
+            }
+        }
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Update-PasswordRotationPolicy
 
 #EndRegion  End Shared Password Management Functions                ######
 ##########################################################################
