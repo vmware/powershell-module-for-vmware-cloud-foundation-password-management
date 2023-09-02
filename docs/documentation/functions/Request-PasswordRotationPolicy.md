@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Retrieves the password rotation settings for accounts managed by SDDC Manager based on the resource type
+Retrieves the credential password rotation settings for credentials managed by SDDC Manager based on the resource type
 for a specified workload domain.
 
 ## Syntax
@@ -13,12 +13,12 @@ Request-PasswordRotationPolicy [-server] <String> [-user] <String> [-pass] <Stri
 
 ## Description
 
-The `Request-PasswordRotationPolicy`` cmdlet retrieves the password rotation settings for accounts managed by SDDC Manager.
+The `Request-PasswordRotationPolicy` cmdlet retrieves the credential password rotation settings for credentials managed by SDDC Manager.
 
-The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager.
-- Retrives the password rotation settings based on the criteria specified by the -domain and -resource values or all resource types for all workload domains if no values are specified.
+- Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource values or all resource types for all workload domains if no values are specified.
 
 ## Examples
 
@@ -28,7 +28,7 @@ The cmdlet connects to the SDDC Manager using the -server, -user, and -pass valu
 Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1!
 ```
 
-This example retrieves the password rotation settings for all resource types managed by SDDC Manager for all workload domains.
+This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
 ### Example 2
 
@@ -36,7 +36,7 @@ This example retrieves the password rotation settings for all resource types man
 Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
 ```
 
-This example retrieves the password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
 
 ### Example 3
 
@@ -44,7 +44,7 @@ This example retrieves the password rotation settings for all resource types man
 Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
 ```
 
-This example retrieves the password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
+This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
 ### Example 4
 
@@ -52,7 +52,7 @@ This example retrieves the password rotation settings for the NSX Manager accoun
 Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource nsxManager
 ```
 
-This example retrieves the password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
 
 ## PARAMETERS
 

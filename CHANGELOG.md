@@ -1,5 +1,17 @@
 # Release History
 
+## [v1.5.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.5.0)
+
+> Release Date: Unreleased
+
+Enhancement:
+
+- Added `Update-PasswordRotationPolicy` cmdlet to update the password rotation settings for credentials managed by SDDC Manager. [GH-108](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108)
+
+Chore:
+
+- Updated `PowerVCF` from v2.3.0 to v2.4.0.
+
 ## [v1.4.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.4.0)
 
 > Release Date: 2023-08-29
@@ -8,8 +20,8 @@ Enhancement:
 
 - Added `Request-SddcManagerPasswordExpiration` cmdlet to retrieve the password expiration policy for the default local users on an SDDC Manager appliance. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97)
 - Added `Update-SddcManagerPasswordExpiration` cmdlet to update the password expiration policy for the default local users on an SDDC Manager appliance. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97)
-- Added `Request-PasswordRotationPolicy` cmdlet to retrieve the password rotation settings for accounts managed by SDDC Manager. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
-- Added `Publish-PasswordRotationPolicy` cmdlet to publish the password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
+- Added `Request-PasswordRotationPolicy` cmdlet to retrieve the password rotation settings for credentials managed by SDDC Manager. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
+- Added `Publish-PasswordRotationPolicy` cmdlet to publish the password rotation settings for credentials managed by SDDC Manager in HTML or JSON format. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
 
 Bugfix:
 
