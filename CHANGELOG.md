@@ -1,5 +1,13 @@
 # Release History
 
+## v1.5.0 (Unreleased)
+
+Enhancement:
+
+- Added `Invoke-PasswordRotationManager`, `Save-ClarityReportNavigationForRotation` and `Set-CreateReportDirectoryRotation` cmdlets and updated `Publish-PasswordRotationPolicy` cmdlet to generate report for password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by workload domain. [GH-115](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/115) 
+- Updated `Invoke-PasswordPolicyManager`, `Get-PasswordPolicyDefault`, `Get-PasswordPolicyConfig`, `Request-SddcManagerPasswordComplexity`, `Request-SddcManagerAccountLockout`, `Request-SsoAccountLockout`, `Request-VcenterPasswordExpiration`, `Request-VcenterPasswordComplexity`, `Request-VcenterAccountLockout`, `Request-VcenterRootPasswordExpiration`, `Request-NsxtManagerPasswordExpiration`, `Request-NsxtManagerPasswordComplexity`, `Request-NsxtManagerAccountLockout`, `Request-NsxtEdgePasswordExpiration`, `Request-NsxtEdgePasswordComplexity`, `Request-NsxtEdgeAccountLockout`, `Request-EsxiPasswordExpiration`, `Request-EsxiPasswordComplexity`, `Request-EsxiAccountLockout` and `Request-LocalUserPasswordExpiration` cmdlet to simplify the logic for reading version information. [GH-115](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/115)
+
+
 ## [v1.4.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.4.0)
 
 > Release Date: 2023-08-29

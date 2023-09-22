@@ -133,6 +133,7 @@ nav:
     - General:
       - Get-PasswordPolicyDefault: documentation/functions/Get-PasswordPolicyDefault.md
       - Invoke-PasswordPolicyManager: documentation/functions/Invoke-PasswordPolicyManager.md
+      - Invoke-PasswordRotationManager: documentation/functions/Invoke-PasswordRotationManager.md
       - Request-LocalUserPasswordExpiration: documentation/functions/Request-LocalUserPasswordExpiration.md
       - Start-PasswordPolicyConfig: documentation/functions/Start-PasswordPolicyConfig.md
       - Test-VcfPasswordManagementPrereq: documentation/functions/Test-VcfPasswordManagementPrereq.md
