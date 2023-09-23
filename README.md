@@ -72,7 +72,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [//]: Links
 
 [changelog]: CHANGELOG.md
-[contributing]: CONTRIBUTING_DCO.md
+[contributing]: CONTRIBUTING.md
 [docs-module]: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation
 [gh-discussions]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/discussions
