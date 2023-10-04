@@ -1,18 +1,21 @@
 # Release History
 
-## [v1.5.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.5.0)
+## v1.5.0
 
 > Release Date: Unreleased
 
 Enhancement:
 
-- Added `Update-PasswordRotationPolicy` cmdlet to update the password rotation settings for credentials managed by SDDC Manager. [GH-108](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108)
+- Added `Invoke-PasswordRotationManager`, `Save-ClarityReportNavigationForRotation` and `Set-CreateReportDirectoryRotation` cmdlets and updated `Publish-PasswordRotationPolicy` cmdlet to generate report for password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by workload domain. [GH-122](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122)
+- Updated `Invoke-PasswordPolicyManager`, `Get-PasswordPolicyDefault`, `Get-PasswordPolicyConfig`, `Request-SddcManagerPasswordComplexity`, `Request-SddcManagerAccountLockout`, `Request-SsoAccountLockout`, `Request-VcenterPasswordExpiration`, `Request-VcenterPasswordComplexity`, `Request-VcenterAccountLockout`, `Request-VcenterRootPasswordExpiration`, `Request-NsxtManagerPasswordExpiration`, `Request-NsxtManagerPasswordComplexity`, `Request-NsxtManagerAccountLockout`, `Request-NsxtEdgePasswordExpiration`, `Request-NsxtEdgePasswordComplexity`, `Request-NsxtEdgeAccountLockout`, `Request-EsxiPasswordExpiration`, `Request-EsxiPasswordComplexity`, `Request-EsxiAccountLockout` and `Request-LocalUserPasswordExpiration` cmdlet to simplify the logic for reading version information. [GH-122](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122)
+- Added Update-PasswordRotationPolicy cmdlet to update the password rotation settings for credentials managed by SDDC Manager. [GH-108](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108)
 
 Chore:
 
-- Updated `PowerVCF` from v2.3.0 to v2.4.0.
+- Updated `PowerVCF` from v2.3.0 to v2.4.0. [GH-108](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108)
 
-## [v1.4.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.4.0)
+
+## v1.4.0
 
 > Release Date: 2023-08-29
 
@@ -20,8 +23,8 @@ Enhancement:
 
 - Added `Request-SddcManagerPasswordExpiration` cmdlet to retrieve the password expiration policy for the default local users on an SDDC Manager appliance. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97)
 - Added `Update-SddcManagerPasswordExpiration` cmdlet to update the password expiration policy for the default local users on an SDDC Manager appliance. [GH-97](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97)
-- Added `Request-PasswordRotationPolicy` cmdlet to retrieve the password rotation settings for credentials managed by SDDC Manager. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
-- Added `Publish-PasswordRotationPolicy` cmdlet to publish the password rotation settings for credentials managed by SDDC Manager in HTML or JSON format. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
+- Added `Request-PasswordRotationPolicy` cmdlet to retrieve the password rotation settings for accounts managed by SDDC Manager. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
+- Added `Publish-PasswordRotationPolicy` cmdlet to publish the password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by resource type or workload domain. [GH-100](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100)
 
 Bugfix:
 
@@ -35,7 +38,7 @@ Chore:
 - Updated `VMware.PowerCLI` from v13.0.0 to v13.1.0. [GH-102](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102)
 - Updated `PowerValidatedSolutions` from v2.5.0 to v2.6.0. [GH-102](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102)
 
-## [v1.3.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.3.0)
+## v1.3.0
 
 > Release Date: 2023-08-15
 
@@ -66,7 +69,7 @@ Chore:
 - Updated `Test-VcfPasswordManagementPrereq` to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. [GH-63](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63)
 - Updated `PowerValidatedSolution` from v2.4.0 to v2.5.0. [GH-63](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63)
 
-## [v1.2.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0)
+## v1.2.0
 
 > Release Date: 2023-06-27
 
@@ -132,7 +135,7 @@ Bugfix:
 - Fixed `Request-LocalUserPasswordExpiration` cmdlet to display the value for `minDays` while `drift` option is used. [GH-49](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49)
 - Fixed small typo in `Request-SsoPasswordComplexity` and `Request-WsaPasswordComplexity` cmdlets. [GH-56](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56)
 
-## [v1.1.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.1.0)
+## v1.1.0
 
 > Release Date: 2023-05-30
 
@@ -169,7 +172,7 @@ Chore:
 >
 > Whilst this release will support VMware Cloud Foundation 5.0, it does not support password complexity for NSX 4.x. Please use the NSX 4.x product documentation to configure password complexity. Reference: [GH-38](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues/38)
 
-## [v1.0.0](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.0.0)
+## v1.0.0
 
 > Release Date: 2023-04-25
 
