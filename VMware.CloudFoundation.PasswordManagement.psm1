@@ -9437,13 +9437,7 @@ Function Test-VcfPasswordManagementPrereq {
     Try {
         $moduleName = $myInvocation.myCommand.ModuleName
         $moduleData = (Get-Module -Name $moduleName)
-
-        if ($PSEdition -eq 'Core' -and ($PSVersionTable.OS).Split(' ')[0] -eq 'Linux') {
-            $moduleManifestPath = $moduleData.ModuleBase + '/' + $moduleData.Name + '.psd1'
-        } else {
-            $moduleManifestPath = $moduleData.ModuleBase + '\' + $moduleData.Name + '.psd1'
-        }
-
+        $moduleManifestPath = Join-Path $moduleData.ModuleBase ($moduleData.Name + '.psd1')
         $moduleManifest = Import-PowerShellDataFile -Path $moduleManifestPath
         $requiredModules = $moduleManifest.RequiredModules
 
