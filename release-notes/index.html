@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
     
     
       
@@ -30,10 +30,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6a10b989.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
       
       
 
@@ -517,8 +517,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v150-unreleased" class="md-nav__link">
-    v1.5.0 (Unreleased)
+  <a href="#v150" class="md-nav__link">
+    v1.5.0
   </a>
   
 </li>
@@ -3686,6 +3686,8 @@
       
         
       
+        
+      
     
     
     
@@ -3747,6 +3749,26 @@
   
   <span class="md-ellipsis">
     Request-PasswordRotationPolicy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/functions/Update-PasswordRotationPolicy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Update-PasswordRotationPolicy
   </span>
   
 
@@ -4000,8 +4022,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v150-unreleased" class="md-nav__link">
-    v1.5.0 (Unreleased)
+  <a href="#v150" class="md-nav__link">
+    v1.5.0
   </a>
   
 </li>
@@ -4073,13 +4095,21 @@
 
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
-<h2 id="v150-unreleased">v1.5.0 (Unreleased)<a class="headerlink" href="#v150-unreleased" title="Permanent link">&para;</a></h2>
+<h2 id="v150">v1.5.0<a class="headerlink" href="#v150" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Release Date: 2023-10-10</p>
+</blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Added <code>Invoke-PasswordRotationManager</code>, <code>Save-ClarityReportNavigationForRotation</code> and <code>Set-CreateReportDirectoryRotation</code> cmdlets and updated <code>Publish-PasswordRotationPolicy</code> cmdlet to generate report for password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/115">GH-115</a> </li>
-<li>Updated <code>Invoke-PasswordPolicyManager</code>, <code>Get-PasswordPolicyDefault</code>, <code>Get-PasswordPolicyConfig</code>, <code>Request-SddcManagerPasswordComplexity</code>, <code>Request-SddcManagerAccountLockout</code>, <code>Request-SsoAccountLockout</code>, <code>Request-VcenterPasswordExpiration</code>, <code>Request-VcenterPasswordComplexity</code>, <code>Request-VcenterAccountLockout</code>, <code>Request-VcenterRootPasswordExpiration</code>, <code>Request-NsxtManagerPasswordExpiration</code>, <code>Request-NsxtManagerPasswordComplexity</code>, <code>Request-NsxtManagerAccountLockout</code>, <code>Request-NsxtEdgePasswordExpiration</code>, <code>Request-NsxtEdgePasswordComplexity</code>, <code>Request-NsxtEdgeAccountLockout</code>, <code>Request-EsxiPasswordExpiration</code>, <code>Request-EsxiPasswordComplexity</code>, <code>Request-EsxiAccountLockout</code> and <code>Request-LocalUserPasswordExpiration</code> cmdlet to simplify the logic for reading version information. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/115">GH-115</a></li>
+<li>Added <code>Invoke-PasswordRotationManager</code>, <code>Save-ClarityReportNavigationForRotation</code> and <code>Set-CreateReportDirectoryRotation</code> cmdlets and updated <code>Publish-PasswordRotationPolicy</code> cmdlet to generate report for password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122">GH-122</a></li>
+<li>Updated <code>Invoke-PasswordPolicyManager</code>, <code>Get-PasswordPolicyDefault</code>, <code>Get-PasswordPolicyConfig</code>, <code>Request-SddcManagerPasswordComplexity</code>, <code>Request-SddcManagerAccountLockout</code>, <code>Request-SsoAccountLockout</code>, <code>Request-VcenterPasswordExpiration</code>, <code>Request-VcenterPasswordComplexity</code>, <code>Request-VcenterAccountLockout</code>, <code>Request-VcenterRootPasswordExpiration</code>, <code>Request-NsxtManagerPasswordExpiration</code>, <code>Request-NsxtManagerPasswordComplexity</code>, <code>Request-NsxtManagerAccountLockout</code>, <code>Request-NsxtEdgePasswordExpiration</code>, <code>Request-NsxtEdgePasswordComplexity</code>, <code>Request-NsxtEdgeAccountLockout</code>, <code>Request-EsxiPasswordExpiration</code>, <code>Request-EsxiPasswordComplexity</code>, <code>Request-EsxiAccountLockout</code> and <code>Request-LocalUserPasswordExpiration</code> cmdlet to simplify the logic for reading version information. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122">GH-122</a></li>
+<li>Added Update-PasswordRotationPolicy cmdlet to update the password rotation settings for credentials managed by SDDC Manager. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108">GH-108</a></li>
 </ul>
-<h2 id="v140"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.4.0">v1.4.0</a><a class="headerlink" href="#v140" title="Permanent link">&para;</a></h2>
+<p>Chore:</p>
+<ul>
+<li>Updated <code>PowerVCF</code> from v2.3.0 to v2.4.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108">GH-108</a></li>
+</ul>
+<h2 id="v140">v1.4.0<a class="headerlink" href="#v140" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2023-08-29</p>
 </blockquote>
@@ -4102,7 +4132,7 @@
 <li>Updated <code>VMware.PowerCLI</code> from v13.0.0 to v13.1.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102">GH-102</a></li>
 <li>Updated <code>PowerValidatedSolutions</code> from v2.5.0 to v2.6.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102">GH-102</a></li>
 </ul>
-<h2 id="v130"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.3.0">v1.3.0</a><a class="headerlink" href="#v130" title="Permanent link">&para;</a></h2>
+<h2 id="v130">v1.3.0<a class="headerlink" href="#v130" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2023-08-15</p>
 </blockquote>
@@ -4133,7 +4163,7 @@
 <li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
 <li>Updated <code>PowerValidatedSolution</code> from v2.4.0 to v2.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
 </ul>
-<h2 id="v120"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.2.0">v1.2.0</a><a class="headerlink" href="#v120" title="Permanent link">&para;</a></h2>
+<h2 id="v120">v1.2.0<a class="headerlink" href="#v120" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2023-06-27</p>
 </blockquote>
@@ -4199,7 +4229,7 @@
 <li>Fixed <code>Request-LocalUserPasswordExpiration</code> cmdlet to display the value for <code>minDays</code> while <code>drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
 <li>Fixed small typo in <code>Request-SsoPasswordComplexity</code> and <code>Request-WsaPasswordComplexity</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">GH-56</a></li>
 </ul>
-<h2 id="v110"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.1.0">v1.1.0</a><a class="headerlink" href="#v110" title="Permanent link">&para;</a></h2>
+<h2 id="v110">v1.1.0<a class="headerlink" href="#v110" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2023-05-30</p>
 </blockquote>
@@ -4236,7 +4266,7 @@
 <p><strong>Note</strong></p>
 <p>Whilst this release will support VMware Cloud Foundation 5.0, it does not support password complexity for NSX 4.x. Please use the NSX 4.x product documentation to configure password complexity. Reference: <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues/38">GH-38</a></p>
 </blockquote>
-<h2 id="v100"><a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/releases/tag/v1.0.0">v1.0.0</a><a class="headerlink" href="#v100" title="Permanent link">&para;</a></h2>
+<h2 id="v100">v1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2023-04-25</p>
 </blockquote>
@@ -4269,10 +4299,10 @@
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-            Back to top
-          </button>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -4343,10 +4373,11 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
+      <script src="../assets/javascripts/bundle.aecac24b.min.js"></script>
       
         <script src="../js/timeago.min.js"></script>
       

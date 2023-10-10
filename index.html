@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
     
     
       
@@ -28,10 +28,10 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.d451bc0e.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.6a10b989.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.a5377069.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.356b1318.min.css">
       
       
 
@@ -3602,6 +3602,8 @@
       
         
       
+        
+      
     
     
     
@@ -3663,6 +3665,26 @@
   
   <span class="md-ellipsis">
     Request-PasswordRotationPolicy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="documentation/functions/Update-PasswordRotationPolicy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Update-PasswordRotationPolicy
   </span>
   
 
@@ -3991,25 +4013,54 @@
 
 <p><img src="assets/images/icon-color.svg" alt="PowerShell Module for VMware Cloud Foundation Password Management" width="150"></p>
 <h1 id="powershell-module-for-vmware-cloud-foundation-password-management">PowerShell Module for VMware Cloud Foundation Password Management<a class="headerlink" href="#powershell-module-for-vmware-cloud-foundation-password-management" title="Permanent link">&para;</a></h1>
+<p><a class="md-button md-button--primary" href="https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.83 4c.49 0 .8.4.67.89l-3.16 14.22c-.11.49-.59.89-1.08.89H2.17c-.49 0-.8-.4-.67-.89L4.66 4.89C4.77 4.4 5.25 4 5.74 4h16.09m-6 12h-4c-.46 0-.83.38-.83.84 0 .47.37.85.83.85h4c.47 0 .85-.38.85-.85 0-.46-.38-.84-.85-.84m-10.05.28a.87.87 0 0 0-.21 1.22c.28.42.84.5 1.24.23 7.35-5.17 7.4-5.23 7.45-5.26.18-.16.27-.38.28-.6.01-.2-.04-.37-.16-.56L9.46 6.03A.867.867 0 0 0 8.21 6c-.36.32-.38.88-.05 1.24l4.15 4.44-6.53 4.6Z"/></svg></span> &nbsp; PowerShell Gallery</a></p>
 <p><code>VMware.CloudFoundation.PasswordManagement</code> is a PowerShell module that supports the ability to report and configure the password policy settings across your <a href="https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html">VMware Cloud Foundatiоn</a> instance.</p>
-<p>With these cmdlets, you can perform the following tasks on your VMware Cloud Foundation instance or a specific workload domain:</p>
+<p>With these cmdlets, you can perform the following actions on a VMware Cloud Foundation instance or a specific workload domain.</p>
+<p>The module provides coverage for the following:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Z"/></svg></span> &nbsp; Password Policies</label><label for="__tabbed_1_2"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2S334.3 224 344 224h128c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2S461.9 48.1 455 55l-41.6 41.6c-87.6-86.5-228.7-86.2-315.8 1-24.4 24.4-42 53.1-52.8 83.8-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v128c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1 24.4-24.4 42.1-53.1 52.9-83.7 5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2S177.7 288 168 288H40c-13.3 0-24 10.7-24 24z"/></svg></span> &nbsp; Password Rotation</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ul>
-<li>Generate a baseline password policy configuration file based on the default password policy settings per component.</li>
-<li>Generate a password policy report detailing the password policy settings per component.</li>
+<li>Generate a password policy report for password expiration, password complexity, and account lockout.</li>
 <li>Generate a password policy report with configuration drift using a password policy configuration file.</li>
-<li>Update password polices to a desired state using a password policy configuration file.=</li>
+<li>Update the password polices using a password policy configuration file.</li>
 </ul>
-<p>The module provides coverage for the following components:</p>
+<p>Components:</p>
 <ul>
+<li>SDDC Manager</li>
+<li>vCenter Single Sign-On</li>
+<li>vCenter Server</li>
 <li>ESXi</li>
+<li>NSX Local Manager</li>
+<li>NSX Edge</li>
+<li>Workspace ONE Access (Standalone)</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>Generate a password rotation report for accounts managed by SDDC Manager.</p>
+<p>Components:</p>
+<ul>
+<li>SDDC Manager</li>
 <li>vCenter Single Sign-On</li>
 <li>vCenter Server</li>
 <li>NSX Local Manager</li>
 <li>NSX Edge</li>
-<li>SDDC Manager</li>
-<li>Workspace ONE Access (Standalone)</li>
+<li>Aria Suite Lifecycle</li>
+<li>Aria Operations for Logs</li>
+<li>Aria Operations</li>
+<li>Aria Automation</li>
+<li>Workspace ONE Access</li>
 </ul>
-<p><a class="md-button md-button--primary" href="https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.83 4c.49 0 .8.4.67.89l-3.16 14.22c-.11.49-.59.89-1.08.89H2.17c-.49 0-.8-.4-.67-.89L4.66 4.89C4.77 4.4 5.25 4 5.74 4h16.09m-6 12h-4c-.46 0-.83.38-.83.84 0 .47.37.85.83.85h4c.47 0 .85-.38.85-.85 0-.46-.38-.84-.85-.84m-10.05.28a.87.87 0 0 0-.21 1.22c.28.42.84.5 1.24.23 7.35-5.17 7.4-5.23 7.45-5.26.18-.16.27-.38.28-.6.01-.2-.04-.37-.16-.56L9.46 6.03A.867.867 0 0 0 8.21 6c-.36.32-.38.88-.05 1.24l4.15 4.44-6.53 4.6Z"/></svg></span> &nbsp; PowerShell Gallery</a></p>
+<details class="note" open="open">
+<summary>Note</summary>
+<ul>
+<li>ESXi password rotation is not managed by SDDC Manager.</li>
+<li>Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.</li>
+</ul>
+</details>
+</div>
+</div>
+</div>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="platforms">Platforms<a class="headerlink" href="#platforms" title="Permanent link">&para;</a></h3>
 <p>The following table lists the supported platforms for this module.</p>
@@ -4114,7 +4165,7 @@
 </tr>
 <tr>
 <td><a href="https://www.powershellgallery.com/packages/PowerVCF">PowerVCF</a></td>
-<td>&gt;= 2.3.0</td>
+<td>&gt;= 2.4.0</td>
 <td>VMware, Inc.</td>
 <td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M96 0C43 0 0 43 0 96v320c0 53 43 96 96 96h320c17.7 0 32-14.3 32-32s-14.3-32-32-32v-64c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H96zm0 384h256v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16h192c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48h192c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg></span> &nbsp; <a href="https://vmware.github.io/powershell-module-for-vmware-cloud-foundation">Documentation</a></td>
 </tr>
@@ -4141,10 +4192,10 @@
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-            Back to top
-          </button>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -4199,10 +4250,11 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.726fbb30.min.js"></script>
+      <script src="assets/javascripts/bundle.aecac24b.min.js"></script>
       
         <script src="js/timeago.min.js"></script>
       
