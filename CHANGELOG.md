@@ -2,7 +2,7 @@
 
 ## v1.5.0
 
-> Release Date: Unreleased
+> Release Date: 2023-10-10
 
 Enhancement:
 
@@ -13,7 +13,6 @@ Enhancement:
 Chore:
 
 - Updated `PowerVCF` from v2.3.0 to v2.4.0. [GH-108](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108)
-
 
 ## v1.4.0
 

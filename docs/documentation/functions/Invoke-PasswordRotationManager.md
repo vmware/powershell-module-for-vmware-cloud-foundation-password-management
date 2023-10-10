@@ -27,7 +27,7 @@ The `Invoke-PasswordRotationManager` generates a Password Rotation Manager Repor
 ### Example 1
 
 ```powershell
-Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains        
+Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains
 ```
 
 This example runs a password rotation report for all workload domains within an SDDC Manager instance.
@@ -35,7 +35,7 @@ This example runs a password rotation report for all workload domains within an 
 ### Example 2
 
 ```powershell
-Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1!  -reportPath "F:\Reporting" -darkMode -workloadDomain sfo-w01
+Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -workloadDomain sfo-w01
 ```
 
 This example runs a password rotation report for a specific Workload Domain within an SDDC Manager instance.

@@ -40,14 +40,20 @@ if ($PSEdition -eq 'Desktop') {
     }
 }
 
+##########################################################################
+#Region     Begin Global Variables                                  ######
+
 Set-Variable -Name "successStatus" -Value "SUCCESSFUL" -Scope Global
 Set-Variable -Name "failureStatus" -Value "FAILED" -Scope Global
 Set-Variable -Name "skippedStatus" -Value "SKIPPED" -Scope Global
 Set-Variable -Name "preValidationFailureStatus" -Value "PRE_VALIDATION_FAILED" -Scope Global
 Set-Variable -Name "postValidationFailureStatus" -Value "POST_VALIDATION_FAILED" -Scope Global
 
+#EndRegion  End Global Variables                                    ######
 ##########################################################################
-#Region     Begin Password Rotation Manager Functions                 ######
+
+##########################################################################
+#Region     Begin Password Rotation Manager Functions               ######
 
 Function Invoke-PasswordRotationManager {
     <#
@@ -58,11 +64,11 @@ Function Invoke-PasswordRotationManager {
         The Invoke-PasswordRotationManager generates a Password Rotation Manager Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
-        Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains
+        Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains
         This example runs a password rotation report for all workload domains within an SDDC Manager instance.
 
         .EXAMPLE
-        Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1!  -reportPath "F:\Reporting" -darkMode -workloadDomain sfo-w01
+        Invoke-PasswordRotationManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -workloadDomain sfo-w01
         This example runs a password rotation report for a specific Workload Domain within an SDDC Manager instance.
 
         .PARAMETER sddcManagerFqdn
@@ -112,6 +118,7 @@ Function Invoke-PasswordRotationManager {
         if (Test-VCFConnection -server $sddcManagerFqdn) {
             if (Test-VCFAuthentication -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass) {
                 $version = Get-VCFManager -version
+                $managementDomain = Get-VCFWorkloadDomain | Where-Object { $_.Type -eq 'MANAGEMENT' }
                 if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
                     $reportPath = $reportPath.TrimEnd("\", "/")
                 }
@@ -127,58 +134,116 @@ Function Invoke-PasswordRotationManager {
                     $workflowMessage = "Workload Domain ($workloadDomain)"
                     $commandSwitch = "-workloadDomain $workloadDomain"
                 }
+
+                if ($PsBoundParameters.ContainsKey("workloadDomain")) {
+                    if (!(Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain })) {
+                        Write-LogMessage -Type ERROR -Message "Workload Domain $workloadDomain not found. Please review the workload domain name and retry." -Colour Red
+                        Break
+                    }
+                }
+
                 if ($PsBoundParameters.ContainsKey("json")) {
                     $commandSwitch = $commandSwitch + " -json"
-                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Rotation Manager JSON for $workflowMessage." -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Starting the process of generating the password rotation JSON for $workflowMessage." -Colour Yellow
                 } else {
                     Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Rotation Manager Report for $workflowMessage." -Colour Yellow
                     Write-LogMessage -Type INFO -Message "Setting up the log file to path $logfile."
                     Write-LogMessage -Type INFO -Message "Setting up report folder and report $reportName."
                 }
 
-                
                 if ($PsBoundParameters.ContainsKey("json")) {
+                    # Platform Resources: Collect Password Rotation Settings Data
+                    if ($PsBoundParameters.ContainsKey("allDomains")) {
+                        $allWorkloadDomains = Get-VCFWorkloadDomain
+                        foreach ($domain in $allWorkloadDomains) {
+                            if ($domain | Where-Object { $_.type -eq 'MANAGEMENT' }) {
+                                Write-LogMessage -Type INFO -Message "Collecting SDDC Manager password rotation policy for $workflowMessage."
+                                $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)" | ConvertFrom-Json
 
-                    # Collect Password Rotation Setting Data
-                    Write-LogMessage -Type INFO -Message "Collecting SDDC Manager Password Rotation for $workflowMessage."
-                    $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server Single Sign-On Rotation for $workflowMessage."
-                    $ssoPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'sso' $($commandSwitch)" | convertfrom-json
+                                Write-LogMessage -type INFO -Message "Collecting vCenter Single Sign-On password rotation policy for $workflowMessage."
+                                $ssoPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'sso' $($commandSwitch)" | ConvertFrom-Json
+                            }
+                        }
+                    } elseif ($PsBoundParameters.ContainsKey("workloadDomain")) {
+                        $domain = Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}
+                        if ($domain.type -eq "MANAGEMENT") {
+                            Write-LogMessage -Type INFO -Message "Collecting SDDC Manager password rotation policy for $workflowMessage."
+                            $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)" | ConvertFrom-Json
 
-                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server Password Rotation for $workflowMessage."
-                    $vcenterServerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'vcenterServer' $($commandSwitch)" | convertfrom-json
+                            Write-LogMessage -Type INFO -Message "Collecting vCenter Single Sign-On password rotation policy for $workflowMessage."
+                            $ssoPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'sso' $($commandSwitch)" | ConvertFrom-Json
+                        }
+                    }
 
-                    Write-LogMessage -Type INFO -Message "Collecting NSX Manager Password Rotation for $workflowMessage."
-                    $nsxManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxManager' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting NSX Edge Password Rotation for $workflowMessage."
-                    $nsxEdgePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxEdge' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting WorkSpace ONE Access Password Rotation for $workflowMessage."
-                    $wsaPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'workspaceOneAccess' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Automation Password Rotation for $workflowMessage."
-                    $ariaAutomationPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaAutomation' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Operations Password Rotation for $workflowMessage."
-                    $ariaOperationsPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaOperations' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Operations Logs Password Rotation for $workflowMessage."
-                    $ariaOperationsLogsPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaOperationsLogs' $($commandSwitch)" | convertfrom-json
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Suite Lifecycle Password Rotation for $workflowMessage."
-                    $ariaLifecyclePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaLifecycle' $($commandSwitch)" | convertfrom-json
-                    
-                    # Add VCF version into JSON file
+                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server password rotation policy for $workflowMessage."
+                    $vcenterServerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'vcenterServer' $($commandSwitch)" | ConvertFrom-Json
+
+                    Write-LogMessage -Type INFO -Message "Collecting NSX Manager password rotation policy for $workflowMessage."
+                    $nsxManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxManager' $($commandSwitch)" | ConvertFrom-Json
+
+                    Write-LogMessage -Type INFO -Message "Collecting NSX Edge password rotation policy for $workflowMessage."
+                    $nsxEdgePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxEdge' $($commandSwitch)" | ConvertFrom-Json
+
+                    # Aria Suite Resources: Build Password Rotation Object
+                    # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        if (Get-VCFAriaLifecycle) {
+                            $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
+                            foreach ($resource in $ariaResources) {
+                                switch ($resource) {
+                                    default { $command = "Get-VCF$resource" }
+                                    'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                                }
+                                $variableName = "${resource}PasswordRotation"
+                                $isEnabled = (Invoke-Expression $command -ErrorAction SilentlyContinue)
+                                $resourceTitleCase = switch ($resource) {
+                                    'ariaLifecycle' { 'Aria Suite Lifecycle' }
+                                    'ariaOperationsLogs' { 'Aria Operations for Logs' }
+                                    'ariaOperations' { 'Aria Operations' }
+                                    'ariaAutomation' { 'Aria Automation' }
+                                    'workspaceOneAccess' { 'Workspace ONE Access' }
+                                }
+                                if ($isEnabled) {
+                                    Write-LogMessage -Type INFO -Message "Collecting $($resourceTitleCase) password rotation policy for $workflowMessage."
+                                    $passwordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource '$resource' $($commandSwitch)" | ConvertFrom-Json
+                                    if ($passwordRotation) {
+                                        Set-Variable -Name $variableName -Value $passwordRotation
+                                    } else {
+                                        Write-LogMessage -Type INFO -Message "No $($resourceTitleCase) password rotation policy data available."
+                                    }
+                                } else {
+                                    Write-LogMessage -Type INFO -Message "Skipping: $($resourceTitleCase) is not present in the SDDC Manager inventory."
+                                }
+                            }
+                        }
+                    }
+
+                    # Version Information: Build Password Rotation Object
                     $vcfVersion = New-Object -TypeName psobject
                     $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
 
-                    $sddcManagerPasswordRotationObj = New-Object -TypeName psobject
-                    $sddcManagerPasswordRotationObj | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
+                    # Platform Resources: Build Password Rotation Object
+                    if ($PsBoundParameters.ContainsKey('allDomains')) {
+                        $allWorkloadDomains = Get-VCFWorkloadDomain
+                        foreach ($domain in $allWorkloadDomains) {
+                            if ($domain.type -eq 'MANAGEMENT') {
+                                $sddcManagerPasswordRotationObj = New-Object -TypeName psobject
+                                $sddcManagerPasswordRotationObj | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
 
-                    $ssoPasswordRotationObj = New-Object -TypeName psobject
-                    $ssoPasswordRotationObj | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordRotation
+                                $ssoPasswordRotationObj = New-Object -TypeName psobject
+                                $ssoPasswordRotationObj | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordRotation
+                            }
+                        }
+                    } elseif ($PsBoundParameters.ContainsKey('workloadDomain')) {
+                        $domain = Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}
+                        if ($domain.type -eq 'MANAGEMENT') {
+                            $sddcManagerPasswordRotationObj = New-Object -TypeName psobject
+                            $sddcManagerPasswordRotationObj | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
+
+                            $ssoPasswordRotationObj = New-Object -TypeName psobject
+                            $ssoPasswordRotationObj | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordRotation
+                        }
+                    }
 
                     $vcenterServerPasswordRotationObj = New-Object -TypeName psobject
                     $vcenterServerPasswordRotationObj | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterServerPasswordRotation
@@ -188,129 +253,227 @@ Function Invoke-PasswordRotationManager {
 
                     $nsxEdgePasswordRotationObj = New-Object -TypeName psobject
                     $nsxEdgePasswordRotationObj | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordRotation
-                    
-                    $wsaPasswordRotationObj = New-Object -TypeName psobject
-                    $wsaPasswordRotationObj | Add-Member -notepropertyname 'wsa' -notepropertyvalue $wsaPasswordRotation
 
-                    $ariaAutomationPasswordRotationObj = New-Object -TypeName psobject
-                    $ariaAutomationPasswordRotationObj | Add-Member -notepropertyname 'ariaAutomation' -notepropertyvalue $ariaAutomationPasswordRotation
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        if (Get-VCFAriaLifecycle) {
+                            $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
+                            foreach ($resource in $ariaResources) {
+                                switch ($resource) {
+                                    default { $command = "Get-VCF$resource" }
+                                    'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                                }
+                                $isEnabled = (Invoke-Expression $command -ErrorAction SilentlyContinue)
+                                $resourceTitleCase = switch ($resource) {
+                                    'ariaLifecycle' { 'Aria Suite Lifecycle' }
+                                    'ariaOperationsLogs' { 'Aria Operations for Logs' }
+                                    'ariaOperations' { 'Aria Operations' }
+                                    'ariaAutomation' { 'Aria Automation' }
+                                    'workspaceOneAccess' { 'Workspace ONE Access' }
+                                }
+                                if ($isEnabled) {
+                                    $variableName = "${resource}PasswordRotation"
+                                    if (Get-Variable -Name $variableName -ValueOnly) {
+                                        $ariaPasswordRotationObj = New-Object -TypeName psobject
+                                        $ariaPasswordRotationObj | Add-Member -notepropertyname $resourceTitleCase -notepropertyvalue (Get-Variable -Name $variableName -ValueOnly)
+                                        Set-Variable -Name "${resource}PasswordRotationObj" -Value $ariaPasswordRotationObj
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                    $ariaOperationsPasswordRotationObj = New-Object -TypeName psobject
-                    $ariaOperationsPasswordRotationObj | Add-Member -notepropertyname 'ariaOperations' -notepropertyvalue $ariaOperationsPasswordRotation
-
-                    $ariaOperationsLogsPasswordRotationObj = New-Object -TypeName psobject
-                    $ariaOperationsLogsPasswordRotationObj | Add-Member -notepropertyname 'ariaOperationsLogs' -notepropertyvalue $ariaOperationsLogsPasswordRotation
-
-                    $ariaLifecyclePasswordRotationObj = New-Object -TypeName psobject
-                    $ariaLifecyclePasswordRotationObj | Add-Member -notepropertyname 'ariaLifecycle' -notepropertyvalue $ariaLifecyclePasswordRotation
-
-                    # Build Final Default Password Rotation Object
+                    # Combine Password Rotation Data
                     $outputJsonObject = New-Object -TypeName psobject
                     $outputJsonObject | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
-                    $outputJsonObject | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterServerPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'nsxManager' -notepropertyvalue $nsxManagerPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'wsa' -notepropertyvalue $wsaPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'ariaAutomation' -notepropertyvalue $ariaAutomationPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'ariaOperations' -notepropertyvalue $ariaOperationsPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'ariaOperationsLogs' -notepropertyvalue $ariaOperationsLogsPasswordRotation
-                    $outputJsonObject | Add-Member -notepropertyname 'ariaLifecycle' -notepropertyvalue $ariaLifecyclePasswordRotation
+
+                    # Platform Resources: Combine Password Rotation Data         
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        $platformResources = @('sddcManager', 'sso', 'vcenterServer', 'nsxManager', 'nsxEdge')
+                    } else {
+                        $platformResources = @('vcenterServer', 'nsxManager', 'nsxEdge')
+                    }
+                    foreach ($resource in $platformResources) {
+                        $variableName = "${resource}PasswordRotation"
+                        if (Get-Variable -Name $variableName -ValueOnly) {
+                            $resourceTitleCase = switch ($resource) {
+                                'sddcManager' { 'SDDC Manager' }
+                                'sso' { 'vCenter Single Sign-On' }
+                                'vcenterServer' { 'vCenter Server' }
+                                'nsxManager' { 'NSX Manager' }
+                                'nsxEdge' { 'NSX Edge' }
+                            }
+                            $outputJsonObject | Add-Member -notepropertyname $resourceTitleCase -notepropertyvalue (Get-Variable -Name $variableName -ValueOnly)
+                        }
+                    }
+
+                    # Aria Suite Resources: Combine Password Rotation Data
+                    # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        if (Get-VCFAriaLifecycle) {
+                            $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
+                            foreach ($resource in $ariaResources) {
+                                switch ($resource) {
+                                    default { $command = "Get-VCF$resource" }
+                                    'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                                }
+                                $isEnabled = (Invoke-Expression $command -ErrorAction SilentlyContinue)
+                                if ($isEnabled) {
+                                    $variableName = "${resource}PasswordRotation"
+                                    if (Get-Variable -Name $variableName -ValueOnly) {
+                                        $resourceTitleCase = switch ($resource) {
+                                            'ariaLifecycle' { 'Aria Suite Lifecycle' }
+                                            'ariaOperationsLogs' { 'Aria Operations for Logs' }
+                                            'ariaOperations' { 'Aria Operations' }
+                                            'ariaAutomation' { 'Aria Automation' }
+                                            'workspaceOneAccess' { 'Workspace OME Access' }
+                                        }
+                                        $outputJsonObject | Add-Member -notepropertyname $resourceTitleCase -notepropertyvalue (Get-Variable -Name $variableName -ValueOnly)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    # Generate the report as a JSON file.
                     $jsonFile = ($reportFolder + "passwordRotationManager" + ".json")
                     Write-LogMessage -Type INFO -Message "Generating the Final JSON and Saving to ($jsonFile)."
                     $outputJsonObject | ConvertTo-Json -Depth 25| Out-File -FilePath $jsonFile
                 } else {
+                    # Platform Resources: Collect Password Rotation Settings Data
+                    if ($PsBoundParameters.ContainsKey("allDomains")) {
+                        $allWorkloadDomains = Get-VCFWorkloadDomain
+                        foreach ($domain in $allWorkloadDomains) {
+                            if ($domain.type -eq "MANAGEMENT") {
+                                Write-LogMessage -Type INFO -Message "Collecting SDDC Manager password rotation policy for $workflowMessage."
+                                $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)"
 
-                    # Collect Password Rotation Setting Data
-                    Write-LogMessage -Type INFO -Message "Collecting SDDC Manager Password Rotation for $workflowMessage."
-                    $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)" 
+                                Write-LogMessage -Type INFO -Message "Collecting vCenter Single Sign-On password rotation policy for $workflowMessage."
+                                $ssoPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'sso' $($commandSwitch)"
+                            }
+                        }
+                    } elseif ($PsBoundParameters.ContainsKey("workloadDomain")) {
+                        $domain = Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}
+                        if ($domain.type -eq "MANAGEMENT") {
+                            Write-LogMessage -Type INFO -Message "Collecting SDDC Manager password rotation policy for $workflowMessage."
+                            $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)"
 
-                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server Single Sign On Rotation for $workflowMessage."
-                    $ssoPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'sso' $($commandSwitch)" 
+                            Write-LogMessage -Type INFO -Message "Collecting vCenter Single Sign-On password rotation policy for $workflowMessage."
+                            $ssoPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'sso' $($commandSwitch)"
+                        }
+                    }
 
-                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server Password Rotation for $workflowMessage."
-                    $vcenterServerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'vcenterServer' $($commandSwitch)" 
+                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server password rotation policy for $workflowMessage."
+                    $vcenterServerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'vcenterServer' $($commandSwitch)"
 
-                    Write-LogMessage -Type INFO -Message "Collecting NSX Manager Password Rotation for $workflowMessage."
-                    $nsxManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxManager' $($commandSwitch)" 
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting NSX Edge Password Rotation for $workflowMessage."
-                    $nsxEdgePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxEdge' $($commandSwitch)" 
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting WorkSpace ONE Access Password Rotation for $workflowMessage."
-                    $wsaPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'workspaceOneAccess' $($commandSwitch)" 
+                    Write-LogMessage -Type INFO -Message "Collecting NSX Manager password rotation policy for $workflowMessage."
+                    $nsxManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxManager' $($commandSwitch)"
 
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Automation Password Rotation for $workflowMessage."
-                    $ariaAutomationPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaAutomation' $($commandSwitch)" 
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Operations Password Rotation for $workflowMessage."
-                    $ariaOperationsPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaOperations' $($commandSwitch)" 
+                    Write-LogMessage -Type INFO -Message "Collecting NSX Edge password rotation policy for $workflowMessage."
+                    $nsxEdgePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxEdge' $($commandSwitch)"
 
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Operations Logs Password Rotation for $workflowMessage."
-                    $ariaOperationsLogsPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaOperationsLogs' $($commandSwitch)" 
-                    
-                    Write-LogMessage -Type INFO -Message "Collecting Aria Suite Lifecycle Password Rotation for $workflowMessage."
-                    $ariaLifecyclePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'ariaLifecycle' $($commandSwitch)" 
-                    
-                    # Combine all information gathered into a single HTML report
+                    # Aria Suite Resources: Collect Password Rotation Settings Data
+                    # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        if (Get-VCFAriaLifecycle) {
+                            $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
+                            foreach ($resource in $ariaResources) {
+                                switch ($resource) {
+                                    default { $command = "Get-VCF$resource" }
+                                    'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                                }
+                                $variableName = "${resource}PasswordRotation"
+                                $isEnabled = (Invoke-Expression $command -ErrorAction SilentlyContinue)
+                                $resourceTitleCase = switch ($resource) {
+                                    'ariaLifecycle' { 'Aria Suite Lifecycle' }
+                                    'ariaOperationsLogs' { 'Aria Operations for Logs' }
+                                    'ariaOperations' { 'Aria Operations' }
+                                    'ariaAutomation' { 'Aria Automation' }
+                                    'workspaceOneAccess' { 'Workspace ONE Access' }
+                                }
+                                if ($isEnabled) {
+                                    Write-LogMessage -Type INFO -Message "Collecting $($resourceTitleCase) password rotation policy for $workflowMessage."
+                                    $passwordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource '$resource' $($commandSwitch)"
+                                    if ($passwordRotation) {
+                                        Set-Variable -Name $variableName -Value $passwordRotation
+                                    } else {
+                                        Write-LogMessage -Type INFO -Message "No $($resourceTitleCase) password rotation policy data available."
+                                    }
+                                } else {
+                                    Write-LogMessage -Type INFO -Message "Skipping: $($resourceTitleCase) is not present in the SDDC Manager inventory."
+                                }
+                            }
+                        }
+                    }
+
+                    # Platform Resources: Combine Password Rotation Data
                     if ($PsBoundParameters.ContainsKey("allDomains")) {
                         $reportData = "<h1>SDDC Manager: $sddcManagerFqdn</h1>"
-                    } else{
+                    } else {
                         $reportData = "<h1>Workload Domain: $workloadDomain</h1>"
                     }
-                    if ($sddcManagerPasswordRotation.Count -gt 3) {
-                        $reportData += $sddcManagerPasswordRotation
+
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        if (($sddcManagerPasswordRotation | Measure-Object).Count -gt 0) {
+                            $reportData += $sddcManagerPasswordRotation
+                        }
+                        if (($ssoPasswordRotation | Measure-Object).Count -gt 0) {
+                            $reportData += $ssoPasswordRotation
+                        }
                     }
-                    if ($ssoPasswordRotation.Count -gt 3) {
-                        $reportData += $ssoPasswordRotation
-                    }
-                    if ($vcenterServerPasswordRotation.Count -gt 3) {
+                    if (($vcenterServerPasswordRotation | Measure-Object).Count -gt 0) {
                         $reportData += $vcenterServerPasswordRotation
                     }
-                    if ($nsxManagerPasswordRotation.Count -gt 3) {
+                    if (($nsxManagerPasswordRotation | Measure-Object).Count -gt 0) {
                         $reportData += $nsxManagerPasswordRotation
                     }
-                    if ($nsxEdgePasswordRotation.Count -gt 3) {
+                    if (($nsxEdgePasswordRotation | Measure-Object).Count -gt 0) {
                         $reportData += $nsxEdgePasswordRotation
                     }
-                    if ($ariaLifecyclePasswordRotation.Count -gt 3) {
-                        $reportData += $ariaLifecyclePasswordRotation
-                    }
-                    if ($ariaOperationsLogsPasswordRotation.Count -gt 3) {                        
-                        $reportData += $ariaOperationsLogsPasswordRotation
-                    }
-                    if ($ariaOperationsPasswordRotation.Count -gt 3) {
-                        $reportData += $ariaOperationsPasswordRotation
-                    }
-                    if ($ariaAutomationPasswordRotation.Count -gt 3) {
-                        $reportData += $ariaAutomationPasswordRotation
-                    }
-                    if ($wsaPasswordRotation.Count -gt 3) {
-                        $reportData += $wsaPasswordRotation
+
+                    # Aria Suite Resources: Combine Password Rotation Data
+                    # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
+                    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+                        if ($ariaLifecyclePasswordRotation) {
+                            $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
+                            foreach ($resource in $ariaResources) {
+                                switch ($resource) {
+                                    default { $command = "Get-VCF$resource" }
+                                    'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                                }
+                                if (Invoke-Expression $command -ErrorAction SilentlyContinue) {
+                                    $variableName = "${resource}PasswordRotation"
+                                    if (Get-Variable -Name $variableName -ValueOnly) {
+                                        $reportData += Get-Variable -Name $variableName -ValueOnly
+                                    }
+                                }
+                            }
+                        }
                     }
 
+                    # Set Report Header, Navigation, and Footer
                     if ($PsBoundParameters.ContainsKey("darkMode")) {
                         $reportHeader = Save-ClarityReportHeader -dark
                     } else {
                         $reportHeader = Save-ClarityReportHeader
                     }
-                    $reportNavigation = Save-ClarityReportNavigationForRotation
+
+                    if ($PsBoundParameters.ContainsKey('allDomains')) {
+                        $reportNavigation = Save-ClarityReportNavigationForRotation -allDomains
+                    } else {
+                        $reportNavigation = Save-ClarityReportNavigationForRotation -workloadDomain $workloadDomain
+                    }
                     $reportFooter = Save-ClarityReportFooter
 
+                    # Combine Report Sections
                     $report = $reportHeader
                     $report += $reportNavigation
                     $report += $reportData
                     $report += $reportFooter
-                    
-                    # Generate the report to an HTML file and then open it in the default browser
+
+                    # Generate the report as and HTML file and open it in the default browser.
                     Write-LogMessage -Type INFO -Message "Generating the Final Report and Saving to ($reportName)."
                     $report | Out-File $reportName
-                    if ($PSEdition -eq "Core" -and ($PSVersionTable.OS).Split(' ')[0] -ne "Linux") {
-                        Invoke-Item $reportName
-                    } elseif ($PSEdition -eq "Desktop") {
-                        Invoke-Item $reportName
-                    }
+                    Invoke-Item $reportName
                 }
             }
         }
@@ -320,6 +483,8 @@ Function Invoke-PasswordRotationManager {
 }
 Export-ModuleMember -Function Invoke-PasswordRotationManager
 
+#EndRegion  End Password Rotation Manager Functions                 ######
+##########################################################################
 
 ##########################################################################
 #Region     Begin Password Policy Manager Functions                 ######
@@ -874,10 +1039,10 @@ Function Get-PasswordPolicyDefault {
         .EXAMPLE
         Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
         This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
-        
+
         .EXAMPLE
         Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
-        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation. 
+        This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
         If passwordPolicyConfig.json is already present, it is overwritten due to 'force' parameter.
 
         .PARAMETER generateJson
@@ -888,7 +1053,7 @@ Function Get-PasswordPolicyDefault {
 
         .PARAMETER jsonFile
         The name of the JSON file to generate.
-        
+
         .PARAMETER force
         The switch used to overwrite the JSON file if already exists.
     #>
@@ -1001,7 +1166,7 @@ Function Get-PasswordPolicyDefault {
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "12"
     } else {
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
-    }    
+    }
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
@@ -1708,6 +1873,13 @@ Function Save-ClarityReportHeader {
 }
 
 Function Save-ClarityReportNavigationForRotation {
+
+    Param (
+        [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
+        [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain
+    )
+
+    $managementDomain = Get-VCFWorkloadDomain | Where-Object { $_.Type -eq 'MANAGEMENT' }
     $clarityCssNavigation = '
         <nav class="subnav">
         <ul class="nav">
@@ -1722,79 +1894,42 @@ Function Save-ClarityReportNavigationForRotation {
             <section class="nav-group collapsible">
                 <input id="rotation" type="checkbox"/>
                 <label for="rotation">Password Rotation</label>
-                <ul class="nav-list">
+                <ul class="nav-list">'
+    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+        $clarityCssNavigation += '
                     <li><a class="nav-link" href="#sddc-manager-password-rotation">SDDC Manager</a></li>
-                    <li><a class="nav-link" href="#vcenter-single-sign-on-password-rotation">vCenter Single Sign-On</a></li>
+                    <li><a class="nav-link" href="#vcenter-single-sign-on-password-rotation">vCenter Single Sign-On</a></li>'
+    }
+    $clarityCssNavigation += '
                     <li><a class="nav-link" href="#vcenter-server-password-rotation">vCenter Server</a></li>
                     <li><a class="nav-link" href="#nsx-manager-password-rotation">NSX Manager</a></li>
-                    <li><a class="nav-link" href="#nsx-edge-password-rotation">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#aria-suite-lifecycle-password-rotation">Aria Suite Lifecycle</a></li>
-                    <li><a class="nav-link" href="#aria-operations-for-logs-password-rotation">Aria Operations for Logs</a></li>
-                    <li><a class="nav-link" href="#aria-operations-password-rotation">Aria Operations</a></li>
-                    <li><a class="nav-link" href="#aria-automation-password-rotation">Aria Automation</a></li>
-                    <li><a class="nav-link" href="#workspace-one-access-password-rotation">Workspace ONE Access</a></li>
-                </ul>
-            </section>
-        </section>
-        </nav>
-            <div class="content-area">
-                <div class="content-area">'
-    $clarityCssNavigation
-}
-
-Function Save-ClarityReportNavigation {
-    $clarityCssNavigation = '
-            <nav class="subnav">
-            <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link active" href="">Password Policy Manager</a>
-            </li>
-            </ul>
-        </nav>
-        <div class="content-container">
-        <nav class="sidenav">
-        <section class="sidenav-content">
-            <section class="nav-group collapsible">
-                <input id="expiration" type="checkbox"/>
-                <label for="expiration">Password Expiration</label>
-                <ul class="nav-list">
-                    <li><a class="nav-link" href="#sddcmanager-password-expiration">SDDC Manager</a></li>
-                    <li><a class="nav-link" href="#sso-password-expiration">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-expiration">vCenter Server</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter Server (Local)</a></li>
-                    <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
-                    <li><a class="nav-link" href="#nsxedge-password-expiration">NSX  Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-password-expiration">ESXi</a></li>
-                    <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
-                </ul>
-            </section>
-            <section class="nav-group collapsible">
-                <input id="complexity" type="checkbox"/>
-                <label for="complexity">Password Complexity</label>
-                <ul class="nav-list">
-                    <li><a class="nav-link" href="#sddcmanager-password-complexity">SDDC Manager</a></li>
-                    <li><a class="nav-link" href="#sso-password-complexity">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter Server (Local)</a></li>
-                    <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
-                    <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-password-complexity">ESXi</a></li>
-                    <li><a class="nav-link" href="#wsa-directory-password-complexity">Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
-                </ul>
-            </section>
-            <section class="nav-group collapsible">
-                <input id="lockout" type="checkbox"/>
-                <label for="lockout">Account Lockout</label>
-                <ul class="nav-list">
-                    <li><a class="nav-link" href="#sddcmanager-account-lockout">SDDC Manager</a></li>
-                    <li><a class="nav-link" href="#sso-account-lockout">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter Server (Local)</a></li>
-                    <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
-                    <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-account-lockout">ESXi</a></li>
-                    <li><a class="nav-link" href="#wsa-directory-account-lockout">Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#nsx-edge-password-rotation">NSX Edge</a></li>'
+    if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
+        if (Get-VCFAriaLifecycle) {
+            $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
+            foreach ($resource in $ariaResources) {
+                switch ($resource) {
+                    default { $command = "Get-VCF$resource" }
+                    'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                }
+                if (Invoke-Expression $command -ErrorAction SilentlyContinue) {
+                    $isEnabled = (Invoke-Expression $command -ErrorAction SilentlyContinue)
+                    if ($isEnabled) {
+                        $resourceTitleCase = switch ($resource) {
+                            'ariaLifecycle' { 'Aria Suite Lifecycle' }
+                            'ariaOperationsLogs' { 'Aria Operations for Logs' }
+                            'ariaOperations' { 'Aria Operations' }
+                            'ariaAutomation' { 'Aria Automation' }
+                            'workspaceOneAccess' { 'Workspace ONE Access' }
+                        }
+                        $resourceKebabCase = $resourceTitleCase.ToLower() -replace ' ', '-'
+                        $clarityCssNavigation += "<li><a class='nav-link' href='#$resourceKebabCase-password-rotation'>$resourceTitleCase</a></li>"
+                    }
+                }
+            }
+        }
+    }
+    $clarityCssNavigation += '
                 </ul>
             </section>
         </section>
@@ -2832,7 +2967,7 @@ Function Request-SsoPasswordExpiration {
         if ($Global:DefaultSsoAdminServers) {
             Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
         }
-    } 
+    }
 }
 Export-ModuleMember -Function Request-SsoPasswordExpiration
 
@@ -2896,7 +3031,7 @@ Function Request-SsoPasswordComplexity {
 
 	Try {
 		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {              
+			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -3793,7 +3928,7 @@ Function Request-VcenterAccountLockout {
 	Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {                
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         $vcenterDomain = $vcfVcenterDetails.type
@@ -4830,7 +4965,7 @@ Function Request-NsxtManagerPasswordExpiration {
         }
 	} Catch {
         Debug-ExceptionWriter -object $_
-    } 
+    }
 }
 Export-ModuleMember -Function Request-NsxtManagerPasswordExpiration
 
@@ -4890,13 +5025,11 @@ Function Request-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-
-
 	Try {
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {   
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $version = Get-VCFManager -version
-                if ($drift) { 
+                if ($drift) {
                     if ($PsBoundParameters.ContainsKey('policyFile')) {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).nsxManager.passwordComplexity
                     } else {
@@ -4922,7 +5055,6 @@ Function Request-NsxtManagerPasswordComplexity {
                                             Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                                         }
                                     }
-                                
                                 }
                                 if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                                     $nsxtPasswordComplexityPolicy = New-Object System.Collections.ArrayList
@@ -5190,7 +5322,7 @@ Function Update-NsxtManagerPasswordComplexity {
 		- Updates the password complexity policy
 
         .EXAMPLE
-        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3 
+        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Local Manager node for a workload domain
 
         .PARAMETER server
@@ -5237,7 +5369,7 @@ Function Update-NsxtManagerPasswordComplexity {
 
         .PARAMETER history
         The maximum number of passwords the system remembers.
-        
+
         .PARAMETER hash_algorithm
         The hash/cryptographic algorithm type for new passwords.
 
@@ -5316,7 +5448,7 @@ Function Update-NsxtManagerPasswordComplexity {
                                                     }
                                                     if ($PsBoundParameters.ContainsKey("maxRetry")){
                                                         Write-Warning "'maxRetry' on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain) is not configurable for VCF5.0"
-                                                    }                                                                                                    
+                                                    }
                                                     if (($existingConfiguration).hash_algorithm -ne $hash_algorithm -or ($existingConfiguration).minimum_password_length -ne $minLength -or ($existingConfiguration).maximum_password_length -ne $maxLength -or ($existingConfiguration).digits -ne $minNumerical -or ($existingConfiguration).lower_chars -ne $minLowercase -or ($existingConfiguration).upper_chars -ne $minUppercase -or ($existingConfiguration).special_chars -ne $minSpecial -or ($existingConfiguration).max_repeats -ne $maxRepeats -or ($existingConfiguration).max_sequence -ne $maxSequence -or ($existingConfiguration).minimum_unique_chars -ne $minUnique -or ($existingConfiguration).password_remembrance -ne $history) {
                                                         Set-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn -hash_algorithm $hash_algorithm -min_passwd_length $minLength -maximum_password_length $maxLength -digits $minNumerical -lower_chars $minLowercase -upper_chars $minUppercase -special_chars $minSpecial -max_repeats $maxRepeats -max_sequence $maxSequence -minimum_unique_chars $minUnique -password_remembrance $history | Out-Null
                                                         $updatedConfiguration = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn
@@ -6949,7 +7081,7 @@ Function Request-EsxiPasswordComplexity {
 		if (Test-VCFConnection -server $server) {
 			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
-                    $version = Get-VCFManager -version 
+                    $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).esxi.passwordComplexity
                     } else {
@@ -8666,7 +8798,7 @@ Export-ModuleMember -Function Publish-WsaLocalPasswordPolicy
 ##########################################################################
 
 ##########################################################################
-#Region     Begin Shared Password Management Functions               ######
+#Region     Begin Shared Password Management Functions              ######
 
 Function Request-LocalUserPasswordExpiration {
     <#
@@ -8750,7 +8882,7 @@ Function Request-LocalUserPasswordExpiration {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey('policyFile')) {
-                        $command = '(Get-PasswordPolicyConfig  -version $version -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
+                        $command = '(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
                     } else {
                         $command = '(Get-PasswordPolicyConfig -version $version).' + $product + '.passwordExpiration'
                     }
@@ -8775,7 +8907,6 @@ Function Request-LocalUserPasswordExpiration {
                                             Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                                         }
                                     }
-                                
                                 }
                                 $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
                                 foreach ($user in $localUser) {
@@ -9066,16 +9197,28 @@ Function Publish-PasswordRotationPolicy {
 
                 # Sort the array by resourceType using the custom sort order
                 $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression={$resourceTypeOrder.IndexOf($_.Resource)}}, 'System', 'User'
-            
-                # # If the json parameter is specified, return the results as JSON.
+
+                # If the json parameter is specified, return the results as JSON.
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $passwordRotationObject | ConvertTo-Json
                 } else {
                     # Otherwise, return the results as HTML.
-                    # $passwordRotationObject = $passwordRotationObject | Sort-Object 'Workload Domain', 'System', 'Resource', 'Type', 'User' | ConvertTo-Html -Fragment -PreContent 
+                    # $passwordRotationObject = $passwordRotationObject | Sort-Object 'Workload Domain', 'System', 'Resource', 'Type', 'User' | ConvertTo-Html -Fragment -PreContent
                     # Return the results as HTML but create an anchor for each resource type.
-                    $passwordRotationObject = $passwordRotationObject | ConvertTo-Html -Fragment -PreContent "<a id=$($resourceName.ToLower() -replace ' ', '-')-password-rotation></a><h3>$($resourceName)</h3>" -As Table
-                    $passwordRotationObject = Convert-CssClassStyle -htmldata $passwordRotationObject
+                    if ($passwordRotationObject) {
+                        # Check if the $passwordRotationObject variable has any items.
+                        if (($passwordRotationObject | Measure-Object).Count -gt 0) {
+                            # Return the results as HTML but create an anchor for each resource type.
+                            $passwordRotationObject = $passwordRotationObject | ConvertTo-Html -Fragment -PreContent "<a id=$($resourceName.ToLower() -replace ' ', '-')-password-rotation></a><h3>$($resourceName)</h3>" -As Table
+                            $passwordRotationObject = Convert-CssClassStyle -htmldata $passwordRotationObject
+                        } else {
+                            # Display a message indicating that there are no results.
+                            $passwordRotationObject = "<a id=$($resourceName.ToLower() -replace ' ', '-')-password-rotation></a><h3>$($resourceName)</h3><p>No password rotation policy data available for $($resourceName).</p>"
+                        }
+                    } else {
+                        # Display a message indicating that there are no results.
+                        $passwordRotationObject = "<a id=$($resourceName.ToLower() -replace ' ', '-')-password-rotation></a><h3>$($resourceName)</h3><p>No password rotation policy data available for $($resourceName).</p>"
+                    }
                     $passwordRotationObject
                 }
             }
@@ -9192,7 +9335,7 @@ Function Request-PasswordRotationPolicy {
                         $frequencyInDays = $passwordRotation.autoRotatePolicy.frequencyInDays
                         $nextSchedule = $passwordRotation.autoRotatePolicy.nextSchedule
                     }
-                    
+
                     # Determine the alert color and message based on the credential password rotation status.
 
                     # Check if the credential password rotation settings are configured.
@@ -9219,11 +9362,11 @@ Function Request-PasswordRotationPolicy {
                         # If the password status is unknown and the connectivity status is not error, set the alert to yellow and the message to unknown.
                         $message = 'The resource is in an unknown state.'
                         $alert = 'YELLOW'
-                    } 
+                    }
 
                     if ($null -eq $passwordRotation.expiry.expiryDate) {
                         # If the password is null set the alert to red and the message to unknown.
-                        $message = 'Password expiration date is unknown.'
+                        $message = 'Password expiration date is unknown or the password has already expired.'
                         $alert = 'RED'
                     } elseif ($passwordRotation.expiry.connectivityStatus -eq 'ERROR') {
                         # If the connectivity status is error, set the alert to red and the message to error.
@@ -9236,19 +9379,19 @@ Function Request-PasswordRotationPolicy {
                     } elseif ($passwordRotation.expiry.expiryDate -le (Get-Date)) {
                         # If the password is expired, set the alert to red and the message to expired.
                         $message = 'Password is expired.'
-                        $alert = 'RED'   
+                        $alert = 'RED'
                     }
 
-                    try {
+                    Try {
                         $nextSchedule = [DateTime]::ParseExact($nextSchedule, 'yyyy-MM-ddTHH:mm:ss.fffZ', [System.Globalization.CultureInfo]::InvariantCulture)
-                    } catch {                                               
-                    } 
+                    } Catch {
+                    }
                     $passwordRotationExpiryDate = $passwordRotation.expiry.expiryDate
-                    try {
+                    Try {
                         $passwordRotationExpiryDate = [DateTime]::ParseExact($passwordRotation.expiry.expiryDate, 'yyyy-MM-ddTHH:mm:ss.fffZ', [System.Globalization.CultureInfo]::InvariantCulture)
-                    } catch {                                             
-                    } 
-    
+                    } Catch {
+                    }
+
                     [PSCustomObject]@{
                         'Workload Domain' = $passwordRotation.resource.domainName
                         'System'          = $passwordRotation.resource.resourceName
@@ -9273,7 +9416,7 @@ Function Request-PasswordRotationPolicy {
 
                 # Return the credential password rotation objects.
                 return $passwordRotationObject
-                
+
             } else {
                 Write-Error "Unable to retrieve password rotation policy for credentials managed by SDDC Manager ($server): PRE_VALIDATION_FAILED"
             }
@@ -9329,7 +9472,7 @@ Function Update-PasswordRotationPolicy {
         The name of the credential to retrieve the user password rotation settings for.
 
         .PARAMETER autoRotate
-        Enable or disable the credential password rotation for the credential by SDDC Manager. One of: enabled, disabled.
+        Enable or disable the credential password rotation policy for the credential by SDDC Manager. One of: enabled, disabled.
 
         .PARAMETER frequencyInDays
         The number of days of warning before credential's password will be automatically rotated by SDDC Manager.
@@ -9384,7 +9527,7 @@ Function Update-PasswordRotationPolicy {
                 $locateMessage = "Locating $message"
                 # Update the credential password rotation settings for a credential managed by SDDC Manager.
                 $credentialExpiry = Get-VCFCredentialExpiry | Where-Object { $_.resource.resourceType -eq $resourceType -and $_.resource.resourceName -eq $resourceName -and $_.resource.domainName -eq $domain -and $_.credentialType -eq $credentialType -and $_.username -eq $username }
-                if ($credentialExpiry) {   
+                if ($credentialExpiry) {
                     if (!$credentialExpiry.autoRotatePolicy -and $autoRotate -eq 'disabled') {
                         Write-Warning "${updateMessage}: ${skippedStatus}"
                     } elseif ($credentialExpiry.autoRotatePolicy -and $autoRotate -eq 'enabled' -and $credentialExpiry.autoRotatePolicy.frequencyInDays -eq $frequencyInDays) {

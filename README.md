@@ -14,21 +14,12 @@
 
 `VMware.CloudFoundation.PasswordManagement` is a PowerShell module that has been written to support the ability to report and configure the password policy settings across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
 
-With these cmdlets, you can:
+With these cmdlets, you can perform the following actions on a VMware Cloud Foundation instance or a specific workload domain.
 
-- Generate a password policy report for your SDDC Manager instance.
-- Generate a password policy report with configuration drift for your SDDC Manager instance by using a password policy configuration file.
-- Updates the password polices for your SDDC Manager instance by using a password policy configuration file.
-
-The module provides coverage for the following components:
-
-- ESXi
-- vCenter Single Sign-On
-- vCenter Server
-- NSX Local Manager
-- NSX Edge
-- SDDC Manager
-- Standalone Workspace ONE Access
+- Generate a password policy report for password expiration, password complexity, and account lockout.
+- Generate a password policy report with configuration drift using a password policy configuration file.
+- Update the password polices using a password policy configuration file.
+- Generate a password rotation report for all accounts managed by SDDC Manager.
 
 ## Documentation
 

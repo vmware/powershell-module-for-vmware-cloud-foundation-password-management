@@ -4,26 +4,50 @@
 
 # PowerShell Module for VMware Cloud Foundation Password Management
 
+[:material-powershell: &nbsp; PowerShell Gallery][psgallery-module-password-management]{ .md-button .md-button--primary }
+
 `VMware.CloudFoundation.PasswordManagement` is a PowerShell module that supports the ability to report and configure the password policy settings across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
 
-With these cmdlets, you can perform the following tasks on your VMware Cloud Foundation instance or a specific workload domain:
+With these cmdlets, you can perform the following actions on a VMware Cloud Foundation instance or a specific workload domain.
 
-- Generate a baseline password policy configuration file based on the default password policy settings per component.
-- Generate a password policy report detailing the password policy settings per component.
-- Generate a password policy report with configuration drift using a password policy configuration file.
-- Update password polices to a desired state using a password policy configuration file.=
+The module provides coverage for the following:
 
-The module provides coverage for the following components:
+=== ":material-shield-check: &nbsp; Password Policies"
 
-- ESXi
-- vCenter Single Sign-On
-- vCenter Server
-- NSX Local Manager
-- NSX Edge
-- SDDC Manager
-- Workspace ONE Access (Standalone)
+    * Generate a password policy report for password expiration, password complexity, and account lockout.
+    * Generate a password policy report with configuration drift using a password policy configuration file.
+    * Update the password polices using a password policy configuration file.
 
-[:material-powershell: &nbsp; PowerShell Gallery][psgallery-module-password-management]{ .md-button .md-button--primary }
+    Components:
+
+    * SDDC Manager
+    * vCenter Single Sign-On
+    * vCenter Server
+    * ESXi
+    * NSX Local Manager
+    * NSX Edge
+    * Workspace ONE Access (Standalone)
+
+=== ":fontawesome-solid-rotate: &nbsp; Password Rotation"
+
+    Generate a password rotation report for accounts managed by SDDC Manager.
+
+    Components:
+
+    * SDDC Manager
+    * vCenter Single Sign-On
+    * vCenter Server
+    * NSX Local Manager
+    * NSX Edge
+    * Aria Suite Lifecycle
+    * Aria Operations for Logs
+    * Aria Operations
+    * Aria Automation
+    * Workspace ONE Access
+
+    ???+ note "Note"
+        - ESXi password rotation is not managed by SDDC Manager.
+        - Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
 
 ## Requirements
 
