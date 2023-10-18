@@ -1033,15 +1033,15 @@ Function Get-PasswordPolicyDefault {
         - VMware Workspace ONE Access
 
         .EXAMPLE
-        Get-PasswordPolicyDefault -version '5.0.0'
-        This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0.
+        Get-PasswordPolicyDefault -version '5.0.0.0'
+        This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0.0.
 
         .EXAMPLE
-        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
+        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0.0'
         This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
 
         .EXAMPLE
-        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
+        Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0.0'
         This example creates a JSON file named passwordPolicyConfig.json with the default password policy settings for the given version of VMware Cloud Foundation.
         If passwordPolicyConfig.json is already present, it is overwritten due to 'force' parameter.
 
