@@ -1,5 +1,13 @@
 # Release History
 
+## v1.6.0
+
+> Release Date: UnReleased
+
+Bugfix:
+
+- Updated example on Get-PasswordPolicyDefault cmdlet. [GH-128](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/128)
+
 ## v1.5.0
 
 > Release Date: 2023-10-10
