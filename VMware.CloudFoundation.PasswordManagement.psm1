@@ -4241,10 +4241,22 @@ Function Update-VcenterAccountLockout {
                         }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
-                                if ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
+                                $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
+                                $sddcManagerVersion = Get-VCFManager -version
+                                if(($sddcManagerVersion.split(".")[0] -eq 5 -and $sddcManagerVersion.split(".")[1] -eq 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
+                                        $scriptCommand = "sed -E -i.bak 's/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so deny=$failures preauth authfail audit unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
+                                        $scriptCommand += "' /etc/pam.d/system-auth"
+                                        Invoke-VMScript -VM $vcfVcenterDetails.fqdn.Split(".")[0] -ScriptText $scriptCommand -Guestuser $vcfVcenterDetails.root -GuestPass $vcfVcenterDetails.rootPass -Confirm:$false | Out-Null
+                                        # validate if changes take effect
+                                        $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
+                                        if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
+                                            Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        } else {
+                                            Write-Error "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        }
+                                } elseif ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
                                     Set-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
-                                    $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
+                                    $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                     if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
                                         Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
