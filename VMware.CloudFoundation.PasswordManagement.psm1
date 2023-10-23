@@ -1062,7 +1062,7 @@ Function Get-PasswordPolicyDefault {
 
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0','4.4.1.0','4.5.0.0','4.5.1.0','4.5.2.0','5.0.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0','4.4.1.0','4.5.0.0','4.5.1.0','4.5.2.0','5.0.0.0','5.1.0.0')] [String]$version,
         [Parameter (Mandatory = $true, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile,
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$force
     )
@@ -1301,7 +1301,7 @@ Export-ModuleMember -Function Get-PasswordPolicyDefault
 Function Get-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0','4.4.1.0','4.5.0.0','4.5.1.0','4.5.2.0','5.0.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0','4.4.1.0','4.5.0.0','4.5.1.0','4.5.2.0','5.0.0.0','5.1.0.0')] [String]$version,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
@@ -2401,8 +2401,28 @@ Function Update-SddcManagerPasswordComplexity {
                             if($existingConfiguration.'Min Classes') {
                                 $chkExistingConfig = $chkExistingConfig -or $existingConfiguration.'Min Classes' -ne $minClass
                             }
-                            if ($chkExistingConfig) {
-                                Set-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -class $minClass -sequence $maxSequence -history $history -retry $maxRetry | Out-Null
+                            $sddcManagerVersion = Get-VCFManager -version
+                            if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Min Length' -eq $null -or $existingConfiguration.'Min Lowercase' -eq $null -or $existingConfiguration.'Min Uppercase' -eq $null -or $existingConfiguration.'Min Numerical' -eq $null -or $existingConfiguration.'Min Special' -eq $null -or $existingConfiguration.'Min Unique' -eq $null -or  $existingConfiguration.'History' -eq $null -or $existingConfiguration.'Max Retries' -eq $null -or $existingConfiguration.'Max Sequence' -eq $null -or $existingConfiguration.'Min Classes' -eq $null)) {
+                                $scriptCommand = "sed -E -i.bak -e 's/password.*required.*pam_pwquality.so.*/password   required pam_pwquality.so dcredit=$minNumerical ucredit=$minUppercase lcredit=$minLowercase ocredit=$minSpecial minlen=$minLength difok=$minUnique minclass=$minClass maxsequence=$maxSequence enforce_for_root/"
+                                $scriptCommand += "' -e 's/password.*required.*pam_pwhistory.so.*/password   required pam_pwhistory.so remember=$history retry=$maxRetry enforce_for_root use_authtok/"
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                                Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -Guestuser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
+                                # validate if changes take effect
+                                $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
+                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
+                                if($updatedConfiguration.'Max Sequence') {
+                                    $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Max Sequence' -eq $maxSequence
+                                }
+                                if($updatedConfiguration.'Min Classes') {
+                                    $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Min Classes' -eq $minClass
+                                }
+                                if ($chkUpdatedConfig) {
+                                    Write-Output "Update Password Complexity Policy on SDDC Manasger ($server): SUCCESSFUL"
+                                } else {
+                                    Write-Error "Update Password Complexity Policy on SDDC Manager ($server): POST_VALIDATION_FAILED"
+                                }
+                            } elseif ($chkExistingConfig) {
+                                Set-LocalPasswordComplexity -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -class $minClass -sequence $maxSequence -history $history -retry $maxRetry | Out-Null
                                 $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
                                 $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
                                 if($updatedConfiguration.'Max Sequence') {
@@ -2488,10 +2508,22 @@ Function Update-SddcManagerAccountLockout {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                            $existingConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager
-                            if ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
-                                Set-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
-                                $updatedConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass -product sddcManager
+                            $existingConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
+                            $sddcManagerVersion = Get-VCFManager -version
+                            if(($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)){
+                                $scriptCommand = "sed -E -i.bak '0,/pam_faillock.so/s/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so preauth authfail audit deny=$failures unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
+                                $scriptCommand += "' /etc/pam.d/system-auth"
+                                Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -Guestuser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
+                                # validate if changes take effect
+                                $updatedConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
+                                if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
+                                    Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                } else {
+                                    Write-Error "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                }
+                            } elseif ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
+                                Set-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
+                                $updatedConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
                                 if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
                                     Write-Output "Update Account Lockout Policy on SDDC Manager ($server): SUCCESSFUL"
                                 } else {
@@ -4241,10 +4273,22 @@ Function Update-VcenterAccountLockout {
                         }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
-                                if ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
+                                $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
+                                $sddcManagerVersion = Get-VCFManager -version
+                                if(($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
+                                    $scriptCommand = "sed -E -i.bak 's/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so preauth authfail audit deny=$failures unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
+                                    $scriptCommand += "' /etc/pam.d/system-auth"
+                                    Invoke-VMScript -VM $vcfVcenterDetails.fqdn.Split(".")[0] -ScriptText $scriptCommand -Guestuser $vcfVcenterDetails.root -GuestPass $vcfVcenterDetails.rootPass -Confirm:$false | Out-Null
+                                    # validate if changes take effect
+                                    $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
+                                    if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
+                                        Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                    } else {
+                                        Write-Error "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                    }
+                                } elseif ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
                                     Set-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
-                                    $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
+                                    $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                     if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
                                         Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {

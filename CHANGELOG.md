@@ -2,11 +2,14 @@
 
 ## v1.6.0
 
-> Release Date: UnReleased
+Enhancement:
 
-Bugfix:
+- Added 5.1.0.0 to  `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1. [GH-130](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130)
+- Updated `Update-SddcManagerPasswordComplexity`, `Update-SddcManagerAccountLockout`, and `Update-vCenterAccountLockout` cmdlet to support VMware Cloud Foundation 5.1 by addressing changes in Photon OS 4 for vCenter Server 8.0.2 and SDDC Manager 5.1. [GH-130](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130)
 
-- Updated example on Get-PasswordPolicyDefault cmdlet. [GH-128](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/128)
+Documentation:
+
+- Updated example `Get-PasswordPolicyDefault` cmdlet. [GH-128](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/128)
 
 ## v1.5.0
 
