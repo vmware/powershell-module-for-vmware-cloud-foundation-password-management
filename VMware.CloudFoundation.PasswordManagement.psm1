@@ -1872,6 +1872,68 @@ Function Save-ClarityReportHeader {
     $clarityCssHeader
 }
 
+Function Save-ClarityReportNavigation {
+    $clarityCssNavigation = '
+            <nav class="subnav">
+            <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="">Password Policy Manager</a>
+            </li>
+            </ul>
+        </nav>
+        <div class="content-container">
+        <nav class="sidenav">
+        <section class="sidenav-content">
+            <section class="nav-group collapsible">
+                <input id="expiration" type="checkbox"/>
+                <label for="expiration">Password Expiration</label>
+                <ul class="nav-list">
+                    <li><a class="nav-link" href="#sddcmanager-password-expiration">SDDC Manager</a></li>
+                    <li><a class="nav-link" href="#sso-password-expiration">vCenter Single Sign-On</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-expiration">vCenter Server</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
+                    <li><a class="nav-link" href="#nsxedge-password-expiration">NSX  Edge</a></li>
+                    <li><a class="nav-link" href="#esxi-password-expiration">ESXi</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
+                </ul>
+            </section>
+            <section class="nav-group collapsible">
+                <input id="complexity" type="checkbox"/>
+                <label for="complexity">Password Complexity</label>
+                <ul class="nav-list">
+                    <li><a class="nav-link" href="#sddcmanager-password-complexity">SDDC Manager</a></li>
+                    <li><a class="nav-link" href="#sso-password-complexity">vCenter Single Sign-On</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
+                    <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
+                    <li><a class="nav-link" href="#esxi-password-complexity">ESXi</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-password-complexity">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
+                </ul>
+            </section>
+            <section class="nav-group collapsible">
+                <input id="lockout" type="checkbox"/>
+                <label for="lockout">Account Lockout</label>
+                <ul class="nav-list">
+                    <li><a class="nav-link" href="#sddcmanager-account-lockout">SDDC Manager</a></li>
+                    <li><a class="nav-link" href="#sso-account-lockout">vCenter Single Sign-On</a></li>
+                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
+                    <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
+                    <li><a class="nav-link" href="#esxi-account-lockout">ESXi</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-account-lockout">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
+                </ul>
+            </section>
+        </section>
+        </nav>
+            <div class="content-area">
+                <div class="content-area">'
+    $clarityCssNavigation
+}
+
 Function Save-ClarityReportNavigationForRotation {
 
     Param (
