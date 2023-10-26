@@ -771,7 +771,11 @@ Function Invoke-PasswordPolicyManager {
                     } else {
                         $reportHeader = Save-ClarityReportHeader
                     }
-                    $reportNavigation = Save-ClarityReportNavigation
+                    if ($PsBoundParameters.ContainsKey('allDomains')) {
+                        $reportNavigation = Save-ClarityReportNavigationForRotation -allDomains
+                    } else {
+                        $reportNavigation = Save-ClarityReportNavigationForRotation -workloadDomain $workloadDomain
+                    }
                     $reportFooter = Save-ClarityReportFooter
 
                     $report = $reportHeader
@@ -7920,10 +7924,11 @@ Function Request-WsaPasswordExpiration {
 	)
 
     if ($drift) {
+        $version = Get-VCFManager -version
         if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordExpiration
+            $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordExpiration
         } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).wsaDirectory.passwordExpiration
+            $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaDirectory.passwordExpiration
         }
     }
 
@@ -8000,10 +8005,11 @@ Function Request-WsaPasswordComplexity {
 	)
 
     if ($drift) {
+        $version = Get-VCFManager -version
         if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordComplexity
+            $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordComplexity
         } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).wsaDirectory.passwordComplexity
+            $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaDirectory.passwordComplexity
         }
     }
 
@@ -8260,10 +8266,11 @@ Function Request-WsaAccountLockout {
 	)
 
     if ($drift) {
+        $version = Get-VCFManager -version
         if ($PsBoundParameters.ContainsKey("policyFile")) {
-            $requiredConfig = (Get-PasswordPolicyConfig -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.accountLockout
+            $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.accountLockout
         } else {
-            $requiredConfig = (Get-PasswordPolicyConfig).wsaDirectory.accountLockout
+            $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaDirectory.accountLockout
         }
     }
 
