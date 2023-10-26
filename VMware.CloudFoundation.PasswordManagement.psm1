@@ -771,11 +771,7 @@ Function Invoke-PasswordPolicyManager {
                     } else {
                         $reportHeader = Save-ClarityReportHeader
                     }
-                    if ($PsBoundParameters.ContainsKey('allDomains')) {
-                        $reportNavigation = Save-ClarityReportNavigationForRotation -allDomains
-                    } else {
-                        $reportNavigation = Save-ClarityReportNavigationForRotation -workloadDomain $workloadDomain
-                    }
+                    $reportNavigation = Save-ClarityReportNavigation
                     $reportFooter = Save-ClarityReportFooter
 
                     $report = $reportHeader
