@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.7">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.35e1ed30.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b4a2bd9.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
@@ -515,6 +515,13 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v160" class="md-nav__link">
+    v1.6.0
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#v150" class="md-nav__link">
@@ -4022,6 +4029,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v160" class="md-nav__link">
+    v1.6.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v150" class="md-nav__link">
     v1.5.0
   </a>
@@ -4095,6 +4109,20 @@
 
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
+<h2 id="v160">v1.6.0<a class="headerlink" href="#v160" title="Permanent link">&para;</a></h2>
+<p>Bugfix:</p>
+<ul>
+<li>Updated <code>Request-WsaPasswordExpiration</code>, <code>Request-WsaPasswordComplexity</code>, and <code>Request-WsaAccountLockout</code> to pass a version with the <code>-drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/131">GH-131</a></li>
+</ul>
+<p>Enhancement:</p>
+<ul>
+<li>Added 5.1.0.0 to  <code>Get-PasswordPolicyDefault</code> and <code>Get-PasswordPolicyConfig</code> to support VMware Cloud Foundation 5.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130">GH-130</a></li>
+<li>Updated <code>Update-SddcManagerPasswordComplexity</code>, <code>Update-SddcManagerAccountLockout</code>, and <code>Update-vCenterAccountLockout</code> cmdlet to support VMware Cloud Foundation 5.1 by addressing changes in Photon OS 4 for vCenter Server 8.0.2 and SDDC Manager 5.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130">GH-130</a></li>
+</ul>
+<p>Documentation:</p>
+<ul>
+<li>Updated example <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/128">GH-128</a></li>
+</ul>
 <h2 id="v150">v1.5.0<a class="headerlink" href="#v150" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2023-10-10</p>
