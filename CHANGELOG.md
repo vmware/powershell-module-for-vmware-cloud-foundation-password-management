@@ -2,6 +2,10 @@
 
 ## v1.6.0
 
+Bugfix:
+
+- Updated `Request-WsaPasswordExpiration`, `Request-WsaPasswordComplexity`, and `Request-WsaAccountLockout` to pass a version with the `-drift` option is used. [GH-131](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/131)
+
 Enhancement:
 
 - Added 5.1.0.0 to  `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1. [GH-130](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130)
