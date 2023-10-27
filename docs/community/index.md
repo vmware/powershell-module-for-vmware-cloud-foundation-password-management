@@ -5,26 +5,9 @@ This PowerShell module is the work of many contributors and the project team app
 Thank you for your interest in the project. Whether it's a bug report, enhancement, correction, or
 additional documentation, we greatly value feedback and contributions from our community.
 
-## Maintainers
-
-### Gary Blake
-
-Senior Staff Solutions Architect, VMware</br>
-:fontawesome-brands-github: &nbsp; [@GaryJBlake](https://github.com/GaryJBlake) &nbsp;&nbsp;
-:fontawesome-brands-twitter: &nbsp; [@GaryJBlake](https://twitter.com/GaryJBlake) &nbsp;&nbsp;
-:fontawesome-brands-chrome: &nbsp; [my-cloudy-world.com](https://my-cloudy-world.com)
-
-### Ryan Johnson
-
-Senior Staff Solutions Architect, VMware</br>
-:fontawesome-brands-github: &nbsp; [@tenthirtyam](https://github.com/tenthirtyam) &nbsp;&nbsp;
-:fontawesome-brands-mastodon: &nbsp; [@tenthirtyam](https://mastodon.social/@tenthirtyam) &nbsp;&nbsp;
-:fontawesome-brands-twitter: &nbsp; [@tenthirtyam](https://twitter.com/tenthirtyam) &nbsp;&nbsp;
-:fontawesome-brands-chrome: &nbsp; [tenthirtyam.org](https://tenthirtyam.org)
-
-## Collaborators
-
-### Sowjana V
-
-Senior Member of Technical Staff, VMware</br>
-:fontawesome-brands-github: &nbsp; [@sowjuec](https://github.com/sowjuec)
+Name         | Title                                    | Role         | GitHub                                                       |
+-------------|------------------------------------------|--------------|--------------------------------------------------------------|
+Gary Blake   | Senior Staff Solutions Architect, VMware | Maintainer   | [:fontawesome-brands-github:](https://github.com/GaryJBlake) |
+Ryan Johnson | Senior Staff Solutions Architect, VMware | Maintainer   | [:fontawesome-brands-github:](https://github.com/tenthirtyam)|
+Sowjana V    | Senior Member of Technical Staff, VMware | Collaborator | [:fontawesome-brands-github:](https://github.com/sowjuec)    |
+Kevin Teng   | Senior Member of Technical Staff, VMware | Collaborator | [:fontawesome-brands-github:](https://github.com/garlicNova) |
