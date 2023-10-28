@@ -8106,7 +8106,8 @@ Function Request-WsaLocalUserPasswordComplexity {
                                 if ($PsBoundParameters.ContainsKey('policyFile')) {
                                     Get-LocalPasswordComplexity -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -drift -product wsaLocal -reportPath $reportPath -policyFile $policyFile
                                 } else {
-                                    Get-LocalPasswordComplexity -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -drift -product wsaLocal
+                                    $version = Get-VCFManager -version
+                                    Get-LocalPasswordComplexity -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -drift -product wsaLocal -version $version
                                 }
                             } else {
                                 Get-LocalPasswordComplexity -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal
@@ -8195,7 +8196,8 @@ Function Request-WsaLocalUserAccountLockout {
                                 if ($PsBoundParameters.ContainsKey('policyFile')) {
                                     Get-LocalAccountLockout -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal -drift -reportPath $reportPath -policyFile $policyFile
                                 } else {
-                                    Get-LocalAccountLockout -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal -drift
+                                    $version = Get-VCFManager -version
+                                    Get-LocalAccountLockout -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal -drift -version $version
                                 }
                             } else {
                                 Get-LocalAccountLockout -vmName ($wsaFqdn.Split("."))[-0] -guestUser root -guestPassword $wsaRootPass -product wsaLocal
