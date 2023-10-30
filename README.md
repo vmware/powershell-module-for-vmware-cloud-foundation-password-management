@@ -4,7 +4,7 @@
 
 # PowerShell Module for VMware Cloud Foundation Password Management
 
-[<img src="https://img.shields.io/badge/Documentation-Read-blue?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Documenation">][docs-module]&nbsp;&nbsp;
+[<img src="https://img.shields.io/badge/Documentation-Read-blue?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Documentation">][docs-module]&nbsp;&nbsp;
 [<img src="https://img.shields.io/badge/Changelog-Read-blue?style=for-the-badge&logo=github&logoColor=white" alt="CHANGELOG" >][changelog]
 
 [<img src="https://img.shields.io/powershellgallery/v/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery">][psgallery-module]&nbsp;&nbsp;
@@ -12,7 +12,7 @@
 
 ## Overview
 
-`VMware.CloudFoundation.PasswordManagement` is a PowerShell module that has been written to support the ability to report and configure the password policy settings across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
+`VMware.CloudFoundation.PasswordManagement` is a PowerShell module that has been written to support the ability to report and configure the password policy settings across your [VMware Cloud Foundation][docs-vmware-cloud-foundation] instance.
 
 With these cmdlets, you can perform the following actions on a VMware Cloud Foundation instance or a specific workload domain.
 
@@ -65,6 +65,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation
 [gh-discussions]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/discussions
 [gh-issues]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues
-[gh-reactions]: https://blog.github.com/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/
+[gh-reactions]: https://github.blog/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/
 [psgallery-module]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
 [vmware-cla-dco]: https://cla.vmware.com/dco
