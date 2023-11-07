@@ -102,14 +102,23 @@ Function Invoke-PasswordRotationManager {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerUser,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerPass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcManagerPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$darkMode,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($sddcManagerPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $sddcManagerUser" -AsSecureString
+        $sddcManagerPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($sddcRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $sddcRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
 
@@ -563,8 +572,8 @@ Function Invoke-PasswordPolicyManager {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerUser,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerPass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcManagerPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
@@ -576,6 +585,26 @@ Function Invoke-PasswordPolicyManager {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaAdminPass
     )
+
+    if ([string]::IsNullOrEmpty($sddcManagerPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $sddcManagerUser" -AsSecureString
+        $sddcManagerPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($sddcRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $sddcRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ($wsaFqdn) {
+        if ([string]::IsNullOrEmpty($wsaRootPass)) {
+            $secureString = Read-Host -Prompt "Enter the password for the Workspace ONE Access appliance root user" -AsSecureString
+            $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+        }
+        if ([string]::IsNullOrEmpty($wsaAdminPass)) {
+            $secureString = Read-Host -Prompt "Enter the password for the Workspace ONE Access admin user" -AsSecureString
+            $wsaAdminPass = ConvertFrom-SecureString $secureString -AsPlainText
+        }
+
+    }
 
     Try {
 
@@ -845,14 +874,34 @@ Function Start-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerUser,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerPass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcManagerPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false, ParameterSetName = 'wsa')] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
         [Parameter (Mandatory = $false, ParameterSetName = 'wsa')] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $false, ParameterSetName = 'wsa')] [ValidateNotNullOrEmpty()] [String]$wsaAdminPass
     )
+
+    if ([string]::IsNullOrEmpty($sddcManagerPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $sddcManagerUser" -AsSecureString
+        $sddcManagerPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($sddcRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $sddcRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ($wsaFqdn) {
+        if ([string]::IsNullOrEmpty($wsaAdminPass)) {
+            $secureString = Read-Host -Prompt "Enter the password for the Workspace ONE Access admin user" -AsSecureString
+            $wsaAdminPass = ConvertFrom-SecureString $secureString -AsPlainText
+        }
+        if ([string]::IsNullOrEmpty($wsaRootPass)) {
+            $secureString = Read-Host -Prompt "Enter the password for the Workspace ONE Access appliance root user" -AsSecureString
+            $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+        }
+    }
+
 
     Clear-Host; Write-Host ""
 
@@ -2092,12 +2141,21 @@ Function Request-SddcManagerPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$rootPass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($rootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $rootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -2176,12 +2234,20 @@ Function Request-SddcManagerPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$rootPass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($rootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $rootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -2263,12 +2329,20 @@ Function Request-SddcManagerAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$rootPass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($rootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $rootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -2344,13 +2418,22 @@ Function Update-SddcManagerPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$rootPass,
         [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$minDays,
         [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$warnDays,
         [Parameter (Mandatory = $false)] [ValidateSet('true', 'false')] [String]$detail = 'true'
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($rootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $rootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     [Array]$localUsers = '"root","vcf","backup"'
     $cmdlet = 'Update-LocalUserPasswordExpiration'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq 'MANAGEMENT'}).name) -vmName $(($server.Split('.'))[-0]) -guestUser root -guestPassword $rootPass -localUser $localUsers -minDays $minDays -maxDays $maxDays -warnDays $warnDays -detail $detail"
@@ -2435,8 +2518,8 @@ Function Update-SddcManagerPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$rootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minLowercase,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUppercase,
@@ -2448,6 +2531,14 @@ Function Update-SddcManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry
 	)
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($rootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $rootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -2557,12 +2648,21 @@ Function Update-SddcManagerAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$rootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$rootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($rootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $rootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -2671,8 +2771,8 @@ Function Publish-SddcManagerPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -2680,6 +2780,14 @@ Function Publish-SddcManagerPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($sddcRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $sddcRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command to be Executed
     [Array]$localUsers = '"root","vcf","backup"'
@@ -2784,8 +2892,8 @@ Function Publish-SddcManagerPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -2793,6 +2901,15 @@ Function Publish-SddcManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($sddcRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $sddcRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command to be Executed
     $command = "Request-SddcManagerPasswordComplexity -server $server -user $user -pass $pass -rootPass $sddcRootPass"
@@ -2896,8 +3013,8 @@ Function Publish-SddcManagerAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$sddcRootPass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -2905,6 +3022,15 @@ Function Publish-SddcManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($sddcRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $sddcRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command to be Executed
     $command = "Request-SddcManagerAccountLockout -server $server -user $user -pass $pass -rootPass $sddcRootPass"
@@ -3001,14 +3127,17 @@ Function Request-SsoPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -3115,13 +3244,17 @@ Function Request-SsoPasswordComplexity {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
 		if (Test-VCFConnection -server $server) {
@@ -3236,14 +3369,17 @@ Function Request-SsoAccountLockout {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
-
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
 		if (Test-VCFConnection -server $server) {
@@ -3337,10 +3473,15 @@ Function Update-SsoPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -3449,7 +3590,7 @@ Function Update-SsoPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxLength,
@@ -3461,6 +3602,11 @@ Function Update-SsoPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxIdenticalAdjacent,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$history
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if ($minLength -gt $maxLength) {
@@ -3563,13 +3709,18 @@ Function Update-SsoAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failureInterval,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval
 
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -3695,7 +3846,7 @@ Function Publish-SsoPasswordPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
@@ -3704,6 +3855,11 @@ Function Publish-SsoPasswordPolicy {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-SsoPasswordExpiration"; $preHtmlContent = '<a id="sso-password-expiration"></a><h3>vCenter Single Sign-On - Password Expiration</h3>' }
     if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-SsoPasswordComplexity"; $preHtmlContent = '<a id="sso-password-complexity"></a><h3>vCenter Single Sign-On - Password Complexity</h3>' }
@@ -3806,12 +3962,17 @@ Function Request-VcenterPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -3906,12 +4067,17 @@ Function Request-VcenterPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         $mgmtConnected = $false
@@ -4012,12 +4178,17 @@ Function Request-VcenterAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         $mgmtConnected = $false
@@ -4111,12 +4282,17 @@ Function Update-VcenterPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$warnDays
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -4202,7 +4378,7 @@ Function Update-VcenterPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minLowercase,
@@ -4212,6 +4388,11 @@ Function Update-VcenterPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUnique,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         $mgmtConnected = $false
@@ -4306,12 +4487,17 @@ Function Update-VcenterAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         $mgmtConnected = $false
@@ -4426,12 +4612,17 @@ Function Request-VcenterRootPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -4527,13 +4718,18 @@ Function Update-VcenterRootPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$email,
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$warnDays,
         [Parameter (Mandatory = $false, ParameterSetName = 'neverexpire')] [ValidateNotNullOrEmpty()] [Switch]$neverexpire
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -4634,7 +4830,7 @@ Function Publish-VcenterPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -4642,6 +4838,11 @@ Function Publish-VcenterPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command
     $GLobal:command = "Request-VcenterPasswordExpiration -server $server -user $user -pass $pass"
@@ -4731,7 +4932,7 @@ Function Publish-VcenterLocalPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -4739,6 +4940,11 @@ Function Publish-VcenterLocalPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -4831,7 +5037,7 @@ Function Publish-VcenterLocalPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -4839,6 +5045,11 @@ Function Publish-VcenterLocalPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -4931,7 +5142,7 @@ Function Publish-VcenterLocalAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -4939,6 +5150,11 @@ Function Publish-VcenterLocalAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift " }} else { $commandSwitch = "" }
@@ -5028,12 +5244,17 @@ Function Request-NsxtManagerPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -5124,12 +5345,17 @@ Function Request-NsxtManagerPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -5276,12 +5502,17 @@ Function Request-NsxtManagerAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5367,11 +5598,16 @@ Function Update-NsxtManagerPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateRange(0,9999)] [Int]$maxDays,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5486,7 +5722,7 @@ Function Update-NsxtManagerPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxLength,
@@ -5502,6 +5738,11 @@ Function Update-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [string]$hash_algorithm,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         $chkVersion = $false
@@ -5668,7 +5909,7 @@ Function Update-NsxtManagerAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliFailures,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliUnlockInterval,
@@ -5677,6 +5918,11 @@ Function Update-NsxtManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$apiUnlockInterval,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5796,7 +6042,7 @@ Function Publish-NsxManagerPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -5804,6 +6050,11 @@ Function Publish-NsxManagerPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -5904,7 +6155,7 @@ Function Publish-NsxManagerPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -5912,6 +6163,11 @@ Function Publish-NsxManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -6004,7 +6260,7 @@ Function Publish-NsxManagerAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -6012,6 +6268,11 @@ Function Publish-NsxManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -6100,12 +6361,17 @@ Function Request-NsxtEdgePasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -6199,12 +6465,17 @@ Function Request-NsxtEdgePasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -6315,14 +6586,16 @@ Function Request-NsxtEdgeAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
-
-
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6406,11 +6679,16 @@ Function Update-NsxtEdgePasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateRange(0,9999)] [Int]$maxDays,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6513,7 +6791,7 @@ Function Update-NsxtEdgePasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minLowercase,
@@ -6524,6 +6802,11 @@ Function Update-NsxtEdgePasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -6617,12 +6900,17 @@ Function Update-NsxtEdgeAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliFailures,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliUnlockInterval,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -6733,7 +7021,7 @@ Function Publish-NsxEdgePasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -6741,6 +7029,11 @@ Function Publish-NsxEdgePasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -6851,7 +7144,7 @@ Function Publish-NsxEdgePasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -6859,6 +7152,11 @@ Function Publish-NsxEdgePasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -6951,7 +7249,7 @@ Function Publish-NsxEdgeAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -6959,6 +7257,11 @@ Function Publish-NsxEdgeAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
@@ -7053,13 +7356,18 @@ Function Request-EsxiPasswordExpiration {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
 		if (Test-VCFConnection -server $server) {
@@ -7175,13 +7483,18 @@ Function Request-EsxiPasswordComplexity {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
 		if (Test-VCFConnection -server $server) {
@@ -7301,13 +7614,18 @@ Function Request-EsxiAccountLockout {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
 		if (Test-VCFConnection -server $server) {
@@ -7418,12 +7736,17 @@ Function Update-EsxiPasswordExpiration {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
 		if (Test-VCFConnection -server $server) {
@@ -7525,13 +7848,18 @@ Function Update-EsxiPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$policy,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$history,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -7646,13 +7974,18 @@ Function Update-EsxiAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -7795,7 +8128,7 @@ Function Publish-EsxiPasswordPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
@@ -7804,6 +8137,11 @@ Function Publish-EsxiPasswordPolicy {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-EsxiPasswordExpiration"; $preHtmlContent = '<a id="esxi-password-expiration"></a><h3>ESXi - Password Expiration</h3>' }
     if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-EsxiPasswordComplexity"; $preHtmlContent = '<a id="esxi-password-complexity"></a><h3>ESXi - Password Complexity</h3>' }
@@ -7913,11 +8251,16 @@ Function Request-WsaPasswordExpiration {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     if ($drift) {
         $version = Get-VCFManager -version
@@ -7994,11 +8337,16 @@ Function Request-WsaPasswordComplexity {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     if ($drift) {
         $version = Get-VCFManager -version
@@ -8088,14 +8436,23 @@ Function Request-WsaLocalUserPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
 
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($wsaRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root user" -AsSecureString
+        $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    
 	Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -8178,13 +8535,22 @@ Function Request-WsaLocalUserAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($wsaRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -8257,11 +8623,16 @@ Function Request-WsaAccountLockout {
 	Param (
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     if ($drift) {
         $version = Get-VCFManager -version
@@ -8335,12 +8706,17 @@ Function Update-WsaPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
 		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$warnDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$reminderDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$tempPasswordHours
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-WsaConnection -server $server) {
@@ -8418,7 +8794,7 @@ Function Update-WsaPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLowercase,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minUppercase,
@@ -8427,7 +8803,11 @@ Function Update-WsaPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxIdenticalAdjacent,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxPreviousCharacters,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$history
-	)
+	)               
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-WsaConnection -server $server) {
@@ -8498,13 +8878,22 @@ Function Update-WsaLocalUserPasswordComplexity {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry
 	)
+    
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($wsaRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for wsa root user" -AsSecureString
+        $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -8575,12 +8964,16 @@ Function Update-WsaAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failureInterval,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval
 
 	)
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-WsaConnection -server $server) {
@@ -8649,13 +9042,22 @@ Function Update-WsaLocalUserAccountLockout {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($wsaRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the WSA root password" -AsSecureString
+        $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -8752,7 +9154,7 @@ Function Publish-WsaDirectoryPasswordPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
@@ -8761,6 +9163,11 @@ Function Publish-WsaDirectoryPasswordPolicy {
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain
     )
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for the user $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-WsaPasswordExpiration"; $preHtmlContent = '<a id="wsa-directory-password-expiration"></a><h3>Workspace ONE Access Directory - Password Expiration</h3>' }
     if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaPasswordComplexity"; $preHtmlContent = '<a id="wsa-directory-password-complexity"></a><h3>Workspace ONE Access Directory - Password Complexity</h3>' }
@@ -8861,9 +9268,9 @@ Function Publish-WsaLocalPasswordPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
         [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
@@ -8873,10 +9280,18 @@ Function Publish-WsaLocalPasswordPolicy {
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain
     )
 
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($wsaRootPass)) {
+        $secureString = Read-Host -Prompt "Enter the password for root" -AsSecureString
+        $wsaRootPass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+
     Try {
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {                
                 # Define the Command Switch
                 if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
                 [Array]$localUsers = '"root","sshuser"'
@@ -8975,17 +9390,26 @@ Function Request-LocalUserPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$vmName,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestUser,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Array]$localUser,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateSet('sddcManager', 'vcenterServer', 'nsxManager', 'nsxEdge', 'wsaLocal')] [String]$product,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
 	)
+
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($guestPassword)) {
+        $secureString = Read-Host -Prompt "Enter the guest password" -AsSecureString
+        $guestPassword = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -9109,17 +9533,26 @@ Function Update-LocalUserPasswordExpiration {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$vmName,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestUser,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Array]$localUser,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$minDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$warnDays,
         [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
 	)
+    
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
+    if ([string]::IsNullOrEmpty($guestPassword)) {
+        $secureString = Read-Host -Prompt "Enter the guest password" -AsSecureString
+        $guestPassword = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
 	Try {
         if (Test-VCFConnection -server $server) {
@@ -9200,7 +9633,7 @@ Function Publish-PasswordRotationPolicy {
         by SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager.
-        - Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource
+        - Retrives the credentialg password rotation settings based on the criteria specified by the -domain and -resource
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
@@ -9248,12 +9681,17 @@ Function Publish-PasswordRotationPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
+    
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Determine the resource type.
     if ($resource) {
@@ -9389,10 +9827,15 @@ Function Request-PasswordRotationPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false)] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource
     )
+    
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
 
     # Determine the resource type.
     if ($resource) {
@@ -9592,7 +10035,7 @@ Function Update-PasswordRotationPolicy {
     Param (
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$resourceName,
@@ -9600,8 +10043,11 @@ Function Update-PasswordRotationPolicy {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$credentialName,
         [Parameter (Mandatory = $true)] [ValidateSet('enabled', 'disabled')] [String]$autoRotate,
         [Parameter (Mandatory = $false)] [ValidateScript({ $autoRotate -eq 'ENABLED' -or $_ -eq $null })] [Int]$frequencyInDays
-    )
-
+    )    
+    if ([string]::IsNullOrEmpty($pass)) {
+        $secureString = Read-Host -Prompt "Enter the password for $user" -AsSecureString
+        $pass = ConvertFrom-SecureString $secureString -AsPlainText
+    }
     # Set the resource type.
     switch ($resource) {
         'sso' {$resourceType = 'PSC'; $resourceDescription = 'vCenter Single Sign-On'}
