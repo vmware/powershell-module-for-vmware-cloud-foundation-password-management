@@ -2,6 +2,8 @@
 
 ## v1.6.0
 
+> Release Date: 2023-11-07
+
 Bugfix:
 
 - Updated `Request-WsaLocalUserPasswordComplexity`, and `Request-WsaLocalUserAccountLockout` to pass a version with the `-drift` option is used. [GH-135](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/135)
