@@ -1,5 +1,13 @@
 # Release History
 
+## v1.7.0
+
+> Release Date: Unreleased
+
+Enhancement:
+
+- Added support for use of secure strings for sensitive parameters. [GH-139](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/139)
+
 ## v1.6.0
 
 > Release Date: 2023-11-07
