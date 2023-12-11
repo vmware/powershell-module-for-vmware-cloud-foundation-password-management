@@ -141,7 +141,7 @@ Function Invoke-PasswordRotationManager {
                 if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
                     $reportPath = $reportPath.TrimEnd("\", "/")
                 }
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path $reportPath)) { Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
                 $defaultReport = Set-CreateReportDirectoryRotation -path $reportPath -sddcManagerFqdn $sddcManagerFqdn # Setup Report Location and Report File
                 if ($PsBoundParameters.ContainsKey("allDomains")) {
@@ -184,7 +184,7 @@ Function Invoke-PasswordRotationManager {
                             }
                         }
                     } elseif ($PsBoundParameters.ContainsKey("workloadDomain")) {
-                        $domain = Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}
+                        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
                         if ($domain.type -eq "MANAGEMENT") {
                             Write-LogMessage -Type INFO -Message "Collecting SDDC Manager password rotation policy for $workflowMessage."
                             $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)" | ConvertFrom-Json
@@ -254,7 +254,7 @@ Function Invoke-PasswordRotationManager {
                             }
                         }
                     } elseif ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                        $domain = Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}
+                        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
                         if ($domain.type -eq 'MANAGEMENT') {
                             $sddcManagerPasswordRotationObj = New-Object -TypeName psobject
                             $sddcManagerPasswordRotationObj | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
@@ -305,7 +305,7 @@ Function Invoke-PasswordRotationManager {
                     $outputJsonObject = New-Object -TypeName psobject
                     $outputJsonObject | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
 
-                    # Platform Resources: Combine Password Rotation Data         
+                    # Platform Resources: Combine Password Rotation Data
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
                         $platformResources = @('sddcManager', 'sso', 'vcenterServer', 'nsxManager', 'nsxEdge')
                     } else {
@@ -356,7 +356,7 @@ Function Invoke-PasswordRotationManager {
                     # Generate the report as a JSON file.
                     $jsonFile = ($reportFolder + "passwordRotationManager" + ".json")
                     Write-LogMessage -Type INFO -Message "Generating the Final JSON and Saving to ($jsonFile)."
-                    $outputJsonObject | ConvertTo-Json -Depth 25| Out-File -FilePath $jsonFile
+                    $outputJsonObject | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
                 } else {
                     # Platform Resources: Collect Password Rotation Settings Data
                     if ($PsBoundParameters.ContainsKey("allDomains")) {
@@ -371,7 +371,7 @@ Function Invoke-PasswordRotationManager {
                             }
                         }
                     } elseif ($PsBoundParameters.ContainsKey("workloadDomain")) {
-                        $domain = Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}
+                        $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
                         if ($domain.type -eq "MANAGEMENT") {
                             Write-LogMessage -Type INFO -Message "Collecting SDDC Manager password rotation policy for $workflowMessage."
                             $sddcManagerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'backup' $($commandSwitch)"
@@ -611,8 +611,8 @@ Function Invoke-PasswordPolicyManager {
                 if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
                     $reportPath = $reportPath.TrimEnd("\", "/")
                 }
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
-                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path $reportPath)) { Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) { Write-Warning "Unable to locate policy file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and retry."; Write-Host ""; Break }
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
                 $defaultReport = Set-CreateReportDirectory -path $reportPath -sddcManagerFqdn $sddcManagerFqdn # Setup Report Location and Report File
                 if ($PsBoundParameters.ContainsKey("allDomains")) {
@@ -741,12 +741,12 @@ Function Invoke-PasswordPolicyManager {
                     $outputJsonObject | Add-Member -notepropertyname 'wsaLocal' -notepropertyvalue $wsaLocalPasswordPolicy
                     $jsonFile = ($reportFolder + "passwordPolicyManager" + ".json")
                     Write-LogMessage -Type INFO -Message "Generating the Final JSON and Saving to ($jsonFile)."
-                    $outputJsonObject | ConvertTo-Json -Depth 25| Out-File -FilePath $jsonFile
+                    $outputJsonObject | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
                 } else {
                     # Combine all information gathered into a single HTML report
                     if ($PsBoundParameters.ContainsKey("allDomains")) {
                         $reportData = "<h1>SDDC Manager: $sddcManagerFqdn</h1>"
-                    } else{
+                    } else {
                         $reportData = "<h1>Workload Domain: $workloadDomain</h1>"
                     }
                     $reportData += $sddcManagerPasswordExpiration
@@ -895,17 +895,17 @@ Function Start-PasswordPolicyConfig {
                 if ($reportPath.EndsWith("\") -or $reportPath.EndsWith("/")) {
                     $reportPath = $reportPath.TrimEnd("\", "/")
                 }
-                if (!(Test-Path -Path $reportPath)) {Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
-                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) {Write-Warning "Unable to locate password policy configuration file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path $reportPath)) { Write-Warning "Unable to locate report path $reportPath. Enter a valid path and retry."; Write-Host ""; Break }
+                if (!(Test-Path -Path (Join-Path $reportPath $policyFile))) { Write-Warning "Unable to locate password policy configuration file $(Join-Path $reportPath $policyFile). Enter a valid path and filename and retry."; Write-Host ""; Break }
                 Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for SDDC Manager Instance ($sddcManagerFqdn)." -Colour Yellow
                 $customPolicy = Get-Content -Path (Join-Path $reportPath $policyFile) | ConvertFrom-Json
-                $sddcDomainMgmt = (Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name
+                $sddcDomainMgmt = (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }).name
                 $allWorkloadDomains = Get-VCFWorkloadDomain
 
                 # Configuring Password Policies for SDDC Manager
                 Write-LogMessage -Type INFO -Message "Configuring Password Policies for SDDC Manager Instance ($sddcManagerFqdn)" -Colour Yellow
                 Write-LogMessage -Type INFO -Message "Configuring SDDC Manager Instance ($sddcManagerFqdn): Password Expiration Policy"
-                $localUsers = @("vcf","root")
+                $localUsers = @("vcf", "root")
                 foreach ($localUser in $localUsers) {
                     $StatusMsg = Update-LocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $sddcDomainMgmt -vmName ($sddcManagerFqdn.Split('.')[-0]) -guestUser root -guestPassword $sddcRootPass -localUser $localUser -minDays $customPolicy.sddcManager.passwordExpiration.minDays -maxDays $customPolicy.sddcManager.passwordExpiration.maxDays -warnDays $customPolicy.sddcManager.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
@@ -1026,7 +1026,7 @@ Function Start-PasswordPolicyConfig {
                     # Workspace ONE Access Local User Password Policies
                     Write-LogMessage -Type INFO -Message "Configuring Password Policies for Workspace ONE Access Local Users" -Colour Yellow
                     Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Users: Password Expiration Policy for instance ($($wsaFqdn))"
-                    $localUsers = @("root","sshuser")
+                    $localUsers = @("root", "sshuser")
                     foreach ($localUser in $localUsers) {
                         $StatusMsg = Update-LocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $sddcDomainMgmt -vmName ($wsaFqdn.Split('.')[-0]) -guestUser root -guestPassword $wsaRootPass -localUser $localUser -minDays $customPolicy.sddcManager.passwordExpiration.minDays -maxDays $customPolicy.sddcManager.passwordExpiration.maxDays -warnDays $customPolicy.sddcManager.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                         if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
@@ -1093,7 +1093,7 @@ Function Get-PasswordPolicyDefault {
 
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0','4.4.1.0','4.5.0.0','4.5.1.0','4.5.2.0','5.0.0.0','5.1.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0', '4.4.1.0', '4.5.0.0', '4.5.1.0', '4.5.2.0', '5.0.0.0', '5.1.0.0')] [String]$version,
         [Parameter (Mandatory = $true, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile,
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$force
     )
@@ -1106,7 +1106,7 @@ Function Get-PasswordPolicyDefault {
                 Write-Error 'The filename provided does not contain a .json extension. Review and retry.'
                 Break
             } else {
-                if(Test-Path $jsonFile -PathType leaf) {
+                if (Test-Path $jsonFile -PathType leaf) {
                     if ($PSBoundParameters.ContainsKey('force')) {
                         Write-Warning "The filename provided ($jsonFile) already exists and will be overwritten."
                     } else {
@@ -1193,7 +1193,7 @@ Function Get-PasswordPolicyDefault {
     $nsxManagerPasswordExpiration = New-Object -TypeName psobject
     $nsxManagerPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
     $nsxManagerPasswordComplexity = New-Object -TypeName psobject
-    if($version -ge "5.0") {
+    if ($version -ge "5.0") {
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "12"
     } else {
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
@@ -1204,7 +1204,7 @@ Function Get-PasswordPolicyDefault {
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "0"
     $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    if($version -ge "5.0") {
+    if ($version -ge "5.0") {
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxLength' -notepropertyvalue "128"
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
         $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxRepeat' -notepropertyvalue "0"
@@ -1321,7 +1321,7 @@ Function Get-PasswordPolicyDefault {
     $defaultConfig | Add-Member -notepropertyname 'wsaDirectory' -notepropertyvalue $wsaDirectoryPasswordPolicy
 
     if ($PSBoundParameters.ContainsKey('generateJson')) {
-        $defaultConfig | ConvertTo-Json -Depth 25| Out-File -FilePath $jsonFile
+        $defaultConfig | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
         Write-Output "Generated JSON File ($jsonFile) with Product Password Policy Default Values"
     } else {
         $defaultConfig
@@ -1332,7 +1332,7 @@ Export-ModuleMember -Function Get-PasswordPolicyDefault
 Function Get-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0','4.4.1.0','4.5.0.0','4.5.1.0','4.5.2.0','5.0.0.0','5.1.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0', '4.4.1.0', '4.5.0.0', '4.5.1.0', '4.5.2.0', '5.0.0.0', '5.1.0.0')] [String]$version,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
@@ -1365,43 +1365,43 @@ Function Get-PasswordPolicyConfig {
 Export-ModuleMember -Function Get-PasswordPolicyConfig
 
 Function checkRange {
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$name,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [int]$value,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [int]$minRange,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [int]$maxRange,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Bool]$required
-	)
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$name,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [int]$value,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [int]$minRange,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [int]$maxRange,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Bool]$required
+    )
 
-	if (($value -eq "Null") -and ($required -eq $true)) {
-		Write-Error "The value for $name has not been configured."
-		return $false
-	} elseif (($value -lt $minRange) -or ($value -gt $maxRange)) {
-		Write-Error "The recommended range for $name should be between $minRange and $maxRange. [$value]"
-		return $false
-	} else {
-		return $true
-	}
+    if (($value -eq "Null") -and ($required -eq $true)) {
+        Write-Error "The value for $name has not been configured."
+        return $false
+    } elseif (($value -lt $minRange) -or ($value -gt $maxRange)) {
+        Write-Error "The recommended range for $name should be between $minRange and $maxRange. [$value]"
+        return $false
+    } else {
+        return $true
+    }
 }
 
 Function checkEmailString {
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$name,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$address,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Bool]$required
-	)
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$name,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$address,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Bool]$required
+    )
 
-	if (($address -eq "Null") -and ($required -eq $true)) {
-		Write-Error "The email address for $name has not been configured."
-		return $false
-	}
-	$checkStatement = $address -match "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
-	if ($checkStatement -eq $true) {
-		return $true
-	} else {
-		Write-Error "The email address for $name is not a valid format. [$address]"
-		return $false
-	}
+    if (($address -eq "Null") -and ($required -eq $true)) {
+        Write-Error "The email address for $name has not been configured."
+        return $false
+    }
+    $checkStatement = $address -match "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+    if ($checkStatement -eq $true) {
+        return $true
+    } else {
+        Write-Error "The email address for $name is not a valid format. [$address]"
+        return $false
+    }
 }
 
 Function Test-PasswordPolicyConfig {
@@ -1415,8 +1415,8 @@ Function Test-PasswordPolicyConfig {
     $encounterError = "False"
 
     # Validating Product Types in the Password Policy Configuration File
-    $defaultProductList = $defaultConfig | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
-    $customProductList = $customConfig | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
+    $defaultProductList = $defaultConfig | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
+    $customProductList = $customConfig | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
     $defaultSection = "passwordExpiration", "passwordComplexity", "accountLockout", "vcfVersion"
 
     foreach ($product in $customProductList) {
@@ -1427,7 +1427,7 @@ Function Test-PasswordPolicyConfig {
         }
         # Validating Product Sections in the Password Policy Configuration File
         if ($encounterError -ne "True") {
-            $customSectionList = $customConfig.($product.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
+            $customSectionList = $customConfig.($product.Name) | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
             foreach ($section in $customSectionList) {
                 if (-Not $defaultSection.Contains($section.Name)) {
                     Write-Error "Found Unknown Password Policy Section ($($section.Name)) Under Product ($($product.Name)). Review the password policy configuration file and retry."
@@ -1436,8 +1436,8 @@ Function Test-PasswordPolicyConfig {
                 }
                 # Validate parameters in customConfig file
                 if ($encounterError -ne "True") {
-                    $defaultParameterList = $defaultConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
-                    $customParameterList = $customConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
+                    $defaultParameterList = $defaultConfig.($product.Name).($section.Name) | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
+                    $customParameterList = $customConfig.($product.Name).($section.Name) | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
                     foreach ( $parameterName in $customParameterList) {
                         if ( -Not $defaultParameterList.Name.Contains($parameterName.Name)) {
                             Write-Error "Found Unknown Parameter ($($parameterName.Name)) Under Section ($($section.Name)) for Product ($($product.Name)). Review the password policy configuration file and retry."
@@ -1457,39 +1457,34 @@ Function Test-PasswordPolicyConfig {
     # Validating parameter values
     if ($encounterError -ne "True") {
         foreach ($product in $customProductList) {
-            $customSectionList = $customConfig.($product.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
+            $customSectionList = $customConfig.($product.Name) | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
             foreach ($section in $customSectionList) {
-                $defaultParameterList = $defaultConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
-                $customParameterList = $customConfig.($product.Name).($section.Name) | Get-Member | Where-Object {$_.MemberType -match "NoteProperty"} | Select-Object Name
+                $defaultParameterList = $defaultConfig.($product.Name).($section.Name) | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
+                $customParameterList = $customConfig.($product.Name).($section.Name) | Get-Member | Where-Object { $_.MemberType -match "NoteProperty" } | Select-Object Name
                 foreach ($parameterName in $customParameterList) {
                     # Validating parameter values
-                    Switch ($parameterName.Name)  {
+                    Switch ($parameterName.Name) {
                         # Password Expiration Section
-                        "maxDays"
-                        {
+                        "maxDays" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxDays" -value $customConfig.($product.Name).($section.Name)."maxDays" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minDays"
-                        {
+                        "minDays" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minDays" -value $customConfig.($product.Name).($section.Name)."minDays" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "warningDays"
-                        {
+                        "warningDays" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):warningDays" -value $customConfig.($product.Name).($section.Name)."warningDays" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "email"
-                        {
+                        "email" {
                             $emailVariable = $customConfig.($product.Name).($section.Name)."email"
-                            if($emailVariable) {
+                            if ($emailVariable) {
                                 $checkReturn = checkEmailString -name "$($product.Name):$($section.Name):email" -address $customConfig.($product.Name).($section.Name)."email" -required $false
                                 if (-Not $checkReturn) { $encounterError = "True" }
                             }
                         }
-                        "passwordLifetime"
-                        {
+                        "passwordLifetime" {
                             if ($product.Name -eq "wsaDirectory") {
                                 $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordLifetime" -value $customConfig.($product.Name).($section.Name)."passwordLifetime" -minRange 0 -maxRange 99999 -required $true
                             } else {
@@ -1497,8 +1492,7 @@ Function Test-PasswordPolicyConfig {
                             }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "passwordReminder"
-                        {
+                        "passwordReminder" {
                             if ($product.Name -eq "wsaDirectory") {
                                 $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminder" -value $customConfig.($product.Name).($section.Name)."passwordReminder" -minRange 0 -maxRange 99999 -required $true
                             } else {
@@ -1506,8 +1500,7 @@ Function Test-PasswordPolicyConfig {
                             }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "passwordReminderFrequency"
-                        {
+                        "passwordReminderFrequency" {
                             if ($product.Name -eq "wsaDirectory") {
                                 $checkReturn = checkRange -name "$($product.Name):$($section.Name):passwordReminderFrequency" -value $customConfig.($product.Name).($section.Name)."passwordReminderFrequency" -minRange 0 -maxRange 99999 -required $true
                             } else {
@@ -1515,19 +1508,17 @@ Function Test-PasswordPolicyConfig {
                             }
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "temporaryPassword"
-                        {
+                        "temporaryPassword" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):temporaryPassword" -value $customConfig.($product.Name).($section.Name)."temporaryPassword" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
                         # Password Complexity section
-                        "policy"
-                        {
-							$policyString = $customConfig.($product.Name).($section.Name).'policy'
+                        "policy" {
+                            $policyString = $customConfig.($product.Name).($section.Name).'policy'
                             $policyPattern = '^retry=(\d+)\s+min=(.+),(.+),(.+),(.+),(.+)'
                             $policyMinRange = 7
                             $policyMaxRange = 999
-                            if ($policyString -match $policyPattern) {$passwdPolicyMinValues = $matches[2..6]}
+                            if ($policyString -match $policyPattern) { $passwdPolicyMinValues = $matches[2..6] }
                             foreach ($passwdPolicyMinValue in $passwdPolicyMinValues) {
                                 if ($passwdPolicyMinValue -ine 'disabled') {
                                     $checkReturn = checkRange -name "$($product.Name):$($section.Name):policy" -value $passwdPolicyMinValue -minRange $policyMinRange -maxRange $policyMaxRange -required $true
@@ -1535,73 +1526,59 @@ Function Test-PasswordPolicyConfig {
                                 }
                             }
                         }
-                        "history"
-                        {
+                        "history" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):history" -value $customConfig.($product.Name).($section.Name)."history" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minLength"
-                        {
+                        "minLength" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minLength" -value $customConfig.($product.Name).($section.Name)."minLength" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "maxLength"
-                        {
+                        "maxLength" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxLength" -value $customConfig.($product.Name).($section.Name)."maxLength" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minAlphabetic"
-                        {
+                        "minAlphabetic" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minAlphabetic" -value $customConfig.($product.Name).($section.Name)."minAlphabetic" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minLowercase"
-                        {
+                        "minLowercase" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minLowercase" -value $customConfig.($product.Name).($section.Name)."minLowercase" -minRange -1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minUppercase"
-                        {
+                        "minUppercase" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minUppercase" -value $customConfig.($product.Name).($section.Name)."minUppercase" -minRange -1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minNumerical"
-                        {
+                        "minNumerical" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minNumerical" -value $customConfig.($product.Name).($section.Name)."minNumerical" -minRange -1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minSpecial"
-                        {
+                        "minSpecial" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minSpecial" -value $customConfig.($product.Name).($section.Name)."minSpecial" -minRange -1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "maxIdenticalAdjacent"
-                        {
+                        "maxIdenticalAdjacent" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxIdenticalAdjacent" -value $customConfig.($product.Name).($section.Name)."maxIdenticalAdjacent" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minUnique"
-                        {
+                        "minUnique" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minUnique" -value $customConfig.($product.Name).($section.Name)."minUnique" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "minClass"
-                        {
+                        "minClass" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):minClass" -value $customConfig.($product.Name).($section.Name)."minClass" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "maxSequence"
-                        {
+                        "maxSequence" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxSequence" -value $customConfig.($product.Name).($section.Name)."maxSequence" -minRange 0 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "retries"
-                        {
+                        "retries" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):retries" -value $customConfig.($product.Name).($section.Name)."retries" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "maxIdenticalAdjacent"
-                        {
+                        "maxIdenticalAdjacent" {
                             if ($product.Name -eq "wsaDirectory") {
                                 $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxIdenticalAdjacent" -value $customConfig.($product.Name).($section.Name)."maxIdenticalAdjacent" -minRange 0 -maxRange 99999 -required $true
                             } else {
@@ -1610,48 +1587,39 @@ Function Test-PasswordPolicyConfig {
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
                         # Account Lockout section
-                        "maxFailures"
-                        {
+                        "maxFailures" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):maxFailures" -value $customConfig.($product.Name).($section.Name)."maxFailures" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "unlockInterval"
-                        {
+                        "unlockInterval" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):unlockInterval" -value $customConfig.($product.Name).($section.Name)."unlockInterval" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "failedAttemptInterval"
-                        {
+                        "failedAttemptInterval" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):failedAttemptInterval" -value $customConfig.($product.Name).($section.Name)."failedAttemptInterval" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "rootUnlockInterval"
-                        {
+                        "rootUnlockInterval" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):rootUnlockInterval" -value $customConfig.($product.Name).($section.Name)."rootUnlockInterval" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "apiMaxFailures"
-                        {
+                        "apiMaxFailures" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):apiMaxFailures" -value $customConfig.($product.Name).($section.Name)."apiMaxFailures" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "apiUnlockInterval"
-                        {
+                        "apiUnlockInterval" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):apiUnlockInterval" -value $customConfig.($product.Name).($section.Name)."apiUnlockInterval" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "apiRestInterval"
-                        {
+                        "apiRestInterval" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):apiRestInterval" -value $customConfig.($product.Name).($section.Name)."apiRestInterval" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "cliMaxFailures"
-                        {
+                        "cliMaxFailures" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):cliMaxFailures" -value $customConfig.($product.Name).($section.Name)."cliMaxFailures" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
-                        "cliUnlockInterval"
-                        {
+                        "cliUnlockInterval" {
                             $checkReturn = checkRange -name "$($product.Name):$($section.Name):cliUnlockInterval" -value $customConfig.($product.Name).($section.Name)."cliUnlockInterval" -minRange 1 -maxRange 99999 -required $true
                             if (-Not $checkReturn) { $encounterError = "True" }
                         }
@@ -2061,11 +2029,11 @@ Function Convert-CssClassStyle {
     $oldAddLine = ':-: '
     $newNewLine = '<br/>'
 
-    $htmlData = $htmlData -replace $oldAlertOK,$newAlertOK
-    $htmlData = $htmlData -replace $oldAlertCritical,$newAlertCritical
-    $htmlData = $htmlData -replace $oldAlertWarning,$newAlertWarning
-    $htmlData = $htmlData -replace $oldTable,$newTable
-    $htmlData = $htmlData -replace $oldAddLine,$newNewLine
+    $htmlData = $htmlData -replace $oldAlertOK, $newAlertOK
+    $htmlData = $htmlData -replace $oldAlertCritical, $newAlertCritical
+    $htmlData = $htmlData -replace $oldAlertWarning, $newAlertWarning
+    $htmlData = $htmlData -replace $oldTable, $newTable
+    $htmlData = $htmlData -replace $oldAddLine, $newNewLine
     $htmlData
 }
 
@@ -2134,7 +2102,7 @@ Function Request-SddcManagerPasswordExpiration {
     $rootPass = Get-Password -username "root" -password $rootPass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
     [Array]$localUsers = '"root","vcf","backup"'
     $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product sddcManager -vmName $(($server.Split("."))[-0]) -guestUser root -guestPassword $rootPass -localUser $localUsers"
     $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch + $customSwitch
@@ -2215,12 +2183,12 @@ Function Request-SddcManagerPasswordComplexity {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $rootPass = Get-Password -username "root" -password $rootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -2241,7 +2209,7 @@ Function Request-SddcManagerPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -2305,12 +2273,12 @@ Function Request-SddcManagerAccountLockout {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $rootPass = Get-Password -username "root" -password $rootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -2331,7 +2299,7 @@ Function Request-SddcManagerAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -2405,11 +2373,9 @@ Function Update-SddcManagerPasswordExpiration {
                 Invoke-Expression -Command $command
             }
         }
-    }
-    Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
-    }
-    Finally {
+    } Finally {
         if ($global:DefaultVIServers) {
             Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
@@ -2490,38 +2456,38 @@ Function Update-SddcManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxSequence,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $rootPass = Get-Password -username "root" -password $rootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             $existingConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                            $chkExistingConfig = $existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or  $existingConfiguration.'History' -ne $history -or $existingConfiguration.'Max Retries' -ne $maxRetry
-                            if($existingConfiguration.'Max Sequence') {
+                            $chkExistingConfig = $existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'History' -ne $history -or $existingConfiguration.'Max Retries' -ne $maxRetry
+                            if ($existingConfiguration.'Max Sequence') {
                                 $chkExistingConfig = $chkExistingConfig -or $existingConfiguration.'Max Sequence' -ne $maxSequence
                             }
-                            if($existingConfiguration.'Min Classes') {
+                            if ($existingConfiguration.'Min Classes') {
                                 $chkExistingConfig = $chkExistingConfig -or $existingConfiguration.'Min Classes' -ne $minClass
                             }
                             $sddcManagerVersion = Get-VCFManager -version
-                            if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Min Length' -eq $null -or $existingConfiguration.'Min Lowercase' -eq $null -or $existingConfiguration.'Min Uppercase' -eq $null -or $existingConfiguration.'Min Numerical' -eq $null -or $existingConfiguration.'Min Special' -eq $null -or $existingConfiguration.'Min Unique' -eq $null -or  $existingConfiguration.'History' -eq $null -or $existingConfiguration.'Max Retries' -eq $null -or $existingConfiguration.'Max Sequence' -eq $null -or $existingConfiguration.'Min Classes' -eq $null)) {
+                            if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Min Length' -eq $null -or $existingConfiguration.'Min Lowercase' -eq $null -or $existingConfiguration.'Min Uppercase' -eq $null -or $existingConfiguration.'Min Numerical' -eq $null -or $existingConfiguration.'Min Special' -eq $null -or $existingConfiguration.'Min Unique' -eq $null -or $existingConfiguration.'History' -eq $null -or $existingConfiguration.'Max Retries' -eq $null -or $existingConfiguration.'Max Sequence' -eq $null -or $existingConfiguration.'Min Classes' -eq $null)) {
                                 $scriptCommand = "sed -E -i.bak -e 's/password.*required.*pam_pwquality.so.*/password   required pam_pwquality.so dcredit=$minNumerical ucredit=$minUppercase lcredit=$minLowercase ocredit=$minSpecial minlen=$minLength difok=$minUnique minclass=$minClass maxsequence=$maxSequence enforce_for_root/"
                                 $scriptCommand += "' -e 's/password.*required.*pam_pwhistory.so.*/password   required pam_pwhistory.so remember=$history retry=$maxRetry enforce_for_root use_authtok/"
                                 $scriptCommand += "' /etc/pam.d/system-password"
                                 Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -Guestuser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
                                 # validate if changes take effect
                                 $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
-                                if($updatedConfiguration.'Max Sequence') {
+                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
+                                if ($updatedConfiguration.'Max Sequence') {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Max Sequence' -eq $maxSequence
                                 }
-                                if($updatedConfiguration.'Min Classes') {
+                                if ($updatedConfiguration.'Min Classes') {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Min Classes' -eq $minClass
                                 }
                                 if ($chkUpdatedConfig) {
@@ -2532,11 +2498,11 @@ Function Update-SddcManagerPasswordComplexity {
                             } elseif ($chkExistingConfig) {
                                 Set-LocalPasswordComplexity -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -class $minClass -sequence $maxSequence -history $history -retry $maxRetry | Out-Null
                                 $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
-                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique  -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
-                                if($updatedConfiguration.'Max Sequence') {
+                                $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
+                                if ($updatedConfiguration.'Max Sequence') {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Max Sequence' -eq $maxSequence
                                 }
-                                if($updatedConfiguration.'Min Classes') {
+                                if ($updatedConfiguration.'Min Classes') {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Min Classes' -eq $minClass
                                 }
                                 if ($chkUpdatedConfig) {
@@ -2552,7 +2518,7 @@ Function Update-SddcManagerPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -2608,12 +2574,12 @@ Function Update-SddcManagerAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $rootPass = Get-Password -username "root" -password $rootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -2621,7 +2587,7 @@ Function Update-SddcManagerAccountLockout {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             $existingConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
                             $sddcManagerVersion = Get-VCFManager -version
-                            if(($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)){
+                            if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
                                 $scriptCommand = "sed -E -i.bak '0,/pam_faillock.so/s/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so preauth authfail audit deny=$failures unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
                                 $scriptCommand += "' /etc/pam.d/system-auth"
                                 Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -Guestuser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
@@ -2648,7 +2614,7 @@ Function Update-SddcManagerAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -2731,26 +2697,26 @@ Function Publish-SddcManagerPasswordExpiration {
     )
 
     $pass = Get-Password -username $user -password $pass
-    $sddcRootPass = Get-Password -username "root" -password $sddcRootPass       
+    $sddcRootPass = Get-Password -username "root" -password $sddcRootPass
 
     # Define the Command to be Executed
     [Array]$localUsers = '"root","vcf","backup"'
     $command = "Request-LocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -vmName $(($server.Split("."))[-0]) -guestUser root -guestPassword $sddcRootPass -localUser $localUsers -product sddcManager"
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $command = $command + " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $command = $command + " -drift" }}
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $command = $command + " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $command = $command + " -drift" } }
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $allSddcManagerPasswordExpirationObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT"}) {
-                        $userPasswordExpiration = Invoke-Expression $command ;  $allSddcManagerPasswordExpirationObject += $userPasswordExpiration
+                    if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT" }) {
+                        $userPasswordExpiration = Invoke-Expression $command ; $allSddcManagerPasswordExpirationObject += $userPasswordExpiration
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
-                        if ($domain | Where-Object {$_.type -eq "MANAGEMENT"}) {
-                            $userPasswordExpiration = Invoke-Expression $command ;  $allSddcManagerPasswordExpirationObject += $userPasswordExpiration
+                        if ($domain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                            $userPasswordExpiration = Invoke-Expression $command ; $allSddcManagerPasswordExpirationObject += $userPasswordExpiration
                         }
                     }
                 }
@@ -2847,24 +2813,24 @@ Function Publish-SddcManagerPasswordComplexity {
     )
 
     $pass = Get-Password -username $user -password $pass
-    $sddcRootPass = Get-Password -username "root" -password $sddcRootPass 
+    $sddcRootPass = Get-Password -username "root" -password $sddcRootPass
 
     # Define the Command to be Executed
     $command = "Request-SddcManagerPasswordComplexity -server $server -user $user -pass $pass -rootPass $sddcRootPass"
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $command = $command + " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $command = $command + " -drift" }}
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $command = $command + " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $command = $command + " -drift" } }
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $sddcManagerPasswordComplexityObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT"}) {
+                    if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT" }) {
                         $sddcManagerPasswordComplexity = Invoke-Expression $command ; $sddcManagerPasswordComplexityObject += $sddcManagerPasswordComplexity
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
-                        if ($domain | Where-Object {$_.type -eq "MANAGEMENT"}) {
+                        if ($domain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                             $sddcManagerPasswordComplexity = Invoke-Expression $command ; $sddcManagerPasswordComplexityObject += $sddcManagerPasswordComplexity
                         }
                     }
@@ -2962,24 +2928,24 @@ Function Publish-SddcManagerAccountLockout {
     )
 
     $pass = Get-Password -username $user -password $pass
-    $sddcRootPass = Get-Password -username "root" -password $sddcRootPass 
+    $sddcRootPass = Get-Password -username "root" -password $sddcRootPass
 
     # Define the Command to be Executed
     $command = "Request-SddcManagerAccountLockout -server $server -user $user -pass $pass -rootPass $sddcRootPass"
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $command = $command + " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $command = $command + " -drift" }}
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $command = $command + " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $command = $command + " -drift" } }
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $sddcManagerAccountLockoutObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT"}) {
+                    if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT" }) {
                         $sddcManagerAccountlockout = Invoke-Expression $command ; $sddcManagerAccountLockoutObject += $sddcManagerAccountlockout
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
-                        if ($domain | Where-Object {$_.type -eq "MANAGEMENT"}) {
+                        if ($domain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                             $sddcManagerAccountlockout = Invoke-Expression $command ; $sddcManagerAccountLockoutObject += $sddcManagerAccountlockout
                         }
                     }
@@ -3064,11 +3030,11 @@ Function Request-SsoPasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-    $pass = Get-Password -username $user -password $pass 
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -3087,12 +3053,12 @@ Function Request-SsoPasswordExpiration {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
-                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
-                                    -ArgumentList @(
+                                        'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                        -ArgumentList @(
                                         $vcfVcenterDetails.fqdn,
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
-                                    $certificateValidator)
+                                        $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
                                 }
@@ -3100,7 +3066,7 @@ Function Request-SsoPasswordExpiration {
                                     $SsoPasswordExpirationObject = New-Object -TypeName psobject
                                     $SsoPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue  $(if ($drift) { if ($SsoPasswordExpiration.PasswordLifetimeDays -ne $requiredConfig.maxDays) { "$($SsoPasswordExpiration.PasswordLifetimeDays) [ $($requiredConfig.maxDays) ]" } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" }} else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" })
+                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue  $(if ($drift) { if ($SsoPasswordExpiration.PasswordLifetimeDays -ne $requiredConfig.maxDays) { "$($SsoPasswordExpiration.PasswordLifetimeDays) [ $($requiredConfig.maxDays) ]" } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" } } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" })
                                 } else {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -3113,7 +3079,7 @@ Function Request-SsoPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($Global:DefaultSsoAdminServers) {
@@ -3124,7 +3090,7 @@ Function Request-SsoPasswordExpiration {
 Export-ModuleMember -Function Request-SsoPasswordExpiration
 
 Function Request-SsoPasswordComplexity {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the password complexity policy for a vCenter Single Sign-On domain.
 
@@ -3170,21 +3136,21 @@ Function Request-SsoPasswordComplexity {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
 
-	Try {
-		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -3193,20 +3159,20 @@ Function Request-SsoPasswordComplexity {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).sso.passwordComplexity
                     }
                 }
-				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
-					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
-                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
-                                    -ArgumentList @(
+                                        'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                        -ArgumentList @(
                                         $vcfVcenterDetails.fqdn,
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
-                                    $certificateValidator)
+                                        $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
                                 }
@@ -3214,30 +3180,30 @@ Function Request-SsoPasswordComplexity {
                                     $SsoPasswordComplexityObject = New-Object -TypeName psobject
                                     $SsoPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinLength -ne $requiredConfig.minLength) { "$($SsoPasswordComplexity.MinLength) [ $($requiredConfig.minLength) ]" } else { "$($SsoPasswordComplexity.MinLength)" }} else { "$($SsoPasswordComplexity.MinLength)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MaxLength -ne $requiredConfig.maxLength) { "$($SsoPasswordComplexity.MaxLength) [ $($requiredConfig.maxLength) ]" } else { "$($SsoPasswordComplexity.MaxLength)" }} else { "$($SsoPasswordComplexity.MaxLength)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Alphabetic" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinAlphabeticCount -ne $requiredConfig.minAlphabetic) { "$($SsoPasswordComplexity.MinAlphabeticCount) [ $($requiredConfig.minAlphabetic) ]" } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" }} else { "$($SsoPasswordComplexity.MinAlphabeticCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinLowercaseCount -ne $requiredConfig.minLowercase) { "$($SsoPasswordComplexity.MinLowercaseCount) [ $($requiredConfig.minLowercase) ]" } else { "$($SsoPasswordComplexity.MinLowercaseCount)" }} else { "$($SsoPasswordComplexity.MinLowercaseCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinUppercaseCount -ne $requiredConfig.minUppercase) { "$($SsoPasswordComplexity.MinUppercaseCount) [ $($requiredConfig.minUppercase) ]" } else { "$($SsoPasswordComplexity.MinUppercaseCount)" }} else { "$($SsoPasswordComplexity.MinUppercaseCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Numeric" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinNumericCount -ne $requiredConfig.minNumerical) { "$($SsoPasswordComplexity.MinNumericCount) [ $($requiredConfig.minNumerical) ]" } else { "$($SsoPasswordComplexity.MinNumericCount)" }} else { "$($SsoPasswordComplexity.MinNumericCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinSpecialCharCount -ne $requiredConfig.minSpecial) { "$($SsoPasswordComplexity.MinSpecialCharCount) [ $($requiredConfig.minSpecial) ]" } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" }} else { "$($SsoPasswordComplexity.MinSpecialCharCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Max Identical Adjacent" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" }} else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount -ne $requiredConfig.history) { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount) [ $($requiredConfig.history) ]" } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" }} else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinLength -ne $requiredConfig.minLength) { "$($SsoPasswordComplexity.MinLength) [ $($requiredConfig.minLength) ]" } else { "$($SsoPasswordComplexity.MinLength)" } } else { "$($SsoPasswordComplexity.MinLength)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MaxLength -ne $requiredConfig.maxLength) { "$($SsoPasswordComplexity.MaxLength) [ $($requiredConfig.maxLength) ]" } else { "$($SsoPasswordComplexity.MaxLength)" } } else { "$($SsoPasswordComplexity.MaxLength)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Alphabetic" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinAlphabeticCount -ne $requiredConfig.minAlphabetic) { "$($SsoPasswordComplexity.MinAlphabeticCount) [ $($requiredConfig.minAlphabetic) ]" } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" } } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinLowercaseCount -ne $requiredConfig.minLowercase) { "$($SsoPasswordComplexity.MinLowercaseCount) [ $($requiredConfig.minLowercase) ]" } else { "$($SsoPasswordComplexity.MinLowercaseCount)" } } else { "$($SsoPasswordComplexity.MinLowercaseCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinUppercaseCount -ne $requiredConfig.minUppercase) { "$($SsoPasswordComplexity.MinUppercaseCount) [ $($requiredConfig.minUppercase) ]" } else { "$($SsoPasswordComplexity.MinUppercaseCount)" } } else { "$($SsoPasswordComplexity.MinUppercaseCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Numeric" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinNumericCount -ne $requiredConfig.minNumerical) { "$($SsoPasswordComplexity.MinNumericCount) [ $($requiredConfig.minNumerical) ]" } else { "$($SsoPasswordComplexity.MinNumericCount)" } } else { "$($SsoPasswordComplexity.MinNumericCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinSpecialCharCount -ne $requiredConfig.minSpecial) { "$($SsoPasswordComplexity.MinSpecialCharCount) [ $($requiredConfig.minSpecial) ]" } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" } } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Max Identical Adjacent" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" } } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" })
+                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount -ne $requiredConfig.history) { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount) [ $($requiredConfig.history) ]" } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" } } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" })
                                 } else {
                                     Write-Error "Unable to retrieve password complexity policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                                 return $SsoPasswordComplexityObject
                             }
-						}
-					}
-				} else {
+                        }
+                    }
+                } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	} Finally {
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
         if ($Global:DefaultSsoAdminServers) {
             Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
         }
@@ -3246,7 +3212,7 @@ Function Request-SsoPasswordComplexity {
 Export-ModuleMember -Function Request-SsoPasswordComplexity
 
 Function Request-SsoAccountLockout {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the account lockout policy policy for a vCenter Single Sign-On domain.
 
@@ -3292,21 +3258,21 @@ Function Request-SsoAccountLockout {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
-		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -3315,20 +3281,20 @@ Function Request-SsoAccountLockout {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).sso.accountLockout
                     }
                 }
-				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
-					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-						if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-SsoConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-SsoAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 Try {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
-                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
-                                    -ArgumentList @(
+                                        'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                        -ArgumentList @(
                                         $vcfVcenterDetails.fqdn,
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
-                                    $certificateValidator)
+                                        $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
                                 }
@@ -3336,24 +3302,24 @@ Function Request-SsoAccountLockout {
                                     $SsoAccountLockoutObject = New-Object -TypeName psobject
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.MaxFailedAttempts -ne $requiredConfig.maxFailures) { "$($SsoAccountLockout.MaxFailedAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($SsoAccountLockout.MaxFailedAttempts)" }} else { "$($SsoAccountLockout.MaxFailedAttempts)" })
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.AutoUnlockIntervalSec -ne $requiredConfig.unlockInterval) { "$($SsoAccountLockout.AutoUnlockIntervalSec) [ $($requiredConfig.unlockInterval) ]" } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" }} else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" })
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.FailedAttemptIntervalSec -ne $requiredConfig.failedAttemptInterval) { "$($SsoAccountLockout.FailedAttemptIntervalSec) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" }} else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" })
+                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.MaxFailedAttempts -ne $requiredConfig.maxFailures) { "$($SsoAccountLockout.MaxFailedAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($SsoAccountLockout.MaxFailedAttempts)" } } else { "$($SsoAccountLockout.MaxFailedAttempts)" })
+                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.AutoUnlockIntervalSec -ne $requiredConfig.unlockInterval) { "$($SsoAccountLockout.AutoUnlockIntervalSec) [ $($requiredConfig.unlockInterval) ]" } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" } } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" })
+                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.FailedAttemptIntervalSec -ne $requiredConfig.failedAttemptInterval) { "$($SsoAccountLockout.FailedAttemptIntervalSec) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" } } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" })
                                 } else {
                                     Write-Error "Unable to retrieve account lockout policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                                 return $SsoAccountLockoutObject
                             }
-						}
-					}
-				} else {
+                        }
+                    }
+                } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	} Finally {
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
         if ($Global:DefaultSsoAdminServers) {
             Disconnect-SsoAdminServer -Server $Global:DefaultSsoAdminServers
         }
@@ -3398,12 +3364,12 @@ Function Update-SsoPasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays
-	)
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -3414,12 +3380,12 @@ Function Update-SsoPasswordExpiration {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
-                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
-                                    -ArgumentList @(
+                                        'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                        -ArgumentList @(
                                         $vcfVcenterDetails.fqdn,
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
-                                    $certificateValidator)
+                                        $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
                                 }
@@ -3441,7 +3407,7 @@ Function Update-SsoPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($Global:DefaultSsoAdminServers) {
@@ -3521,11 +3487,11 @@ Function Update-SsoPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minSpecial,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxIdenticalAdjacent,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$history
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if ($minLength -gt $maxLength) {
             Write-Error "The value for minLength($minLength) is greater than maxLength($maxLength): PRE_VALIDATION_FAILED"
             Break
@@ -3546,19 +3512,19 @@ Function Update-SsoPasswordComplexity {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
-                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
-                                    -ArgumentList @(
+                                        'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                        -ArgumentList @(
                                         $vcfVcenterDetails.fqdn,
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
-                                    $certificateValidator)
+                                        $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
                                 }
-                                $passwordComplexityConfigBefore =  Get-SsoPasswordPolicy -server $ssoAdminServer
+                                $passwordComplexityConfigBefore = Get-SsoPasswordPolicy -server $ssoAdminServer
                                 if ($passwordComplexityConfigBefore.MinLength -ne $minLength -or $passwordComplexityConfigBefore.MaxLength -ne $maxLength -or $passwordComplexityConfigBefore.MinAlphabeticCount -ne $minAlphabetic -or $passwordComplexityConfigBefore.MinLowercaseCount -ne $minLowercase -or $passwordComplexityConfigBefore.MinUppercaseCount -ne $minUppercase -or $passwordComplexityConfigBefore.MinNumericCount -ne $minNumeric -or $passwordComplexityConfigBefore.MinSpecialCharCount -ne $minSpecial -or $passwordComplexityConfigBefore.MaxIdenticalAdjacentCharacters -ne $maxIdenticalAdjacent -or $passwordComplexityConfigBefore.ProhibitedPreviousPasswordsCount -ne $history) {
-                                    Get-SsoPasswordPolicy -server $ssoAdminServer| Set-SsoPasswordPolicy -MinLength $minLength -MaxLength $maxLength -MinAlphabeticCount $minAlphabetic -MinLowercaseCount $minLowercase -MinUppercaseCount $minUppercase -MinNumericCount $minNumeric -MinSpecialCharCount $minSpecial -MaxIdenticalAdjacentCharacters $maxIdenticalAdjacent -ProhibitedPreviousPasswordsCount $history | Out-Null
-                                    $passwordComplexityConfigAfter =  Get-SsoPasswordPolicy -server $ssoAdminServer
+                                    Get-SsoPasswordPolicy -server $ssoAdminServer | Set-SsoPasswordPolicy -MinLength $minLength -MaxLength $maxLength -MinAlphabeticCount $minAlphabetic -MinLowercaseCount $minLowercase -MinUppercaseCount $minUppercase -MinNumericCount $minNumeric -MinSpecialCharCount $minSpecial -MaxIdenticalAdjacentCharacters $maxIdenticalAdjacent -ProhibitedPreviousPasswordsCount $history | Out-Null
+                                    $passwordComplexityConfigAfter = Get-SsoPasswordPolicy -server $ssoAdminServer
                                     if ($passwordComplexityConfigAfter.MinLength -eq $minLength -and $passwordComplexityConfigAfter.MaxLength -eq $maxLength -and $passwordComplexityConfigAfter.MinAlphabeticCount -eq $minAlphabetic -and $passwordComplexityConfigAfter.MinLowercaseCount -eq $minLowercase -and $passwordComplexityConfigAfter.MinUppercaseCount -eq $minUppercase -and $passwordComplexityConfigAfter.MinNumericCount -eq $minNumeric -and $passwordComplexityConfigAfter.MinSpecialCharCount -eq $minSpecial -and $passwordComplexityConfigAfter.MaxIdenticalAdjacentCharacters -eq $maxIdenticalAdjacent -and $passwordComplexityConfigAfter.ProhibitedPreviousPasswordsCount -eq $history) {
                                         Write-Output "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
@@ -3575,7 +3541,7 @@ Function Update-SsoPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($Global:DefaultSsoAdminServers) {
@@ -3631,12 +3597,11 @@ Function Update-SsoAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failureInterval,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval
+    )
 
-	)
+    $pass = Get-Password -username $user -password $pass
 
-	$pass = Get-Password -username $user -password $pass
-
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -3647,19 +3612,19 @@ Function Update-SsoAccountLockout {
                                     $certificateValidator = New-Object 'VMware.vSphere.SsoAdmin.Utils.AcceptAllX509CertificateValidator'
                                     $securePass = ConvertTo-SecureString $vcfVcenterDetails.ssoAdminPass -AsPlainText -Force
                                     $ssoAdminServer = New-Object `
-                                    'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
-                                    -ArgumentList @(
+                                        'VMware.vSphere.SsoAdminClient.DataTypes.SsoAdminServer' `
+                                        -ArgumentList @(
                                         $vcfVcenterDetails.fqdn,
                                         $vcfVcenterDetails.ssoAdmin,
                                         $securePass,
-                                    $certificateValidator)
+                                        $certificateValidator)
                                 } Catch {
                                     Write-Error $_.Exception
                                 }
-                                $lockoutPolicyBefore =  Get-SsoLockoutPolicy -server $ssoAdminServer
+                                $lockoutPolicyBefore = Get-SsoLockoutPolicy -server $ssoAdminServer
                                 if ($lockoutPolicyBefore.MaxFailedAttempts -ne $failures -or $lockoutPolicyBefore.FailedAttemptIntervalSec -ne $failureInterval -or $lockoutPolicyBefore.AutoUnlockIntervalSec -ne $unlockInterval) {
                                     Get-SsoLockoutPolicy -server $ssoAdminServer | Set-SsoLockoutPolicy  -AutoUnlockIntervalSec $unlockInterval -FailedAttemptIntervalSec $failureInterval -MaxFailedAttempts $failures | Out-Null
-                                    $lockoutPolicyAfter =  Get-SsoLockoutPolicy -server $ssoAdminServer
+                                    $lockoutPolicyAfter = Get-SsoLockoutPolicy -server $ssoAdminServer
                                     if ($lockoutPolicyAfter.MaxFailedAttempts -eq $failures -and $lockoutPolicyAfter.FailedAttemptIntervalSec -eq $failureInterval -and $lockoutPolicyAfter.AutoUnlockIntervalSec -eq $unlockInterval) {
                                         Write-Output "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
@@ -3676,7 +3641,7 @@ Function Update-SsoAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($Global:DefaultSsoAdminServers) {
@@ -3761,7 +3726,7 @@ Function Publish-SsoPasswordPolicy {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
+        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration', 'PasswordComplexity', 'AccountLockout')] [String]$policy,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -3770,7 +3735,7 @@ Function Publish-SsoPasswordPolicy {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-SsoPasswordExpiration"; $preHtmlContent = '<a id="sso-password-expiration"></a><h3>vCenter Single Sign-On - Password Expiration</h3>' }
     if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-SsoPasswordComplexity"; $preHtmlContent = '<a id="sso-password-complexity"></a><h3>vCenter Single Sign-On - Password Complexity</h3>' }
@@ -3778,21 +3743,21 @@ Function Publish-SsoPasswordPolicy {
 
     # Define the Command
     $command = $pvsCmdlet + " -server $server -user $user -pass $pass"
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $ssoPasswordPolicyObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $workloadDomain}) {
+                    if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }) {
                         $command = $command + " -domain " + $workloadDomain + $commandSwitch
                         $ssoPolicy = Invoke-Expression $command ; $ssoPasswordPolicyObject += $ssoPolicy
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
-                        if ($domain | Where-Object {$_.type -eq "MANAGEMENT"}) {
+                        if ($domain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                             $command = $command + " -domain " + $($domain.name) + $commandSwitch
                             $ssoPolicy = Invoke-Expression $command ; $ssoPasswordPolicyObject += $ssoPolicy
                         }
@@ -3878,11 +3843,11 @@ Function Request-VcenterPasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -3901,9 +3866,9 @@ Function Request-VcenterPasswordExpiration {
                                     $VcenterPasswordExpirationObject = New-Object -TypeName psobject
                                     $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $VcenterPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.min_days -ne $requiredConfig.minDays) { "$($VcenterPasswordExpiration.min_days) [ $($requiredConfig.minDays) ]" } else { "$($VcenterPasswordExpiration.min_days)" }} else { "$($VcenterPasswordExpiration.min_days)" })
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.max_days -ne $requiredConfig.maxDays) { "$($VcenterPasswordExpiration.max_days) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterPasswordExpiration.max_days)" }} else { "$($VcenterPasswordExpiration.max_days)" })
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.warn_days -ne $requiredConfig.warningDays) { "$($VcenterPasswordExpiration.warn_days) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterPasswordExpiration.warn_days)" }} else { "$($VcenterPasswordExpiration.warn_days)" })
+                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.min_days -ne $requiredConfig.minDays) { "$($VcenterPasswordExpiration.min_days) [ $($requiredConfig.minDays) ]" } else { "$($VcenterPasswordExpiration.min_days)" } } else { "$($VcenterPasswordExpiration.min_days)" })
+                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.max_days -ne $requiredConfig.maxDays) { "$($VcenterPasswordExpiration.max_days) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterPasswordExpiration.max_days)" } } else { "$($VcenterPasswordExpiration.max_days)" })
+                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.warn_days -ne $requiredConfig.warningDays) { "$($VcenterPasswordExpiration.warn_days) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterPasswordExpiration.warn_days)" } } else { "$($VcenterPasswordExpiration.warn_days)" })
                                 } else {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -3916,7 +3881,7 @@ Function Request-VcenterPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -3980,11 +3945,11 @@ Function Request-VcenterPasswordComplexity {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4024,7 +3989,7 @@ Function Request-VcenterPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -4088,11 +4053,11 @@ Function Request-VcenterAccountLockout {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4133,7 +4098,7 @@ Function Request-VcenterAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -4186,14 +4151,14 @@ Function Update-VcenterPasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$warnDays
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4218,7 +4183,7 @@ Function Update-VcenterPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -4286,11 +4251,11 @@ Function Update-VcenterPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minSpecial,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUnique,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4313,10 +4278,10 @@ Function Update-VcenterPasswordComplexity {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $existingConfiguration = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
-                                if ($existingConfiguration.'Min Length' -ne $minLength  -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'History' -ne $history) {
+                                if ($existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'History' -ne $history) {
                                     Set-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -history $history | Out-Null
                                     $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
-                                    if ($updatedConfiguration.'Min Length' -eq $minLength  -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'History' -eq $history) {
+                                    if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'History' -eq $history) {
                                         Write-Output "Update Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
                                         Write-Error "Update Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
@@ -4332,7 +4297,7 @@ Function Update-VcenterPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -4388,11 +4353,11 @@ Function Update-VcenterAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4416,7 +4381,7 @@ Function Update-VcenterAccountLockout {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                 $sddcManagerVersion = Get-VCFManager -version
-                                if(($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
+                                if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
                                     $scriptCommand = "sed -E -i.bak 's/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so preauth authfail audit deny=$failures unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
                                     $scriptCommand += "' /etc/pam.d/system-auth"
                                     Invoke-VMScript -VM $vcfVcenterDetails.fqdn.Split(".")[0] -ScriptText $scriptCommand -Guestuser $vcfVcenterDetails.root -GuestPass $vcfVcenterDetails.rootPass -Confirm:$false | Out-Null
@@ -4446,7 +4411,7 @@ Function Update-VcenterAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -4510,11 +4475,11 @@ Function Request-VcenterRootPasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -4534,10 +4499,10 @@ Function Request-VcenterRootPasswordExpiration {
                                     $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
                                     $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue "root"
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.min_days_between_password_change -ne $requiredConfig.minDays) { "$($VcenterRootPasswordExpiration.min_days_between_password_change) [ $($requiredConfig.minDays) ]" } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" }} else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" })
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.max_days_between_password_change -ne $requiredConfig.maxDays) { "$($VcenterRootPasswordExpiration.max_days_between_password_change) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" }} else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" })
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.warn_days_before_password_expiration -ne $requiredConfig.warningDays) { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" }} else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" })
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Email" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.email -ne $requiredConfig.email) { "$($VcenterRootPasswordExpiration.email) [ $($requiredConfig.email) ]" } else { "$($VcenterRootPasswordExpiration.email)" }} else { "$($VcenterRootPasswordExpiration.email)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.min_days_between_password_change -ne $requiredConfig.minDays) { "$($VcenterRootPasswordExpiration.min_days_between_password_change) [ $($requiredConfig.minDays) ]" } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" } } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.max_days_between_password_change -ne $requiredConfig.maxDays) { "$($VcenterRootPasswordExpiration.max_days_between_password_change) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" } } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.warn_days_before_password_expiration -ne $requiredConfig.warningDays) { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" } } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Email" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.email -ne $requiredConfig.email) { "$($VcenterRootPasswordExpiration.email) [ $($requiredConfig.email) ]" } else { "$($VcenterRootPasswordExpiration.email)" } } else { "$($VcenterRootPasswordExpiration.email)" })
                                 } else {
                                     Write-Error "Unable to retrieve root password expiration policy from vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -4550,7 +4515,7 @@ Function Request-VcenterRootPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -4614,11 +4579,11 @@ Function Update-VcenterRootPasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$warnDays,
         [Parameter (Mandatory = $false, ParameterSetName = 'neverexpire')] [ValidateNotNullOrEmpty()] [Switch]$neverexpire
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4656,7 +4621,7 @@ Function Update-VcenterRootPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -4726,11 +4691,11 @@ Function Publish-VcenterPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command
     $GLobal:command = "Request-VcenterPasswordExpiration -server $server -user $user -pass $pass"
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -4825,10 +4790,10 @@ Function Publish-VcenterLocalPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -4927,10 +4892,10 @@ Function Publish-VcenterLocalPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5029,10 +4994,10 @@ Function Publish-VcenterLocalAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift " }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift " } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5124,11 +5089,11 @@ Function Request-NsxtManagerPasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -5150,7 +5115,7 @@ Function Request-NsxtManagerPasswordExpiration {
                                     $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfNsxDetails.fqdn)
                                     $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "User" -notepropertyvalue $($localUser.username)
-                                    $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" }} else { "$($localUser.password_change_frequency)" })
+                                    $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" } } else { "$($localUser.password_change_frequency)" })
                                     $nsxtPasswordExpirationPolicy += $localUserPasswordExpirationPolicy
                                 }
                                 Return $nsxtPasswordExpirationPolicy
@@ -5162,7 +5127,7 @@ Function Request-NsxtManagerPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -5222,11 +5187,11 @@ Function Request-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $version = Get-VCFManager -version
@@ -5267,13 +5232,13 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.'Min Length')" }} else { "$($nsxtManagerNodePolicy.'Min Length')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" }} else { "$($nsxtManagerNodePolicy.'Min Lowercase')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" }} else { "$($nsxtManagerNodePolicy.'Min Uppercase')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.'Min Numerical')" }} else { "$($nsxtManagerNodePolicy.'Min Numerical')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" }} else { "$($nsxtManagerNodePolicy.'Min Special')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" }} else { "$($nsxtManagerNodePolicy.'Min Unique')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" }} else { "$($nsxtManagerNodePolicy.'Max Retries')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.'Min Length')" } } else { "$($nsxtManagerNodePolicy.'Min Length')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" } } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" } } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.'Min Numerical')" } } else { "$($nsxtManagerNodePolicy.'Min Numerical')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" } } else { "$($nsxtManagerNodePolicy.'Min Special')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" } } else { "$($nsxtManagerNodePolicy.'Min Unique')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" } } else { "$($nsxtManagerNodePolicy.'Max Retries')" })
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Password Complexity Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -5283,17 +5248,17 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_password_length -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.minimum_password_length) [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.minimum_password_length)" }} else { "$($nsxtManagerNodePolicy.minimum_password_length)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.maximum_password_length -ne $requiredConfig.maxLength) { "$($nsxtManagerNodePolicy.maximum_password_length) [ $($requiredConfig.maxLength) ]" } else { "$($nsxtManagerNodePolicy.maximum_password_length)" }} else { "$($nsxtManagerNodePolicy.maximum_password_length)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.lower_chars -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.lower_chars) [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.lower_chars)" }} else { "$($nsxtManagerNodePolicy.lower_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.upper_chars -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.upper_chars) [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.upper_chars)" }} else { "$($nsxtManagerNodePolicy.upper_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.digits -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.digits) [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.digits)" }} else { "$($nsxtManagerNodePolicy.digits)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.special_chars -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.special_chars) [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.special_chars)" }} else { "$($nsxtManagerNodePolicy.special_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_unique_chars -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.minimum_unique_chars) [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" }} else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Repeats" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_repeats -ne $requiredConfig.maxRepeat) { "$($nsxtManagerNodePolicy.max_repeats) [ $($requiredConfig.maxRepeat) ]" } else { "$($nsxtManagerNodePolicy.max_repeats)" }} else { "$($nsxtManagerNodePolicy.max_repeats)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" }} else { "$($nsxtManagerNodePolicy.max_sequence)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" }} else { "$($nsxtManagerNodePolicy.password_remembrance)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Hash Algorithm" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.hash_algorithm -ne $requiredConfig.hashAlgorithm) { "$($nsxtManagerNodePolicy.hash_algorithm) [ $($requiredConfig.hashAlgorithm) ]" } else { "$($nsxtManagerNodePolicy.hash_algorithm)" }} else { "$($nsxtManagerNodePolicy.hash_algorithm)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_password_length -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.minimum_password_length) [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.minimum_password_length)" } } else { "$($nsxtManagerNodePolicy.minimum_password_length)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.maximum_password_length -ne $requiredConfig.maxLength) { "$($nsxtManagerNodePolicy.maximum_password_length) [ $($requiredConfig.maxLength) ]" } else { "$($nsxtManagerNodePolicy.maximum_password_length)" } } else { "$($nsxtManagerNodePolicy.maximum_password_length)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.lower_chars -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.lower_chars) [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.lower_chars)" } } else { "$($nsxtManagerNodePolicy.lower_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.upper_chars -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.upper_chars) [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.upper_chars)" } } else { "$($nsxtManagerNodePolicy.upper_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.digits -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.digits) [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.digits)" } } else { "$($nsxtManagerNodePolicy.digits)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.special_chars -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.special_chars) [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.special_chars)" } } else { "$($nsxtManagerNodePolicy.special_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_unique_chars -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.minimum_unique_chars) [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" } } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Repeats" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_repeats -ne $requiredConfig.maxRepeat) { "$($nsxtManagerNodePolicy.max_repeats) [ $($requiredConfig.maxRepeat) ]" } else { "$($nsxtManagerNodePolicy.max_repeats)" } } else { "$($nsxtManagerNodePolicy.max_repeats)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" } } else { "$($nsxtManagerNodePolicy.max_sequence)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" } } else { "$($nsxtManagerNodePolicy.password_remembrance)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Hash Algorithm" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.hash_algorithm -ne $requiredConfig.hashAlgorithm) { "$($nsxtManagerNodePolicy.hash_algorithm) [ $($requiredConfig.hashAlgorithm) ]" } else { "$($nsxtManagerNodePolicy.hash_algorithm)" } } else { "$($nsxtManagerNodePolicy.hash_algorithm)" })
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -5312,7 +5277,7 @@ Function Request-NsxtManagerPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -5378,7 +5343,7 @@ Function Request-NsxtManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5391,7 +5356,7 @@ Function Request-NsxtManagerAccountLockout {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxManager.accountLockout
                     }
                 }
-                if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         $nsxtAccountLockoutPolicy = New-Object System.Collections.ArrayList
                         foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
@@ -5401,11 +5366,11 @@ Function Request-NsxtManagerAccountLockout {
                                         $NsxtManagerAccountLockoutObject = New-Object -TypeName psobject
                                         $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                         $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "CLI Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtManagerAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" }} else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "CLI Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" }} else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_max_auth_failures -ne $requiredConfig.apiMaxFailures) { "$($NsxtManagerAccountLockout.api_max_auth_failures) [ $($requiredConfig.apiMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" }} else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_lockout_period -ne $requiredConfig.apiUnlockInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period) [ $($requiredConfig.apiUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" }} else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Reset Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_reset_period -ne $requiredConfig.apiRestInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period) [ $($requiredConfig.apiRestInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" }} else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "CLI Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtManagerAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" } } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "CLI Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" } } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_max_auth_failures -ne $requiredConfig.apiMaxFailures) { "$($NsxtManagerAccountLockout.api_max_auth_failures) [ $($requiredConfig.apiMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" } } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_lockout_period -ne $requiredConfig.apiUnlockInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period) [ $($requiredConfig.apiUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" } } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Reset Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_reset_period -ne $requiredConfig.apiRestInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period) [ $($requiredConfig.apiRestInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" } } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" })
                                         $nsxtAccountLockoutPolicy += $NsxtManagerAccountLockoutObject
                                     } else {
                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -5466,11 +5431,11 @@ Function Update-NsxtManagerPasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-        [Parameter (Mandatory = $true)] [ValidateRange(0,9999)] [Int]$maxDays,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
+        [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$maxDays,
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5483,7 +5448,7 @@ Function Update-NsxtManagerPasswordExpiration {
                                 foreach ($localUser in $localUsers) {
                                     if ($localUser.password_change_frequency -ne $maxDays) {
                                         Set-NsxtApplianceUserExpirationPolicy -userId $localUser.userid -maxDays $maxDays | Out-Null
-                                        $updatedConfiguration = Get-NsxtApplianceUser | Where-Object {$_.userid -eq $localUser.userid }
+                                        $updatedConfiguration = Get-NsxtApplianceUser | Where-Object { $_.userid -eq $localUser.userid }
                                         if (($updatedConfiguration).password_change_frequency -eq $maxDays ) {
                                             if ($detail -eq "true") {
                                                 Write-Output "Update Password Expiration Policy on NSX Local Manager ($($vcfNsxDetails.fqdn)) for Local User ($($localUser.username)): SUCCESSFUL"
@@ -5599,12 +5564,12 @@ Function Update-NsxtManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRepeats,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxSequence,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [string]$hash_algorithm,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
-	)
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         $chkVersion = $false
         $error_presence = $false
         if (Test-VCFConnection -server $server) {
@@ -5614,46 +5579,46 @@ Function Update-NsxtManagerPasswordComplexity {
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
-                                    $chkVersion = ((Get-VCFManager).version -gt "5.0") -and ((Get-VCFNsxtcluster | where-object {$_.vipFqdn -eq $vcfNsxDetails.fqdn}).version -gt "4.0")
+                                    $chkVersion = ((Get-VCFManager).version -gt "5.0") -and ((Get-VCFNsxtcluster | where-object { $_.vipFqdn -eq $vcfNsxDetails.fqdn }).version -gt "4.0")
                                     foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
                                         if (Test-NSXTConnection -server $nsxtManagerNode.fqdn) {
                                             if (Test-NSXTAuthentication -server $nsxtManagerNode.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                                 if ($chkVersion) {
                                                     $existingConfiguration = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn
-                                                    if (!$PsBoundParameters.ContainsKey("minLength")){
+                                                    if (!$PsBoundParameters.ContainsKey("minLength")) {
                                                         $minLength = [int]$existingConfiguration.minimum_password_length
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("maxLength")){
+                                                    if (!$PsBoundParameters.ContainsKey("maxLength")) {
                                                         $maxLength = [int]$existingConfiguration.maximum_password_length
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("minNumerical")){
+                                                    if (!$PsBoundParameters.ContainsKey("minNumerical")) {
                                                         $minNumerical = [int]$existingConfiguration.digits
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("minLowercase")){
+                                                    if (!$PsBoundParameters.ContainsKey("minLowercase")) {
                                                         $minLowercase = [int]$existingConfiguration.lower_chars
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("minUppercase")){
+                                                    if (!$PsBoundParameters.ContainsKey("minUppercase")) {
                                                         $minUppercase = [int]$existingConfiguration.upper_chars
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("minSpecial")){
+                                                    if (!$PsBoundParameters.ContainsKey("minSpecial")) {
                                                         $minSpecial = [int]$existingConfiguration.special_chars
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("history")){
+                                                    if (!$PsBoundParameters.ContainsKey("history")) {
                                                         $history = [int]$existingConfiguration.password_remembrance
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("minUnique")){
+                                                    if (!$PsBoundParameters.ContainsKey("minUnique")) {
                                                         $minUnique = [int]$existingConfiguration.minimum_unique_chars
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("maxRepeats")){
+                                                    if (!$PsBoundParameters.ContainsKey("maxRepeats")) {
                                                         $maxRepeats = [int]$existingConfiguration.max_repeats
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("maxSequence")){
+                                                    if (!$PsBoundParameters.ContainsKey("maxSequence")) {
                                                         $maxSequence = [int]$existingConfiguration.max_sequence
                                                     }
-                                                    if (!$PsBoundParameters.ContainsKey("hash_algorithm")){
+                                                    if (!$PsBoundParameters.ContainsKey("hash_algorithm")) {
                                                         $hash_algorithm = $existingConfiguration.hash_algorithm
                                                     }
-                                                    if ($PsBoundParameters.ContainsKey("maxRetry")){
+                                                    if ($PsBoundParameters.ContainsKey("maxRetry")) {
                                                         Write-Warning "'maxRetry' on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain) is not configurable for VCF5.0"
                                                     }
                                                     if (($existingConfiguration).hash_algorithm -ne $hash_algorithm -or ($existingConfiguration).minimum_password_length -ne $minLength -or ($existingConfiguration).maximum_password_length -ne $maxLength -or ($existingConfiguration).digits -ne $minNumerical -or ($existingConfiguration).lower_chars -ne $minLowercase -or ($existingConfiguration).upper_chars -ne $minUppercase -or ($existingConfiguration).special_chars -ne $minSpecial -or ($existingConfiguration).max_repeats -ne $maxRepeats -or ($existingConfiguration).max_sequence -ne $maxSequence -or ($existingConfiguration).minimum_unique_chars -ne $minUnique -or ($existingConfiguration).password_remembrance -ne $history) {
@@ -5673,12 +5638,12 @@ Function Update-NsxtManagerPasswordComplexity {
                                                         }
                                                     }
                                                 } else {
-                                                    if($PsBoundParameters.ContainsKey("maxSequence") -or $PsBoundParameters.ContainsKey("maxRepeats") -or $PsBoundParameters.ContainsKey("history") -or $PsBoundParameters.ContainsKey("maxLength")) {
+                                                    if ($PsBoundParameters.ContainsKey("maxSequence") -or $PsBoundParameters.ContainsKey("maxRepeats") -or $PsBoundParameters.ContainsKey("history") -or $PsBoundParameters.ContainsKey("maxLength")) {
                                                         Write-Warning "Update for 'maxSequence' or 'maxRepeats' or 'history' or 'maxLength' parameters on NSX Local Manager ($($nsxtManagerNode.fqdn)) for Workload Domain ($domain) is not supported. Requires VMware Cloud Foundation 5.0 or later: SKIPPING"
                                                     }
                                                     $existingConfiguration = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx
-                                                    if ($existingConfiguration.'Min Length' -ne $minLength  -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
-                                                        Set-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -retry $maxRetry| Out-Null
+                                                    if ($existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
+                                                        Set-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -retry $maxRetry | Out-Null
                                                         $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx
                                                         if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'Max Retries' -eq $maxRetry) {
                                                             if ($detail -eq "true") {
@@ -5697,7 +5662,7 @@ Function Update-NsxtManagerPasswordComplexity {
                                             }
                                         }
                                     }
-                                    if (($detail -eq "true") -and ($error_presence-eq $false)) {
+                                    if (($detail -eq "true") -and ($error_presence -eq $false)) {
                                         Write-Output "Update Password Complexity Policy for all NSX Local Manager Nodes in Workload Domain ($domain): SUCCESSFUL"
                                     }
                                 }
@@ -5709,7 +5674,7 @@ Function Update-NsxtManagerPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -5774,17 +5739,17 @@ Function Update-NsxtManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliFailures,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliUnlockInterval,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$apiFailures,
-		[Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$apiFailureInterval,
+        [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$apiFailureInterval,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$apiUnlockInterval,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $vcfNsxDetails.fqdn) {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
@@ -5792,19 +5757,19 @@ Function Update-NsxtManagerAccountLockout {
                                     if (Test-NSXTAuthentication -server $nsxtManagerNode.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.AdminPass) {
                                         $existingConfiguration = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn
                                         if (($existingConfiguration).cli_max_auth_failures -ne $cliFailures -or ($existingConfiguration).cli_failed_auth_lockout_period -ne $cliUnlockInterval -or ($existingConfiguration).api_max_auth_failures -ne $apiFailures -or ($existingConfiguration).api_failed_auth_reset_period -ne $apiFailureInterval -or ($existingConfiguration).api_failed_auth_lockout_period -ne $apiUnlockInterval ) {
-                                            if (!$PsBoundParameters.ContainsKey("cliFailures")){
+                                            if (!$PsBoundParameters.ContainsKey("cliFailures")) {
                                                 $cliFailures = [int]$existingConfiguration.cli_max_auth_failures
                                             }
-                                            if (!$PsBoundParameters.ContainsKey("cliUnlockInterval")){
+                                            if (!$PsBoundParameters.ContainsKey("cliUnlockInterval")) {
                                                 $cliUnlockInterval = [int]$existingConfiguration.cli_failed_auth_lockout_period
                                             }
-                                            if (!$PsBoundParameters.ContainsKey("apiFailures")){
+                                            if (!$PsBoundParameters.ContainsKey("apiFailures")) {
                                                 $apiFailures = [int]$existingConfiguration.api_max_auth_failures
                                             }
-                                            if (!$PsBoundParameters.ContainsKey("apiFailureInterval")){
+                                            if (!$PsBoundParameters.ContainsKey("apiFailureInterval")) {
                                                 $apiFailureInterval = [int]$existingConfiguration.api_failed_auth_reset_period
                                             }
-                                            if (!$PsBoundParameters.ContainsKey("apiUnlockInterval")){
+                                            if (!$PsBoundParameters.ContainsKey("apiUnlockInterval")) {
                                                 $apiUnlockInterval = [int]$existingConfiguration.api_failed_auth_lockout_period
                                             }
                                             Set-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn -cli_max_attempt $cliFailures -cli_lockout_period $cliUnlockInterval -api_max_attempt $apiFailures -api_reset_period $apiFailureInterval -api_lockout_period $apiUnlockInterval | Out-Null
@@ -5908,10 +5873,10 @@ Function Publish-NsxManagerPasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -5920,8 +5885,8 @@ Function Publish-NsxManagerPasswordExpiration {
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $workloadDomain -listNodes)) {
                         # foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
-                            $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
-                            $nsxPasswordExpiration = Invoke-Expression $command ; $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
+                        $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
+                        $nsxPasswordExpiration = Invoke-Expression $command ; $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
                         # }
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
@@ -5929,8 +5894,8 @@ Function Publish-NsxManagerPasswordExpiration {
                     foreach ($domain in $allWorkloadDomains ) {
                         if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain.name -listNodes)) {
                             # foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
-                                $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
-                                $nsxPasswordExpiration = Invoke-Expression $command ; $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
+                            $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
+                            $nsxPasswordExpiration = Invoke-Expression $command ; $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
                             # }
                         }
                     }
@@ -6018,10 +5983,10 @@ Function Publish-NsxManagerPasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6120,10 +6085,10 @@ Function Publish-NsxManagerAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6214,11 +6179,11 @@ Function Request-NsxtEdgePasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -6234,7 +6199,7 @@ Function Request-NsxtEdgePasswordExpiration {
                         if (Test-NSXTConnection -server $($vcfNsxDetails.fqdn)) {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                 $allNsxEdgePasswordExpirationPolicy = New-Object System.Collections.ArrayList
-                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
+                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                     $localUsers = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id
                                     foreach ($localUser in $localUsers) {
@@ -6242,7 +6207,7 @@ Function Request-NsxtEdgePasswordExpiration {
                                         $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                         $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
                                         $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "User" -notepropertyvalue $($localUser.username)
-                                        $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" }} else { "$($localUser.password_change_frequency)" })
+                                        $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" } } else { "$($localUser.password_change_frequency)" })
                                         $allNsxEdgePasswordExpirationPolicy += $nsxEdgePasswordExpirationPolicy
                                     }
                                 }
@@ -6255,7 +6220,7 @@ Function Request-NsxtEdgePasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -6285,6 +6250,11 @@ Function Request-NsxtEdgePasswordComplexity {
         Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults.
 
+        .EXAMPLE
+        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -unmanagedEdgeNode sfo-edg01m -unmanagedEdgeNodePass VMw@re1!VMw@re1!
+        This example retrieves the password complexity policy for an NSX Edge node that is not managed by SDDC Manager.
+
+
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
 
@@ -6305,6 +6275,12 @@ Function Request-NsxtEdgePasswordComplexity {
 
         .PARAMETER policyFile
         The path to the policy configuration file.
+
+        .PARAMETER unmanagedEdgeNode
+        The name of the unmanaged NSX Edge node.
+
+        .PARAMETER unmanagedEdgeNodePass
+        The password for the unmanaged NSX Edge node.
     #>
 
     Param (
@@ -6314,12 +6290,14 @@ Function Request-NsxtEdgePasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$unmanagedEdgeNode,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$unmanagedEdgeNodePass
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -6338,23 +6316,39 @@ Function Request-NsxtEdgePasswordComplexity {
                                     if (Test-NSXTConnection -server $vcfNsxDetails.fqdn) {
                                         if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                             $nsxtPasswordComplexityPolicy = New-Object System.Collections.ArrayList
-                                            $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
-                                            foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
-                                                $nsxEdgeRootPass = (Get-VCFCredential | Where-Object {$_.resource.resourceName -eq ($nsxtEdgeNode.display_name + '.' + $vcfNsxDetails.fqdn.Split('.',2)[-1]) -and $_.username -eq "root"}).password
-                                                if ($nsxtEdgeNodePolicy = Get-LocalPasswordComplexity -vmName $($nsxtEdgeNode.display_name) -guestUser root -guestPassword $nsxEdgeRootPass -nsx ) {
+                                            $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
+                                            if (!($PsBoundParameters.ContainsKey("unmanagedEdgeNode"))) {
+                                                foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
+                                                    $nsxEdgeRootPass = (Get-VCFCredential | Where-Object { $_.resource.resourceName -eq ($nsxtEdgeNode.display_name + '.' + $vcfNsxDetails.fqdn.Split('.', 2)[-1]) -and $_.username -eq "root" }).password
+                                                    if ($nsxtEdgeNodePolicy = Get-LocalPasswordComplexity -vmName $($nsxtEdgeNode.display_name) -guestUser root -guestPassword $nsxEdgeRootPass -nsx ) {
+                                                        $NsxtEdgePasswordComplexityObject = New-Object -TypeName psobject
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" } } else { "$($nsxtEdgeNodePolicy.'Min Length')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" } } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
+                                                        $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
+                                                    } else {
+                                                        Write-Error "Unable to retrieve Password Complexity Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
+                                                    }
+                                                }
+                                            } elseif ($PsBoundParameters.ContainsKey("unmanagedEdgeNode")) {
+                                                if ($nsxtEdgeNodePolicy = Get-LocalPasswordComplexity -vmName $($unmanagedEdgeNode) -guestUser root -guestPassword $unmanagedEdgeNodePass -nsx ) {
                                                     $NsxtEdgePasswordComplexityObject = New-Object -TypeName psobject
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" }} else { "$($nsxtEdgeNodePolicy.'Min Length')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" }} else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" }} else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" }} else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" }} else { "$($nsxtEdgeNodePolicy.'Min Special')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" }} else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" }} else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $unmanagedEdgeNode
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" } } else { "$($nsxtEdgeNodePolicy.'Min Length')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" } } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
                                                     $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
-                                                } else {
-                                                    Write-Error "Unable to retrieve Password Complexity Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
                                                 }
                                             }
                                         }
@@ -6369,7 +6363,7 @@ Function Request-NsxtEdgePasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -6434,7 +6428,8 @@ Function Request-NsxtEdgeAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
-	$pass = Get-Password -username $user -password $pass
+
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6447,19 +6442,19 @@ Function Request-NsxtEdgeAccountLockout {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).nsxEdge.accountLockout
                     }
                 }
-                if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $vcfNsxDetails.fqdn) {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                 $nsxtAccountLockoutPolicy = New-Object System.Collections.ArrayList
-                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
+                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                     if ($NsxtEdgeAccountLockout = Get-NsxtEdgeNodeAuthPolicy -nsxtManager $vcfNsxDetails.fqdn -nsxtEdgeNodeID $nsxtEdgeNode.transport_node_id) {
                                         $NsxtEdgeAccountLockoutObject = New-Object -TypeName psobject
                                         $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                         $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
-                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "CLI Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtEdgeAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" }} else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" })
-                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "CLI Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" }} else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" })
+                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "CLI Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtEdgeAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" } } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" })
+                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "CLI Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" } } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" })
                                         $nsxtAccountLockoutPolicy += $NsxtEdgeAccountLockoutObject
                                     } else {
                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
@@ -6520,11 +6515,11 @@ Function Update-NsxtEdgePasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-        [Parameter (Mandatory = $true)] [ValidateRange(0,9999)] [Int]$maxDays,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
+        [Parameter (Mandatory = $true)] [ValidateRange(0, 9999)] [Int]$maxDays,
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6533,13 +6528,13 @@ Function Update-NsxtEdgePasswordExpiration {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $($vcfNsxDetails.fqdn)) {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
-                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
+                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                     $localUsers = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id
                                     foreach ($localUser in $localUsers) {
                                         if ($localUser.password_change_frequency -ne $maxDays) {
                                             Set-NsxtApplianceUserExpirationPolicy -transportNodeId $nsxtEdgeNode.transport_node_id -userId $localUser.userid -maxDays $maxDays | Out-Null
-                                            $updatedConfiguration = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id | Where-Object {$_.userid -eq $localUser.userid }
+                                            $updatedConfiguration = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id | Where-Object { $_.userid -eq $localUser.userid }
                                             if (($updatedConfiguration).password_change_frequency -eq $maxDays ) {
                                                 if ($detail -eq "true") {
                                                     Write-Output "Update Password Expiration Policy on NSX Edge ($($nsxtEdgeNode.display_name)) for Local User ($($localUser.username)): SUCCESSFUL"
@@ -6636,12 +6631,12 @@ Function Update-NsxtEdgePasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minSpecial,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minUnique,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
-	)
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -6651,12 +6646,12 @@ Function Update-NsxtEdgePasswordComplexity {
                                 if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                                     if (Test-NSXTConnection -server $vcfNsxDetails.fqdn) {
                                         if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
-                                            $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
+                                            $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
                                             foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
-                                                $nsxEdgeRootPass = (Get-VCFCredential | Where-Object {$_.resource.resourceName -eq ($nsxtEdgeNode.display_name + '.' + $vcfNsxDetails.fqdn.Split('.',2)[-1]) -and $_.username -eq "root"}).password
+                                                $nsxEdgeRootPass = (Get-VCFCredential | Where-Object { $_.resource.resourceName -eq ($nsxtEdgeNode.display_name + '.' + $vcfNsxDetails.fqdn.Split('.', 2)[-1]) -and $_.username -eq "root" }).password
                                                 $existingConfiguration = Get-LocalPasswordComplexity -vmName $($nsxtEdgeNode.display_name) -guestUser root -guestPassword $nsxEdgeRootPass -nsx
-                                                if ($existingConfiguration.'Min Length' -ne $minLength  -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
-                                                    Set-LocalPasswordComplexity -vmName $nsxtEdgeNode.display_name -guestUser root -guestPassword $nsxEdgeRootPass -nsx -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -retry $maxRetry| Out-Null
+                                                if ($existingConfiguration.'Min Length' -ne $minLength -or $existingConfiguration.'Min Lowercase' -ne $minLowercase -or $existingConfiguration.'Min Uppercase' -ne $minUppercase -or $existingConfiguration.'Min Numerical' -ne $minNumerical -or $existingConfiguration.'Min Special' -ne $minSpecial -or $existingConfiguration.'Min Unique' -ne $minUnique -or $existingConfiguration.'Max Retries' -ne $maxRetry) {
+                                                    Set-LocalPasswordComplexity -vmName $nsxtEdgeNode.display_name -guestUser root -guestPassword $nsxEdgeRootPass -nsx -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -retry $maxRetry | Out-Null
                                                     $updatedConfiguration = Get-LocalPasswordComplexity -vmName $nsxtEdgeNode.display_name -guestUser root -guestPassword $nsxEdgeRootPass -nsx
                                                     if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'Max Retries' -eq $maxRetry) {
                                                         if ($detail -eq "true") {
@@ -6685,7 +6680,7 @@ Function Update-NsxtEdgePasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -6737,26 +6732,26 @@ Function Update-NsxtEdgeAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliFailures,
         [Parameter (Mandatory = $false)] [ValidateRange(1, [int]::MaxValue)] [int]$cliUnlockInterval,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain -listNodes)) {
                         if (Test-NSXTConnection -server $vcfNsxDetails.fqdn) {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
-                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
+                                $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                     $existingConfiguration = Get-NsxtEdgeNodeAuthPolicy -nsxtManager $vcfNsxDetails.fqdn -nsxtEdgeNodeID $nsxtEdgeNode.transport_node_id
                                     if (($existingConfiguration).cli_max_auth_failures -ne $cliFailures -or ($existingConfiguration).cli_failed_auth_lockout_period -ne $cliUnlockInterval) {
-                                        if (!$PsBoundParameters.ContainsKey("cliFailures")){
+                                        if (!$PsBoundParameters.ContainsKey("cliFailures")) {
                                             $cliFailures = [int]$existingConfiguration.cli_max_auth_failures
                                         }
-                                        if (!$PsBoundParameters.ContainsKey("cliUnlockInterval")){
+                                        if (!$PsBoundParameters.ContainsKey("cliUnlockInterval")) {
                                             $cliUnlockInterval = [int]$existingConfiguration.cli_failed_auth_lockout_period
                                         }
                                         Set-NsxtEdgeNodeAuthPolicy -nsxtManager $vcfNsxDetails.fqdn -nsxtEdgeNodeID $nsxtEdgeNode.transport_node_id -cli_max_attempt $cliFailures -cli_lockout_period $cliUnlockInterval | Out-Null
@@ -6860,10 +6855,10 @@ Function Publish-NsxEdgePasswordExpiration {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6875,8 +6870,8 @@ Function Publish-NsxEdgePasswordExpiration {
                             if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                 # $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
                                 # foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
-                                    $command = "Request-NsxtEdgePasswordExpiration -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
-                                    $nsxEdgePasswordExpiration = Invoke-Expression $command ;  $nsxEdgePasswordExpirationObject += $nsxEdgePasswordExpiration
+                                $command = "Request-NsxtEdgePasswordExpiration -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
+                                $nsxEdgePasswordExpiration = Invoke-Expression $command ; $nsxEdgePasswordExpirationObject += $nsxEdgePasswordExpiration
                                 # }
                             }
                         }
@@ -6889,8 +6884,8 @@ Function Publish-NsxEdgePasswordExpiration {
                                 if (Test-NSXTAuthentication -server $vcfNsxDetails.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                     # $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object {$_.member_node_type -eq "EDGE_NODE"})
                                     # foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
-                                        $command = "Request-NsxtEdgePasswordExpiration -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
-                                        $nsxEdgePasswordExpiration = Invoke-Expression $command ;  $nsxEdgePasswordExpirationObject += $nsxEdgePasswordExpiration
+                                    $command = "Request-NsxtEdgePasswordExpiration -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
+                                    $nsxEdgePasswordExpiration = Invoke-Expression $command ; $nsxEdgePasswordExpirationObject += $nsxEdgePasswordExpiration
                                     # }
                                 }
                             }
@@ -6980,10 +6975,10 @@ Function Publish-NsxEdgePasswordComplexity {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -6991,12 +6986,12 @@ Function Publish-NsxEdgePasswordComplexity {
                 $nsxEdgePasswordComplexityObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
                     $command = "Request-NsxtEdgePasswordComplexity -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
-                    $nsxEdgePasswordComplexity = Invoke-Expression $command ;  $nsxEdgePasswordComplexityObject += $nsxEdgePasswordComplexity
+                    $nsxEdgePasswordComplexity = Invoke-Expression $command ; $nsxEdgePasswordComplexityObject += $nsxEdgePasswordComplexity
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
                         $command = "Request-NsxtEdgePasswordComplexity -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
-                        $nsxEdgePasswordComplexity = Invoke-Expression $command ;  $nsxEdgePasswordComplexityObject += $nsxEdgePasswordComplexity
+                        $nsxEdgePasswordComplexity = Invoke-Expression $command ; $nsxEdgePasswordComplexityObject += $nsxEdgePasswordComplexity
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
@@ -7082,10 +7077,10 @@ Function Publish-NsxEdgeAccountLockout {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -7093,12 +7088,12 @@ Function Publish-NsxEdgeAccountLockout {
                 $nsxEdgeAccountLockoutObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
                     $command = "Request-NsxtEdgeAccountLockout -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
-                    $nsxEdgeAccountLockout = Invoke-Expression $command ;  $nsxEdgeAccountLockoutObject += $nsxEdgeAccountLockout
+                    $nsxEdgeAccountLockout = Invoke-Expression $command ; $nsxEdgeAccountLockoutObject += $nsxEdgeAccountLockout
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
                         $command = "Request-NsxtEdgeAccountLockout -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
-                        $nsxEdgeAccountLockout = Invoke-Expression $command ;  $nsxEdgeAccountLockoutObject += $nsxEdgeAccountLockout
+                        $nsxEdgeAccountLockout = Invoke-Expression $command ; $nsxEdgeAccountLockoutObject += $nsxEdgeAccountLockout
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
@@ -7123,7 +7118,7 @@ Export-ModuleMember -Function Publish-NsxEdgeAccountLockout
 #Region     Begin ESXi Password Management Functions                ######
 
 Function Request-EsxiPasswordExpiration {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the password expiration policy for ESXi hosts in a cluster.
 
@@ -7174,22 +7169,22 @@ Function Request-EsxiPasswordExpiration {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
-		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -7198,46 +7193,46 @@ Function Request-EsxiPasswordExpiration {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).esxi.passwordExpiration
                     }
                 }
-				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
-					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
-							if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-								if (Get-Cluster | Where-Object {$_.Name -eq $cluster}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
                                     $esxiPasswdPolicy = New-Object System.Collections.Generic.List[System.Object]
-									$esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
-									if ($esxiHosts) {
-										Foreach ($esxiHost in $esxiHosts) {
-											$passwordExpire = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance"} | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }
-											if ($passwordExpire) {
-												$nodePasswdPolicy = New-Object -TypeName psobject
+                                    $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+                                    if ($esxiHosts) {
+                                        Foreach ($esxiHost in $esxiHosts) {
+                                            $passwordExpire = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }
+                                            if ($passwordExpire) {
+                                                $nodePasswdPolicy = New-Object -TypeName psobject
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Cluster" -notepropertyvalue $cluster
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($passwordExpire.Value -ne $requiredConfig.maxdays) { "$($passwordExpire.Value) [ $($requiredConfig.maxdays) ]" } else { "$($passwordExpire.Value)" }} else { "$($passwordExpire.Value)" })
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($passwordExpire.Value -ne $requiredConfig.maxdays) { "$($passwordExpire.Value) [ $($requiredConfig.maxdays) ]" } else { "$($passwordExpire.Value)" } } else { "$($passwordExpire.Value)" })
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
-												Remove-Variable -Name nodePasswdPolicy
-											} else {
-												Write-Error "Unable to retrieve password expiration policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
-											}
-										}
-										return $esxiPasswdPolicy
-									} else {
-										Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
-									}
-								} else {
+                                                Remove-Variable -Name nodePasswdPolicy
+                                            } else {
+                                                Write-Error "Unable to retrieve password expiration policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
+                                            }
+                                        }
+                                        return $esxiPasswdPolicy
+                                    } else {
+                                        Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
+                                    }
+                                } else {
                                     Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
-								}
-							}
-						}
-					}
-				} else {
+                                }
+                            }
+                        }
+                    }
+                } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	} Finally {
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
         if ($global:DefaultVIServers) {
             Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
@@ -7246,7 +7241,7 @@ Function Request-EsxiPasswordExpiration {
 Export-ModuleMember -Function Request-EsxiPasswordExpiration
 
 Function Request-EsxiPasswordComplexity {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the password complexity policy for all ESXi hosts in a cluster.
 
@@ -7298,22 +7293,22 @@ Function Request-EsxiPasswordComplexity {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
-		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -7322,50 +7317,50 @@ Function Request-EsxiPasswordComplexity {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).esxi.passwordComplexity
                     }
                 }
-				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
-					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
-							if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-								if (Get-Cluster | Where-Object {$_.Name -eq $cluster}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
                                     $esxiPasswdPolicy = New-Object System.Collections.Generic.List[System.Object]
-									$esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
-									if ($esxiHosts) {
-										Foreach ($esxiHost in $esxiHosts) {
-											# retreving ESXi Advanced Setting: Security.PasswordHistory
-											$passwordHistory = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance"} | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordHistory" }
-											# retreving ESXi Advanced Setting: Security.PasswordQualityControl
-											$passwordQualityControl = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance"} | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }
-											if ($passwordHistory -and $passwordQualityControl) {
-												$nodePasswdPolicy = New-Object -TypeName psobject
+                                    $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+                                    if ($esxiHosts) {
+                                        Foreach ($esxiHost in $esxiHosts) {
+                                            # retreving ESXi Advanced Setting: Security.PasswordHistory
+                                            $passwordHistory = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordHistory" }
+                                            # retreving ESXi Advanced Setting: Security.PasswordQualityControl
+                                            $passwordQualityControl = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }
+                                            if ($passwordHistory -and $passwordQualityControl) {
+                                                $nodePasswdPolicy = New-Object -TypeName psobject
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Cluster" -notepropertyvalue $cluster
-												$nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Policy" -notepropertyvalue $(if ($drift) { if ($passwordQualityControl.value -ne $requiredConfig.policy) { "$($passwordQualityControl.value) [ $($requiredConfig.policy) ]" } else { "$($passwordQualityControl.value)" }} else { "$($passwordQualityControl.value)" })
-												$nodePasswdPolicy | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($passwordHistory.Value -ne $requiredConfig.history) { "$($passwordHistory.Value) [ $($requiredConfig.history) ]" } else { "$($passwordHistory.Value)" }} else { "$($passwordHistory.Value)" })
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "Policy" -notepropertyvalue $(if ($drift) { if ($passwordQualityControl.value -ne $requiredConfig.policy) { "$($passwordQualityControl.value) [ $($requiredConfig.policy) ]" } else { "$($passwordQualityControl.value)" } } else { "$($passwordQualityControl.value)" })
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($passwordHistory.Value -ne $requiredConfig.history) { "$($passwordHistory.Value) [ $($requiredConfig.history) ]" } else { "$($passwordHistory.Value)" } } else { "$($passwordHistory.Value)" })
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
-												Remove-Variable -Name nodePasswdPolicy
-											} else {
-												Write-Error "Unable to retrieve password complexity policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
-											}
-										}
-										return $esxiPasswdPolicy
-									} else {
-										Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
-									}
-								} else {
+                                                Remove-Variable -Name nodePasswdPolicy
+                                            } else {
+                                                Write-Error "Unable to retrieve password complexity policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
+                                            }
+                                        }
+                                        return $esxiPasswdPolicy
+                                    } else {
+                                        Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
+                                    }
+                                } else {
                                     Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
-								}
-							}
-						}
-					}
-				} else {
+                                }
+                            }
+                        }
+                    }
+                } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	} Finally {
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
         if ($global:DefaultVIServers) {
             Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
@@ -7374,7 +7369,7 @@ Function Request-EsxiPasswordComplexity {
 Export-ModuleMember -Function Request-EsxiPasswordComplexity
 
 Function Request-EsxiAccountLockout {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the account lockout policy for all ESXi hosts in a cluster.
 
@@ -7426,22 +7421,22 @@ Function Request-EsxiAccountLockout {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
-		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
                     $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -7450,50 +7445,50 @@ Function Request-EsxiAccountLockout {
                         $requiredConfig = (Get-PasswordPolicyConfig -version $version).esxi.accountLockout
                     }
                 }
-				if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
-					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
-							if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-								if (Get-Cluster | Where-Object {$_.Name -eq $cluster}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
                                     $esxiPasswdPolicy = New-Object System.Collections.Generic.List[System.Object]
-									$esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
-									if ($esxiHosts) {
-										Foreach ($esxiHost in $esxiHosts) {
-											# retreving ESXi Advanced Setting: Security.PasswordHistory
-											$lockFailues = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance"} | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountLockFailures" }
-											# retreving ESXi Advanced Setting: Security.PasswordQualityControl
-											$unlockTime = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance"} | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }
-											if ($lockFailues -and $unlockTime) {
-												$nodePasswdPolicy = New-Object -TypeName psobject
+                                    $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
+                                    if ($esxiHosts) {
+                                        Foreach ($esxiHost in $esxiHosts) {
+                                            # retreving ESXi Advanced Setting: Security.PasswordHistory
+                                            $lockFailues = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountLockFailures" }
+                                            # retreving ESXi Advanced Setting: Security.PasswordQualityControl
+                                            $unlockTime = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }
+                                            if ($lockFailues -and $unlockTime) {
+                                                $nodePasswdPolicy = New-Object -TypeName psobject
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Cluster" -notepropertyvalue $cluster
-												$nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
-												$nodePasswdPolicy | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($lockFailues.Value -ne $requiredConfig.maxFailures) { "$($lockFailues.Value) [ $($requiredConfig.maxFailures) ]" } else { "$($lockFailues.Value)" }} else { "$($lockFailues.Value)" })
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($unlockTime.value -ne $requiredConfig.unlockInterval) { "$($unlockTime.value) [ $($requiredConfig.unlockInterval) ]" } else { "$($unlockTime.value)" }} else { "$($unlockTime.value)" })
-												$esxiPasswdPolicy.Add($nodePasswdPolicy)
-												Remove-Variable -Name nodePasswdPolicy
-											} else {
-												Write-Error "Unable to retrieve account lockout policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
-											}
-										}
-										return $esxiPasswdPolicy
-									} else {
-										Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
-									}
-								} else {
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($lockFailues.Value -ne $requiredConfig.maxFailures) { "$($lockFailues.Value) [ $($requiredConfig.maxFailures) ]" } else { "$($lockFailues.Value)" } } else { "$($lockFailues.Value)" })
+                                                $nodePasswdPolicy | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($unlockTime.value -ne $requiredConfig.unlockInterval) { "$($unlockTime.value) [ $($requiredConfig.unlockInterval) ]" } else { "$($unlockTime.value)" } } else { "$($unlockTime.value)" })
+                                                $esxiPasswdPolicy.Add($nodePasswdPolicy)
+                                                Remove-Variable -Name nodePasswdPolicy
+                                            } else {
+                                                Write-Error "Unable to retrieve account lockout policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
+                                            }
+                                        }
+                                        return $esxiPasswdPolicy
+                                    } else {
+                                        Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
+                                    }
+                                } else {
                                     Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
-								}
-							}
-						}
-					}
-				} else {
+                                }
+                            }
+                        }
+                    }
+                } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	} Finally {
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
         if ($global:DefaultVIServers) {
             Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
@@ -7502,7 +7497,7 @@ Function Request-EsxiAccountLockout {
 Export-ModuleMember -Function Request-EsxiAccountLockout
 
 Function Update-EsxiPasswordExpiration {
-	<#
+    <#
 		.SYNOPSIS
         Updates the password expiration period in days for all ESXi hosts in a cluster.
 
@@ -7545,31 +7540,31 @@ Function Update-EsxiPasswordExpiration {
         Return the details of the policy. One of true or false. Default is true.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$maxDays,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
-	)
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$maxDays,
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
-		if (Test-VCFConnection -server $server) {
-			if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-				if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
-					if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
-							if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-								if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
-									$esxiHosts = Get-Cluster $cluster | Get-VMHost
-									Foreach ($esxiHost in $esxiHosts) {
-										# $passwordExpire = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }
-										if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }).value -ne $maxDays) {
-											Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }) -Value $maxDays -Confirm:$false | Out-Null
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
+                                    $esxiHosts = Get-Cluster $cluster | Get-VMHost
+                                    Foreach ($esxiHost in $esxiHosts) {
+                                        # $passwordExpire = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }
+                                        if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }).value -ne $maxDays) {
+                                            Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }) -Value $maxDays -Confirm:$false | Out-Null
                                             if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }) -match $maxDays) {
                                                 if ($detail -eq "true") {
                                                     Write-Output "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost): SUCCESSFUL"
@@ -7577,29 +7572,29 @@ Function Update-EsxiPasswordExpiration {
                                             } else {
                                                 Write-Error "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost): POST_VALIDATION_FAILED"
                                             }
-										} else {
+                                        } else {
                                             if ($detail -eq "true") {
                                                 Write-Warning "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
-									}
-									if ($detail -eq "false") {
+                                    }
+                                    if ($detail -eq "false") {
                                         Write-Output "Update Advanced System Setting (Security.PasswordQualityControl) to ($maxDays) on all ESXi Hosts for Workload Domain ($domain): SUCCESSFUL"
                                     }
-								} else {
+                                } else {
                                     Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($vcfVcenterDetails.fqdn), check details and retry: PRE_VALIDATION_FAILED"
                                 }
-							}
-						}
-					}
-				} else {
+                            }
+                        }
+                    }
+                } else {
                     Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                 }
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	} Finally {
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
         if ($global:DefaultVIServers) {
             Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
@@ -7662,19 +7657,19 @@ Function Update-EsxiPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$policy,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$history,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if (Get-Cluster | Where-Object {$_.Name -eq $cluster}) {
+                                if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
                                     $esxiHosts = Get-Cluster $cluster | Get-VMHost
                                     Foreach ($esxiHost in $esxiHosts) {
                                         if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }).value -ne $policy) {
@@ -7785,19 +7780,19 @@ Function Update-EsxiAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$cluster,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                if (Get-VCFWorkloadDomain | Where-Object {$_.name -eq $domain}) {
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
                         if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
-                                if (Get-Cluster | Where-Object {$_.Name -eq $cluster}) {
+                                if (Get-Cluster | Where-Object { $_.Name -eq $cluster }) {
                                     $esxiHosts = Get-Cluster $cluster | Get-VMHost
                                     Foreach ($esxiHost in $esxiHosts) {
                                         if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountLockFailures" }).value -ne $failures) {
@@ -7932,7 +7927,7 @@ Function Publish-EsxiPasswordPolicy {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
+        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration', 'PasswordComplexity', 'AccountLockout')] [String]$policy,
         [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
         [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
@@ -7941,14 +7936,14 @@ Function Publish-EsxiPasswordPolicy {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-EsxiPasswordExpiration"; $preHtmlContent = '<a id="esxi-password-expiration"></a><h3>ESXi - Password Expiration</h3>' }
     if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-EsxiPasswordComplexity"; $preHtmlContent = '<a id="esxi-password-complexity"></a><h3>ESXi - Password Complexity</h3>' }
     if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-EsxiAccountLockout"; $preHtmlContent = '<a id="esxi-account-lockout"></a><h3>ESXi - Account Lockout</h3>' }
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         if (Test-VCFConnection -server $server) {
@@ -7956,8 +7951,8 @@ Function Publish-EsxiPasswordPolicy {
                 $esxiPasswordPolicyObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $workloadDomain)) {
-						if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
-							if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                        if (Test-VsphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-VsphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $clusters = Get-Cluster -Server $vcfVcenterDetails.fqdn
                                 foreach ($cluster in $clusters) {
                                     $command = $pvsCmdlet + " -server $server -user $user -pass $pass -cluster $($cluster.name) -domain $workloadDomain" + $commandSwitch
@@ -8008,7 +8003,7 @@ Export-ModuleMember -Function Publish-EsxiPasswordPolicy
 #Region     Begin Workspace ONE Access Password Management Function ######
 
 Function Request-WsaPasswordExpiration {
-	<#
+    <#
         .SYNOPSIS
         Retrieves Workspace ONE Access password expiration.
 
@@ -8048,16 +8043,16 @@ Function Request-WsaPasswordExpiration {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     if ($drift) {
         $version = Get-VCFManager -version
@@ -8068,30 +8063,30 @@ Function Request-WsaPasswordExpiration {
         }
     }
 
-	Try {
-		if (Test-WsaConnection -server $server) {
-			if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-WsaConnection -server $server) {
+            if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 if ($WsaPasswordExpiration = Get-WsaPasswordPolicy) {
                     $WsaPasswordExpirationObject = New-Object -TypeName psobject
                     $WsaPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Lifetime (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($WsaPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" }} else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" })
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" }} else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Temporary Password (hours)" -notepropertyvalue $(if ($drift) { if ($WsaPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($WsaPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($WsaPasswordExpiration.tempPasswordTtl)" }} else { "$($WsaPasswordExpiration.tempPasswordTtl)" })
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder Frequency (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" }} else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
+                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Lifetime (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($WsaPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" } } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" })
+                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" } } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
+                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Temporary Password (hours)" -notepropertyvalue $(if ($drift) { if ($WsaPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($WsaPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($WsaPasswordExpiration.tempPasswordTtl)" } } else { "$($WsaPasswordExpiration.tempPasswordTtl)" })
+                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder Frequency (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" } } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
                 return $WsaPasswordExpirationObject
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	}
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    }
 }
 Export-ModuleMember -Function Request-WsaPasswordExpiration
 
 Function Request-WsaPasswordComplexity {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the password complexity policy for Workspace ONE Access instance.
 
@@ -8131,16 +8126,16 @@ Function Request-WsaPasswordComplexity {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     if ($drift) {
         $version = Get-VCFManager -version
@@ -8151,30 +8146,30 @@ Function Request-WsaPasswordComplexity {
         }
     }
 
-    $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" }} else { "$($WsaPasswordComplexity.History)" })
+    $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" } } else { "$($WsaPasswordComplexity.History)" })
 
-	Try {
-		if (Test-WsaConnection -server $server) {
-			if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
+    Try {
+        if (Test-WsaConnection -server $server) {
+            if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 if ($WsaPasswordComplexity = Get-WsaPasswordPolicy) {
                     $WsaPasswordComplexityObject = New-Object -TypeName psobject
                     $WsaPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minLen -ne $requiredConfig.minLength) { "$($WsaPasswordComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($WsaPasswordComplexity.minLen)" }} else { "$($WsaPasswordComplexity.minLen)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minLower -ne $requiredConfig.minLowercase) { "$($WsaPasswordComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($WsaPasswordComplexity.minLower)" }} else { "$($WsaPasswordComplexity.minLower)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minUpper -ne $requiredConfig.minUppercase) { "$($WsaPasswordComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($WsaPasswordComplexity.minUpper)" }} else { "$($WsaPasswordComplexity.minUpper)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Numeric" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minDigit -ne $requiredConfig.minNumerical) { "$($WsaPasswordComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($WsaPasswordComplexity.minDigit)" }} else { "$($WsaPasswordComplexity.minDigit)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minSpecial -ne $requiredConfig.minSpecial) { "$($WsaPasswordComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($WsaPasswordComplexity.minSpecial)" }} else { "$($WsaPasswordComplexity.minSpecial)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Max Identical Adjacent" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" }} else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" }} else { "$($WsaPasswordComplexity.History)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minLen -ne $requiredConfig.minLength) { "$($WsaPasswordComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($WsaPasswordComplexity.minLen)" } } else { "$($WsaPasswordComplexity.minLen)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minLower -ne $requiredConfig.minLowercase) { "$($WsaPasswordComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($WsaPasswordComplexity.minLower)" } } else { "$($WsaPasswordComplexity.minLower)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minUpper -ne $requiredConfig.minUppercase) { "$($WsaPasswordComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($WsaPasswordComplexity.minUpper)" } } else { "$($WsaPasswordComplexity.minUpper)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Numeric" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minDigit -ne $requiredConfig.minNumerical) { "$($WsaPasswordComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($WsaPasswordComplexity.minDigit)" } } else { "$($WsaPasswordComplexity.minDigit)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minSpecial -ne $requiredConfig.minSpecial) { "$($WsaPasswordComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($WsaPasswordComplexity.minSpecial)" } } else { "$($WsaPasswordComplexity.minSpecial)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Max Identical Adjacent" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" } } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" })
+                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" } } else { "$($WsaPasswordComplexity.History)" })
                 } else {
                     Write-Error "Unable to retrieve password complexity policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
                 return $WsaPasswordComplexityObject
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	}
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    }
 }
 Export-ModuleMember -Function Request-WsaPasswordComplexity
 
@@ -8236,12 +8231,12 @@ Function Request-WsaLocalUserPasswordComplexity {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $wsaRootPass = Get-Password -username "root" -password $wsaRootPass
-    
-	Try {
+
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -8262,7 +8257,7 @@ Function Request-WsaLocalUserPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -8329,12 +8324,12 @@ Function Request-WsaLocalUserAccountLockout {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $wsaRootPass = Get-Password -username "root" -password $wsaRootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -8355,14 +8350,14 @@ Function Request-WsaLocalUserAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
 Export-ModuleMember -Function Request-WsaLocalUserAccountLockout
 
 Function Request-WsaAccountLockout {
-	<#
+    <#
         .SYNOPSIS
         Retrieves the account lockout policy for Workspace ONE Access instance.
 
@@ -8402,16 +8397,16 @@ Function Request-WsaAccountLockout {
         The path to the policy configuration file.
     #>
 
-	Param (
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
     if ($drift) {
         $version = Get-VCFManager -version
@@ -8422,26 +8417,26 @@ Function Request-WsaAccountLockout {
         }
     }
 
-    $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" }} else { "$($WsaAccountLockout.numAttempts)" })
+    $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" } } else { "$($WsaAccountLockout.numAttempts)" })
 
     Try {
-		if (Test-WsaConnection -server $server) {
-			if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
+        if (Test-WsaConnection -server $server) {
+            if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 if ($WsaAccountLockout = Get-WsaAccountLockout) {
                     $WsaAccountLockoutObject = New-Object -TypeName psobject
                     $WsaAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
-                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" }} else { "$($WsaAccountLockout.numAttempts)" })
+                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" } } else { "$($WsaAccountLockout.numAttempts)" })
                     $WsaAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (min)" -notepropertyvalue $WsaAccountLockout.unlockInterval
                     $WsaAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (min)" -notepropertyvalue $WsaAccountLockout.attemptInterval
                 } else {
                     Write-Error "Unable to retrieve account lockout policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
                 return $WsaAccountLockoutObject
-			}
-		}
-	} Catch {
-		Debug-ExceptionWriter -object $_
-	}
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    }
 }
 Export-ModuleMember -Function Request-WsaAccountLockout
 
@@ -8486,15 +8481,15 @@ Function Update-WsaPasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-		[Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$warnDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$reminderDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$tempPasswordHours
-	)
+    )
 
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-WsaConnection -server $server) {
             if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 $newMaxDays = ($maxDays * 24)
@@ -8512,7 +8507,7 @@ Function Update-WsaPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -8579,19 +8574,20 @@ Function Update-WsaPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxIdenticalAdjacent,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$maxPreviousCharacters,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$history
-	)               
-	$pass = Get-Password -username $user -password $pass
+    )
 
-	Try {
+    $pass = Get-Password -username $user -password $pass
+
+    Try {
         if (Test-WsaConnection -server $server) {
             if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 $currentPasswordPolicy = Get-WsaPasswordPolicy
                 $currentMaxDays = (($currentPasswordPolicy).passwordTtlInHours / 24)
                 $currentWarnDays = (($currentPasswordPolicy).notificationThreshold / 24 / 3600 / 1000)
                 $currentReminderDays = (($currentPasswordPolicy).notificationInterval / 24 / 3600 / 1000)
-                if ((Get-WsaPasswordPolicy).minLen -ne $minLength  -or (Get-WsaPasswordPolicy).minLower -ne $minLowercase  -or (Get-WsaPasswordPolicy).minUpper -ne $minUppercase  -or (Get-WsaPasswordPolicy).minDigit -ne $minNumeric -or (Get-WsaPasswordPolicy).minSpecial -ne $minSpecial -or (Get-WsaPasswordPolicy).maxConsecutiveIdenticalCharacters -ne $maxIdenticalAdjacent -or (Get-WsaPasswordPolicy).maxPreviousPasswordCharactersReused -ne $maxPreviousCharacters -or (Get-WsaPasswordPolicy).history -ne $history) {
+                if ((Get-WsaPasswordPolicy).minLen -ne $minLength -or (Get-WsaPasswordPolicy).minLower -ne $minLowercase -or (Get-WsaPasswordPolicy).minUpper -ne $minUppercase -or (Get-WsaPasswordPolicy).minDigit -ne $minNumeric -or (Get-WsaPasswordPolicy).minSpecial -ne $minSpecial -or (Get-WsaPasswordPolicy).maxConsecutiveIdenticalCharacters -ne $maxIdenticalAdjacent -or (Get-WsaPasswordPolicy).maxPreviousPasswordCharactersReused -ne $maxPreviousCharacters -or (Get-WsaPasswordPolicy).history -ne $history) {
                     Set-WsaPasswordPolicy -minLen $minLength -minLower $minLowercase -minUpper $minUppercase -minDigit $minNumeric -minSpecial $minSpecial -history $history -maxConsecutiveIdenticalCharacters $maxIdenticalAdjacent -maxPreviousPasswordCharactersReused $maxPreviousCharacters -tempPasswordTtlInHrs (Get-WsaPasswordPolicy).tempPasswordTtl -passwordTtlInDays $currentMaxDays -notificationThresholdInDays $currentWarnDays -notificationIntervalInDays $currentReminderDays | Out-Null
-                    if ((Get-WsaPasswordPolicy).minLen -eq $minLength  -and (Get-WsaPasswordPolicy).minLower -eq $minLowercase -and (Get-WsaPasswordPolicy).minUpper -eq $minUppercase  -and (Get-WsaPasswordPolicy).minDigit -eq $minNumeric -and (Get-WsaPasswordPolicy).minSpecial -eq $minSpecial -and (Get-WsaPasswordPolicy).maxConsecutiveIdenticalCharacters -eq $maxIdenticalAdjacent -and (Get-WsaPasswordPolicy).maxPreviousPasswordCharactersReused -eq $maxPreviousCharacters -and (Get-WsaPasswordPolicy).history -eq $history) {
+                    if ((Get-WsaPasswordPolicy).minLen -eq $minLength -and (Get-WsaPasswordPolicy).minLower -eq $minLowercase -and (Get-WsaPasswordPolicy).minUpper -eq $minUppercase -and (Get-WsaPasswordPolicy).minDigit -eq $minNumeric -and (Get-WsaPasswordPolicy).minSpecial -eq $minSpecial -and (Get-WsaPasswordPolicy).maxConsecutiveIdenticalCharacters -eq $maxIdenticalAdjacent -and (Get-WsaPasswordPolicy).maxPreviousPasswordCharactersReused -eq $maxPreviousCharacters -and (Get-WsaPasswordPolicy).history -eq $history) {
                         Write-Output "Updated Workspace ONE Access Password Complexity on Server ($server): SUCCESSFUL"
                     } else {
                         Write-Error "Update Workspace ONE Access Password Complexity Policy on server ($server): POST_VALIDATION_FAILED"
@@ -8601,7 +8597,7 @@ Function Update-WsaPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -8657,12 +8653,12 @@ Function Update-WsaLocalUserPasswordComplexity {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$minLength,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxRetry
-	)
-    
+    )
+
     $pass = Get-Password -username $user -password $pass
     $wsaRootPass = Get-Password -username "root" -password $wsaRootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -8685,7 +8681,7 @@ Function Update-WsaLocalUserPasswordComplexity {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -8735,11 +8731,11 @@ Function Update-WsaAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failureInterval,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval
+    )
 
-	)
-	$pass = Get-Password -username $user -password $pass
+    $pass = Get-Password -username $user -password $pass
 
-	Try {
+    Try {
         if (Test-WsaConnection -server $server) {
             if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 $failureInterval = ($failureInterval / 60)
@@ -8756,7 +8752,7 @@ Function Update-WsaAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -8812,12 +8808,12 @@ Function Update-WsaLocalUserAccountLockout {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Int]$failures,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $wsaRootPass = Get-Password -username "root" -password $wsaRootPass
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType MANAGEMENT)) {
@@ -8840,7 +8836,7 @@ Function Update-WsaLocalUserAccountLockout {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     }
 }
@@ -8913,7 +8909,7 @@ Function Publish-WsaDirectoryPasswordPolicy {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
-        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
+        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration', 'PasswordComplexity', 'AccountLockout')] [String]$policy,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
@@ -8929,7 +8925,7 @@ Function Publish-WsaDirectoryPasswordPolicy {
     if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaAccountLockout"; $preHtmlContent = '<a id="wsa-directory-account-lockout"></a><h3>Workspace ONE Access Directory - Account Lockout</h3>' }
 
     # Define the Command Switch
-    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+    if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
 
     Try {
         $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch
@@ -9026,7 +9022,7 @@ Function Publish-WsaLocalPasswordPolicy {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$wsaFqdn,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$wsaRootPass,
-        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration','PasswordComplexity','AccountLockout')] [String]$policy,
+        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration', 'PasswordComplexity', 'AccountLockout')] [String]$policy,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
@@ -9040,12 +9036,12 @@ Function Publish-WsaLocalPasswordPolicy {
 
     Try {
         if (Test-VCFConnection -server $server) {
-            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {                
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 # Define the Command Switch
-                if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" }} else { $commandSwitch = "" }
+                if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
                 [Array]$localUsers = '"root","sshuser"'
                 if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $preHtmlContent = '<a id="wsa-local-password-expiration"></a><h3>Workspace ONE Access (Local Users) - Password Expiration</h3>'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product wsaLocal -vmName $(($wsaFqdn.Split("."))[-0]) -guestUser root -guestPassword $wsaRootPass -localUser $localUsers" }
-                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="wsa-local-password-complexity"></a><h3>Workspace ONE Access (Local Users) - Password Complexity</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass"}
+                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="wsa-local-password-complexity"></a><h3>Workspace ONE Access (Local Users) - Password Complexity</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
                 if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaLocalUserAccountLockout"; $preHtmlContent = '<a id="wsa-local-account-lockout"></a><h3>Workspace ONE Access (Local Users) - Account Lockout</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
 
                 $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch + $customSwitch
@@ -9149,12 +9145,12 @@ Function Request-LocalUserPasswordExpiration {
         [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
-	)
+    )
 
     $pass = Get-Password -username $user -password $pass
     $guestPassword = Get-Password -username $guestUser -password $guestPassword
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
@@ -9193,9 +9189,9 @@ Function Request-LocalUserPasswordExpiration {
                                         $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                         $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
                                         $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" }} else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
+                                        $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
+                                        $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
+                                        $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
                                         $allLocalUserExpirationObject += $localUserExpirationObject
                                     } else {
                                         Write-Error "Unable to retrieve password expiration policy for local user ($user) from Virtual Machine ($vmName): PRE_VALIDATION_FAILED"
@@ -9210,7 +9206,7 @@ Function Request-LocalUserPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -9285,13 +9281,13 @@ Function Update-LocalUserPasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$minDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$warnDays,
-        [Parameter (Mandatory = $false)] [ValidateSet("true","false")] [String]$detail="true"
-	)
-    
+        [Parameter (Mandatory = $false)] [ValidateSet("true", "false")] [String]$detail = "true"
+    )
+
     $pass = Get-Password -username $user -password $pass
     $guestPassword = Get-Password -username $guestUser -password $guestPassword
 
-	Try {
+    Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -9316,15 +9312,15 @@ Function Update-LocalUserPasswordExpiration {
                                 }
                                 foreach ($user in $localUser) {
                                     $existingConfiguration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user
-                                    $currentMinDays = ($existingConfiguration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()
-                                    $currentMaxDays = ($existingConfiguration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()
-                                    $currentWarnDays = ($existingConfiguration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()
+                                    $currentMinDays = ($existingConfiguration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()
+                                    $currentMaxDays = ($existingConfiguration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()
+                                    $currentWarnDays = ($existingConfiguration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()
                                     if ($currentMinDays -ne $minDays -or $currentMaxDays -ne $maxDays -or $currentWarnDays -ne $warnDays) {
                                         Set-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user -minDays $minDays -maxDays $maxDays -warnDays $warnDays
                                         $updatedConfiguration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user
-                                        $updatedMinDays = ($updatedConfiguration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()
-                                        $updatedMaxDays = ($updatedConfiguration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()
-                                        $updatedWarnDays = ($updatedConfiguration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()
+                                        $updatedMinDays = ($updatedConfiguration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()
+                                        $updatedMaxDays = ($updatedConfiguration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()
+                                        $updatedWarnDays = ($updatedConfiguration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()
                                         if ($updatedMinDays -eq $minDays -or $updatedMaxDays -eq $maxDays -or $updatedWarnDays -eq $warnDays) {
                                             if ($detail -eq "true") {
                                                 Write-Output "Update Local User ($user) Password Expiration Policy on Virtual Machine ($vmName): SUCCESSFUL"
@@ -9349,7 +9345,7 @@ Function Update-LocalUserPasswordExpiration {
                 }
             }
         }
-	} Catch {
+    } Catch {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
@@ -9424,22 +9420,22 @@ Function Publish-PasswordRotationPolicy {
         [Parameter (Mandatory = $false)] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json
     )
-    
-	$pass = Get-Password -username $user -password $pass
+
+    $pass = Get-Password -username $user -password $pass
 
     # Determine the resource type.
     if ($resource) {
         switch ($resource) {
-            'sso' {$resourceName = 'vCenter Single Sign-On'}
-            'vcenterServer' {$resourceName = 'vCenter Server'}
-            'nsxManager' {$resourceName = 'NSX Manager'}
-            'nsxEdge' {$resourceName = 'NSX Edge'}
-            'ariaLifecycle' {$resourceName = 'Aria Suite Lifecycle'}
-            'ariaOperationsLogs' {$resourceName = 'Aria Operations for Logs'}
-            'ariaOperations' {$resourceName = 'Aria Operations'}
-            'ariaAutomation' {$resourceName = 'Aria Automation'}
-            'workspaceOneAccess' {$resourceName = 'Workspace ONE Access'}
-            'backup' {$resourceName = 'SDDC Manager'}
+            'sso' { $resourceName = 'vCenter Single Sign-On' }
+            'vcenterServer' { $resourceName = 'vCenter Server' }
+            'nsxManager' { $resourceName = 'NSX Manager' }
+            'nsxEdge' { $resourceName = 'NSX Edge' }
+            'ariaLifecycle' { $resourceName = 'Aria Suite Lifecycle' }
+            'ariaOperationsLogs' { $resourceName = 'Aria Operations for Logs' }
+            'ariaOperations' { $resourceName = 'Aria Operations' }
+            'ariaAutomation' { $resourceName = 'Aria Automation' }
+            'workspaceOneAccess' { $resourceName = 'Workspace ONE Access' }
+            'backup' { $resourceName = 'SDDC Manager' }
         }
     } else {
         # If no resource type is specified, retrieve all resource types.
@@ -9476,10 +9472,10 @@ Function Publish-PasswordRotationPolicy {
                 }
 
                 # Define the custom sort order for resourceType
-                $resourceTypeOrder = @('SDDC Manager','vCenter Single Sign-On','vCenter Server','NSX Manager','NSX Edge','Aria Suite Lifecycle','Aria Operations for Logs','Aria Operations','Aria Automation','Workspace ONE Access')
+                $resourceTypeOrder = @('SDDC Manager', 'vCenter Single Sign-On', 'vCenter Server', 'NSX Manager', 'NSX Edge', 'Aria Suite Lifecycle', 'Aria Operations for Logs', 'Aria Operations', 'Aria Automation', 'Workspace ONE Access')
 
                 # Sort the array by resourceType using the custom sort order
-                $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression={$resourceTypeOrder.IndexOf($_.Resource)}}, 'System', 'User'
+                $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression = { $resourceTypeOrder.IndexOf($_.Resource) } }, 'System', 'User'
 
                 # If the json parameter is specified, return the results as JSON.
                 if ($PsBoundParameters.ContainsKey('json')) {
@@ -9565,22 +9561,22 @@ Function Request-PasswordRotationPolicy {
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$domain,
         [Parameter (Mandatory = $false)] [ValidateSet('sso', 'vcenterServer', 'nsxManager', 'nsxEdge', 'ariaLifecycle', 'ariaOperations', 'ariaOperationsLogs', 'ariaAutomation', 'workspaceOneAccess', 'backup')] [String]$resource
     )
-    
-	$pass = Get-Password -username $user -password $pass
+
+    $pass = Get-Password -username $user -password $pass
 
     # Determine the resource type.
     if ($resource) {
         switch ($resource) {
-            'sso' {$resourceType = 'PSC'}
-            'vcenterServer' {$resourceType = 'VCENTER'}
-            'nsxManager' {$resourceType = 'NSXT_MANAGER'}
-            'nsxEdge' {$resourceType = 'NSXT_EDGE'}
-            'ariaLifecycle' {$resourceType = 'VRSLCM'}
-            'ariaOperationsLogs' {$resourceType = 'VRLI'}
-            'ariaOperations' {$resourceType = 'VROPS'}
-            'ariaAutomation' {$resourceType = 'VRA'}
-            'workspaceOneAccess' {$resourceType = 'WSA'}
-            'backup' {$resourceType = 'BACKUP'}
+            'sso' { $resourceType = 'PSC' }
+            'vcenterServer' { $resourceType = 'VCENTER' }
+            'nsxManager' { $resourceType = 'NSXT_MANAGER' }
+            'nsxEdge' { $resourceType = 'NSXT_EDGE' }
+            'ariaLifecycle' { $resourceType = 'VRSLCM' }
+            'ariaOperationsLogs' { $resourceType = 'VRLI' }
+            'ariaOperations' { $resourceType = 'VROPS' }
+            'ariaAutomation' { $resourceType = 'VRA' }
+            'workspaceOneAccess' { $resourceType = 'WSA' }
+            'backup' { $resourceType = 'BACKUP' }
         }
     } else {
         # If no resource type is specified, retrieve all resource types.
@@ -9599,16 +9595,16 @@ Function Request-PasswordRotationPolicy {
                 $passwordRotationObject = foreach ($passwordRotation in $passwordRotations) {
                     # Determine the resource name based on the resource type.
                     switch ($passwordRotation.resource.resourceType) {
-                        'PSC' {$resourceName = 'vCenter Single Sign-On'}
-                        'VCENTER' {$resourceName = 'vCenter Server'}
-                        'NSXT_MANAGER' {$resourceName = 'NSX Manager'}
-                        'NSXT_EDGE' {$resourceName = 'NSX Edge'}
-                        'VRSLCM' {$resourceName = 'Aria Suite Lifecycle'}
-                        'VRLI' {$resourceName = 'Aria Operations for Logs'}
-                        'VROPS' {$resourceName = 'Aria Operations'}
-                        'VRA' {$resourceName = 'Aria Automation'}
-                        'WSA' {$resourceName = 'Workspace ONE Access'}
-                        'BACKUP' {$resourceName = 'SDDC Manager'}
+                        'PSC' { $resourceName = 'vCenter Single Sign-On' }
+                        'VCENTER' { $resourceName = 'vCenter Server' }
+                        'NSXT_MANAGER' { $resourceName = 'NSX Manager' }
+                        'NSXT_EDGE' { $resourceName = 'NSX Edge' }
+                        'VRSLCM' { $resourceName = 'Aria Suite Lifecycle' }
+                        'VRLI' { $resourceName = 'Aria Operations for Logs' }
+                        'VROPS' { $resourceName = 'Aria Operations' }
+                        'VRA' { $resourceName = 'Aria Automation' }
+                        'WSA' { $resourceName = 'Workspace ONE Access' }
+                        'BACKUP' { $resourceName = 'SDDC Manager' }
                     }
                     # Determine the frequency and next schedule based on the credential password rotation settings.
                     if (!$passwordRotation.autoRotatePolicy) {
@@ -9694,10 +9690,10 @@ Function Request-PasswordRotationPolicy {
                 }
 
                 # Define the custom sort order for resourceType
-                $resourceTypeOrder = @('SDDC Manager','vCenter Single Sign-On','vCenter Server','NSX Manager','NSX Edge','Aria Suite Lifecycle','Aria Operations for Logs','Aria Operations','Aria Automation','Workspace ONE Access')
+                $resourceTypeOrder = @('SDDC Manager', 'vCenter Single Sign-On', 'vCenter Server', 'NSX Manager', 'NSX Edge', 'Aria Suite Lifecycle', 'Aria Operations for Logs', 'Aria Operations', 'Aria Automation', 'Workspace ONE Access')
 
                 # Sort the $passwordRotationObjects array by resourceType using the custom sort order
-                $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression={$resourceTypeOrder.IndexOf($_.Resource)}}, 'System', 'Type', 'User'
+                $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression = { $resourceTypeOrder.IndexOf($_.Resource) } }, 'System', 'Type', 'User'
 
                 # Return the credential password rotation objects.
                 return $passwordRotationObject
@@ -9774,28 +9770,30 @@ Function Update-PasswordRotationPolicy {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$credentialName,
         [Parameter (Mandatory = $true)] [ValidateSet('enabled', 'disabled')] [String]$autoRotate,
         [Parameter (Mandatory = $false)] [ValidateScript({ $autoRotate -eq 'ENABLED' -or $_ -eq $null })] [Int]$frequencyInDays
-    )    
-	$pass = Get-Password -username $user -password $pass
+    )
+
+    $pass = Get-Password -username $user -password $pass
+    
     # Set the resource type.
     switch ($resource) {
-        'sso' {$resourceType = 'PSC'; $resourceDescription = 'vCenter Single Sign-On'}
-        'vcenterServer' {$resourceType = 'VCENTER'; $resourceDescription = 'vCenter Server'}
-        'nsxManager' {$resourceType = 'NSXT_MANAGER'; $resourceDescription = 'NSX Manager'}
-        'nsxEdge' {$resourceType = 'NSXT_EDGE'; $resourceDescription = 'NSX Edge'}
-        'ariaLifecycle' {$resourceType = 'VRSLCM'; $resourceDescription = 'Aria Suite Lifecycle'}
-        'ariaOperationsLogs' {$resourceType = 'VRLI'; $resourceDescription = 'Aria Operations for Logs'}
-        'ariaOperations' {$resourceType = 'VROPS'; $resourceDescription = 'Aria Operations'}
-        'ariaAutomation' {$resourceType = 'VRA'; $resourceDescription = 'Aria Automation'}
-        'workspaceOneAccess' {$resourceType = 'WSA'; $resourceDescription = 'Workspace ONE Access'}
-        'backup' {$resourceType = 'BACKUP'; $resourceDescription = 'SDDC Manager'}
+        'sso' { $resourceType = 'PSC'; $resourceDescription = 'vCenter Single Sign-On' }
+        'vcenterServer' { $resourceType = 'VCENTER'; $resourceDescription = 'vCenter Server' }
+        'nsxManager' { $resourceType = 'NSXT_MANAGER'; $resourceDescription = 'NSX Manager' }
+        'nsxEdge' { $resourceType = 'NSXT_EDGE'; $resourceDescription = 'NSX Edge' }
+        'ariaLifecycle' { $resourceType = 'VRSLCM'; $resourceDescription = 'Aria Suite Lifecycle' }
+        'ariaOperationsLogs' { $resourceType = 'VRLI'; $resourceDescription = 'Aria Operations for Logs' }
+        'ariaOperations' { $resourceType = 'VROPS'; $resourceDescription = 'Aria Operations' }
+        'ariaAutomation' { $resourceType = 'VRA'; $resourceDescription = 'Aria Automation' }
+        'workspaceOneAccess' { $resourceType = 'WSA'; $resourceDescription = 'Workspace ONE Access' }
+        'backup' { $resourceType = 'BACKUP'; $resourceDescription = 'SDDC Manager' }
     }
 
     # Set the credential type.
     switch ($credential) {
-        'ssh' {$credentialType = $credential.ToUpper()}
-        'api' {$credentialType = $credential.ToUpper()}
-        'audit' {$credentialType = $credential.ToUpper()}
-        'sso' {$credentialType = $credential.ToUpper()}
+        'ssh' { $credentialType = $credential.ToUpper() }
+        'api' { $credentialType = $credential.ToUpper() }
+        'audit' { $credentialType = $credential.ToUpper() }
+        'sso' { $credentialType = $credential.ToUpper() }
     }
 
     # Set the username.
@@ -9807,7 +9805,7 @@ Function Update-PasswordRotationPolicy {
             # Validate that authentication is possible to SDDC Manager.
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 # Set the status messages.
-                $message =  "password rotation policy for $credentialType credential ($credentialName) for workload domain ($domain) $resourceDescription resource ($resourceName) managed by SDDC Manager ($server)"
+                $message = "password rotation policy for $credentialType credential ($credentialName) for workload domain ($domain) $resourceDescription resource ($resourceName) managed by SDDC Manager ($server)"
                 $updateMessage = "Updating $message"
                 $locateMessage = "Locating $message"
                 # Update the credential password rotation settings for a credential managed by SDDC Manager.
@@ -9897,17 +9895,17 @@ Export-ModuleMember -Function Test-VcfPasswordManagementPrereq
 Function Show-PasswordManagementOutput {
     Param (
         [Parameter (Mandatory = $true)] [AllowEmptyString()] [String]$message,
-        [Parameter (Mandatory = $false)] [ValidateSet("INFO", "ERROR", "WARNING", "EXCEPTION","ADVISORY","NOTE","QUESTION","WAIT")] [String]$type = "INFO",
+        [Parameter (Mandatory = $false)] [ValidateSet("INFO", "ERROR", "WARNING", "EXCEPTION", "ADVISORY", "NOTE", "QUESTION", "WAIT")] [String]$type = "INFO",
         [Parameter (Mandatory = $false)] [Switch]$skipnewline
     )
 
     If ($type -eq "INFO") {
         $messageColour = "92m" #Green
-    } elseIf ($type -in "ERROR","EXCEPTION") {
+    } elseif ($type -in "ERROR", "EXCEPTION") {
         $messageColour = "91m" # Red
-    } elseIf ($type -in "WARNING","ADVISORY","QUESTION") {
+    } elseif ($type -in "WARNING", "ADVISORY", "QUESTION") {
         $messageColour = "93m" #Yellow
-    } elseIf ($type -in "NOTE","WAIT") {
+    } elseif ($type -in "NOTE", "WAIT") {
         $messageColour = "97m" # White
     }
 

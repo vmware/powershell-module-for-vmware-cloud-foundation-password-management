@@ -1,5 +1,13 @@
 # Release History
 
+## v1.8.0
+
+> Release Date: Unreleased
+
+Enhancements:
+
+- Added support in `Request-NsxtEdgePasswordComplexity` to retrieve the password complexity policy from an unmanaged NSX Edge Node. [GH-148](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148)
+
 ## v1.7.0
 
 > Release Date: 2023-11-16
