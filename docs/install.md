@@ -32,19 +32,19 @@ Verify that your system has a [supported edition and version](index.md#powershel
 
     === ":fontawesome-brands-windows: &nbsp; Windows"
 
-        Save Modules [module dependencies](index.md#module-dependencies) from the PowerShell Gallery on a non air-gapped machine by running the following commands:
+        From a system with an Internet connection, save the module dependencies from the PowerShell Gallery by running the following commands in the PowerShell console:
 
         ```powershell
         --8<-- "./docs/snippets/save-module-local-windows.ps1"
         ```
 
-        Copy the PowerShell Modules [module dependencies](index.md#module-dependencies) from the Local Machine to air-gapped facing machine by running the following commands:
+        From the system with the Internet connection, copy the module dependencies to a target system by running the following commands in the PowerShell console:
 
         ```powershell
         --8<-- "./docs/snippets/copy-module-local-windows.ps1"
         ```
 
-        Import the PowerShell Modules [module dependencies](index.md#module-dependencies) from the air-gapped machine by running the following commands:
+        On the target system, import the module dependencies by running the following commands in the PowerShell console:
 
         ```powershell
         --8<-- "./docs/snippets/import-module.ps1"
@@ -58,19 +58,19 @@ Verify that your system has a [supported edition and version](index.md#powershel
         --8<-- "./docs/snippets/pre-req-linux.sh"
         ```
 
-        Save Modules [module dependencies](index.md#module-dependencies) from the PowerShell Gallery on a non air-gapped machine by running the following commands:
+        From a system with an Internet connection, save the module dependencies from the PowerShell Gallery by running the following commands in the PowerShell console:
 
         ```powershell
         --8<-- "./docs/snippets/save-module-local-linux.ps1"
         ```
 
-        Copy the PowerShell Modules [module dependencies](index.md#module-dependencies) from the Local Machine to air-gapped facing machine by running the following commands:
+        From the system with an Internet connection, copy the module dependencies to a target system by running the following commands in the PowerShell console:
 
         ```bash
         --8<-- "./docs/snippets/copy-module-local-linux.sh"
         ```
 
-        Import the PowerShell Modules [module dependencies](index.md#module-dependencies) from the air-gapped machine by running the following commands in PowerShell:
+        On the target system, import the module dependencies by running the following commands in the PowerShell console:
 
         ```powershell
         --8<-- "./docs/snippets/import-module-local-linux.ps1"
