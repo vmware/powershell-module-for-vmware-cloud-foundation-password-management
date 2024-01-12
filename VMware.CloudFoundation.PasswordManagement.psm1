@@ -1,4 +1,4 @@
-# Copyright 2023 Broadcom. All Rights Reserved.
+# Copyright 2023-2024 Broadcom. All Rights Reserved.
 # SPDX-License-Identifier: BSD-2
 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -64,6 +64,9 @@ Set-Variable -Name "failureStatus" -Value "FAILED" -Scope Global
 Set-Variable -Name "skippedStatus" -Value "SKIPPED" -Scope Global
 Set-Variable -Name "preValidationFailureStatus" -Value "PRE_VALIDATION_FAILED" -Scope Global
 Set-Variable -Name "postValidationFailureStatus" -Value "POST_VALIDATION_FAILED" -Scope Global
+Set-Variable -Name "managedPasswordMinLength" -Value "20" -Scope Global
+Set-Variable -Name "minLengthExceeds" -Value "SDDC Manager is not able to the rotate password. Minimum length is greater than the managed range: $minumumPasswordLengthMax." -Scope Global
+Set-Variable -Name "minLengthNotExceeds" -Value "SDDC Manager is able to rotate the password." -Scope Global
 
 #EndRegion  End Global Variables                                    ######
 ##########################################################################
@@ -3974,12 +3977,72 @@ Function Request-VcenterPasswordComplexity {
                                 if ($drift) {
                                     $version = Get-VCFManager -version
                                     if ($PsBoundParameters.ContainsKey('policyFile')) {
-                                        Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
+                                        $vcenterLocalPolicy = Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
+                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                        if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
+                                            $alert = "RED"
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                        } else {
+                                            $alert = "GREEN"
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds 
+                                        } 
+                                        $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     } else {
-                                        Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
+                                        $vcenterLocalPolicy = Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
+                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                        if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
+                                            $alert = "RED"
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                        } else {
+                                            $alert = "GREEN"
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds 
+                                        } 
+                                        $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     }
                                 } else {
-                                    Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
+                                        $vcenterLocalPolicy = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
+                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                        if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
+                                            $alert = "RED"
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                        } else {
+                                            $alert = "GREEN"
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds 
+                                        } 
+                                        $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                 }
                             }
                         }
@@ -5239,6 +5302,15 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" } } else { "$($nsxtManagerNodePolicy.'Min Special')" })
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" } } else { "$($nsxtManagerNodePolicy.'Min Unique')" })
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" } } else { "$($nsxtManagerNodePolicy.'Max Retries')" })
+                                                        if ( $nsxtManagerNodePolicy.minimum_password_length -gt $managedPasswordMinLength ) {
+                                                            $alert = "RED"
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds 
+                                                        } else { 
+                                                            $alert = "GREEN"
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                                        } 
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Password Complexity Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -5259,6 +5331,15 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" } } else { "$($nsxtManagerNodePolicy.max_sequence)" })
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" } } else { "$($nsxtManagerNodePolicy.password_remembrance)" })
                                                         $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Hash Algorithm" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.hash_algorithm -ne $requiredConfig.hashAlgorithm) { "$($nsxtManagerNodePolicy.hash_algorithm) [ $($requiredConfig.hashAlgorithm) ]" } else { "$($nsxtManagerNodePolicy.hash_algorithm)" } } else { "$($nsxtManagerNodePolicy.hash_algorithm)" })
+                                                        if ( $nsxtManagerNodePolicy.minimum_password_length -gt $managedPasswordMinLength ) {
+                                                            $alert = "RED"
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds 
+                                                        } else { 
+                                                            $alert = "GREEN"
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                                        } 
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -6331,6 +6412,15 @@ Function Request-NsxtEdgePasswordComplexity {
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
+                                                         if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
+                                                            $alert = "RED"
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                         } else {
+                                                            $alert = "GREEN"
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                                                         }  
                                                         $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Password Complexity Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
@@ -6348,6 +6438,15 @@ Function Request-NsxtEdgePasswordComplexity {
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
+                                                     if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
+                                                        $alert = "RED"
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                     } else {
+                                                        $alert = "GREEN"
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                                                     }  
                                                     $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                 }
                                             }
@@ -7337,6 +7436,16 @@ Function Request-EsxiPasswordComplexity {
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Policy" -notepropertyvalue $(if ($drift) { if ($passwordQualityControl.value -ne $requiredConfig.policy) { "$($passwordQualityControl.value) [ $($requiredConfig.policy) ]" } else { "$($passwordQualityControl.value)" } } else { "$($passwordQualityControl.value)" })
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($passwordHistory.Value -ne $requiredConfig.history) { "$($passwordHistory.Value) [ $($requiredConfig.history) ]" } else { "$($passwordHistory.Value)" } } else { "$($passwordHistory.Value)" })
+                                                if ( $passwordQualityControl.Value.Trim().Split(',')[2] -ne "disabled" -and [int]$passwordQualityControl.Value.Trim().Split(',')[2] -gt $managedPasswordMinLength ) {
+                                                      $alert = "Red"
+                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                    } else {
+                                                      $alert = "Green"
+                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                    
+                                                 } 
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
