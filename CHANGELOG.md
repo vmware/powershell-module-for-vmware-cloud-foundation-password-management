@@ -1,6 +1,6 @@
 # Release History
 
-## v1.8.0
+## v1.7.1
 
 > Release Date: Unreleased
 
