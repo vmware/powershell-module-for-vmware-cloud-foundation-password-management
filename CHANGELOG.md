@@ -11,6 +11,7 @@ Enhancements:
 
 Chore:
 
+- Updated `PowerVCF` from v2.4.0 to v2.4.1. [GH-154](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/154)
 - Updated `PowerValidatedSolutions` from v2.7.0 to v2.8.0. [GH-153](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/153)
 
 ## v1.7.0
