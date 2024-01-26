@@ -11,7 +11,7 @@
     RootModule = '.\VMware.CloudFoundation.PasswordManagement.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.7.1.1002'
+    ModuleVersion = '1.7.1.1003'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -57,7 +57,7 @@
         }
         @{
             ModuleName    = 'PowerVCF';
-            ModuleVersion = '2.4.0'
+            ModuleVersion = '2.4.1'
         }
         @{
             ModuleName    = 'PowerValidatedSolutions';
