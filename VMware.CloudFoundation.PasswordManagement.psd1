@@ -61,7 +61,7 @@
         }
         @{
             ModuleName    = 'PowerValidatedSolutions';
-            ModuleVersion = '2.7.0'
+            ModuleVersion = '2.8.0'
         }
     )
     
