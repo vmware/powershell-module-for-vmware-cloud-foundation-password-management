@@ -6,8 +6,12 @@
 
 Enhancements:
 
-- Added support in `Request-NsxtEdgePasswordComplexity` to retrieve the password complexity policy from an unmanaged NSX Edge Node. [GH-148](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148)
+- Added support in `Request-NsxtEdgePasswordComplexity` to retrieve the password complexity policy from an non-managed NSX Edge Node. [GH-148](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148)
 - Added support to check if the minimum length exceeds the maximum length used in a password rotation by SDDC Manager for NSX Local Managers, NSX Edges, vCenter Server, and ESXi. [GH-150](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/150)
+
+Chore:
+
+- Updated `PowerValidatedSolutions` from v2.7.0 to v2.8.0. [GH-153](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/153)
 
 ## v1.7.0
 
