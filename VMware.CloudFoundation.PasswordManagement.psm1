@@ -4045,6 +4045,7 @@ Function Request-VcenterPasswordComplexity {
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                 }
                             }
+                            return $VcenterLocalPasswordComplexityPolicy
                         }
                     }
                 } else {

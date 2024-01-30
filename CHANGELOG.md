@@ -4,6 +4,10 @@
 
 > Release Date: Unreleased
 
+Bugfix:
+
+- Fixed returning of the object in `Request-VcenterPasswordComplexity` cmdlet. [GH-157](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/157)
+
 Enhancements:
 
 - Added support in `Request-NsxtEdgePasswordComplexity` to retrieve the password complexity policy from an non-managed NSX Edge Node. [GH-148](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148)
