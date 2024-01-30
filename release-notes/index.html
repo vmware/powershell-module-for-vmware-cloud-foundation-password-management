@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.6">
     
     
       
@@ -522,9 +522,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v180" class="md-nav__link">
+  <a href="#v171" class="md-nav__link">
     <span class="md-ellipsis">
-      v1.8.0
+      v1.7.1
     </span>
   </a>
   
@@ -4186,9 +4186,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v180" class="md-nav__link">
+  <a href="#v171" class="md-nav__link">
     <span class="md-ellipsis">
-      v1.8.0
+      v1.7.1
     </span>
   </a>
   
@@ -4298,13 +4298,23 @@
 
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
-<h2 id="v180">v1.8.0<a class="headerlink" href="#v180" title="Permanent link">&para;</a></h2>
+<h2 id="v171">v1.7.1<a class="headerlink" href="#v171" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>Release Date: Unreleased</p>
+<p>Release Date: 2024-01-30</p>
 </blockquote>
+<p>Bugfix:</p>
+<ul>
+<li>Fixed returning of the object in <code>Request-VcenterPasswordComplexity</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/157">GH-157</a></li>
+</ul>
 <p>Enhancements:</p>
 <ul>
-<li>Added support in <code>Request-NsxtEdgePasswordComplexity</code> to retrieve the password complexity policy from an unmanaged NSX Edge Node. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148">GH-148</a></li>
+<li>Added support in <code>Request-NsxtEdgePasswordComplexity</code> to retrieve the password complexity policy from an non-managed NSX Edge Node. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148">GH-148</a></li>
+<li>Added support to check if the minimum length exceeds the maximum length used in a password rotation by SDDC Manager for NSX Local Managers, NSX Edges, vCenter Server, and ESXi. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/150">GH-150</a></li>
+</ul>
+<p>Chore:</p>
+<ul>
+<li>Updated <code>PowerVCF</code> from v2.4.0 to v2.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/154">GH-154</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> from v2.7.0 to v2.8.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/153">GH-153</a></li>
 </ul>
 <h2 id="v170">v1.7.0<a class="headerlink" href="#v170" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -4536,21 +4546,6 @@
     
     
     
-      
-  
-  <span class="md-source-file__fact">
-    <span class="md-icon" title="Contributors">
-      
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4Z"/></svg>
-      
-    </span>
-    <nav>
-      
-        <a href="mailto:johnsonryan@vmware.com">Ryan Johnson</a>
-    </nav>
-  </span>
-
-    
     
   </aside>
 
@@ -4646,10 +4641,10 @@ The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../assets/javascripts/bundle.e1c3ead8.min.js"></script>
       
         <script src="../js/timeago.min.js"></script>
       
