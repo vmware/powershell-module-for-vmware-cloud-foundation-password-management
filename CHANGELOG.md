@@ -1,5 +1,13 @@
 # Release History
 
+## v1.7.2
+
+> Release Date: Unreleased
+
+Breaking Change:
+
+- Removes support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-159](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159)
+
 ## v1.7.1
 
 > Release Date: 2024-01-30
