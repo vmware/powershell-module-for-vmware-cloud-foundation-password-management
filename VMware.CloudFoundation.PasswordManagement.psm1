@@ -2589,19 +2589,7 @@ Function Update-SddcManagerAccountLockout {
                     if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                         if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                             $existingConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
-                            $sddcManagerVersion = Get-VCFManager -version
-                            if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
-                                $scriptCommand = "sed -E -i.bak '0,/pam_faillock.so/s/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so preauth authfail audit deny=$failures unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
-                                $scriptCommand += "' /etc/pam.d/system-auth"
-                                Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -Guestuser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
-                                # validate if changes take effect
-                                $updatedConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
-                                if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
-                                    Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
-                                } else {
-                                    Write-Error "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
-                                }
-                            } elseif ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
+                            if ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
                                 Set-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
                                 $updatedConfiguration = Get-LocalAccountLockout -vmName ($server.Split("."))[0] -guestUser root -guestPassword $rootPass -product sddcManager
                                 if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
@@ -3995,8 +3983,8 @@ Function Request-VcenterPasswordComplexity {
                                         } else {
                                             $alert = "GREEN"
                                             $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds 
-                                        } 
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                        }
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     } else {
                                         $vcenterLocalPolicy = Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
@@ -4017,8 +4005,8 @@ Function Request-VcenterPasswordComplexity {
                                         } else {
                                             $alert = "GREEN"
                                             $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds 
-                                        } 
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                        }
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     }
                                 } else {
@@ -4040,8 +4028,8 @@ Function Request-VcenterPasswordComplexity {
                                         } else {
                                             $alert = "GREEN"
                                             $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds 
-                                        } 
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                        }
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                 }
                             }
@@ -4122,23 +4110,18 @@ Function Request-VcenterAccountLockout {
     $pass = Get-Password -username $user -password $pass
 
     Try {
-        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                if ($vcenterDomain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-                        $vcenterDomain = $vcfVcenterDetails.type
-                        if ($vcenterDomain -ne "MANAGEMENT") {
-                            if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
-                                if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
-                                    if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                            $mgmtConnected = $true
-                                        }
+                        # Connect to Management domain if provided domain is VI
+                        if ($vcenterDomain.type -ne "MANAGEMENT") {
+                            if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "MANAGEMENT")) {
+                                if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                        $mgmtConnected = $true
                                     }
                                 }
-                            } else {
-                                Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                             }
                         }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
@@ -4154,7 +4137,6 @@ Function Request-VcenterAccountLockout {
                                     Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                 }
                             }
-
                         }
                     }
                 } else {
@@ -4166,7 +4148,7 @@ Function Request-VcenterAccountLockout {
         Debug-ExceptionWriter -object $_
     } Finally {
         if ($global:DefaultVIServers) {
-            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+            #Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
         }
     }
 }
@@ -4425,38 +4407,21 @@ Function Update-VcenterAccountLockout {
         $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
-                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                if ($vcenterDomain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
                     if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
-                        $vcenterDomain = $vcfVcenterDetails.type
-                        if ($vcenterDomain -ne "MANAGEMENT") {
-                            if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
-                                if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
-                                    if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                            $mgmtConnected = $true
-                                        }
+                        if ($vcenterDomain.type -ne "MANAGEMENT") {
+                            if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                        $mgmtConnected = $true
                                     }
                                 }
-                            } else {
-                                Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
                             }
                         }
                         if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 $existingConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
-                                $sddcManagerVersion = Get-VCFManager -version
-                                if (($sddcManagerVersion.split(".")[0] -ge 5 -and $sddcManagerVersion.split(".")[1] -ge 1) -and ($existingConfiguration.'Max Failures' -eq $null -or $existingConfiguration.'Unlock Interval (sec)' -eq $null -or $existingConfiguration.'Root Unlock Interval (sec)' -eq $null)) {
-                                    $scriptCommand = "sed -E -i.bak 's/.*auth.*required.*pam_faillock.so.*/auth`trequired pam_faillock.so preauth authfail audit deny=$failures unlock_time=$unlockInterval root_unlock_time=$rootUnlockInterval/"
-                                    $scriptCommand += "' /etc/pam.d/system-auth"
-                                    Invoke-VMScript -VM $vcfVcenterDetails.fqdn.Split(".")[0] -ScriptText $scriptCommand -Guestuser $vcfVcenterDetails.root -GuestPass $vcfVcenterDetails.rootPass -Confirm:$false | Out-Null
-                                    # validate if changes take effect
-                                    $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
-                                    if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
-                                        Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
-                                    } else {
-                                        Write-Error "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
-                                    }
-                                } elseif ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
+                                if ($existingConfiguration.'Max Failures' -ne $failures -or $existingConfiguration.'Unlock Interval (sec)' -ne $unlockInterval -or $existingConfiguration.'Root Unlock Interval (sec)' -ne $rootUnlockInterval) {
                                     Set-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
                                     $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                     if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
@@ -5306,12 +5271,12 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         if ( $nsxtManagerNodePolicy.minimum_password_length -gt $managedPasswordMinLength ) {
                                                             $alert = "RED"
                                                             $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds 
-                                                        } else { 
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                                        } else {
                                                             $alert = "GREEN"
                                                             $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                             $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
-                                                        } 
+                                                        }
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Password Complexity Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -5335,12 +5300,12 @@ Function Request-NsxtManagerPasswordComplexity {
                                                         if ( $nsxtManagerNodePolicy.minimum_password_length -gt $managedPasswordMinLength ) {
                                                             $alert = "RED"
                                                             $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds 
-                                                        } else { 
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                                        } else {
                                                             $alert = "GREEN"
                                                             $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                             $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
-                                                        } 
+                                                        }
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -6421,7 +6386,7 @@ Function Request-NsxtEdgePasswordComplexity {
                                                             $alert = "GREEN"
                                                             $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                             $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
-                                                         }  
+                                                         }
                                                         $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Password Complexity Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
@@ -6447,7 +6412,7 @@ Function Request-NsxtEdgePasswordComplexity {
                                                         $alert = "GREEN"
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
-                                                     }  
+                                                     }
                                                     $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                 }
                                             }
@@ -7445,8 +7410,8 @@ Function Request-EsxiPasswordComplexity {
                                                       $alert = "Green"
                                                       $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                       $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
-                    
-                                                 } 
+
+                                                 }
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
@@ -9883,7 +9848,7 @@ Function Update-PasswordRotationPolicy {
     )
 
     $pass = Get-Password -username $user -password $pass
-    
+
     # Set the resource type.
     switch ($resource) {
         'sso' { $resourceType = 'PSC'; $resourceDescription = 'vCenter Single Sign-On' }
