@@ -90,7 +90,7 @@ PowerShell Module                                    | Version   | Publisher    
 [VMware.PowerCLI][psgallery-module-powercli]         | >= 13.1.0 | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
 [VMware.vSphere.SsoAdmin][psgallery-module-ssoadmin] | >= 1.3.9  | Broadcom     | :fontawesome-brands-github: &nbsp; [GitHub][github-module-ssoadmin]
 [PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.8.0  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.9.0  | Broadcom     | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
 [docs-vmware-cloud-foundation-ppm-5-1]: https://docs.vmware.com/en/VMware-Cloud-Foundation/5.1/vcf-operations/GUID-18A95158-30F5-460F-AF80-33F25B6533D0.html

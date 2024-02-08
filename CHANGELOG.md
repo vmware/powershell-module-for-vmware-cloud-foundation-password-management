@@ -8,6 +8,10 @@ Breaking Change:
 
 - Removes support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-159](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159)
 
+Bugfix:
+
+- Fix for missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
+
 ## v1.7.1
 
 > Release Date: 2024-01-30
