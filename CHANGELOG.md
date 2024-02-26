@@ -8,6 +8,10 @@ Breaking Change:
 
 - Removes support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-159](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159)
 
+Enhancement:
+
+- Added 5.1.1.0 to  `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1.1. [GH-164](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164)
+
 Bugfix:
 
 - Fix for missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
