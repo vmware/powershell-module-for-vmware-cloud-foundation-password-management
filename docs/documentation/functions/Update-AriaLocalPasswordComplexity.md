@@ -1,32 +1,39 @@
-# Update-SddcManagerPasswordComplexity
+# Update-AriaLocalUserPasswordComplexity
 
 ## Synopsis
 
-Updates the password complexity policy for an SDDC Manager.
+Configure password complexity for local users.
 
 ## Syntax
 
 ```powershell
-Update-SddcManagerPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-rootPass] <String> [-minLength] <Int32> [[-minLowercase] <Int32>] [[-minUppercase] <Int32>] [[-minNumerical] <Int32>] [[-minSpecial] <Int32>] [[-minUnique] <Int32>] [-minClass] <Int32>] [[-maxSequence] <Int32>] [[-history] <Int32>] [[-maxRetry] <Int32>] [<CommonParameters>]
+Update-AriaLocalUserPasswordComplexity [-server] <String> [-user] <String> [-pass] <String> [-product] <String>
+ [[-minLength] <Int32>] [[-uppercase] <Int32>] [[-lowercase] <Int32>] [[-numerical] <Int32>]
+ [[-special] <Int32>] [[-unique] <Int32>] [[-history] <Int32>] [[-retry] <Int32>] [[-class] <Int32>]
+ [[-sequence] <Int32>] [-json] [[-policyPath] <String>] [[-policyFile] <String>] [<CommonParameters>]
 ```
 
-## Description
+## DESCRIPTION
 
-The `Update-SddcManagerPasswordComplexity` cmdlet configures the password complexity policy for an SDDC Manager.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
-
-- Validates that network connectivity and authentication is possible to SDDC Manager
-- Configures the password complexity policy
+The `Update-AriaLocalUserPasswordComplexity` cmdlet configures the password complexity for local users
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Update-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
+Update-AriaLocalUserPasswordComplexity -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
 ```
 
-This example configures the password complexity policy for an SDDC Manager.
+This Example updates the VMware Aria Automation nodes with new values for each element.
+
+### Example 2
+
+```powershell
+Update-AriaLocalUserPasswordComplexity -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile "passwordPolicyConfig.json"
+```
+
+This Example updates the VMware Aria Automation using Jthe SON file of preset values.
 
 ## Parameters
 
@@ -78,9 +85,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rootPass
+### -product
 
-The password for the SDDC Manager appliance root account.
+The product to configure.
 
 ```yaml
 Type: String
@@ -96,23 +103,23 @@ Accept wildcard characters: False
 
 ### -minLength
 
-The minimum length of the password.
+The minimum number of characters in a password.
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 5
 Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -minLowercase
+### -uppercase
 
-The minimum number of lowercase characters in the password.
+The maximum number of uppercase characters in a password.
 
 ```yaml
 Type: Int32
@@ -126,9 +133,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -minUppercase
+### -lowercase
 
-The minimum number of uppercase characters in the password.
+The maximum number of lowercase characters in a password.
 
 ```yaml
 Type: Int32
@@ -142,9 +149,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -minNumerical
+### -numerical
 
-The minimum number of numerical characters in the password.
+The maximum number of numerical characters in a password.
 
 ```yaml
 Type: Int32
@@ -158,9 +165,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -minSpecial
+### -special
 
-The minimum number of special characters in the password.
+The maximum number of special characters in a password.
 
 ```yaml
 Type: Int32
@@ -174,9 +181,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -minUnique
+### -unique
 
-The minimum number of unique characters in the password.
+The minimum number of unique characters in a password.
 
 ```yaml
 Type: Int32
@@ -190,9 +197,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -minClass
+### -history
 
-The minimum number of character classes in the password.
+The number of passwords to remember.
 
 ```yaml
 Type: Int32
@@ -206,9 +213,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -maxSequence
+### -retry
 
-The maximum number of sequential characters in the password.
+The number of retries.
 
 ```yaml
 Type: Int32
@@ -222,9 +229,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -history
+### -class
 
-The number of previous passwords that a password cannot match.
+The minimum number of character classes.
 
 ```yaml
 Type: Int32
@@ -238,9 +245,9 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -maxRetry
+### -sequence
 
-The number of failed login attempts before the account is locked.
+The maximum number of repeated characters.
 
 ```yaml
 Type: Int32
@@ -250,6 +257,54 @@ Aliases:
 Required: False
 Position: 14
 Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -json
+
+Use a JSON file to configure the password complexity.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -policyPath
+
+The path to the policy file.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 15
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -policyFile
+
+The path to the policy file.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 16
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

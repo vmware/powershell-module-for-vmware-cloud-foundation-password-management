@@ -1,72 +1,84 @@
-# Publish-WsaDirectoryPasswordPolicy
+# Publish-AriaLocalUserPasswordPolicy
 
 ## Synopsis
 
-Publishes the password policies for Workspace ONE Access Directory.
+Publishes the password policies for Aria product local users.
 
 ## Syntax
 
 ### All-WorkloadDomains
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] [-allDomains] [<CommonParameters>]
+Publish-AriaLocalUserPasswordPolicy -server <String> -user <String> [-pass <String>] -policy <String> [-drift]
+ [-reportPath <String>] [-policyFile <String>] [-json] [-allDomains] [<CommonParameters>]
 ```
 
 ### Specific-WorkloadDomain
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <String> -user <String> -pass <String> -policy <String> [-drift] [-reportPath <String>] [-policyFile <String>] [-json] -workloadDomain <String> [<CommonParameters>]
+Publish-AriaLocalUserPasswordPolicy -server <String> -user <String> [-pass <String>] -policy <String> [-drift]
+ [-reportPath <String>] [-policyFile <String>] [-json] -workloadDomain <String> [<CommonParameters>]
 ```
 
 ## Description
 
-The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for Workspace ONE Accessand converts the output to HTML.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
+The `Publish-AriaLocalUserPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and converts
+the output to HTML.
 
-- Validates that network connectivity and authentication is possible to Workspace ONE Access
-- Retrieves the requested password policy for Workspace ONE Access and converts to HTML
+The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+
+- Validates that network connectivity and authentication is possible to SDDC Manager.
+- Validates which VMware Aria products are installed.
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains
+Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
 ```
 
-This example returns the password expiration policy for Workspace ONE Access Directory Users.
+This example returns password expiration policy for all VMware Aria products for all domains.
 
 ### Example 2
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordComplexity -allDomains
+Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-m01
 ```
 
-This example returns the password complexity policy for Workspace ONE Access Directory Users.
+This example returns password expiration policy for all VMware Aria products for the management domain.
 
 ### Example 3
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy AccountLockout -allDomains
+Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
 ```
 
-This example returns the account lockout policy for Workspace ONE Access Directory Users.
+This example returns password complexity policy for all VMware Aria products for all domains.
 
 ### Example 4
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-m01
 ```
 
-This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the `passwordPolicyConfig.json` file.
+This example returns password complexity policy for all VMware Aria products for the management domain.
 
 ### Example 5
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift
+Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
 ```
 
-This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
+This example returns password account lockout policy for all VMware Aria products for all domains.
+
+### Example 6
+
+```powershell
+Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-m01
+```
+
+This example returns password account lockout policy for all VMware Aria products for the management domain.
 
 ## Parameters
 
@@ -111,7 +123,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -121,7 +133,8 @@ Accept wildcard characters: False
 ### -policy
 
 The policy to publish.
-One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+
+One of: `PasswordExpiration`, `PasswordComplexity`, `AccountLockout`.
 
 ```yaml
 Type: String

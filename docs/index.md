@@ -14,19 +14,24 @@ The module provides coverage for the following:
 
 === ":material-shield-check: &nbsp; Password Policies"
 
-    * Generate a password policy report for password expiration, password complexity, and account lockout.
-    * Generate a password policy report with configuration drift using a password policy configuration file.
-    * Update the password polices using a password policy configuration file.
+    1. Generate a password policy report for password expiration, password complexity, and account lockout.
+    2. Generate a password policy report with configuration drift using a password policy configuration file.
+    3. Update the password polices using a password policy configuration file.
 
     Components:
 
-    * SDDC Manager
-    * vCenter Single Sign-On
-    * vCenter Server
-    * ESXi
-    * NSX Local Manager
-    * NSX Edge
-    * Workspace ONE Access (Standalone)
+    * VMware SDDC Manager
+    * VMware vCenter Single Sign-On
+    * VMware vCenter Server
+    * VMware ESXi
+    * VMware NSX Local Manager
+    * VMware NSX Edge
+    * VMware Aria Suite Lifecycle
+    * VMware Aria Operations
+    * VMware Aria Operations for Logs
+    * VMware Aria Operations for Networks
+    * VMware Aria Automation
+    * VMware Workspace ONE Access
 
 === ":fontawesome-solid-rotate: &nbsp; Password Rotation"
 
@@ -34,20 +39,20 @@ The module provides coverage for the following:
 
     Components:
 
-    * SDDC Manager
-    * vCenter Single Sign-On
-    * vCenter Server
-    * NSX Local Manager
-    * NSX Edge
-    * Aria Suite Lifecycle
-    * Aria Operations for Logs
-    * Aria Operations
-    * Aria Automation
-    * Workspace ONE Access
+    * VMware SDDC Manager
+    * VMware vCenter Single Sign-On
+    * VMware vCenter Server
+    * VMware NSX Local Manager
+    * VMware NSX Edge
+    * VMware Aria Suite Lifecycle
+    * VMware Aria Operations
+    * VMware Aria Operations for Logs
+    * VMware Aria Automation
+    * VMware Workspace ONE Access
 
     ???+ note "Note"
-        - ESXi password rotation is not managed by SDDC Manager.
-        - Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
+        - VMware ESXi password rotation is not managed by SDDC Manager.
+        - VMware Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
 
 ## Requirements
 

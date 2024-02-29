@@ -209,7 +209,7 @@ Function Invoke-PasswordRotationManager {
                     # Aria Suite Resources: Build Password Rotation Object
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFAriaLifecycle) {
+                        if (Get-VCFariaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -277,7 +277,7 @@ Function Invoke-PasswordRotationManager {
                     $nsxEdgePasswordRotationObj | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordRotation
 
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFAriaLifecycle) {
+                        if (Get-VCFariaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -331,7 +331,7 @@ Function Invoke-PasswordRotationManager {
                     # Aria Suite Resources: Combine Password Rotation Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFAriaLifecycle) {
+                        if (Get-VCFariaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -396,7 +396,7 @@ Function Invoke-PasswordRotationManager {
                     # Aria Suite Resources: Collect Password Rotation Settings Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFAriaLifecycle) {
+                        if (Get-VCFariaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -677,6 +677,11 @@ Function Invoke-PasswordPolicyManager {
                 $esxiPasswordComplexity = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
                 $esxiAccountLockout = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
 
+                Write-LogMessage -Type INFO -Message "Collecting VMware Aria Suite Password Policies for $workflowMessage."
+                $ariaPasswordExpiration = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordExpiration $($commandSwitch)"
+                $ariaPasswordComplexity = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
+                $ariaAccountLockout = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
+
                 if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                     Write-LogMessage -Type INFO -Message "Collecting Workspace ONE Access Local Directory Password Policies for $workflowMessage."
                     $wsaDirectoryPasswordExpiration = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy PasswordExpiration $($commandSwitch)"
@@ -719,6 +724,10 @@ Function Invoke-PasswordPolicyManager {
                     $esxiPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $esxiPasswordExpiration
                     $esxiPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $esxiPasswordComplexity
                     $esxiPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $esxiAccountLockout
+                    $ariaPasswordPolicy = New-Object -TypeName psobject
+                    $ariaPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $ariaPasswordExpiration
+                    $ariaPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $ariaPasswordComplexity
+                    $ariaPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $ariaAccountLockout
                     if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                         $wsaDirectoryPasswordPolicy = New-Object -TypeName psobject
                         $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $wsaDirectoryPasswordExpiration
@@ -742,6 +751,7 @@ Function Invoke-PasswordPolicyManager {
                     $outputJsonObject | Add-Member -notepropertyname 'esxi' -notepropertyvalue $esxiPasswordPolicy
                     $outputJsonObject | Add-Member -notepropertyname 'wsaDirectory' -notepropertyvalue $wsaDirectoryPasswordPolicy
                     $outputJsonObject | Add-Member -notepropertyname 'wsaLocal' -notepropertyvalue $wsaLocalPasswordPolicy
+                    $outputJsonObject | Add-Member -notepropertyname 'ariaLocal' -notepropertyvalue $ariaPasswordPolicy
                     $jsonFile = ($reportFolder + "passwordPolicyManager" + ".json")
                     Write-LogMessage -Type INFO -Message "Generating the Final JSON and Saving to ($jsonFile)."
                     $outputJsonObject | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
@@ -759,12 +769,13 @@ Function Invoke-PasswordPolicyManager {
                     $reportData += $nsxManagerPasswordExpiration
                     $reportData += $nsxEdgePasswordExpiration
                     $reportData += $esxiPasswordExpiration
+                    $reportData += $ariaPasswordExpiration
                     if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                         $reportData += $wsaDirectoryPasswordExpiration
                         $reportData += $wsaLocalPasswordExpiration
                     } else {
-                        $reportData += ($wsaDirectoryPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="wsa-directory-password-expiration"></a><h3>Workspace ONE Access Directory - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="wsa-local-password-expiration"></a><h3>Workspace ONE Access (Local Users) - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaDirectoryPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-password-expiration"></a><h3>Standalone Workspace ONE Access Directory - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-password-expiration"></a><h3>Standalone Workspace ONE Access (Local Users) - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
                     $reportData += $sddcManagerPasswordComplexity
                     $reportData += $ssoPasswordComplexity
@@ -772,12 +783,13 @@ Function Invoke-PasswordPolicyManager {
                     $reportData += $nsxManagerPasswordComplexity
                     $reportData += $nsxEdgePasswordComplexity
                     $reportData += $esxiPasswordComplexity
+                    $reportData += $ariaPasswordComplexity
                     if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                         $reportData += $wsaDirectoryPasswordComplexity
                         $reportData += $wsaLocalPasswordComplexity
                     } else {
-                        $reportData += ($wsaDirectoryPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="wsa-directory-password-complexity"></a><h3>Workspace ONE Access Directory - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="wsa-local-password-complexity"></a><h3>Workspace ONE Access (Local Users) - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaDirectoryPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-password-complexity"></a><h3>Standalone Workspace ONE Access Directory - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-password-complexity"></a><h3>Standalone Workspace ONE Access (Local Users) - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
                     $reportData += $sddcManagerAccountLockout
                     $reportData += $ssoAccountLockout
@@ -785,12 +797,13 @@ Function Invoke-PasswordPolicyManager {
                     $reportData += $nsxManagerAccountLockout
                     $reportData += $nsxEdgeAccountLockout
                     $reportData += $esxiAccountLockout
+                    $reportData += $ariaAccountLockout
                     if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                         $reportData += $wsaDirectoryAccountLockout
                         $reportData += $wsaLocalAccountLockout
                     } else {
-                        $reportData += ($wsaDirectoryAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="wsa-directory-account-lockout"></a><h3>Workspace ONE Access Directory - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="wsa-local-account-lockout"></a><h3>Workspace ONE Access (Local Users) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaDirectoryAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-account-lockout"></a><h3>Standalone Workspace ONE Access Directory - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-account-lockout"></a><h3>Stanalone Workspace ONE Access (Local Users) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
 
                     if ($PsBoundParameters.ContainsKey("darkMode")) {
@@ -822,7 +835,6 @@ Function Invoke-PasswordPolicyManager {
     }
 }
 Export-ModuleMember -Function Invoke-PasswordPolicyManager
-
 
 Function Start-PasswordPolicyConfig {
     <#
@@ -1042,6 +1054,84 @@ Function Start-PasswordPolicyConfig {
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Workspace ONE Access Local Users" -Colour Yellow
                 }
+
+                # Configuring Password Policies for VMware Aria Suite Lifecycle
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Suite Lifecycle"
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Suite Lifecycle Local Users: Password Expiration Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrslcm' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaLifecycle.passwordExpiration.minDays -maxDays $customPolicy.ariaLifecycle.passwordExpiration.maxDays -warnDays $customPolicy.ariaLifecycle.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Suite Lifecycle Local Users: Password Complexity Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrslcm' -minLength $customPolicy.ariaLifecycle.passwordComplexity.minLength -uppercase $customPolicy.ariaLifecycle.passwordComplexity.minUppercase -lowercase $customPolicy.ariaLifecycle.passwordComplexity.minLowercase -numerical $customPolicy.ariaLifecycle.passwordComplexity.minNumerical -special $customPolicy.ariaLifecycle.passwordComplexity.minSpecial -sequence $customPolicy.ariaLifecycle.passwordComplexity.maxSequence -unique $customPolicy.ariaLifecycle.passwordComplexity.minUnique -class $customPolicy.ariaLifecycle.passwordComplexity.minClass -history $customPolicy.ariaLifecycle.passwordComplexity.history -retry $customPolicy.ariaLifecycle.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Suite Lifecycle Local Users: Account Lockout Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrslcm' -failures $customPolicy.ariaLifecycle.accountLockout.maxFailures -unlockInterval $customPolicy.ariaLifecycle.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaLifecycle.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Suite Lifecycle Local Users"
+
+                # Configuring Password Policies for VMware Aria Operations
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Operations"
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations Local Users: Password Expiration Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrops' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaOperations.passwordExpiration.minDays -maxDays $customPolicy.ariaOperations.passwordExpiration.maxDays -warnDays $customPolicy.ariaOperations.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations Local Users: Password Complexity Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrops' -minLength $customPolicy.ariaOperations.passwordComplexity.minLength -uppercase $customPolicy.ariaOperations.passwordComplexity.minUppercase -lowercase $customPolicy.ariaOperations.passwordComplexity.minLowercase -numerical $customPolicy.ariaOperations.passwordComplexity.minNumerical -special $customPolicy.ariaOperations.passwordComplexity.minSpecial -sequence $customPolicy.ariaOperations.passwordComplexity.maxSequence -unique $customPolicy.ariaOperations.passwordComplexity.minUnique -class $customPolicy.ariaOperations.passwordComplexity.minClass -history $customPolicy.ariaOperations.passwordComplexity.history -retry $customPolicy.ariaOperations.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations Local Users: Account Lockout Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrops' -failures $customPolicy.ariaOperations.accountLockout.maxFailures -unlockInterval $customPolicy.ariaOperations.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaOperations.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Operations Local Users"
+
+                # Configuring Password Policies for VMware Aria Operations for Logs
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Operations for Logs"
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Logs Local Users: Password Expiration Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrli' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaOperationsLogs.passwordExpiration.minDays -maxDays $customPolicy.ariaOperationsLogs.passwordExpiration.maxDays -warnDays $customPolicy.ariaOperationsLogs.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Logs Local Users: Password Complexity Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrli' -minLength $customPolicy.ariaOperationsLogs.passwordComplexity.minLength -uppercase $customPolicy.ariaOperationsLogs.passwordComplexity.minUppercase -lowercase $customPolicy.ariaOperationsLogs.passwordComplexity.minLowercase -numerical $customPolicy.ariaOperationsLogs.passwordComplexity.minNumerical -special $customPolicy.ariaOperationsLogs.passwordComplexity.minSpecial -sequence $customPolicy.ariaOperationsLogs.passwordComplexity.maxSequence -unique $customPolicy.ariaOperationsLogs.passwordComplexity.minUnique -class $customPolicy.ariaOperationsLogs.passwordComplexity.minClass -history $customPolicy.ariaOperationsLogs.passwordComplexity.history -retry $customPolicy.ariaOperationsLogs.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Logs Local Users: Account Lockout Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrli' -failures $customPolicy.ariaOperationsLogs.accountLockout.maxFailures -unlockInterval $customPolicy.ariaOperationsLogs.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaOperationsLogs.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Operations for Logs Local Users"
+
+                # Configuring Password Policies for VMware Aria Operations for Networks
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Operations for Networks"
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Networks Local Users: Password Expiration Policy for Each Instance"
+                $localUsers = @("support", "consoleuser")
+                foreach ($localUser in $localUsers) {
+                    $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrni' -policyPath $reportPath -policyFile $policyFile -localUser $localUser -minDays $customPolicy.ariaOperationsNetworks.passwordExpiration.minDays -maxDays $customPolicy.ariaOperationsNetworks.passwordExpiration.maxDays -warnDays $customPolicy.ariaOperationsNetworks.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                    if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Networks Local Users: Password Complexity Policy ffor Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrni' -minLength $customPolicy.ariaOperationsNetworks.passwordComplexity.minLength -uppercase $customPolicy.ariaOperationsNetworks.passwordComplexity.minUppercase -lowercase $customPolicy.ariaOperationsNetworks.passwordComplexity.minLowercase -numerical $customPolicy.ariaOperationsNetworks.passwordComplexity.minNumerical -special $customPolicy.ariaOperationsNetworks.passwordComplexity.minSpecial -sequence $customPolicy.ariaOperationsNetworks.passwordComplexity.maxSequence -unique $customPolicy.ariaOperationsNetworks.passwordComplexity.minUnique -class $customPolicy.ariaOperationsNetworks.passwordComplexity.minClass -history $customPolicy.ariaOperationsNetworks.passwordComplexity.history -retry $customPolicy.ariaOperationsNetworks.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Networks Local Users: Account Lockout Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrni' -failures $customPolicy.ariaOperationsNetworks.accountLockout.maxFailures -unlockInterval $customPolicy.ariaOperationsNetworks.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaOperationsNetworks.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Operations for Networks Local Users"
+
+                # Configuring Password Policies for VMware Aria Automation
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Automation"
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Automation Local Users: Password Expiration Policy for each instance"
+                $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vra' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaAutomation.passwordExpiration.minDays -maxDays $customPolicy.ariaAutomation.passwordExpiration.maxDays -warnDays $customPolicy.ariaAutomation.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Automation Local Users: Password Complexity Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vra' -minLength $customPolicy.ariaAutomation.passwordComplexity.minLength -uppercase $customPolicy.ariaAutomation.passwordComplexity.minUppercase -lowercase $customPolicy.ariaAutomation.passwordComplexity.minLowercase -numerical $customPolicy.ariaAutomation.passwordComplexity.minNumerical -special $customPolicy.ariaAutomation.passwordComplexity.minSpecial -sequence $customPolicy.ariaAutomation.passwordComplexity.maxSequence -unique $customPolicy.ariaAutomation.passwordComplexity.minUnique -class $customPolicy.ariaAutomation.passwordComplexity.minClass -history $customPolicy.ariaAutomation.passwordComplexity.history -retry $customPolicy.ariaAutomation.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+
+                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Automation Local Users: Account Lockout Policy for Each Instance"
+                $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vra' -failures $customPolicy.ariaAutomation.accountLockout.maxFailures -unlockInterval $customPolicy.ariaAutomation.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaAutomation.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Automation Local Users"
+
             }
         }
     } Catch {
@@ -1065,6 +1155,11 @@ Function Get-PasswordPolicyDefault {
         - VMware NSX Manager
         - VMware NSX Edge
         - VMware Workspace ONE Access
+        - VMware Aria Suite Lifecycle
+        - VMware Aria Operations
+        - VMware Aria Operations for Logs
+        - VMware Aria Operations for Networks
+        - VMware Aria Automation
 
         .EXAMPLE
         Get-PasswordPolicyDefault -version '5.0.0.0'
@@ -1310,6 +1405,131 @@ Function Get-PasswordPolicyDefault {
     $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $wsaDirectoryPasswordComplexity
     $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $wsaDirectoryAccountLockout
 
+    # Build Aria Automation Local Users Password Policy Settings
+    $vraLocalPasswordExpiration = New-Object -TypeName psobject
+    $vraLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
+    $vraLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
+    $vraLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
+    $vraLocalPasswordComplexity = New-Object -TypeName psobject
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
+    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
+    $vraLocalAccountLockout = New-Object -TypeName psobject
+    $vraLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
+    $vraLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "86400"
+    $vraLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "300"
+    $vraLocalPasswordPolicy = New-Object -TypeName psobject
+    $vraLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vraLocalPasswordExpiration
+    $vraLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vraLocalPasswordComplexity
+    $vraLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vraLocalAccountLockout
+
+    # Build Aria Operations Local Users Password Policy Settings
+    $vropsLocalPasswordExpiration = New-Object -TypeName psobject
+    $vropsLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
+    $vropsLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
+    $vropsLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
+    $vropsLocalPasswordComplexity = New-Object -TypeName psobject
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'maxNumerical' -notepropertyvalue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'maxUppercase' -notepropertyvalue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'maxLowercase' -notepropertyvalue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
+    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
+    $vropsLocalAccountLockout = New-Object -TypeName psobject
+    $vropsLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
+    $vropsLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
+    $vropsLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
+    $vropsLocalPasswordPolicy = New-Object -TypeName psobject
+    $vropsLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vropsLocalPasswordExpiration
+    $vropsLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vropsLocalPasswordComplexity
+    $vropsLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vropsLocalAccountLockout
+
+    # Build Aria Operations Logs Local Users Password Policy Settings
+    $vrliLocalPasswordExpiration = New-Object -TypeName psobject
+    $vrliLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
+    $vrliLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
+    $vrliLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
+    $vrliLocalPasswordComplexity = New-Object -TypeName psobject
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'maxNumerical' -notepropertyvalue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'maxUppercase' -notepropertyvalue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'maxLowercase' -notepropertyvalue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
+    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
+    $vrliLocalAccountLockout = New-Object -TypeName psobject
+    $vrliLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
+    $vrliLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
+    $vrliLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
+    $vrliLocalPasswordPolicy = New-Object -TypeName psobject
+    $vrliLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vrliLocalPasswordExpiration
+    $vrliLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vrliLocalPasswordComplexity
+    $vrliLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vrliLocalAccountLockout
+
+    # Build Aria Suite Lifecycle Local Users Password Policy Settings
+    $vrslcmLocalPasswordExpiration = New-Object -TypeName psobject
+    $vrslcmLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
+    $vrslcmLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
+    $vrslcmLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
+    $vrslcmLocalPasswordComplexity = New-Object -TypeName psobject
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'maxNumerical' -notepropertyvalue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'maxUppercase' -notepropertyvalue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'maxLowercase' -notepropertyvalue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
+    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
+    $vrslcmLocalAccountLockout = New-Object -TypeName psobject
+    $vrslcmLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
+    $vrslcmLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
+    $vrslcmLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
+    $vrslcmLocalPasswordPolicy = New-Object -TypeName psobject
+    $vrslcmLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vrslcmLocalPasswordExpiration
+    $vrslcmLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vrslcmLocalPasswordComplexity
+    $vrslcmLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vrslcmLocalAccountLockout
+
+    # Build Aria Operations for Networks Local Users Password Policy Settings
+    $vrniLocalPasswordExpiration = New-Object -TypeName psobject
+    $vrniLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
+    $vrniLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
+    $vrniLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
+    $vrniLocalPasswordComplexity = New-Object -TypeName psobject
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'maxNumerical' -notepropertyvalue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'maxUppercase' -notepropertyvalue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'maxLowercase' -notepropertyvalue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
+    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
+    $vrniLocalAccountLockout = New-Object -TypeName psobject
+    $vrniLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
+    $vrniLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
+    $vrniLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
+    $vrniLocalPasswordPolicy = New-Object -TypeName psobject
+    $vrniLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vrniLocalPasswordExpiration
+    $vrniLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vrniLocalPasswordComplexity
+    $vrniLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vrniLocalAccountLockout
+
     # Build Final Default Password Policy Object
     $defaultConfig = New-Object -TypeName psobject
     $defaultConfig | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
@@ -1322,6 +1542,11 @@ Function Get-PasswordPolicyDefault {
     $defaultConfig | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordPolicy
     $defaultConfig | Add-Member -notepropertyname 'wsaLocal' -notepropertyvalue $wsaLocalPasswordPolicy
     $defaultConfig | Add-Member -notepropertyname 'wsaDirectory' -notepropertyvalue $wsaDirectoryPasswordPolicy
+    $defaultConfig | Add-Member -notepropertyName 'ariaAutomation' -notepropertyValue $vraLocalPasswordPolicy
+    $defaultConfig | Add-Member -notepropertyName 'ariaLifecycle' -notepropertyValue $vrslcmLocalPasswordPolicy
+    $defaultConfig | Add-Member -notepropertyName 'ariaOperations' -notepropertyValue $vropsLocalPasswordPolicy
+    $defaultConfig | Add-Member -notepropertyName 'ariaOperationsLogs' -notepropertyValue $vrliLocalPasswordPolicy
+    $defaultConfig | Add-Member -notepropertyName 'ariaOperationsNetworks' -notepropertyValue $vrniLocalPasswordPolicy
 
     if ($PSBoundParameters.ContainsKey('generateJson')) {
         $defaultConfig | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
@@ -1521,7 +1746,7 @@ Function Test-PasswordPolicyConfig {
                             $policyPattern = '^retry=(\d+)\s+min=(.+),(.+),(.+),(.+),(.+)'
                             $policyMinRange = 7
                             $policyMaxRange = 999
-                            if ($policyString -match $policyPattern) { $passwdPolicyMinValues = $matches[2..6] }
+                            if ($policyString -match $policyPattern) { $passwdPolicyMinValues = $matches[2.6] }
                             foreach ($passwdPolicyMinValue in $passwdPolicyMinValues) {
                                 if ($passwdPolicyMinValue -ine 'disabled') {
                                     $checkReturn = checkRange -name "$($product.Name):$($section.Name):policy" -value $passwdPolicyMinValue -minRange $policyMinRange -maxRange $policyMaxRange -required $true
@@ -1895,10 +2120,15 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#vcenter-password-expiration">vCenter Server</a></li>
                     <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter Server (Local)</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
-                    <li><a class="nav-link" href="#nsxedge-password-expiration">NSX  Edge</a></li>
+                    <li><a class="nav-link" href="#nsxedge-password-expiration">NSX Edge</a></li>
                     <li><a class="nav-link" href="#esxi-password-expiration">ESXi</a></li>
-                    <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-directory-password-expiration">Standalone Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-local-password-expiration">Standalone Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#vrslcm-local-password-expiration">Aria Suite LifeCycle (Local)</a></li>
+                    <li><a class="nav-link" href="#vrops-local-password-expiration">Aria Operations (Local)</a></li>
+                    <li><a class="nav-link" href="#vrli-local-password-expiration">Aria Operations for Logs (Local)</a></li>
+                    <li><a class="nav-link" href="#vrni-local-password-expiration">Aria Operations for Networks (Local)</a></li>
+                    <li><a class="nav-link" href="#vra-local-password-expiration">Aria Automation (Local)</a></li>
                 </ul>
             </section>
             <section class="nav-group collapsible">
@@ -1911,8 +2141,13 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
                     <li><a class="nav-link" href="#esxi-password-complexity">ESXi</a></li>
-                    <li><a class="nav-link" href="#wsa-directory-password-complexity">Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-directory-password-complexity">Standalone Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-local-password-complexity">Standalone Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#vrslcm-local-password-complexity">Aria Suite LifeCycle (Local)</a></li>
+                    <li><a class="nav-link" href="#vrops-local-password-complexity">Aria Operations (Local)</a></li>
+                    <li><a class="nav-link" href="#vrli-local-password-complexity">Aria Operations for Logs (Local)</a></li>
+                    <li><a class="nav-link" href="#vrni-local-password-complexity">Aria Operations for Networks (Local)</a></li>
+                    <li><a class="nav-link" href="#vra-local-password-complexity">Aria Automation (Local)</a></li>
                 </ul>
             </section>
             <section class="nav-group collapsible">
@@ -1925,8 +2160,13 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
                     <li><a class="nav-link" href="#esxi-account-lockout">ESXi</a></li>
-                    <li><a class="nav-link" href="#wsa-directory-account-lockout">Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-directory-account-lockout">Standalone Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-local-account-lockout">Standalone Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#vrslcm-local-account-lockout">Aria Suite LifeCycle (Local)</a></li>
+                    <li><a class="nav-link" href="#vrops-local-account-lockout">Aria Operations (Local)</a></li>
+                    <li><a class="nav-link" href="#vrli-local-account-lockout">Aria Operations for Logs (Local)</a></li>
+                    <li><a class="nav-link" href="#vrni-local-account-lockout">Aria Operations for Networks (Local)</a></li>
+                    <li><a class="nav-link" href="#vra-local-account-lockout">Aria Automation (Local)</a></li>
                 </ul>
             </section>
         </section>
@@ -1969,7 +2209,7 @@ Function Save-ClarityReportNavigationForRotation {
                     <li><a class="nav-link" href="#nsx-manager-password-rotation">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsx-edge-password-rotation">NSX Edge</a></li>'
     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-        if (Get-VCFAriaLifecycle) {
+        if (Get-VCFariaLifecycle) {
             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
             foreach ($resource in $ariaResources) {
                 switch ($resource) {
@@ -2977,7 +3217,7 @@ Function Request-SsoPasswordExpiration {
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		- Retrives the global password expiration policy
+		- Retrieves the global password expiration policy
 
         .EXAMPLE
         Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -3057,7 +3297,7 @@ Function Request-SsoPasswordExpiration {
                                     $SsoPasswordExpirationObject = New-Object -TypeName psobject
                                     $SsoPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
                                     $SsoPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue  $(if ($drift) { if ($SsoPasswordExpiration.PasswordLifetimeDays -ne $requiredConfig.maxDays) { "$($SsoPasswordExpiration.PasswordLifetimeDays) [ $($requiredConfig.maxDays) ]" } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" } } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" })
+                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($SsoPasswordExpiration.PasswordLifetimeDays -ne $requiredConfig.maxDays) { "$($SsoPasswordExpiration.PasswordLifetimeDays) [ $($requiredConfig.maxDays) ]" } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" } } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" })
                                 } else {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -3614,7 +3854,7 @@ Function Update-SsoAccountLockout {
                                 }
                                 $lockoutPolicyBefore = Get-SsoLockoutPolicy -server $ssoAdminServer
                                 if ($lockoutPolicyBefore.MaxFailedAttempts -ne $failures -or $lockoutPolicyBefore.FailedAttemptIntervalSec -ne $failureInterval -or $lockoutPolicyBefore.AutoUnlockIntervalSec -ne $unlockInterval) {
-                                    Get-SsoLockoutPolicy -server $ssoAdminServer | Set-SsoLockoutPolicy  -AutoUnlockIntervalSec $unlockInterval -FailedAttemptIntervalSec $failureInterval -MaxFailedAttempts $failures | Out-Null
+                                    Get-SsoLockoutPolicy -server $ssoAdminServer | Set-SsoLockoutPolicy -AutoUnlockIntervalSec $unlockInterval -FailedAttemptIntervalSec $failureInterval -MaxFailedAttempts $failures | Out-Null
                                     $lockoutPolicyAfter = Get-SsoLockoutPolicy -server $ssoAdminServer
                                     if ($lockoutPolicyAfter.MaxFailedAttempts -eq $failures -and $lockoutPolicyAfter.FailedAttemptIntervalSec -eq $failureInterval -and $lockoutPolicyAfter.AutoUnlockIntervalSec -eq $unlockInterval) {
                                         Write-Output "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
@@ -3790,7 +4030,7 @@ Function Request-VcenterPasswordExpiration {
         Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		- Retrives the global password expiration policy
+		- Retrieves the global password expiration policy
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -4010,27 +4250,27 @@ Function Request-VcenterPasswordComplexity {
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     }
                                 } else {
-                                        $vcenterLocalPolicy = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
-                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
-                                        if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
-                                            $alert = "RED"
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
-                                        } else {
-                                            $alert = "GREEN"
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
-                                        }
-                                        $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
+                                    $vcenterLocalPolicy = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
+                                    $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                    if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
+                                        $alert = "RED"
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                    } else {
+                                        $alert = "GREEN"
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                    }
+                                    $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                 }
                             }
                             return $VcenterLocalPasswordComplexityPolicy
@@ -4460,7 +4700,7 @@ Function Request-VcenterRootPasswordExpiration {
         vCenter Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		- Retrives the root user password expiration policy
+		- Retrieves the root user password expiration policy
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
@@ -4636,39 +4876,39 @@ Function Update-VcenterRootPasswordExpiration {
                                     if ($maxDays) {
                                         $updateCommand = $updateCommand + " -maxDays $maxDays"
                                         if (($vCenterRootPasswordExpirationSettings).max_days_between_password_change -ne $maxDays) {
-                                            $runUpdate = $runUpdate -and $true                                            
+                                            $runUpdate = $runUpdate -and $true
                                         } else {
                                             $runUpdate = $runUpdate -and $false
                                         }
-                                    } 
+                                    }
                                     if ($warnDays) {
                                         $updateCommand = $updateCommand + " -warnDays $warnDays"
                                         if (($vCenterRootPasswordExpirationSettings).warn_days_before_password_expiration -ne $warnDays) {
-                                            $runUpdate = $runUpdate -and $true    
+                                            $runUpdate = $runUpdate -and $true
                                         } else {
                                             $runUpdate = $runUpdate -and $false
                                         }
-                                    } 
+                                    }
                                     if ($email) {
                                         $updateCommand = $updateCommand + " -email $email"
                                         if (($vCenterRootPasswordExpirationSettings).email -ne $email) {
-                                            $runUpdate = $runUpdate -and $true                                            
+                                            $runUpdate = $runUpdate -and $true
                                         } else {
-                                            $runUpdate = $runUpdate -and $false    
+                                            $runUpdate = $runUpdate -and $false
                                         }
                                     }
                                     if ($runUpdate) {
-                                        $condition = $true 
+                                        $condition = $true
                                         Invoke-Expression $updateCommand | Out-Null
                                         $vCenterRootPasswordExpirationSettings = Get-VcenterRootPasswordExpiration
                                         if ($maxDays) {
-                                            $condition =  $condition -and ($vCenterRootPasswordExpirationSettings).max_days_between_password_change -eq $maxDays
-                                        } 
+                                            $condition = $condition -and ($vCenterRootPasswordExpirationSettings).max_days_between_password_change -eq $maxDays
+                                        }
                                         if ($warnDays) {
-                                            $condition =  $condition -and ($vCenterRootPasswordExpirationSettings).warn_days_before_password_expiration -eq $warnDays
-                                        } 
+                                            $condition = $condition -and ($vCenterRootPasswordExpirationSettings).warn_days_before_password_expiration -eq $warnDays
+                                        }
                                         if ($email) {
-                                            $condition =  $condition -and ($vCenterRootPasswordExpirationSettings).email -eq $email
+                                            $condition = $condition -and ($vCenterRootPasswordExpirationSettings).email -eq $email
                                         }
                                         if ($condition) {
                                             Write-Output "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
@@ -6415,15 +6655,15 @@ Function Request-NsxtEdgePasswordComplexity {
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
-                                                         if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
+                                                        if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
                                                             $alert = "RED"
                                                             $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                             $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
-                                                         } else {
+                                                        } else {
                                                             $alert = "GREEN"
                                                             $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                             $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
-                                                         }
+                                                        }
                                                         $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                     } else {
                                                         Write-Error "Unable to retrieve Password Complexity Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
@@ -6441,15 +6681,15 @@ Function Request-NsxtEdgePasswordComplexity {
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
                                                     $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
-                                                     if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
+                                                    if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
                                                         $alert = "RED"
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
-                                                     } else {
+                                                    } else {
                                                         $alert = "GREEN"
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
                                                         $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
-                                                     }
+                                                    }
                                                     $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                 }
                                             }
@@ -7440,15 +7680,15 @@ Function Request-EsxiPasswordComplexity {
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "Policy" -notepropertyvalue $(if ($drift) { if ($passwordQualityControl.value -ne $requiredConfig.policy) { "$($passwordQualityControl.value) [ $($requiredConfig.policy) ]" } else { "$($passwordQualityControl.value)" } } else { "$($passwordQualityControl.value)" })
                                                 $nodePasswdPolicy | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($passwordHistory.Value -ne $requiredConfig.history) { "$($passwordHistory.Value) [ $($requiredConfig.history) ]" } else { "$($passwordHistory.Value)" } } else { "$($passwordHistory.Value)" })
                                                 if ( $passwordQualityControl.Value.Trim().Split(',')[2] -ne "disabled" -and [int]$passwordQualityControl.Value.Trim().Split(',')[2] -gt $managedPasswordMinLength ) {
-                                                      $alert = "Red"
-                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
-                                                    } else {
-                                                      $alert = "Green"
-                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                      $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                                                    $alert = "Red"
+                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                } else {
+                                                    $alert = "Green"
+                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
+                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
 
-                                                 }
+                                                }
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
@@ -8853,7 +9093,7 @@ Function Update-WsaAccountLockout {
                 $failureInterval = ($failureInterval / 60)
                 $unlockInterval = ($unlockInterval / 60)
                 if ((Get-WsaAccountLockout).numAttempts -ne $failures -or (Get-WsaAccountLockout).attemptInterval -ne $failureInterval -or (Get-WsaAccountLockout).unlockInterval -ne $unlockInterval) {
-                    Set-WsaAccountLockout  -numAttempts $failures -attemptInterval $failureInterval -unlockInterval $unlockInterval | Out-Null
+                    Set-WsaAccountLockout -numAttempts $failures -attemptInterval $failureInterval -unlockInterval $unlockInterval | Out-Null
                     if ((Get-WsaAccountLockout).numAttempts -eq $failures -and (Get-WsaAccountLockout).attemptInterval -eq $failureInterval -and (Get-WsaAccountLockout).unlockInterval -eq $unlockInterval) {
                         Write-Output "Update Workspace ONE Access Account Lockout Policy on instance ($server): SUCCESSFUL"
                     } else {
@@ -9032,9 +9272,9 @@ Function Publish-WsaDirectoryPasswordPolicy {
 
     $pass = Get-Password -username $user -password $pass
 
-    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-WsaPasswordExpiration"; $preHtmlContent = '<a id="wsa-directory-password-expiration"></a><h3>Workspace ONE Access Directory - Password Expiration</h3>' }
-    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaPasswordComplexity"; $preHtmlContent = '<a id="wsa-directory-password-complexity"></a><h3>Workspace ONE Access Directory - Password Complexity</h3>' }
-    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaAccountLockout"; $preHtmlContent = '<a id="wsa-directory-account-lockout"></a><h3>Workspace ONE Access Directory - Account Lockout</h3>' }
+    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-WsaPasswordExpiration"; $preHtmlContent = '<a id="standalone-wsa-directory-password-expiration"></a><h3>Standalone Workspace ONE Access Directory - Password Expiration</h3>' }
+    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaPasswordComplexity"; $preHtmlContent = '<a id="standalone-wsa-directory-password-complexity"></a><h3>Standalone Workspace ONE Access Directory - Password Complexity</h3>' }
+    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaAccountLockout"; $preHtmlContent = '<a id="standalone-wsa-directory-account-lockout"></a><h3>Standalone Workspace ONE Access Directory - Account Lockout</h3>' }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
@@ -9152,9 +9392,9 @@ Function Publish-WsaLocalPasswordPolicy {
                 # Define the Command Switch
                 if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
                 [Array]$localUsers = '"root","sshuser"'
-                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $preHtmlContent = '<a id="wsa-local-password-expiration"></a><h3>Workspace ONE Access (Local Users) - Password Expiration</h3>'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product wsaLocal -vmName $(($wsaFqdn.Split("."))[-0]) -guestUser root -guestPassword $wsaRootPass -localUser $localUsers" }
-                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="wsa-local-password-complexity"></a><h3>Workspace ONE Access (Local Users) - Password Complexity</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
-                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaLocalUserAccountLockout"; $preHtmlContent = '<a id="wsa-local-account-lockout"></a><h3>Workspace ONE Access (Local Users) - Account Lockout</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
+                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $preHtmlContent = '<a id="standalone-wsa-local-password-expiration"></a><h3>StandaloneWorkspace ONE Access (Local Users) - Password Expiration</h3>'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product wsaLocal -vmName $(($wsaFqdn.Split("."))[-0]) -guestUser root -guestPassword $wsaRootPass -localUser $localUsers" }
+                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="standalone-wsa-local-password-complexity"></a><h3>StandaloneWorkspace ONE Access (Local Users) - Password Complexity</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
+                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaLocalUserAccountLockout"; $preHtmlContent = '<a id="standalone-wsa-local-account-lockout"></a><h3>Standalone Workspace ONE Access (Local Users) - Account Lockout</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
 
                 $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch + $customSwitch
                 $wsaLocalPasswordPolicyObject = Invoke-Expression $command
@@ -9162,7 +9402,7 @@ Function Publish-WsaLocalPasswordPolicy {
                     $wsaLocalPasswordPolicyObject
                 } else {
                     if ($wsaLocalPasswordPolicyObject.Count -eq 0) {
-                        $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Workspace ONE Access Not Requested</p>'
+                        $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Standalone Workspace ONE Access Not Requested</p>'
                     } else {
                         $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
                     }
@@ -9181,6 +9421,6105 @@ Export-ModuleMember -Function Publish-WsaLocalPasswordPolicy
 ##########################################################################
 
 ##########################################################################
+#Region     Begin Aria Product Password Management Function ######
+
+Function Get-AriaLocalUserAccountLockout {
+    <#
+		.SYNOPSIS
+        Retrieves the password account lockout for local users.
+
+        .DESCRIPTION
+        The Get-AriaLocalUserAccountLockoutcmdlets retrieves the account lockout for local users
+
+        .EXAMPLE
+        Get-AriaLocalUserAccountLockout -vmName sfo-vra01 -guestUser root -guestPassword VMw@re1! -product vra
+        This example retrieves the VMware Aria Automation account lockout policy.
+
+        .EXAMPLE
+        Get-AriaLocalUserAccountLockout -vmName sfo-vra01 -guestUser root -guestPassword VMw@re1! -product vra -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the VMware Aria Automation account lockout policy and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Get-Get-AriaLocalUserAccountLockout -vmName sfo-vra01 -guestUser root -guestPassword VMw@re1! -product vra -drift
+        This example retrieves the VMware Aria Automation account lockout policy and compares the configuration against the product defaults.
+
+        .PARAMETER vmName
+        The virtual machine name.
+
+        .PARAMETER guestUser
+        The guest user name.
+
+        .PARAMETER guestPassword
+        The guest user password.
+
+        .PARAMETER product
+        The product name.
+
+        .PARAMETER drift
+        The configuration drift flag.
+
+        .PARAMETER version
+        The product to retrieve the password account lockout policy
+
+        .PARAMETER reportPath
+        The report path.
+
+        .PARAMETER policyFile
+        The policy file.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$vmName,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestUser,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
+        [Parameter (Mandatory = $false)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [String]$version,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    if ($PsBoundParameters.ContainsKey('drift')) {
+        if ($PsBoundParameters.ContainsKey('policyFile')) {
+            $command = "(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile).$product.accountLockout"
+        } else {
+            $command = "(Get-PasswordPolicyConfig -version $version).$product.accountLockout"
+        }
+        $requiredConfig = Invoke-Expression $command
+    }
+
+    Try {
+        $cmd = "cat /etc/photon-release"
+        $output = Invoke-VMScript -VM $vmName -ScriptText $cmd -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+        $photonRelease = [regex]::match($output.ScriptOutput, '(\d+\.\d+)').Groups[1].Value
+        if (($photonRelease -ge "4.0")) {
+            $scriptCommand = "cat /etc/security/faillock.conf"
+            $output = Invoke-VMScript -VM $vmName -ScriptText $scriptCommand -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+            if ([regex]::Matches($output.ScriptOutput, 'deny = [-]?[0-9]+')) { $failures = (([regex]::Matches($output.ScriptOutput, 'deny = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'unlock_time = [-]?[0-9]+')) { $unlockInterval = (([regex]::Matches($output.ScriptOutput, 'unlock_time = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'root_unlock_time = [-]?[0-9]+')) { $rootUnlockInterval = (([regex]::Matches($output.ScriptOutput, 'root_unlock_time = [-]?[0-9]+').Value) -Split ('='))[-1] }
+        } elseif ($product -ne 'vrni' -and $photonRelease -lt "4.0") {
+            $scriptCommand = "cat /etc/pam.d/system-auth"
+            $output = Invoke-VMScript -VM $vmName -ScriptText $scriptCommand -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+            if ([regex]::Matches($output.ScriptOutput, 'deny=[-]?[0-9]+')) { $failures = (([regex]::Matches($output.ScriptOutput, 'deny=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, ' unlock_time=[-]?[0-9]+')) { $unlockInterval = (([regex]::Matches($output.ScriptOutput, ' unlock_time=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'root_unlock_time=[-]?[0-9]+')) { $rootUnlockInterval = (([regex]::Matches($output.ScriptOutput, 'root_unlock_time=[-]?[0-9]+').Value) -Split ('='))[-1] }
+        } elseif ($product -eq 'vrni') {
+            $scriptCommand = "cat /etc/pam.d/common-auth"
+            $output = Invoke-VMScript -VM $vmName -ScriptText $scriptCommand -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+            if ([regex]::Matches($output.ScriptOutput, 'deny=[-]?[0-9]+')) { $failures = (([regex]::Matches($output.ScriptOutput, 'deny=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'unlock_time=[-]?[0-9]+')) { $unlockInterval = (([regex]::Matches($output.ScriptOutput, 'unlock_time=[-]?[0-9]+').Value) -Split ('='))[-1] }
+
+        }
+        $accountLockoutObject = New-Object -TypeName psobject
+        $accountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
+        if ($failures) { $accountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($failures -ne $requiredConfig.maxFailures) { "$($failures) [ $($requiredConfig.maxFailures) ]" } else { "$($failures)" } } else { "$($failures)" }) }
+        if ($unlockInterval) { $accountLockoutObject | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($unlockInterval -ne $requiredConfig.unlockInterval) { "$($unlockInterval) [ $($requiredConfig.unlockInterval) ]" } else { "$($unlockInterval)" } } else { "$($unlockInterval)" }) }
+        if ($rootUnlockInterval) { $accountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($rootUnlockInterval -ne $requiredConfig.rootUnlockInterval) { "$($rootUnlockInterval) [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($rootUnlockInterval)" } } else { "$($rootUnlockInterval)" }) }
+        Return $accountLockoutObject
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Get-AriaLocalUserAccountLockout
+
+Function Get-AriaLocalUserPasswordComplexity {
+    <#
+		.SYNOPSIS
+        Get password complexity for local users.
+
+        .DESCRIPTION
+        The Get-AriaLocalUserPasswordComplexitycmdlets retrieves the password complexity for local users
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordComplexity -vmName sfo-vra01 -guestUser root -guestPassword VMw@re1! -product vra
+        This example retrieves the VMware Aria Automation password complexity
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordComplexity -vmName sfo-vrni01 -guestUser root -guestPassword VMw@re1!VMw@re1! -vrni
+        This example retrieves the VMware Aria Operations for Networks password complexity
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordComplexity -vmName sfo-vra01 -guestUser root -guestPassword VMw@re1! -drift -product vra -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the VMware Aria Automation password complexity and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordComplexity -vmName sfo-vra01 -guestUser root -guestPassword VMw@re1! -drift -product vra
+        This example retrieves the VMware Aria Automation password complexity and compares the configuration against the product defaults.
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordComplexity -vmName sfo-vrni01 -guestUser root -guestPassword VMw@re1! -drift -vrni -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the VMware Aria Operations for Networks password complexity and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordComplexity -vmName sfo-vrni01 -guestUser root -guestPassword VMw@re1! -drift -vrni
+        This example retrieves the VMware Aria Operations for Networks password complexity and compares the configuration against the product defaults.
+
+        .PARAMETER vmName
+        The virtual machine name.
+
+        .PARAMETER guestUser
+        The guest user name.
+
+        .PARAMETER guestPassword
+        The guest user password.
+
+        .PARAMETER vrni
+        The VMware Ariare Aria Operations for Networks flag.
+
+        .PARAMETER drift
+        The configuration drift flag.
+
+        .PARAMETER product
+        The product to retrieve the password complexity policy
+
+        .PARAMETER version
+        The product version.
+
+        .PARAMETER reportPath
+        The report path.
+
+        .PARAMETER policyFile
+        The policy file.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$vmName,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestUser,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateSet('vra', 'vrslcm', 'vrops', 'vrli', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [String]$version,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    if ($PsBoundParameters.ContainsKey('drift')) {
+        if ($PsBoundParameters.ContainsKey('policyFile')) {
+            $command = "(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile).$product.passwordComplexity"
+        } else {
+            $command = "(Get-PasswordPolicyConfig -version $version).$product.passwordComplexity"
+        }
+        $requiredConfig = Invoke-Expression $command
+    }
+
+    Try {
+
+        $cmd = "cat /etc/photon-release"
+        $output = Invoke-VMScript -VM $vmName -ScriptText $cmd -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+        $photonRelease = [regex]::match($output.ScriptOutput, '(\d+\.\d+)').Groups[1].Value
+        $photoRelease
+        if (($photonRelease -ge "4.0")) {
+            $scriptCommand = "cat /etc/security/pwquality.conf"
+            $output = Invoke-VMScript -VM $vmName -ScriptText $scriptCommand -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+            if ([regex]::Matches($output.ScriptOutput, 'minlen = [-]?[0-9]+')) { $minLen = (([regex]::Matches($output.ScriptOutput, 'minlen = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'lcredit = [-]?[0-9]+')) { $minLowercase = (([regex]::Matches($output.ScriptOutput, 'lcredit = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'ucredit = [-]?[0-9]+')) { $minUppercase = (([regex]::Matches($output.ScriptOutput, 'ucredit = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'dcredit = [-]?[0-9]+')) { $minNumerical = (([regex]::Matches($output.ScriptOutput, 'dcredit = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'ocredit = [-]?[0-9]+')) { $minSpecial = (([regex]::Matches($output.ScriptOutput, 'ocredit = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'minclass = [-]?[0-9]+')) { $minClass = (([regex]::Matches($output.ScriptOutput, 'minclass = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'difok = [-]?[0-9]+')) { $minUnique = (([regex]::Matches($output.ScriptOutput, 'difok = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'maxrepeat = [-]?[0-9]+')) { $maxRepeat = (([regex]::Matches($output.ScriptOutput, 'maxrepeat = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'remember = [-]?[0-9]+')) { $history = (([regex]::Matches($output.ScriptOutput, 'remember = [-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'retry = [-]?[0-9]+')) { $retry = (([regex]::Matches($output.ScriptOutput, 'retry = [-]?[0-9]+').Value) -Split ('='))[-1] }
+        } elseif ($product -ne 'vrni' -and $photonRelease -lt "4.0") {
+            $scriptCommand = "cat /etc/pam.d/system-password"
+            $output = Invoke-VMScript -VM $vmName -ScriptText $scriptCommand -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+            if ([regex]::Matches($output.ScriptOutput, 'minlen=[-]?[0-9]+')) { $minLen = (([regex]::Matches($output.ScriptOutput, 'minlen=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'lcredit=[-]?[0-9]+')) { $minLowercase = (([regex]::Matches($output.ScriptOutput, 'lcredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'ucredit=[-]?[0-9]+')) { $minUppercase = (([regex]::Matches($output.ScriptOutput, 'ucredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'dcredit=[-]?[0-9]+')) { $minNumerical = (([regex]::Matches($output.ScriptOutput, 'dcredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'ocredit=[-]?[0-9]+')) { $minSpecial = (([regex]::Matches($output.ScriptOutput, 'ocredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'minclass=[-]?[0-9]+')) { $minClass = (([regex]::Matches($output.ScriptOutput, 'minclass=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'difok=[-]?[0-9]+')) { $minUnique = (([regex]::Matches($output.ScriptOutput, 'difok=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ($product -ne 'vrops' -or $product -ne 'vrli') {
+                if ([regex]::Matches($output.ScriptOutput, 'maxsequence=[-]?[0-9]+')) { $maxSequence = (([regex]::Matches($output.ScriptOutput, 'maxsequence=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            } else {
+                if ([regex]::Matches($output.ScriptOutput, 'maxrepeat=[-]?[0-9]+')) { $maxRepeat = (([regex]::Matches($output.ScriptOutput, 'maxrepeat=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            }
+            if ([regex]::Matches($output.ScriptOutput, 'remember=[-]?[0-9]+')) { $history = (([regex]::Matches($output.ScriptOutput, 'remember=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'retry=[-]?[0-9]+')) { $retry = (([regex]::Matches($output.ScriptOutput, 'retry=[-]?[0-9]+').Value) -Split ('='))[-1] }
+        } elseif ($product -eq 'vrni') {
+            $scriptCommand = "cat /etc/pam.d/common-password"
+            $output = Invoke-VMScript -VM $vmName -ScriptText $scriptCommand -GuestUser $guestUser -GuestPassword $guestPassword -Confirm:$false
+            if ([regex]::Matches($output.ScriptOutput, 'minlen=[-]?[0-9]+')) { $minLen = (([regex]::Matches($output.ScriptOutput, 'minlen=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'lcredit=[-]?[0-9]+')) { $minLowercase = (([regex]::Matches($output.ScriptOutput, 'lcredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'ucredit=[-]?[0-9]+')) { $minUppercase = (([regex]::Matches($output.ScriptOutput, 'ucredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'dcredit=[-]?[0-9]+')) { $minNumerical = (([regex]::Matches($output.ScriptOutput, 'dcredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'ocredit=[-]?[0-9]+')) { $minSpecial = (([regex]::Matches($output.ScriptOutput, 'ocredit=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'minclass=[-]?[0-9]+')) { $minClass = (([regex]::Matches($output.ScriptOutput, 'minclass=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'difok=[-]?[0-9]+')) { $minUnique = (([regex]::Matches($output.ScriptOutput, 'difok=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'remember=[-]?[0-9]+')) { $history = (([regex]::Matches($output.ScriptOutput, 'remember=[-]?[0-9]+').Value) -Split ('='))[-1] }
+            if ([regex]::Matches($output.ScriptOutput, 'retry=[-]?[0-9]+')) { $retry = (([regex]::Matches($output.ScriptOutput, 'retry=[-]?[0-9]+').Value) -Split ('='))[-1] }
+        }
+
+        $passwordComplexityObject = New-Object -TypeName psobject
+        $passwordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
+        if ($minLen) { $passwordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($minLen -ne $requiredConfig.minLength) { "$($minLen) [ $($requiredConfig.minLength) ]" } else { "$($minLen)" } } else { "$($minLen)" }) }
+        if ($minLowercase) { $passwordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($minLowercase -ne $requiredConfig.minLowercase) { "$($minLowercase) [ $($requiredConfig.minLowercase) ]" } else { "$($minLowercase)" } } else { "$($minLowercase)" }) }
+        if ($minUppercase) { $passwordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($minUppercase -ne $requiredConfig.minUppercase) { "$($minUppercase) [ $($requiredConfig.minUppercase) ]" } else { "$($minUppercase)" } } else { "$($minUppercase)" }) }
+        if ($minNumerical) { $passwordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($minNumerical -ne $requiredConfig.minNumerical) { "$($minNumerical) [ $($requiredConfig.minNumerical) ]" } else { "$($minNumerical)" } } else { "$($minNumerical)" }) }
+        if ($minSpecial) { $passwordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($minSpecial -ne $requiredConfig.minSpecial) { "$($minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($minSpecial)" } } else { "$($minSpecial)" }) }
+        if ($minUnique) { $passwordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($minUnique -ne $requiredConfig.minUnique) { "$($minUnique) [ $($requiredConfig.minUnique) ]" } else { "$($minUnique)" } } else { "$($minUnique)" }) }
+        if ($minClass) { $passwordComplexityObject | Add-Member -notepropertyname "Min Classes" -notepropertyvalue $(if ($drift) { if ($minClass -ne $requiredConfig.minClass) { "$($minClass) [ $($requiredConfig.minClass) ]" } else { "$($minClass)" } } else { "$($minClass)" }) }
+        if ($maxRepeat) { $passwordComplexityObject | Add-Member -notepropertyname "Max Repeat" -notepropertyvalue $(if ($drift) { if ($maxRepeat -ne $requiredConfig.maxRepeat) { "$($maxRepeat) [ $($requiredConfig.maxRepeat) ]" } else { "$($maxRepeat)" } } else { "$($maxRepeat)" }) }
+        if ($maxSequence) { $passwordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($maxSequence -ne $requiredConfig.maxSequence) { "$($maxSequence) [ $($requiredConfig.maxSequence) ]" } else { "$($maxSequence)" } } else { "$($maxSequence)" }) }
+        if ($history) { $passwordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($history -ne $requiredConfig.history) { "$($history) [ $($requiredConfig.history) ]" } else { "$($history)" } } else { "$($history)" }) }
+        if ($retry) { $passwordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($retry -ne $requiredConfig.retries) { "$($retry) [ $($requiredConfig.retries) ]" } else { "$($retry)" } } else { "$($retry)" }) }
+        Return $passwordComplexityObject
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Get-AriaLocalUserPasswordComplexity
+
+Function Get-AriaLocalUserPasswordExpiration {
+    <#
+		.SYNOPSIS
+		Retrieves the password expiration policy for the specified local user.
+
+        .DESCRIPTION
+        The Get-AriaLocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy.
+        The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to vCenter Server
+		- Retrieves the password expiration policy for the specified local user
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
+        This example retrieves the global password expiration policy for a VMware Aria Automation instance.
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01  -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the global password expiration policy for a VMware Aria Automation instance and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
+        This example retrieves the global password expiration policy for a VMware Aria Automation instance and compares the configuration against the product defaults.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER domain
+        The name of the workload domain which the product is deployed
+
+        .PARAMETER vmName
+        The name of the virtual machine to retrieve the policy from.
+
+        .PARAMETER guestUser
+        The username to authenticate to the virtual machine guest operating system.
+
+        .PARAMETER guestPassword
+        The password to authenticate to the virtual machine guest operating system.
+
+        .PARAMETER localUser
+        The local user to retrieve the password expiration policy for.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$vmName,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$guestUser,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$guestPassword,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [switch]$sudo,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [Array]$localUser,
+        [Parameter (Mandatory = $false, ParameterSetName = 'drift')] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    $pass = Get-Password -username $user -password $pass
+    $guestPassword = Get-Password -username $guestUser -password $guestPassword
+
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if ($drift) {
+                    $version = Get-VCFManager -version
+                    if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $command = '(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
+                    } else {
+                        $command = '(Get-PasswordPolicyConfig -version $version).' + $product + '.passwordExpiration'
+                    }
+                    $requiredConfig = Invoke-Expression $command
+                }
+                if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                                if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain)) {
+                                    $vcenterDomain = $vcfVcenterDetails.type
+                                    if ($vcenterDomain -ne "MANAGEMENT") {
+                                        if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
+                                            if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
+                                                if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
+                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
+                                                        $mgmtConnected = $true
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Write-Error "Unable to find Workload Domain typed (MANAGEMENT) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                                        }
+                                    }
+                                }
+                                if ($PsBoundParameters.ContainsKey('sudo')) {
+                                    $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
+                                    foreach ($user in $localUser) {
+                                        if ($localUserPasswordExpiration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user -sudo) {
+                                            $localUserExpirationObject = New-Object -TypeName psobject
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                            $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
+                                            $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
+                                            $allLocalUserExpirationObject += $localUserExpirationObject
+                                        } else {
+                                            Write-Error "Unable to retrieve password expiration policy for local user ($user) from Virtual Machine ($vmName): PRE_VALIDATION_FAILED"
+                                        }
+                                    }
+                                    return $allLocalUserExpirationObject
+                                } else {
+                                    $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
+                                    foreach ($user in $localUser) {
+                                        if ($localUserPasswordExpiration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user) {
+                                            $localUserExpirationObject = New-Object -TypeName psobject
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
+                                            $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
+                                            $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
+                                            $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
+                                            $allLocalUserExpirationObject += $localUserExpirationObject
+                                        } else {
+                                            Write-Error "Unable to retrieve password expiration policy for local user ($user) from Virtual Machine ($vmName): PRE_VALIDATION_FAILED"
+                                        }
+                                    }
+                                    return $allLocalUserExpirationObject
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Write-Error "Unable to find Workload Domain named ($domain) in the inventory of SDDC Manager ($server): PRE_VALIDATION_FAILED"
+                }
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    } Finally {
+        if ($global:DefaultVIServers) {
+            Disconnect-VIServer -Server $global:DefaultVIServers -Confirm:$false
+        }
+    }
+}
+Export-ModuleMember -Function Get-AriaLocalUserPasswordExpiration
+
+Function Publish-AriaLocalUserPasswordPolicy {
+    <#
+        .SYNOPSIS
+        Publishes the password policies for Aria product local users.
+
+        .DESCRIPTION
+        Publish-AriaLocalUserPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts the output to HTML.
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates which VMware Aria products are installed
+
+        .EXAMPLE
+        Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
+        This example returns password expiration policy for all VMware Aria products for all domains.
+
+        .EXAMPLE
+        Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-m01
+        This example returns password expiration policy for all VMware Aria products for the management domain.
+
+        .EXAMPLE
+        Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
+        This example returns password complexity policy for all VMware Aria products for all domains.
+
+        .EXAMPLE
+        Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-m01
+        This example returns password complexity policy for all VMware Aria products for the management domain.
+
+        .EXAMPLE
+        Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
+        This example returns password account lockout policy for all VMware Aria products for all domains.
+
+        .EXAMPLE
+        Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-m01
+        This example returns password account lockout policy for all VMware Aria products for the management domain.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER policy
+        The policy to publish. One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+
+        .PARAMETER allDomains
+        Switch to publish the policy for all workload domains.
+
+        .PARAMETER workloadDomain
+        Switch to publish the policy for a specific workload domain.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+
+        .PARAMETER json
+        Switch to publish the policy in JSON format.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateSet('PasswordExpiration', 'PasswordComplexity', 'AccountLockout')] [String]$policy,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json,
+        [Parameter (ParameterSetName = 'All-WorkloadDomains', Mandatory = $true)] [ValidateNotNullOrEmpty()] [Switch]$allDomains,
+        [Parameter (ParameterSetName = 'Specific-WorkloadDomain', Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$workloadDomain
+    )
+
+    $pass = Get-Password -username $user -password $pass
+
+    Try {
+        if (Test-VCFConnection -server $server) {
+            if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+                if (Get-VCFAriaLifecycle) {
+                    $ariaResources = @('ariaLifecycle')
+                    foreach ($resource in $ariaResources) {
+                        switch ($resource) {
+                            default { $command = "Get-VCF$resource" }
+                            'workspaceOneAccess' { $command = 'Get-VCFWsa'; }
+                        }
+                        $isEnabled = (Invoke-Expression $command -ErrorAction SilentlyContinue)
+                        $resourceTitleCase = switch ($resource) {
+                            'ariaLifecycle' { 'Aria Suite Lifecycle' }
+                        }
+                        # Checks for VCF Aware Mode on Aria Suite Lifecycle
+                        if ($isEnabled) {
+                            # Aria Suite Lifecycle
+                            if ($resourceTitleCase -eq "Aria Suite Lifecycle") {
+                                if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
+                                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrslcm-local-password-complexity"></a><h3>Aria Suite Lifecycle (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrslcm-local-password-expiration"></a><h3>VMware Aria Suite Lifecycle (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrslcm-local-account-lockout"></a><h3>VMware Aria Suite Lifecycle (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                                $vrslcmLocalPasswordPolicyObject = Invoke-Expression $command
+                                $allvrslcmLocalPasswordPolicyObject += $vrslcmLocalPasswordPolicyObject
+                                $allvrslcmLocalPasswordPolicyObject = $allvrslcmLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                                $allvrslcmLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvrslcmLocalPasswordPolicyObject
+                                $allvrslcmLocalPasswordPolicyObject
+                            }
+                        }
+
+                        # Aria Operations
+                        $notvcfenabledvrops = Get-vRSLCMProductDetails -productId vrops
+                        if ($notvcfenabledvrops) {
+                            if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrops-local-password-complexity"></a><h3>VMware Aria Operations (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrops-local-password-expiration"></a><h3>VMware Aria Operations (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops" }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrops-local-account-lockout"></a><h3>VMware Aria Operations (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
+                            $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                            $vropsLocalPasswordPolicyObject = Invoke-Expression $command
+                            $allvropsLocalPasswordPolicyObject += $vropsLocalPasswordPolicyObject
+                            $allvropsLocalPasswordPolicyObject = $allvropsLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allvropsLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvropsLocalPasswordPolicyObject
+                            $allvropsLocalPasswordPolicyObject
+                        }
+
+                        # Aria Operations for Logs
+                        $notvcfenabledvrli = Get-vRSLCMProductDetails -productId vrli
+                        if ($notvcfenabledvrli) {
+                            if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrli-local-password-complexity"></a><h3>VMware Aria Operations for Logs (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrli-local-password-expiration"></a><h3>VMware Aria Operations for Logs (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrli-local-account-lockout"></a><h3>VMware Aria Operations for Logs (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                            $vrliLocalPasswordPolicyObject = Invoke-Expression $command
+                            $allvrliLocalPasswordPolicyObject += $vrliLocalPasswordPolicyObject
+                            $allvrliLocalPasswordPolicyObject = $allvrliLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allvrliLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvrliLocalPasswordPolicyObject
+                            $allvrliLocalPasswordPolicyObject
+                        }
+
+                        # Aria Operations for Netowrks
+                        $notvcfenabledvrni = Get-vRSLCMProductDetails -productId vrni
+                        if ($null -ne $notvcfenabledvrni) {
+                            if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrni-local-password-complexity"></a><h3>VMware Aria Operations for Networks (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrni-local-password-expiration"></a><h3>VMware Aria Operations for Networks (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrni-local-account-lockout"></a><h3>VMware Aria Operations for Networks (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                            $vrniLocalPasswordPolicyObject = Invoke-Expression $command
+                            $allvrniLocalPasswordPolicyObject += $vrniLocalPasswordPolicyObject
+                            $allvrniLocalPasswordPolicyObject = $allvrniLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allvrniLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvrniLocalPasswordPolicyObject
+                            $allvrniLocalPasswordPolicyObject
+                        }
+
+                        # Aria Automation
+                        $notvcfenabledvra = Get-vRSLCMProductDetails -productid vra
+                        if ($notvcfenabledvra) {
+                            if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vra-local-password-complexity"></a><h3>VMware Aria Automation (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vra-local-password-expiration"></a><h3>VMware Aria Automation (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vraa-local-account-lockout"></a><h3>VMware Aria Automation (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                            $vraLocalPasswordPolicyObject = Invoke-Expression $command
+                            $allvraLocalPasswordPolicyObject += $vraLocalPasswordPolicyObject
+                            $allvraLocalPasswordPolicyObject = $allvraLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allvraLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvraLocalPasswordPolicyObject
+                            $allvraLocalPasswordPolicyObject
+                        }
+
+                        # Aria Workspace ONE
+                        $notvcfenabledvidm = Get-vRSLCMProductDetails -productid vidm
+                        if ($notvcfenabledvidm) {
+                            # Runs Aria Workspace ONE Directory password policy
+                            if ($PsBoundParameters.ContainsKey('vidmdrift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -vidmdrift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -vidmdrift" } } else { $commandSwitch = "" }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vidm-directory-password-complexity"></a><h3>VMware Aria Lifecycle Workspace One (Directory) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings directory  " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vidm-directory-password-expiration"></a><h3>VMware Aria Lifecycle Workspace One (Directory) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm  " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vidm-directory-account-lockout"></a><h3>VMware Aria Lifecycle Workspace One (Directory) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings directory " }
+                            $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                            $vidmDirectoryPasswordPolicyObject = Invoke-Expression $command
+                            $allvidmDirectoryPasswordPolicyObject += $vidmDirectoryPasswordPolicyObject
+                            $allvidmDirectoryPasswordPolicyObject = $allvidmDirectoryPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allvidmDirectoryPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvidmDirectoryPasswordPolicyObject
+                            $allvidmDirectoryPasswordPolicyObject
+                            # Runs Aria Workspace ONE Local password policy
+                            if ($PsBoundParameters.ContainsKey('vidmdrift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -vidmdrift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -vidmdrift" } } else { $commandSwitch = "" }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vidm-local-password-complexity"></a><h3>VMware Aria Lifecycle Workspace One (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings localuser " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vidm-local-account-lockout"></a><h3>VMware Aria Lifecycle Workspace One (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings localuser " }
+                            $command = $pvsCmdlet + $commandSwitch + $customSwitch
+                            $vidmLocalPasswordPolicyObject = Invoke-Expression $command
+                            $allvidmLocalPasswordPolicyObject += $vidmLocalPasswordPolicyObject
+                            $allvidmLocalPasswordPolicyObject = $allvidmLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allvidmLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvidmLocalPasswordPolicyObject
+                            $allvidmLocalPasswordPolicyObject
+                        }
+                    }
+                }
+            }
+        }
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Publish-AriaLocalUserPasswordPolicy
+
+Function Request-AriaLocalUserAccountLockout {
+    <#
+        .SYNOPSIS
+        Retrieves the VMware Aria product password account lockout.
+
+        .DESCRIPTION
+        The Request-AriaLocalUserAccountLockout cmdlet retrieves the VMware Aria Automation password expiration policy.
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle
+        - Retrieves the password account lockout policy
+
+        .EXAMPLE
+        Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra
+        This example retrieves the password expiration policy for VMware Aria Automation instances.
+
+        .EXAMPLE
+        Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra -drift
+        This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
+
+        .EXAMPLE
+        Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory
+        This example retrieves the password expiration policy for VMware Aria Lifecycle Workspace One instances for directory users.
+
+        .EXAMPLE
+        Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password expiration policy for VMware Aria Lifecycle Workspace One instances for directory users and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift
+        This example retrieves the password expiration policy for VMware Aria Lifecycle Workspace One instances for directory users and compares the configuration against the product defaults.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER product.
+        The product to retrieve the password account lockout policy
+
+        .PARAMETER vidm
+        Switch to retrieve the password account lockout policy for VMware Aria Lifecycle Workspace One.
+
+        .PARAMETER settings
+        The settings to retrieve the password account lockout policy for VMware Aria Lifecycle Workspace One. One of: directory, localuser.
+
+        .PARAMETER vidmdrift
+        Switch to compare the current configuration against the product defaults or a JSON file for Aria Lifecycle Workspace One.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+    #>
+
+    Param (
+        [CmdletBinding(DefaultParameterSetName = 'novidm')]
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter(ParameterSetName = 'novidm', Mandatory = $false)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false, ParameterSetName = "vidm")] [Switch]$vidm,
+        [Parameter(ParameterSetName = 'vidm', Mandatory = $true)] [ValidateSet('directory', 'localuser')] [String]$settings,
+        [Parameter (Mandatory = $false, ParameterSetName = "vidm")] [ValidateNotNullOrEmpty()] [Switch]$vidmdrift,
+        [Parameter (Mandatory = $false, ParameterSetName = "novidm")] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    $pass = Get-Password -username $user -password $pass
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (($vcfVrslcmDetails = Get-vRSLCMServerDetail -fqdn $server -username $user -password $pass)) {
+                if (Test-vRSLCMAuthentication -server $vcfVrslcmDetails.fqdn -user $vcfVrslcmDetails.adminUser -pass $vcfVrslcmDetails.adminPass) {
+                    $version = Get-VCFManager -version
+                    $domain = Get-VCFWorkloadDomain | Select-Object name, type | Where-Object { $_.type -eq "MANAGEMENT" }
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain.name)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Try {
+        # VMware Aria Suite Lifecycle
+        if ($product -eq 'vrslcm') {
+            if ($drift) {
+                if ($PsBoundParameters.ContainsKey("policyFile")) {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaLifecycle.accountLockout
+                } else {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaLifecycle.accountLockout
+                }
+            }
+            $allvrslcmAccountLockoutObject = New-Object System.Collections.ArrayList
+            if ($vrslcmAccountLockout = Get-AriaLocalUserAccountLockout -vmName $vcfVrslcmDetails.fqdn.split('.')[0] -guestUser $vcfVrslcmDetails.rootUser -guestPassword $vcfVrslcmDetails.rootPassword ) {
+                $vrslcmAccountLockoutObject = New-Object -TypeName psobject
+                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrslcmAccountLockout.system
+                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vrslcmAccountLockout.'Max Failures' -eq $null) { Write-Output "Max Failures is not configured" } else { $(if ($drift) { if (($vrslcmAccountLockout.'Max Failures') -ne $requiredConfig.maxFailures) { "$($vrslcmAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrslcmAccountLockout.'Max Failures')" } } else { "$($vrslcmAccountLockout.'Max Failures')" }) })
+                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vrslcmAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($drift) { if (($vrslcmAccountLockout.'Unlock Interval (sec)') -ne $requiredConfig.unlockInterval) { "$($vrslcmAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrslcmAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Unlock Interval (sec)')" }) })
+                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vrslcmAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Root Unlock Interval is not configured" } else { $(if ($drift) { if (($vrslcmAccountLockout.'Root Unlock Interval (sec)') -ne $requiredConfig.rootUnlockInterval) { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" }) })
+                $allvrslcmAccountLockoutObject += $vrslcmAccountLockoutObject
+            } else {
+                Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($vcfVrslcmDetails.fqdn): PRE_VALIDATION_FAILED"
+            }
+            return $allvrslcmAccountLockoutObject
+        }
+
+        # VMware Aria Operations
+        if ($product -eq 'vrops') {
+            if ($drift) {
+                if ($PsBoundParameters.ContainsKey("policyFile")) {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperations.accountLockout
+                } else {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperations.accountLockout
+                }
+            }
+            $vropsnodes = ((Get-vRSLCMProductDetails -productId vrops).nodes).properties.hostName
+            $allvropsAccountLockoutObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vropsnodes) {
+                $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                if ($vropsAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password ) {
+                    $vropsAccountLockoutObject = New-Object -TypeName psobject
+                    $vropsAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsAccountLockout.system
+                    $vropsAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vropsAccountLockout.'Max Failures' -eq $null) { Write-Output "Max Failures is not configured" } else { $(if ($drift) { if (($vropsAccountLockout.'Max Failures') -ne $requiredConfig.maxFailures) { "$($vropsAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vropsAccountLockout.'Max Failures')" } } else { "$($vropsAccountLockout.'Max Failures')" }) })
+                    $vropsAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vropsAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($drift) { if (($vropsAccountLockout.'Unlock Interval (sec)') -ne $requiredConfig.unlockInterval) { "$($vropsAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vropsAccountLockout.'Unlock Interval (sec)')" } } else { "$($vropsAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vropsAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vropsAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Root Unlock Interval is not configured" } else { $(if ($drift) { if (($vropsAccountLockout.'Root Unlock Interval (sec)') -ne $requiredConfig.rootUnlockInterval) { "$($vropsAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vropsAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vropsAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $allvropsAccountLockoutObject += $vropsAccountLockoutObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvropsAccountLockoutObject
+        }
+
+        # VMware Aria Operatons for Logs
+        if ($product -eq 'vrli') {
+            if ($drift) {
+                if ($PsBoundParameters.ContainsKey("policyFile")) {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperationsLogs.accountLockout
+                } else {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperationsLogs.accountLockout
+                }
+            }
+            $vrlinodes = ((Get-vRSLCMProductDetails -productId vrli).nodes).properties.hostName
+            $allvrliAccountLockoutObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vrlinodes) {
+                $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                if ($vrliAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser root -guestPassword $vrlipassword.password ) {
+                    $vrliAccountLockoutObject = New-Object -TypeName psobject
+                    $vrliAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrliAccountLockout.system
+                    $vrliAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vrliAccountLockout.'Max Failures' -eq $null) { Write-Output "Max Failures is not configured" } else { $(if ($drift) { if (($vrliAccountLockout.'Max Failures') -ne $requiredConfig.maxFailures) { "$($vrliAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrliAccountLockout.'Max Failures')" } } else { "$($vrliAccountLockout.'Max Failures')" }) })
+                    $vrliAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vrliAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($drift) { if (($vrliAccountLockout.'Unlock Interval (sec)') -ne $requiredConfig.unlockInterval) { "$($vrliAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrliAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrliAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vrliAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vrliAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Root Unlock Interval is not configured" } else { $(if ($drift) { if (($vrliAccountLockout.'Root Unlock Interval (sec)') -ne $requiredConfig.rootUnlockInterval) { "$($vrliAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrliAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrliAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $allvrliAccountLockoutObject += $vrliAccountLockoutObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvrliAccountLockoutObject
+        }
+
+        # VMware Aria Operations for Networks
+        if ($product -eq 'vrni') {
+            if ($drift) {
+                if ($PsBoundParameters.ContainsKey("policyFile")) {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperationsNetworks.accountLockout
+                } else {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperationsNetworks.accountLockout
+                }
+            }
+            $vrninodes = ((Get-vRSLCMProductDetails -productId vrni).nodes | Select-Object type -ExpandProperty properties)
+            $allvrniAccountLockoutObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vrninodes) {
+                $vrninodedata = ((Get-vRSLCMProductDetails -productId vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                if ($vrniAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.vmname -guestUser support -guestPassword $vrnipassword.password -product vrni ) {
+                    $vrniAccountLockoutObject = New-Object -TypeName psobject
+                    $vrniAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniAccountLockout.system
+                    $vrniAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vrniAccountLockout.'Max Failures' -eq $null) { Write-Output "Max Failures is not configured" } else { $(if ($drift) { if (($vrniAccountLockout.'Max Failures') -ne $requiredConfig.maxFailures) { "$($vrniAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrniAccountLockout.'Max Failures')" } } else { "$($vrniAccountLockout.'Max Failures')" }) })
+                    $vrniAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vrniAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($drift) { if (($vrniAccountLockout.'Unlock Interval (sec)') -ne $requiredConfig.unlockInterval) { "$($vrniAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrniAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrniAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vrniAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vrniAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Root Unlock Interval is not configured" } else { $(if ($drift) { if (($vrniAccountLockout.'Root Unlock Interval (sec)') -ne $requiredConfig.rootUnlockInterval) { "$($vrniAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrniAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrniAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $allvrniAccountLockoutObject += $vrniAccountLockoutObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvrniAccountLockoutObject
+        }
+
+        # VMware Aria Automation
+        if ($product -eq 'vra') {
+            if ($drift) {
+                if ($PsBoundParameters.ContainsKey("policyFile")) {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaAutomation.accountLockout
+                } else {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaAutomation.accountLockout
+                }
+            }
+            $vranodes = ((Get-vRSLCMProductDetails -productId vra).nodes).properties.hostName
+            $allvraAccountLockoutObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vranodes) {
+                $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                if ($vraAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser $vrausername -guestPassword $vrapassword.password ) {
+                    $vraAccountLockoutObject = New-Object -TypeName psobject
+                    $vraAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vraAccountLockout.system
+                    $vraAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vraAccountLockout.'Max Failures' -eq $null) { Write-Output "Max Failures is not configured" } else { $(if ($drift) { if (($vraAccountLockout.'Max Failures') -ne $requiredConfig.maxFailures) { "$($vraAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vraAccountLockout.'Max Failures')" } } else { "$($vraAccountLockout.'Max Failures')" }) })
+                    $vraAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vraAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($drift) { if (($vraAccountLockout.'Unlock Interval (sec)') -ne $requiredConfig.unlockInterval) { "$($vraAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vraAccountLockout.'Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vraAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vraAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Root Unlock Interval is not configured" } else { $(if ($drift) { if (($vraAccountLockout.'Root Unlock Interval (sec)') -ne $requiredConfig.rootUnlockInterval) { "$($vraAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $allvraAccountLockoutObject += $vraAccountLockoutObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvraAccountLockoutObject
+        }
+
+        # Aria Lifecycle Workspace ONE Access Access
+        if ($vidm) {
+            # Directory Users
+            if ($settings -eq 'directory') {
+                if ($drift) {
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.accountLockout
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaDirectory.accountLockout
+                    }
+                }
+                $vidmnodes = ((Get-vRSLCMProductDetails -productId vidm).nodes | Where-Object { $_.type -ne 'vidm-connector' }).properties.hostName
+                $allvidmDirectoryAccountLockoutObject = New-Object System.Collections.ArrayList
+                foreach ($node in $vidmnodes) {
+                    $vidmdirectorynodedata = ((Get-vRSLCMProductDetails -productId vidm).properties)
+                    $vidmdirectoryvmid = $vidmdirectorynodedata.defaultConfigurationPassword.split(':')[2]
+                    $vidmdirectorypassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmdirectoryvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vidmdirectoryusername = $vidmdirectorynodedata.defaultConfigurationUsername
+                    if (Test-WsaConnection -server $node) {
+                        if (Test-WsaAuthentication -server $node -user $vidmdirectoryusername -pass $vidmdirectorypassword.password ) {
+                            if ($vidmDirectoryAccountLockout = Get-WsaAccountLockout) {
+                                $vidmDirectoryAccountLockoutObject = New-Object -TypeName psobject
+                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $node.Split('.')[0]
+                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vidmDirectoryAccountLockout.numAttempts -eq $null) { Write-Output "Max Failures is not configured" } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.numAttempts) -ne $requiredConfig.maxFailures) { "$($vidmDirectoryAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($vidmDirectoryAccountLockout.numAttempts)" } } else { "$($vidmDirectoryAccountLockout.numAttempts)" }) })
+                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "Attempt Interval" $(if ($vidmDirectoryAccountLockout.attemptInterval -eq $null) { Write-Output "Attempt Interval is not configured" } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.attemptInterval) -ne $requiredConfig.failedAttemptInterval) { "$($vidmDirectoryAccountLockout.attemptInterval) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($vidmDirectoryAccountLockout.attemptInterval)" } } else { "$($vidmDirectoryAccountLockout.attemptInterval)" }) })
+                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vidmDirectoryAccountLockout.unlockInterval -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.unlockInterval) -ne $requiredConfig.unlockInterval) { "$($vidmDirectoryAccountLockout.unlockInterval) [ $($requiredConfig.unlockInterval) ]" } else { "$($vidmDirectoryAccountLockout.unlockInterval)" } } else { "$($vidmDirectoryAccountLockout.unlockInterval)" }) })
+                                $allvidmDirectoryAccountLockoutObject += $vidmDirectoryAccountLockoutObject
+                            }
+                        }
+                    }
+                }
+                return $allvidmDirectoryAccountLockoutObject
+            }
+
+            # Local Users
+            if ($settings -eq 'localuser') {
+                if ($vidmdrift) {
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaLocal.accountLockout
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaLocal.accountLockout
+                    }
+                }
+                $vidmnodes = ((Get-vRSLCMProductDetails -productId vidm).nodes | Where-Object { $_.type -ne 'vidm-connector' }).properties.hostName
+                $allvidmLocalAccountLockoutObject = New-Object System.Collections.ArrayList
+                foreach ($node in $vidmnodes) {
+                    $vidmlocalnodedata = ((Get-vRSLCMProductDetails -productId vidm).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.type -ne 'vidm-connector' -and $_.hostName -eq $node })
+                    $vidmlocalvmid = $vidmlocalnodedata.vidmRootPassword.Split(':')[2]
+                    $vidmlocalpassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmlocalvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    if ($vidmLocalAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser root -guestPassword $vidmlocalpassword.password) {
+                        $vidmLocalAccountLockoutObject = New-Object -TypeName psobject
+                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vidmLocalAccountLockout.system
+                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vidmLocalAccountLockout.'Maximum Failures' -eq $null) { Write-Output "Maximum Failures is not configured" } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Maximum Failures') -ne $requiredConfig.maxFailures) { "$($vidmLocalAccountLockout.'Maximum Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vidmLocalAccountLockout.'Maximum Failures')" } } else { "$($vrliAccountLockout.'Maximum Failures')" }) })
+                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vidmLocalAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Unlock Interval is not configured" } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Unlock Interval (sec)') -ne $requiredConfig.unlockInterval) { "$($vidmLocalAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vidmLocalAccountLockout.'Unlock Interval (sec)')" } } else { "$($vidmLocalAccountLockout.'Unlock Interval (sec)')" }) })
+                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vidmLocalAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Root Unlock Interval is not configured" } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Root Unlock Interval (sec)') -ne $requiredConfig.rootUnlockInterval) { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)')" }) })
+                        $allvidmLocalAccountLockoutObject += $vidmLocalAccountLockoutObject
+                    }
+                }
+                return $allvidmLocalAccountLockoutObject
+            }
+        }
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Request-AriaLocalUserAccountLockout
+
+Function Request-AriaLocalUserPasswordComplexity {
+    <#
+        .SYNOPSIS
+        Retrieves the VMware Aria product password complexity.
+
+        .DESCRIPTION
+        The Request-AriaLocalUserPasswordComplexity cmdlet retrieves the VMware Aria Automation password expiration policy.
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle
+        - Retrieves the password complexity policy
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra
+        This example retrieves the password complexity policy for VMware Aria Automation instances.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password complexity policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra -drift
+        This example retrieves the password complexity policy for VMware Aria Automation instances and compares the configuration against the product defaults.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory.
+        This example retrieves the password complexity policy for Workspace ONE Access directory users.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password complexity policy for Workspace ONE Access directory users and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift
+        This example retrieves the password complexity policy for Workspace ONE Access directory users and compares the configuration against the product defaults.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER product
+        The product to retrieve the password complexity policy
+
+        .PARAMETER vidm
+        Switch to retrieve the password complexity policy for Workspace ONE Access.
+
+        .PARAMETER settings
+        The settings to retrieve the password complexity policy for Workspace ONE Access. The possible values are directory and localuser.
+
+        .PARAMETER vidmdrift
+        Switch to compare the current configuration against the product defaults or a JSON file for Aria Lifecycle Workspace One.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+    #>
+
+    Param (
+        [CmdletBinding(DefaultParameterSetName = 'novidm')]
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter(ParameterSetName = 'novidm', Mandatory = $false)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false, ParameterSetName = "vidm")] [Switch]$vidm,
+        [Parameter(ParameterSetName = 'vidm', Mandatory = $true)] [ValidateSet('directory', 'localuser')] [String]$settings,
+        [Parameter (Mandatory = $false, ParameterSetName = "vidm")] [ValidateNotNullOrEmpty()] [Switch]$vidmdrift,
+        [Parameter (Mandatory = $false, ParameterSetName = "novidm")] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    $pass = Get-Password -username $user -password $pass
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (($vcfVrslcmDetails = Get-vRSLCMServerDetail -fqdn $server -username $user -password $pass)) {
+                if (Test-vRSLCMAuthentication -server $vcfVrslcmDetails.fqdn -user $vcfVrslcmDetails.adminUser -pass $vcfVrslcmDetails.adminPass) {
+                    $version = Get-VCFManager -version
+                    $domain = Get-VCFWorkloadDomain | Select-Object name, type | Where-Object { $_.type -eq "MANAGEMENT" }
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain.name)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Try {
+        # VMware Aria Suite Lifecycle
+        if ($product -eq 'vrslcm') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaLifecycle.passwordComplexity
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaLifecycle.passwordComplexity
+            }
+            $allvrslcmPasswordComplexityObject = New-Object System.Collections.ArrayList
+            if ($vrslcmPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $vcfVrslcmDetails.fqdn.split('.')[0] -guestUser $vcfVrslcmDetails.rootUser -guestPassword $vcfVrslcmDetails.rootPassword) {
+                $vrslcmPasswordComplexityObject = New-Object -TypeName psobject
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrslcmPasswordComplexity.system
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vrslcmPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Min Numerical is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Numerical') -ne $requiredConfig.minNumerical) { "$($vrslcmPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrslcmPasswordComplexity.'Min Numerical')" } } else { "$($vrslcmPasswordComplexity.'Min Numerical')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vrslcmPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Min Uppercase is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Uppercase') -ne $requiredConfig.minUppercase) { "$($vrslcmPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" } } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vrslcmPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Min Lowercase is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Lowercase') -ne $requiredConfig.minLowercase) { "$($vrslcmPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrslcmPasswordComplexity.'Min Lowercase')" } } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vrslcmPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Min Unique is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Unique') -ne $requiredConfig.minUnique) { "$($vrslcmPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrslcmPasswordComplexity.'Min Unique')" } } else { "$($vrslcmPasswordComplexity.'Min Unique')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vrslcmPasswordComplexity.'Min Length' -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vrslcmPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrslcmPasswordComplexity.'Min Length')" } } else { "$($vrslcmPasswordComplexity.'Min Length')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vrslcmPasswordComplexity.'Min Classes' -eq $null) { Write-Output "Min Classes is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Classes') -ne $requiredConfig.minClass) { "$($vrslcmPasswordComplexity.'Min Classes') [ $($requiredConfig.minClass) ]" } else { "$($vrslcmPasswordComplexity.'Min Classes')" } } else { "$($vrslcmPasswordComplexity.'Min Classes')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Identical Adjacent" $(if ($vrslcmPasswordComplexity.'Min Special' -eq $null) { Write-Output "Min Special is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Special') -ne $requiredConfig.minSpecial) { "$($vrslcmPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrslcmPasswordComplexity.'Min Special')" } } else { "$($vrslcmPasswordComplexity.'Min Special')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vrslcmPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Max Retries is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vrslcmPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrslcmPasswordComplexity.'Max Retries')" } } else { "$($vrslcmPasswordComplexity.'Max Retries')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" $(if ($vrslcmPasswordComplexity.'Max Sequence' -eq $null) { Write-Output "Max Sequence is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Max Sequence') -ne $requiredConfig.maxSequence) { "$($vrslcmPasswordComplexity.'Max Sequence') [ $($requiredConfig.maxSequence) ]" } else { "$($vrslcmPasswordComplexity.'Max Sequence')" } } else { "$($vrslcmPasswordComplexity.'Max Sequence')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vrslcmPasswordComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($drift) { if (($vrslcmPasswordComplexity.History) -ne $requiredConfig.history) { "$($vrslcmPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrslcmPasswordComplexity.History)" } } else { "$($vrslcmPasswordComplexity.History)" }) })
+                $allvrslcmPasswordComplexityObject += $vrslcmPasswordComplexityObject
+            } else {
+                Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
+            }
+            return $allvrslcmPasswordComplexityObject
+        }
+
+        # VMware Aria Operations
+        if ($product -eq 'vrops') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperations.passwordComplexity
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperations.passwordComplexity
+            }
+            $vropsnodes = ((Get-vRSLCMProductDetails -productId vrops).nodes).properties.hostName
+            $allvropsPasswordComplexityObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vropsnodes) {
+                $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                if ($vropsPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password) {
+                    $vropsPasswordComplexityObject = New-Object -TypeName psobject
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsPasswordComplexity.system
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vropsPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Min Numerical is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Numerical') -ne $requiredConfig.minNumerical) { "$($vropsPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vropsPasswordComplexity.'Min Numerical')" } } else { "$($vropsPasswordComplexity.'Min Numerical')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vropsPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Min Uppercase is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Uppercase') -ne $requiredConfig.minUppercase) { "$($vropsPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vropsPasswordComplexity.'Min Uppercase')" } } else { "$($vropsPasswordComplexity.'Min Uppercase')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vropsPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Min Lowercase is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Lowercase') -ne $requiredConfig.minLowercase) { "$($vropsPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vropsPasswordComplexity.'Min Lowercase')" } } else { "$($vropsPasswordComplexity.'Min Uppercase')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vropsPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Min Unique is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Unique') -ne $requiredConfig.minUnique) { "$($vropsPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vropsPasswordComplexity.'Min Unique')" } } else { "$($vropsPasswordComplexity.'Min Unique')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vropsPasswordComplexity.'Min Length' -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vropsPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vropsPasswordComplexity.'Min Length')" } } else { "$($vropsPasswordComplexity.'Min Length')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vropsPasswordComplexity.'Min Classes' -eq $null) { Write-Output "Min Classes is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Classes') -ne $requiredConfig.minClass) { "$($vropsPasswordComplexity.'Min Classes') [ $($requiredConfig.minClass) ]" } else { "$($vropsPasswordComplexity.'Min Classes')" } } else { "$($vropsPasswordComplexity.'Min Classes')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vropsPasswordComplexity.'Min Special' -eq $null) { Write-Output "Min Special is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Special') -ne $requiredConfig.minSpecial) { "$($vropsPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vropsPasswordComplexity.'Min Special')" } } else { "$($vropsPasswordComplexity.'Min Special')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vropsPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Max Retries is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vropsPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vropsPasswordComplexity.'Max Retries')" } } else { "$($vropsPasswordComplexity.'Max Retries')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Max Repeat" $(if ($vropsPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Max Repeat is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.'Max Repeat') -ne $requiredConfig.maxRepeat) { "$($vropsPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxSequence) ]" } else { "$($vropsPasswordComplexity.'Max Repeat')" } } else { "$($vropsPasswordComplexity.'Max Repeat')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vropsPasswordComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($drift) { if (($vropsPasswordComplexity.History) -ne $requiredConfig.history) { "$($vropsPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vropsPasswordComplexity.History)" } } else { "$($vropsPasswordComplexity.History)" }) })
+                    $allvropsPasswordComplexityObject += $vropsPasswordComplexityObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvropsPasswordComplexityObject
+        }
+
+        # VMware Aria Operatons for Logs
+        if ($product -eq 'vrli') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperationsLogs.passwordComplexity
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperationsLogs.passwordComplexity
+            }
+            $vrlinodes = ((Get-vRSLCMProductDetails -productId vrli).nodes).properties.hostName
+            $allvrliPasswordComplexityObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vrlinodes) {
+                $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                if ($vrliPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser root -guestPassword $vrlipassword.password) {
+                    $vrliPasswordComplexityObject = New-Object -TypeName psobject
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrliPasswordComplexity.system
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vrliPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Min Numerical is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Numerical') -ne $requiredConfig.minNumerical) { "$($vrliPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrliPasswordComplexity.'Min Numerical')" } } else { "$($vrliPasswordComplexity.'Min Numerical')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vrliPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Min Uppercase is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Uppercase') -ne $requiredConfig.minUppercase) { "$($vrliPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrliPasswordComplexity.'Min Uppercase')" } } else { "$($vrliPasswordComplexity.'Min Uppercase')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vrliPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Min Lowercase is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Lowercase') -ne $requiredConfig.minLowercase) { "$($vrliPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrliPasswordComplexity.'Min Lowercase')" } } else { "$($vrliPasswordComplexity.'Min Uppercase')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vrliPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Min Unique is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Unique') -ne $requiredConfig.minUnique) { "$($vrliPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrliPasswordComplexity.'Min Unique')" } } else { "$($vrliPasswordComplexity.'Min Unique')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vrliPasswordComplexity.'Min Length' -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vrliPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrliPasswordComplexity.'Min Length')" } } else { "$($vrliPasswordComplexity.'Min Length')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vrliPasswordComplexity.'Min Classes' -eq $null) { Write-Output "Min Classes is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Classes') -ne $requiredConfig.minClass) { "$($vrliPasswordComplexity.'Min Classes') [ $($requiredConfig.minClass) ]" } else { "$($vrliPasswordComplexity.'Min Classes')" } } else { "$($vrliPasswordComplexity.'Min Classes')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vrliPasswordComplexity.'Min Special' -eq $null) { Write-Output "Min Special is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Special') -ne $requiredConfig.minSpecial) { "$($vrliPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrliPasswordComplexity.'Min Special')" } } else { "$($vrliPasswordComplexity.'Min Special')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vrliPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Max Retries is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vrliPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrliPasswordComplexity.'Max Retries')" } } else { "$($vrliPasswordComplexity.'Max Retries')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Max Repeat" $(if ($vrliPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Max Repeat is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.'Max Repeat') -ne $requiredConfig.maxSequence) { "$($vrliPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxSequence) ]" } else { "$($vrliPasswordComplexity.'Max Repeat')" } } else { "$($vrliPasswordComplexity.'Max Repeat')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vrliPasswordComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($drift) { if (($vrliPasswordComplexity.History) -ne $requiredConfig.history) { "$($vrliPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrliPasswordComplexity.History)" } } else { "$($vrliPasswordComplexity.History)" }) })
+                    $allvrliPasswordComplexityObject += $vrliPasswordComplexityObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvrliPasswordComplexityObject
+        }
+
+        # VMware Aria Operations for Networks
+        if ($product -eq 'vrni') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperationsNetworks.passwordComplexity
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperationsNetworks.passwordComplexity
+            }
+            $vrninodes = ((Get-vRSLCMProductDetails -productId vrni).nodes | Select-Object type -ExpandProperty properties)
+            $allvrniPasswordComplexityObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vrninodes) {
+                $vrninodedata = ((Get-vRSLCMProductDetails -productId vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                if ($vrniPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.vmname -guestUser support -guestPassword $vrnipassword.password) {
+                    $vrniPasswordComplexityObject = New-Object -TypeName psobject
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniPasswordComplexity.system
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vrniPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Min Numerical is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Numerical') -ne $requiredConfig.minNumerical) { "$($vrniPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrniPasswordComplexity.'Min Numerical')" } } else { "$($vrniPasswordComplexity.'Min Numerical')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vrniPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Min Uppercase is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Uppercase') -ne $requiredConfig.minUppercase) { "$($vrniPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrniPasswordComplexity.'Min Uppercase')" } } else { "$($vrniPasswordComplexity.'Min Uppercase')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vrniPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Min Lowercase is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Lowercase') -ne $requiredConfig.minLowercase) { "$($vrniPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrniPasswordComplexity.'Min Lowercase')" } } else { "$($vrniPasswordComplexity.'Min Uppercase')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vrniPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Min Unique is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Unique') -ne $requiredConfig.minUnique) { "$($vrniPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrniPasswordComplexity.'Min Unique')" } } else { "$($vrniPasswordComplexity.'Min Unique')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vrniPasswordComplexity.'Min Length' -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vrniPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrniPasswordComplexity.'Min Length')" } } else { "$($vrniPasswordComplexity.'Min Length')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vrniPasswordComplexity.'Min Classes' -eq $null) { Write-Output "Min Classes is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Classes') -ne $requiredConfig.minClass) { "$($vrniPasswordComplexity.'Min Classes') [ $($requiredConfig.minClass) ]" } else { "$($vrniPasswordComplexity.'Min Classes')" } } else { "$($vrniPasswordComplexity.'Min Classes')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vrniPasswordComplexity.'Min Special' -eq $null) { Write-Output "Min Special is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Special') -ne $requiredConfig.minSpecial) { "$($vrniPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrniPasswordComplexity.'Min Special')" } } else { "$($vrniPasswordComplexity.'Min Special')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vrniPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Max Retries is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vrniPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrniPasswordComplexity.'Max Retries')" } } else { "$($vrniPasswordComplexity.'Max Retries')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vrniPasswordComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($drift) { if (($vrniPasswordComplexity.History) -ne $requiredConfig.history) { "$($vrniPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrniPasswordComplexity.History)" } } else { "$($vrniPasswordComplexity.History)" }) })
+                    $allvrniPasswordComplexityObject += $vrniPasswordComplexityObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvrniPasswordComplexityObject
+        }
+
+        # VMware Aria Automation
+        if ($product -eq 'vra') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaAutomation.passwordComplexity
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaAutomation.passwordComplexity
+            }
+            $vranodes = ((Get-vRSLCMProductDetails -productId vra ).nodes).properties.hostName
+            $allvraPasswordComplexityObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vranodes) {
+                $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                if ($vraPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser $vrausername -guestPassword $vrapassword.password) {
+                    $vraPasswordComplexityObject = New-Object -TypeName psobject
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vraPasswordComplexity.system
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vraPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Min Numerical is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Numerical') -ne $requiredConfig.minNumerical) { "$($vraPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vraPasswordComplexity.'Min Numerical')" } } else { "$($vraPasswordComplexity.'Min Numerical')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vraPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Min Uppercase is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Uppercase') -ne $requiredConfig.minUppercase) { "$($vraPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vraPasswordComplexity.'Min Uppercase')" } } else { "$($vraPasswordComplexity.'Min Uppercase')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vraPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Min Lowercase is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Lowercase') -ne $requiredConfig.minLowercase) { "$($vraPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vraPasswordComplexity.'Min Lowercase')" } } else { "$($vraPasswordComplexity.'Min Uppercase')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vraPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Min Unique is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Unique') -ne $requiredConfig.minUnique) { "$($vraPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vraPasswordComplexity.'Min Unique')" } } else { "$($vraPasswordComplexity.'Min Unique')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vraPasswordComplexity.'Min Length' -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vraPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vraPasswordComplexity.'Min Length')" } } else { "$($vraPasswordComplexity.'Min Length')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vraPasswordComplexity.'Min Classes' -eq $null) { Write-Output "Min Classes is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Classes') -ne $requiredConfig.minClass) { "$($vraPasswordComplexity.'Min Classes') [ $($requiredConfig.minClass) ]" } else { "$($vraPasswordComplexity.'Min Classes')" } } else { "$($vraPasswordComplexity.'Min Classes')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vraPasswordComplexity.'Min Special' -eq $null) { Write-Output "Min Special is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Special') -ne $requiredConfig.Special) { "$($vraPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vraPasswordComplexity.'Min Special')" } } else { "$($vraPasswordComplexity.'Min Special')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vraPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Max Retries is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vraPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vraPasswordComplexity.'Max Retries')" } } else { "$($vraPasswordComplexity.'Max Retries')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" $(if ($vraPasswordComplexity.'Max Sequence' -eq $null) { Write-Output "Max Sequence is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Sequence') -ne $requiredConfig.maxSequence) { "$($vraPasswordComplexity.'Max Sequence') [ $($requiredConfig.maxSequence) ]" } else { "$($vraPasswordComplexity.'Max Sequence')" } } else { "$($vraPasswordComplexity.'Max Sequence')" }) })
+                    $vraPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vraPasswordComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($drift) { if (($vraPasswordComplexity.History) -ne $requiredConfig.history) { "$($vraPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vraPasswordComplexity.History)" } } else { "$($vraPasswordComplexity.History)" }) })
+                    $allvraPasswordComplexityObject += $vraPasswordComplexityObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvraPasswordComplexityObject
+        }
+
+        # Aria Lifecycle Workspace ONE Access Access
+        if ($vidm) {
+            # Directory Users
+            if ($settings -eq 'directory') {
+                if ($vidmdrift) {
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordComplexity
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaDirectory.passwordComplexity
+                    }
+                }
+                $vidmnodes = ((Get-vRSLCMProductDetails -productId vidm).nodes | Where-Object { $_.type -ne 'vidm-connector' }).properties.hostName
+                $allvidmPasswordDirectoryComplexityObject = New-Object System.Collections.ArrayList
+                foreach ($node in $vidmnodes) {
+                    $vidmdirectorynodedata = ((Get-vRSLCMProductDetails -productId vidm).properties)
+                    $vidmdirectoryvmid = $vidmdirectorynodedata.defaultConfigurationPassword.split(':')[2]
+                    $vidmdirectorypassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmdirectoryvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vidmdirectoryusername = $vidmdirectorynodedata.defaultConfigurationUsername
+                    if (Test-WsaConnection -server $node) {
+                        if (Test-WsaAuthentication -server $node -user $vidmdirectoryusername -pass $vidmdirectorypassword.password ) {
+                            if ($vidmPasswordDirectoryComplexity = Get-WsaPasswordPolicy) {
+                                $vidmPasswordDirectoryComplexityObject = New-Object -TypeName psobject
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $node.Split('.')[0]
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vidmPasswordDirectoryComplexity.minDigit -eq $null) { Write-Output "Min Numerical is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minDigit) -ne $requiredConfig.minNumerical) { "$($vidmPasswordDirectoryComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($vidmPasswordDirectoryComplexity.minDigit)" } } else { "$($vidmPasswordDirectoryComplexity.minDigit)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vidmPasswordDirectoryComplexity.minUpper -eq $null) { Write-Output "Min Uppercase is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minUpper) -ne $requiredConfig.minUppercase) { "$($vidmPasswordDirectoryComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($vidmPasswordDirectoryComplexity.minUpper)" } } else { "$($vidmPasswordDirectoryComplexity.minUpper)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vidmPasswordDirectoryComplexity.minLower -eq $null) { Write-Output "Min Lowercase is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minLower) -ne $requiredConfig.minLowercase) { "$($vidmPasswordDirectoryComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($vidmPasswordDirectoryComplexity.minLower)" } } else { "$($vidmPasswordDirectoryComplexity.minLower)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Max Indentical Characters" $(if ($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters -eq $null) { Write-Output "Max Indentical Characters" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters) -ne $requiredConfig.maxIdenticalAdjacent) { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters)" } } else { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vidmPasswordDirectoryComplexity.minLen -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minLen) -ne $requiredConfig.minLength) { "$($vidmPasswordDirectoryComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($vidmPasswordDirectoryComplexity.minLen)" } } else { "$($vidmPasswordDirectoryComplexity.minLen)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vidmPasswordDirectoryComplexity.minSpecial -eq $null) { Write-Output "Min Special is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minSpecial) -ne $requiredConfig.minSpecial) { "$($vidmPasswordDirectoryComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($vidmPasswordDirectoryComplexity.minSpecial)" } } else { "$($vidmPasswordDirectoryComplexity.minSpecial)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "History" $(if ($vidmPasswordDirectoryComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.History) -ne $requiredConfig.history) { "$($vidmPasswordDirectoryComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vidmPasswordDirectoryComplexity.History)" } } else { "$($vidmPasswordDirectoryComplexity.History)" }) })
+                                $allvidmPasswordDirectoryComplexityObject += $vidmPasswordDirectoryComplexityObject
+                            }
+                        }
+                    }
+                }
+                return $allvidmPasswordDirectoryComplexityObject
+            }
+
+            # Local Users
+            if ($settings -eq 'localuser') {
+                if ($vidmdrift) {
+                    if ($PsBoundParameters.ContainsKey("policyFile")) {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaLocal.passwordComplexity
+                    } else {
+                        $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaLocal.passwordComplexity
+                    }
+                }
+                $vidmnodes = ((Get-vRSLCMProductDetails -productId vidm).nodes | Where-Object { $_.type -ne 'vidm-connector' }).properties.hostName
+                $allvidmPasswordLocalComplexityObject = New-Object System.Collections.ArrayList
+                foreach ($node in $vidmnodes) {
+                    $vidmlocalnodedata = ((Get-vRSLCMProductDetails -productId vidm).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.type -ne 'vidm-connector' -and $_.hostName -eq $node })
+                    $vidmlocalvmid = $vidmlocalnodedata.vidmRootPassword.Split(':')[2]
+                    $vidmlocalpassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmlocalvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    if ($vidmPasswordLocalComplexity = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser root -guestPassword $vidmlocalpassword.password ) {
+                        $vidmPasswordLocalComplexityObject = New-Object -TypeName psobject
+                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vidmPasswordLocalComplexity.system
+                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vidmPasswordLocalComplexity.'Min Length' -eq $null) { Write-Output "Min Length is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vidmPasswordLocalComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vidmPasswordLocalComplexity.'Min Length')" } } else { "$($vidmPasswordLocalComplexity.'Min Length')" }) })
+                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "History" $(if ($vidmPasswordLocalComplexity.History -eq $null) { Write-Output "History is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.History) -ne $requiredConfig.history) { "$($vidmPasswordLocalComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vidmPasswordLocalComplexity.History)" } } else { "$($vidmPasswordLocalComplexity.History)" }) })
+                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vidmPasswordLocalComplexity.'Max Retries' -eq $null) { Write-Output "Max Retries is not configured" } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vidmPasswordLocalComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vidmPasswordLocalComplexity.'Max Retries')" } } else { "$($vidmPasswordLocalComplexity.'Max Retries')" }) })
+                        $allvidmPasswordLocalComplexityObject += $vidmPasswordLocalComplexityObject
+                    }
+                }
+                return $allvidmPasswordLocalComplexityObject
+            }
+        }
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    }
+}
+Export-ModuleMember -Function Request-AriaLocalUserPasswordComplexity
+
+Function Request-AriaLocalUserPasswordExpiration {
+    <#
+        .SYNOPSIS
+        Retrieves the VMware Aria product password expiration.
+
+        .DESCRIPTION
+        The Request-AriaLocalUserPasswordExpiration cmdlet retrieves the VMware Aria Automation password expiration policy.
+        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle
+        - Retrieves the password expiration policy
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra
+        This example retrieves the password expiration policy for VMware Aria Automation instances.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -product vra -drift
+        This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory
+        This example retrieves the password expiration policy for Workspace ONE Access directory users.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        This example retrieves the password expiration policy for Workspace ONE Access directory users and checks the configuration drift using the provided configuration JSON.
+
+        .EXAMPLE
+        Request-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift
+        This example retrieves the password expiration policy for Workspace ONE Access directory users and compares the configuration against the product defaults.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER product
+        Aria product name.
+
+        .PARAMETER vidm
+        Switch to retrieve the password expiration policy for Workspace ONE Access.
+
+        .PARAMETER settings
+        The settings to retrieve the password expiration policy for Workspace ONE Access. The acceptable values are 'directory' and 'localuser'.
+
+        .PARAMETER vidmdrift
+        Switch to compare the current configuration against the product defaults or a JSON file for Aria Lifecycle Workspace One.
+
+        .PARAMETER drift
+        Switch to compare the current configuration against the product defaults or a JSON file.
+
+        .PARAMETER reportPath
+        The path to save the policy report.
+
+        .PARAMETER policyFile
+        The path to the policy configuration file.
+    #>
+
+    Param (
+        [CmdletBinding(DefaultParameterSetName = 'novidm')]
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter(ParameterSetName = 'novidm', Mandatory = $false)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false, ParameterSetName = "vidm")] [Switch]$vidm,
+        [Parameter (Mandatory = $false, ParameterSetName = "vidm")] [ValidateNotNullOrEmpty()] [Switch]$vidmdrift,
+        [Parameter (Mandatory = $false, ParameterSetName = "novidm")] [ValidateNotNullOrEmpty()] [Switch]$drift,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+    )
+
+    $pass = Get-Password -username $user -password $pass
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (($vcfVrslcmDetails = Get-vRSLCMServerDetail -fqdn $server -username $user -password $pass)) {
+                if (Test-vRSLCMAuthentication -server $vcfVrslcmDetails.fqdn -user $vcfVrslcmDetails.adminUser -pass $vcfVrslcmDetails.adminPass) {
+                    $version = Get-VCFManager -version
+                    $domain = Get-VCFWorkloadDomain | Select-Object name, type | Where-Object { $_.type -eq "MANAGEMENT" }
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain.name)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Try {
+        # VMware Aria Suite Lifecycle
+        if ($product -eq 'vrslcm') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaLifecycle.passwordExpiration
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaLifecycle.passwordExpiration
+            }
+            $allvrslcmPasswordExpirationObject = New-Object System.Collections.ArrayList
+            if ($vrslcmPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $vcfVrslcmDetails.fqdn.split('.')[0] -guestUser $vcfVrslcmDetails.rootUser -guestPassword $vcfVrslcmDetails.rootPassword -localUser "root") {
+                $vrslcmPasswordExpirationObject = New-Object -TypeName psobject
+                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrslcmPasswordExpiration.system
+                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
+                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrslcmPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrslcmPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrslcmPasswordExpiration.'Min Days')" } } else { "$($vrslcmPasswordExpiration.'Min Days')" }) })
+                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrslcmPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrslcmPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrslcmPasswordExpiration.'Max Days')" } } else { "$($vrslcmPasswordExpiration.'Max Days')" }) })
+                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrslcmPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrslcmPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrslcmPasswordExpiration.'Warning Days')" } } else { "$($vrslcmPasswordExpiration.'Warning Days')" }) })
+                $allvrslcmPasswordExpirationObject += $vrslcmPasswordExpirationObject
+            } else {
+                Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
+            }
+            return $allvrslcmPasswordExpirationObject
+        }
+
+        # VMware Aria Operation
+        if ($product -eq 'vrops') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperations.passwordExpiration
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperations.passwordExpiration
+            }
+            $vropsnodes = ((Get-vRSLCMProductDetails -productId vrops).nodes).properties.hostName
+            $allvropsPasswordExpirationObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vropsnodes) {
+                $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                if ($vropsPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password -localUser "root") {
+                    $vropsPasswordExpirationObject = New-Object -TypeName psobject
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsPasswordExpiration.system
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vropsPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vropsPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vropsPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vropsPasswordExpiration.'Min Days')" } } else { "$($vropsPasswordExpiration.'Min Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vropsPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vropsPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vropsPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vropsPasswordExpiration.'Max Days')" } } else { "$($vropsPasswordExpiration.'Max Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vropsPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
+                    $allvropsPasswordExpirationObject += $vropsPasswordExpirationObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
+                }
+                if ($vropsPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password -localUser "admin") {
+                    $vropsPasswordExpirationObject = New-Object -TypeName psobject
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsPasswordExpiration.system
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "admin"
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vropsPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vropsPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vropsPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vropsPasswordExpiration.'Min Days')" } } else { "$($vropsPasswordExpiration.'Min Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vropsPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vropsPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vropsPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vropsPasswordExpiration.'Max Days')" } } else { "$($vropsPasswordExpiration.'Max Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vropsPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
+                    $allvropsPasswordExpirationObject += $vropsPasswordExpirationObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvropsPasswordExpirationObject
+        }
+
+        # VMware Aria Operatons for Logs
+        if ($product -eq 'vrli') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperationsLogs.passwordExpiration
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperationsLogs.passwordExpiration
+            }
+            $vrlinodes = ((Get-vRSLCMProductDetails -productId vrli).nodes).properties.hostName
+            $allvrliPasswordExpirationObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vrlinodes) {
+                $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                if ($vrliPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser root -guestPassword $vrlipassword.password -localUser "root") {
+                    $vrliPasswordExpirationObject = New-Object -TypeName psobject
+                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrliPasswordExpiration.system
+                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
+                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrliPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vrliPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrliPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrliPasswordExpiration.'Min Days')" } } else { "$($vrliPasswordExpiration.'Min Days')" }) })
+                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrliPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vrliPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrliPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrliPasswordExpiration.'Max Days')" } } else { "$($vrliPasswordExpiration.'Max Days')" }) })
+                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrliPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vrliPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrliPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrliPasswordExpiration.'Warning Days')" } } else { "$($vrliPasswordExpiration.'Warning Days')" }) })
+                    $allvrliPasswordExpirationObject += $vrliPasswordExpirationObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvrliPasswordExpirationObject
+        }
+
+        # VMware Aria Operations for Networks
+        if ($product -eq 'vrni') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaOperationsNetworks.passwordExpiration
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaOperationsNetworks.passwordExpiration
+            }
+            $vrninodes = ((Get-vRSLCMProductDetails -productId vrni).nodes | Select-Object type -ExpandProperty properties)
+            $allvrniPasswordExpirationObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vrninodes) {
+                $vrninodedata = ((Get-vRSLCMProductDetails -productId vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                if ($vrniPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.vmname -guestUser support -guestPassword $vrnipassword.password -localUser "support" -sudo) {
+                    $vrniPasswordExpirationObject = New-Object -TypeName psobject
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniPasswordExpiration.system
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "local User" -notepropertyvalue "support"
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrniPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vrniPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrniPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrniPasswordExpiration.'Min Days')" } } else { "$($vrniPasswordExpiration.'Min Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrniPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vrniPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrniPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrniPasswordExpiration.'Max Days')" } } else { "$($vrniPasswordExpiration.'Max Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrniPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
+                    $allvrniPasswordExpirationObject += $vrniPasswordExpirationObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Network ($node): PRE_VALIDATION_FAILED"
+                }
+                if ($vrniPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.vmName -guestUser support -guestPassword $vrnipassword.password -localUser "consoleuser" -sudo) {
+                    $vrniPasswordExpirationObject = New-Object -TypeName psobject
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniPasswordExpiration.system
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "local User" -notepropertyvalue "consoleuser"
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrniPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vrniPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrniPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrniPasswordExpiration.'Min Days')" } } else { "$($vrniPasswordExpiration.'Min Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrniPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vrniPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrniPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrniPasswordExpiration.'Max Days')" } } else { "$($vrniPasswordExpiration.'Max Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrniPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
+                    $allvrniPasswordExpirationObject += $vrniPasswordExpirationObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Network ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvrniPasswordExpirationObject
+        }
+
+        # VMware Aria Automation
+        if ($product -eq 'vra') {
+            if ($drift) {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).ariaAutomation.passwordExpiration
+            } else {
+                $requiredConfig = (Get-PasswordPolicyConfig -version $version).ariaAutomation.passwordExpiration
+            }
+            $vranodes = ((Get-vRSLCMProductDetails -productId vra).nodes).properties.hostName
+            $allvraPasswordExpirationObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vranodes) {
+                $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                if ($vraPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vrausername -guestPassword $vrapassword.password -localUser "root") {
+                    $vraPasswordExpirationObject = New-Object -TypeName psobject
+                    $vraPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vraPasswordExpiration.system
+                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
+                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vraPasswordExpiration.'Min Days' -eq $null) { Write-Output "Min Days is not configured" } else { $(if ($drift) { if (($vraPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vraPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vraPasswordExpiration.'Min Days')" } } else { "$($vraPasswordExpiration.'Min Days')" }) })
+                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vraPasswordExpiration.'Max Days' -eq $null) { Write-Output "Max Days is not configured" } else { $(if ($drift) { if (($vraPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vraPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vraPasswordExpiration.'Max Days')" } } else { "$($vraPasswordExpiration.'Max Days')" }) })
+                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vraPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Warning Days is not configured" } else { $(if ($drift) { if (($vraPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vraPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vraPasswordExpiration.'Warning Days')" } } else { "$($vraPasswordExpiration.'Warning Days')" }) })
+                    $allvraPasswordExpirationObject += $vraPasswordExpirationObject
+                } else {
+                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
+                }
+            }
+            return $allvraPasswordExpirationObject
+        }
+
+        # Aria Lifecycle Workspace ONE Access
+        if ($vidm) {
+            if ($vidmdrift) {
+                if ($PsBoundParameters.ContainsKey("policyFile")) {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).wsaDirectory.passwordExpiration
+                } else {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version).wsaDirectory.passwordExpiration
+                }
+            }
+            $vidmnodes = ((Get-vRSLCMProductDetails -productId vidm).nodes | Where-Object { $_.type -ne 'vidm-connector' }).properties.hostName
+            $allvidmPasswordDirectoryExpirationObject = New-Object System.Collections.ArrayList
+            foreach ($node in $vidmnodes) {
+                $vidmdirectorynodedata = ((Get-vRSLCMProductDetails -productId vidm).properties)
+                $vidmdirectoryvmid = $vidmdirectorynodedata.defaultConfigurationPassword.split(':')[2]
+                $vidmdirectorypassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmdirectoryvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                $vidmdirectoryusername = $vidmdirectorynodedata.defaultConfigurationUsername
+                if (Test-WsaConnection -server $node) {
+                    if (Test-WsaAuthentication -server $node -user $vidmdirectoryusername -pass $vidmdirectorypassword.password) {
+                        if ($vidmPasswordExpiration = Get-WsaPasswordPolicy) {
+                            $vidmPasswordExpirationObject = New-Object -TypeName psobject
+                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue ($node.Split("."))[-0]
+                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Password Lifetime (days)" -notepropertyvalue $(if ($vidmdrift) { if (($vidmPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($vidmPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($vidmPasswordExpiration.passwordTtlInHours / 24))" } } else { "$(($vidmPasswordExpiration.passwordTtlInHours / 24))" })
+                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder (days)" -notepropertyvalue $(if ($vidmdrift) { if (($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" } } else { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
+                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Temporary Password (hours)" -notepropertyvalue $(if ($vidmdrift) { if ($vidmPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($vidmPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($vidmPasswordExpiration.tempPasswordTtl)" } } else { "$($vidmPasswordExpiration.tempPasswordTtl)" })
+                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder Frequency (days)" -notepropertyvalue $(if ($vidmdrift) { if (($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" } } else { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
+                            $allvidmPasswordDirectoryExpirationObject += $vidmPasswordExpirationObject
+                        } else {
+                            Write-Error "Unable to retrieve password expiration policy from Workspace ONE Access instance ($node): PRE_VALIDATION_FAILED"
+                        }
+                    }
+                }
+            }
+            return $allvidmPasswordDirectoryExpirationObject
+        }
+
+    } Catch {
+        Debug-ExceptionWriter -object $_
+    }
+}
+Export-ModuleMember -Function Request-AriaLocalUserPasswordExpiration
+
+Function Update-AriaLocalUserPasswordAccountLockout {
+    <#
+		.SYNOPSIS
+        Configure password account lockout for local users.
+
+        .DESCRIPTION
+        The Update-AriaLocalUserPasswordAccountLockout cmdlet configures the password complexity local users.
+
+        .EXAMPLE
+        Update-AriaLocalUserPasswordAccountLockout -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -failures 5 -unlockInterval 900 -rootUnlockInterval 900
+        This example updates the VMware Aria Automation nodes with new values for each element.
+
+        .EXAMPLE
+        Update-AriaLocalUserPasswordAccountLockout -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile "passwordPolicyConfig.json"
+        This example updates VMware Aria Automation nodes using Jthe SON file of preset values.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER product
+        The product to configure.
+
+        .PARAMETER failures
+        The number of failed login attempts before the account is locked.
+
+        .PARAMETER unlockInterval
+        The number of seconds before a locked out account is unlocked.
+
+        .PARAMETER rootUnlockInterval
+        The number of seconds before a locked out root account is unlocked.
+
+        .PARAMETER json
+        Use a JSON file to configure the password complexity.
+
+        .PARAMETER policyPath
+        The path to the policy file.
+
+        .PARAMETER policyFile
+        The path to the policy file.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$failures,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unlockInterval,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$rootUnlockInterval,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+
+    )
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (($vcfVrslcmDetails = Get-vRSLCMServerDetail -fqdn $server -username $user -password $pass)) {
+                if (Test-vRSLCMAuthentication -server $vcfVrslcmDetails.fqdn -user $vcfVrslcmDetails.adminUser -pass $vcfVrslcmDetails.adminPass) {
+                    $domain = Get-VCFWorkloadDomain | Select-Object name, type | Where-Object { $_.type -eq "MANAGEMENT" }
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain.name)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    $photonScript = "cat /etc/photon-release"
+
+    Try {
+        if ($PsBoundParameters.ContainsKey("json")) {
+            $version = Get-VCFManager -version
+            if ($PsBoundParameters.ContainsKey("policyFile")) {
+
+                # VMware Aria Suite Lifecycle
+                if ($product -eq "vrslcm") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaLifecycle.accountLockout
+                    $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/faillock.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-auth"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                    # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                    $failures = $requiredConfig.maxFailures
+
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/faillock.conf"
+                    } else {
+                        "/etc/pam.d/system-auth"
+                    }
+                    $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/deny = [-]?[0-9]+/deny = $failures/g"
+                    } else {
+                        ";s/deny=[-]?[0-9]+/deny=$failures/"
+                    }
+                    $uncommentRegex = "/deny/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                    } else {
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # unlock_time = Amount of time in seconds that the account remains locked (Default = 900)
+                    $unlockInterval = $requiredConfig.unlockInterval
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/faillock.conf"
+                    } else {
+                        "/etc/pam.d/system-auth"
+                    }
+                    $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                    } else {
+                        ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                    }
+                    $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                    } else {
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 900)
+                    $rootUnlockInterval = $requiredConfig.rootUnlockInterval
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/faillock.conf"
+                    } else {
+                        "/etc/pam.d/system-auth"
+                    }
+                    $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                    } else {
+                        ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                    }
+                    $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                    } else {
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                # VMware Aria Operations
+                if ($product -eq "vrops") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperations.accountLockout
+                    $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
+                    foreach ($node in $vropsnodes) {
+                        $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                        $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCheck = " cat /etc/security/faillock.conf"
+                        } else {
+                            $scriptCheck = " cat /etc/pam.d/system-password"
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                        $failures = $requiredConfig.maxFailures
+
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                        }
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $uncommentRegex = "/deny/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                        } else {
+                            $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                            } else {
+                                ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 900)
+                        $unlockInterval = $requiredConfig.unlockInterval
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                        }
+                        $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                        } else {
+                            $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                            } else {
+                                ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 900)
+                        $rootUnlockInterval = $requiredConfig.rootUnlockInterval
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                        }
+                        $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                        } else {
+                            $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                            } else {
+                                ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+                }
+
+                # VMware Aria Operatons for Logs
+                if ($product -eq 'vrli') {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperationsLogs.accountLockout
+                    $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
+                    foreach ($node in $vrlinodes) {
+                        $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser root -GuestPassword $vrlipassword.password
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCheck = " cat /etc/security/faillock.conf"
+                        } else {
+                            $scriptCheck = " cat /etc/pam.d/system-password"
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                        $failures = $requiredConfig.maxFailures
+
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $uncommentRegex = "/deny/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                        } else {
+                            $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                            } else {
+                                ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 900)
+                        $unlockInterval = $requiredConfig.unlockInterval
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                        }
+                        $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                        } else {
+                            $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                            } else {
+                                ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 900)
+                        $rootUnlockInterval = $requiredConfig.rootUnlockInterval
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                        }
+                        $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                        } else {
+                            $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                            } else {
+                                ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+                }
+
+                # VMware Aria Operations for Networks
+                if ($product -eq "vrni") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).ariaOperationsNetworks.accountLockout
+                    $scriptCommand = $null
+                    $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
+                    foreach ($node in $vrninodes) {
+                        $scriptCheck = " sudo cat /etc/pam.d/common-auth"
+                        $vrninodedata = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                        $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                        $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 5)
+                        $failuresCommand = $null
+                        $failures = $requiredConfig.maxFailures
+                        $scriptCommand = "sudo sed -E -i.bak '"
+                        $pamPattern = "auth\s+required\s+pam_tally2\.so\s+onerr=fail"
+                        $denyPattern = "deny="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $denyPattern) {
+                                $failuresCommand += ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            } else {
+                                $failuresCommand += ";/$pamPattern/ s/$/ deny=$failures/"
+                            }
+                        } else {
+                            $failuresCommand += "/pam_deny.so/a auth    required pam_tally2.so onerr=fail deny=$failures"
+                        }
+                        $scriptCommand += $failuresCommand
+                        $scriptCommand += "' /etc/pam.d/common-auth"
+                        Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                        $scriptCommand = $null
+
+                        $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 15)
+                        $unlockInterval = $requiredConfig.unlockInterval
+                        $unlockIntervalCommand = $null
+                        $scriptCommand = "sudo sed -E -i.bak '"
+                        $pamPattern = "auth\s+required\s+pam_tally2\.so\s+onerr=fail"
+                        $unlockIntervalPattern = "unlock_time="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $unlockIntervalPattern) {
+                                $unlockIntervalCommand += ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/"
+                            } else {
+                                $unlockIntervalCommand += ";/$pamPattern/ s/$/ unlock_time=$unlockInterval/"
+                            }
+                        } else {
+                            $unlockIntervalCommand += "/pam_deny.so/a auth    required pam_tally2.so onerr=fail unlock_time=$unlockInterval"
+                        }
+                        $scriptCommand += $unlockIntervalCommand
+                        $scriptCommand += "' /etc/pam.d/common-auth"
+                        Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                        $scriptCommand = $null
+                    }
+                }
+
+                # VMware Aria Automation
+                if ($product -eq "vra") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaAutomation.accountLockout
+                    $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
+                    foreach ($node in $vranodes) {
+                        $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                        $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCheck = " cat /etc/security/faillock.conf"
+                        } else {
+                            $scriptCheck = " cat /etc/pam.d/system-auth"
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                        $failures = $requiredConfig.maxFailures
+
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                        } else {
+                            $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                            } else {
+                                ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 86400)
+                        $unlockInterval = $requiredConfig.unlockInterval
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                        }
+                        $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                        } else {
+                            $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                            } else {
+                                ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 300)
+                        $rootUnlockInterval = $requiredConfig.rootUnlockInterval
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                        }
+                        $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                        } else {
+                            $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                            } else {
+                                ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+                }
+            }
+        }
+
+        if (-not($PsBoundParameters.ContainsKey("json"))) {
+            # VMware Aria Suite Lifecycle
+            if ($product -eq "vrslcm") {
+                $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                if ($photonRelease.ScriptOutput -match "4.0") {
+                    $scriptCheck = " cat /etc/security/pwquality.conf"
+                } else {
+                    $scriptCheck = " cat /etc/pam.d/system-password"
+                }
+
+                $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                if ($PsBoundParameters.ContainsKey("failures")) {
+                    # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/faillock.conf"
+                    } else {
+                        "/etc/pam.d/system-auth"
+                    }
+                    $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/deny = [-]?[0-9]+/deny = $failures/g"
+                    } else {
+                        ";s/deny=[-]?[0-9]+/deny=$failures/"
+                    }
+                    $uncommentRegex = "/deny/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                    } else {
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+                if ($PsBoundParameters.ContainsKey("unlockInterval")) {
+                    # unlock_time = Amount of time in seconds that the account remains locked (Default = 900)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/faillock.conf"
+                    } else {
+                        "/etc/pam.d/system-auth"
+                    }
+                    $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                    } else {
+                        ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                    }
+                    $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                    } else {
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+
+                        }
+                        $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("rootUnlockInterval")) {
+                    # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 900)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/faillock.conf"
+                    } else {
+                        "/etc/pam.d/system-auth"
+                    }
+                    $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                    } else {
+                        ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                    }
+                    $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                    } else {
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+            }
+
+            # VMware Aria Operations
+            if ($product -eq "vrops") {
+                $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
+                foreach ($node in $vropsnodes) {
+                    $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                    $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/pwquality.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-password"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                    if ($PsBoundParameters.ContainsKey("failures")) {
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $uncommentRegex = "/deny/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                        } else {
+                            $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                            } else {
+                                ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unlockInterval")) {
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 900)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                        }
+                        $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                        } else {
+                            $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                            } else {
+                                ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("rootUnlockInterval")) {
+                        # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 900)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                        }
+                        $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                        } else {
+                            $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                            } else {
+                                ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                        }
+                        $scriptCommand
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+                }
+            }
+
+            # VMware Aria Operations for Logs
+            if ($product -eq "vrli") {
+                $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
+                foreach ($node in $vrlinodes) {
+                    $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser root -GuestPassword $vrlipassword.password
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/faillock.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-auth"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+
+                    if ($PsBoundParameters.ContainsKey("failures")) {
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $uncommentRegex = "/deny/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                        } else {
+                            $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                            } else {
+                                ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unlockInterval")) {
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 900)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                        }
+                        $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                        } else {
+                            $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                            } else {
+                                ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+
+                            }
+                            $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                        }
+                        $scriptCommand
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("rootUnlockInterval")) {
+                        # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 900)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                        }
+                        $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                        } else {
+                            $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                            } else {
+                                ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                        }
+                        $scriptCommand
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+                }
+            }
+
+            # VMware Aria Operations for Networks
+            if ($product -eq "vrni") {
+                $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
+                $scriptCommand = $null
+                foreach ($node in $vrninodes) {
+                    $scriptCheck = " sudo cat /etc/pam.d/common-auth"
+                    $vrninodedata = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                    $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                    $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+
+                    if ($PsBoundParameters.ContainsKey("failures")) {
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 5)
+                        $scriptCommand = $null
+                        $failuresCommand = $null
+                        $scriptCommand = "sudo sed -E -i.bak '"
+                        $pamPattern = "auth\s+required\s+pam_tally2\.so\s+onerr=fail"
+                        $denyPattern = "deny="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $denyPattern) {
+                                $failuresCommand += ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            } else {
+                                $failuresCommand += ";/$pamPattern/ s/$/ deny=$failures/"
+                            }
+                        } else {
+                            $failuresCommand += "/pam_deny.so/a auth    required pam_tally2.so onerr=fail deny=$failures"
+                        }
+                        $scriptCommand += $failuresCommand
+                        $scriptCommand += "' /etc/pam.d/common-auth"
+                        Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                        $scriptCommand = $null
+                        $failuresCommand = $null
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+
+                    if ($PsBoundParameters.ContainsKey("unlockInterval")) {
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 15)
+                        $unlockIntervalCommand = $null
+                        $scriptCommand = "sudo sed -E -i.bak '"
+                        $pamPattern = "auth\s+required\s+pam_tally2\.so\s+onerr=fail"
+                        $unlockIntervalPattern = "unlock_time="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $unlockIntervalPattern) {
+                                $unlockIntervalCommand += ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/"
+                            } else {
+                                $unlockIntervalCommand += ";/$pamPattern/ s/$/ unlock_time=$unlockInterval/"
+                            }
+                        } else {
+                            $unlockIntervalCommand += "/pam_deny.so/a auth    required pam_tally2.so onerr=fail unlock_time=$unlockInterval"
+                        }
+                        $scriptCommand += $unlockIntervalCommand
+                        $scriptCommand += "' /etc/pam.d/common-auth"
+                        Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                        $scriptCommand = $null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("rootUnlockInterval")) {
+                        Write-Output "The root unlock interval is not supported for VMware Aria Operations for Networks."
+                    }
+                }
+            }
+
+            # VMware Aria Automation
+            if ($product -eq 'vra') {
+                $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
+                foreach ($node in $vranodes) {
+                    $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                    $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/faillock.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-auth"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                    if ($PsBoundParameters.ContainsKey("failures")) {
+                        # failures = Maximum number of authentication failures before the account is locked (Default = 3)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/deny = [-]?[0-9]+/deny = $failures/g"
+                        } else {
+                            ";s/deny=[-]?[0-9]+/deny=$failures/"
+                        }
+                        $uncommentRegex = "/deny/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# deny =" -or $checkKeys.ScriptOutput -match "deny=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$failuresRegex' $configFile"
+                        } else {
+                            $failuresRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/deny = [-]?[0-9]+/deny = $failures/g"
+                            } else {
+                                ";s/deny=[-]?[0-9]+/deny=$failures/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$failuresRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unlockInterval")) {
+                        # unlock_time = Amount of time in seconds that the account remains locked (Default = 86400)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                        } else {
+                            ";s/unlock_time=[-]?[0-9]+/unlock_time=$unlockInterval/g"
+                        }
+                        $uncommentRegex = "/unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$unlockIntervalRegex' $configFile"
+                        } else {
+                            $unlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^unlock_time = [-]?[0-9]+/unlock_time = $unlockInterval/g"
+                            } else {
+                                ";s/(^| )unlock_time=[-]?[0-9]+/\1unlock_time=$unlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$unlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("rootUnlockInterval")) {
+                        # root_unlock_time = Amount of time in seconds that the root account remains locked (Default = 300)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/faillock.conf"
+                        } else {
+                            "/etc/pam.d/system-auth"
+                        }
+                        $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/root_unlock_time= [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                        } else {
+                            ";s/root_unlock_time=[-]?[0-9]+/root_unlock_time=$rootUnlockInterval/"
+                        }
+                        $uncommentRegex = "/root_unlock_time/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "^# root_unlock_time =" -or $checkKeys.ScriptOutput.Trim() -eq "root_unlock_time=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$rootUnlockIntervalRegex' $configFile"
+                        } else {
+                            $rootUnlockIntervalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/^root_unlock_time = [-]?[0-9]+/root_unlock_time = $rootUnlockInterval/g"
+                            } else {
+                                ";s/(^| )root_unlock_time=[-]?[0-9]+/\1root_unlock_time=$rootUnlockInterval/g"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$rootUnlockIntervalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+                }
+            }
+        }
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Update-AriaLocalUserPasswordAccountLockout
+
+Function Update-AriaLocalUserPasswordComplexity {
+    <#
+		.SYNOPSIS
+        Configure password complexity for local users.
+
+        .DESCRIPTION
+        The Update-AriaLocalUserPasswordComplexity cmdlet configures the password complexity local users.
+
+        .EXAMPLE
+        Update-AriaLocalUserPasswordComplexity -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
+        This example updates the VMware Aria Automation nodes with new values for each element.
+
+        .EXAMPLE
+        Update-AriaLocalUserPasswordComplexity -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile "passwordPolicyConfig.json"
+        This example updates VMware Aria Automation using Jthe SON file of preset values.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER product
+        The product to configure.
+
+        .PARAMETER minLength
+        The minimum number of characters in a password.
+
+        .PARAMETER uppercase
+        The maximum number of uppercase characters in a password.
+
+        .PARAMETER lowercase
+        The maximum number of lowercase characters in a password.
+
+        .PARAMETER numerical
+        The maximum number of numerical characters in a password.
+
+        .PARAMETER special
+        The maximum number of special characters in a password.
+
+        .PARAMETER unique
+        The minimum number of unique characters in a password.
+
+        .PARAMETER history
+        The number of passwords to remember.
+
+        .PARAMETER retry
+        The number of retries.
+
+        .PARAMETER class
+        The minimum number of character classes.
+
+        .PARAMETER sequence
+        The maximum number of repeated characters.
+
+        .PARAMETER json
+        Use a JSON file to configure the password complexity.
+
+        .PARAMETER policyPath
+        The path to the policy file.
+
+        .PARAMETER policyFile
+        The path to the policy file.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$minLength,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$uppercase,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$lowercase,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$numerical,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$special,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$unique,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$history,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$retry,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$class,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$sequence,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (($vcfVrslcmDetails = Get-vRSLCMServerDetail -fqdn $server -username $user -password $pass)) {
+                if (Test-vRSLCMAuthentication -server $vcfVrslcmDetails.fqdn -user $vcfVrslcmDetails.adminUser -pass $vcfVrslcmDetails.adminPass) {
+                    $domain = Get-VCFWorkloadDomain | Select-Object name, type | Where-Object { $_.type -eq "MANAGEMENT" }
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain.name)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    $photonScript = "cat /etc/photon-release"
+
+    Try {
+        if ($PsBoundParameters.ContainsKey("json")) {
+            $version = Get-VCFManager -version
+            if ($PsBoundParameters.ContainsKey("policyFile")) {
+                # VMware Aria Suite Lifecycle
+                if ($product -eq "vrslcm") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaLifecycle.passwordComplexity
+                    $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/pwquality.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-password"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                    # minlen = Minimum password length (Default = 8)
+                    $minLength = $requiredConfig.minLength
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                    } else {
+                        ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                    }
+                    $uncommentRegex = "/minlen/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                    } else {
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                    $uppercase = $requiredConfig.minUppercase
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                    } else {
+                        ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                    }
+                    $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                    } else {
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                    $lowercase = $requiredConfig.minLowercase
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                    } else {
+                        ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                    }
+                    $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                    } else {
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                    $numerical = $requiredConfig.minNumerical
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                    } else {
+                        ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                    }
+                    $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                    } else {
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                    $special = $requiredConfig.minSpecial
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                    } else {
+                        ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                    }
+                    $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                    } else {
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                    $unique = $requiredConfig.minUnique
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/difok = [-]?[0-9]+/difok = $unique/g"
+                    } else {
+                        ";s/difok=[-]?[0-9]+/difok=$unique/"
+                    }
+                    $uncommentRegex = "/difok/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                    } else {
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                    $class = $requiredConfig.minClass
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                    } else {
+                        ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                    }
+                    $uncommentRegex = "/minclass/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                    } else {
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+
+                    # remember = Maximum number of passwords the system remembers (Default = 5)
+                    $history = $requiredConfig.history
+                    if ($photonRelease.ScriptOutput -match "3.0") {
+                        $scriptCommand = $null
+                        $historyCommand = $null
+                        $scriptCommand = "sed -E -i.bak '"
+                        $pamPattern = "requisite pam_pwhistory.so enforce_for_root use_authtok"
+                        $rememberPattern = "remember="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                            } else {
+                                $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                            }
+                        } else {
+                            $historyCommand += "/pam_unix.so/i password  requisite pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                        }
+                        $scriptCommand += $historyCommand
+                        if ($product -eq "vrni") {
+                            $scriptCommand += "' /etc/pam.d/common-password"
+                        } else {
+                            $scriptCommand += "' /etc/pam.d/system-password"
+                        }
+                        Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                    # retry = Maximum number of retries of password (Default = 3)
+                    $retry = $requiredConfig.retries
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        if ($checkKeys.ScriptOutput -match "# retry =") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $retryCommand += "/retry/s/ *# *//g"
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        } else {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                        $scriptCommand = $null
+                        $retryCommand = $null
+                        $scriptCommand = "sed -E -i.bak '"
+                        $pamPattern = "requisite pam_pwhistory.so enforce_for_root use_authtok"
+                        $retryPattern = "retry="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                            } else {
+                                $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                            }
+                        } else {
+                            $retryCommand += "/pam_unix.so/i password  requisite pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                        }
+                        $scriptCommand += $retryCommand
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCommand += "' /etc/security/pwquality.conf"
+                        } else {
+                            $scriptCommand += "' /etc/pam.d/system-password"
+                        }
+
+                        Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                        $scriptCommand = $null
+                        $retryCommand = $null
+                    }
+                }
+
+                # VMware Aria Operations
+                if ($product -eq "vrops") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperations.passwordComplexity
+                    $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
+                    foreach ($node in $vropsnodes) {
+                        $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                        $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCheck = " cat /etc/security/pwquality.conf; cat /etc/security/pwhistory.conf"
+                        } else {
+                            $scriptCheck = " cat /etc/pam.d/system-password"
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                        # minlen = Minimum password length (Default = 8)
+                        $minLength = $requiredConfig.minLength
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        }
+                        $uncommentRegex = "/minlen/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                        } else {
+                            $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        $uppercase = $requiredConfig.minUppercase
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                        } else {
+                            $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        $lowercase = $requiredConfig.minLowercase
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                        } else {
+                            $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        $numerical = $requiredConfig.minNumerical
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                        } else {
+                            $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        $special = $requiredConfig.minSpecial
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                        } else {
+                            $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        $unique = $requiredConfig.minUnique
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $uncommentRegex = "/difok/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                        } else {
+                            $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        $class = $requiredConfig.minClass
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $uncommentRegex = "/minclass/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                        } else {
+                            $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # maxsequence = Maximum number of times a single character may be repeated (Default = 0)
+                        $sequence = $requiredConfig.maxSequence
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                        } else {
+                            ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $uncommentRegex = "/maxrepeat/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# maxrepeat =" -or $checkKeys.ScriptOutput -match "maxsequence=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$sequenceRegex' $configFile"
+                        } else {
+                            $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ maxsequence=$sequence/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$sequenceRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        $history = $requiredConfig.history
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# remember =") {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "/remember/s/ *# *//g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += ";s/remember = [-]?[0-9]+/remember = $remember/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $historyCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $rememberPattern = "remember="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                    $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                                } else {
+                                    $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                                }
+                            } else {
+                                $historyCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                            }
+                            $scriptCommand += $historyCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwhistory.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                        # retry = Maximum number of retries of password (Default = 3)
+                        $retry = $requiredConfig.retries
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# retry =") {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "/retry/s/ *# *//g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $retryPattern = "retry="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                    $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                                } else {
+                                    $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                                }
+                            } else {
+                                $retryCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                            }
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    }
+                }
+
+                # VMware Aria Operatons for Logs
+                if ($product -eq 'vrli') {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperationsLogs.passwordComplexity
+                    $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
+                    foreach ($node in $vrlinodes) {
+                        $scriptCommand = "sed -E -i.bak '"
+                        $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser root -GuestPassword $vrlipassword.password
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCheck = " cat /etc/security/pwquality.conf; cat /etc/security/pwhistory.conf"
+                        } else {
+                            $scriptCheck = " cat /etc/pam.d/system-password"
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+
+                        # minlen = Minimum password length (Default = 8)
+                        $minLength = $requiredConfig.minLength
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        }
+                        $uncommentRegex = "/minlen/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                        } else {
+                            $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        $uppercase = $requiredConfig.minUppercase
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                        } else {
+                            $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        $lowercase = $requiredConfig.minLowercase
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                        } else {
+                            $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        $numerical = $requiredConfig.minNumerical
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                        } else {
+                            $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        $special = $requiredConfig.minSpecial
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                        } else {
+                            $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        $unique = $requiredConfig.minUnique
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $uncommentRegex = "/difok/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                        } else {
+                            $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        $class = $requiredConfig.minClass
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $uncommentRegex = "/minclass/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                        } else {
+                            $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # maxsequence = Maximum number of times a single character may be repeated (Default = 0)
+                        $sequence = $requiredConfig.maxSequence
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                        } else {
+                            ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $uncommentRegex = "/maxrepeat/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# maxrepeat =" -or $checkKeys.ScriptOutput -match "maxsequence=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$sequenceRegex' $configFile"
+                        } else {
+                            $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ maxsequence=$sequence/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$sequenceRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        $history = $requiredConfig.history
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# remember =") {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "/remember/s/ *# *//g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += ";s/remember = [-]?[0-9]+/remember = $remember/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $historyCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $rememberPattern = "remember="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                    $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                                } else {
+                                    $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                                }
+                            } else {
+                                $historyCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                            }
+                            $scriptCommand += $historyCommand
+                            if ($product -eq "vrni") {
+                                $scriptCommand += "' /etc/pam.d/common-password"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+
+                        # retry = Maximum number of retries of password (Default = 3)
+                        $retry = $requiredConfig.retries
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# retry =") {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "/retry/s/ *# *//g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $retryPattern = "retry="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                    $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                                } else {
+                                    $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                                }
+                            } else {
+                                $retryCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                            }
+                            $scriptCommand += $retryCommand
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    }
+                }
+
+                # VMware Aria Operations for Networks
+                if ($product -eq "vrni") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).ariaOperationsNetworks.passwordComplexity
+                    $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
+                    $scriptCommand = $null
+                    foreach ($node in $vrninodes) {
+                        $scriptCommand = "sudo sed -E -i.bak '"
+                        $scriptCheck = " sudo cat /etc/pam.d/common-password"
+                        $vrninodedata = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                        $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                        $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+
+                        # minlen = Minimum password length (Default = 6)
+                        $minLengthCommand = $null
+                        $minLength = $requiredConfig.minLength
+                        if ($checkKeys.ScriptOutput -match "minlen=") {
+                            $minLengthCommand += ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        } else {
+                            $minLengthCommand += ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                        }
+                        $scriptCommand += $minLengthCommand
+
+                        $uppercase = $requiredConfig.minUppercase
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "ucredit=") {
+                            $uppercaseCommand = ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $scriptCommand += $uppercaseCommand
+
+                        $lowercase = $requiredConfig.minLowercase
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "lcredit=") {
+                            $lowercaseCommand = ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $scriptCommand += $lowercaseCommand
+
+                        $numerical = $requiredConfig.minNumerical
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "dcredit=") {
+                            $numericalCommand = ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $scriptCommand += $numericalCommand
+
+                        $special = $requiredConfig.minSpecial
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "ocredit=") {
+                            $specialCommand = ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $scriptCommand += $specialCommand
+
+                        $unique = $requiredConfig.minUnique
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        if ($checkKeys.ScriptOutput -match "difok=") {
+                            $uniqueCommand = ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $scriptCommand += $uniqueCommand
+
+                        $class = $requiredConfig.minClass
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        if ($checkKeys.ScriptOutput -match "minclass=" ) {
+                            $minClassCommand = ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $scriptCommand += $minClassCommand
+
+                        $sequence = $requiredConfig.maxSequence
+                        # maxrepeat = Maximum number of times a single character may be repeated (Default = 0)
+                        if ($checkKeys.ScriptOutput -match "sequence=" ) {
+                            $maxSequenceCommand = ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $scriptCommand += $maxSequenceCommand
+
+                        $history = $requiredConfig.history
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        if ($checkKeys.ScriptOutput -match "history=") {
+                            $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                        }
+                        $scriptCommand += $historyCommand
+
+                        $retry = $requiredConfig.retries
+                        if ($checkKeys.ScriptOutput -match "retry=") {
+                            $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                        }
+                        $scriptCommand += $retryCommand
+
+                        $scriptCommand += "' /etc/pam.d/common-password"
+                        Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                    }
+                }
+
+                # VMware Aria Automation
+                if ($product -eq "vra") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaAutomation.passwordComplexity
+                    $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
+                    foreach ($node in $vranodes) {
+                        $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                        $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCheck = " cat /etc/security/pwquality.conf; cat /etc/security/pwhistory.conf"
+                        } else {
+                            $scriptCheck = " cat /etc/pam.d/system-password"
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                        # minlen = Minimum password length (Default = 8)
+                        $minLength = $requiredConfig.minLength
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        }
+                        $uncommentRegex = "/minlen/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                        } else {
+                            $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        $uppercase = $requiredConfig.minUppercase
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                        } else {
+                            $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        $lowercase = $requiredConfig.minLowercase
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                        } else {
+                            $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        $numerical = $requiredConfig.minNumerical
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                        } else {
+                            $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        $special = $requiredConfig.minSpecial
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                        } else {
+                            $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        $unique = $requiredConfig.minUnique
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $uncommentRegex = "/difok/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                        } else {
+                            $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        $class = $requiredConfig.minClass
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $uncommentRegex = "/minclass/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                        } else {
+                            $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # maxsequence = Maximum number of times a single character may be repeated (Default = 0)
+                        $sequence = $requiredConfig.maxSequence
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                        } else {
+                            ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $uncommentRegex = "/maxrepeat/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# maxrepeat =" -or $checkKeys.ScriptOutput -match "maxsequence=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$sequenceRegex' $configFile"
+                        } else {
+                            $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ maxsequence=$sequence/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$sequenceRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        $history = $requiredConfig.history
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# remember =") {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "/remember/s/ *# *//g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "s/remember = [-]?[0-9]+/remember = $history/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += ";s/remember = [-]?[0-9]+/remember = $history/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $historyCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $rememberPattern = "remember="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                    $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                                } else {
+                                    $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                                }
+                            } else {
+                                $historyCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                            }
+                            $scriptCommand += $historyCommand
+                            if ($product -eq "vrni") {
+                                $scriptCommand += "' /etc/pam.d/common-password"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $historyCommand = $null
+                        }
+
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                        # retry = Maximum number of retries of password (Default = 3)
+                        $retry = $requiredConfig.retries
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# retry =") {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "/retry/s/ *# *//g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                $scriptCommand
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $retryPattern = "retry="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                    $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                                } else {
+                                    $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                                }
+                            } else {
+                                $retryCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                            }
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    }
+                }
+            }
+        }
+
+        if (-not($PsBoundParameters.ContainsKey("json"))) {
+            # VMware Aria Suite Lifecycle
+            if ($product -eq "vrslcm") {
+                $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                if ($photonRelease.ScriptOutput -match "4.0") {
+                    $scriptCheck = " cat /etc/security/pwquality.conf"
+                } else {
+                    $scriptCheck = " cat /etc/pam.d/system-password"
+                }
+
+                $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                if ($PsBoundParameters.ContainsKey("minLength")) {
+                    # minlen = Minimum password length (Default = 8)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                    } else {
+                        ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                    }
+                    $uncommentRegex = "/minlen/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                    } else {
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("uppercase")) {
+                    # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                    } else {
+                        ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                    }
+                    $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                    } else {
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("lowercase")) {
+                    # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                    } else {
+                        ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                    }
+                    $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                    } else {
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("numerical")) {
+                    # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                    } else {
+                        ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                    }
+                    $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                    } else {
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("special")) {
+                    # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                    } else {
+                        ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                    }
+                    $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                    } else {
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("unique")) {
+                    # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/difok = [-]?[0-9]+/difok = $unique/g"
+                    } else {
+                        ";s/difok=[-]?[0-9]+/difok=$unique/"
+                    }
+                    $uncommentRegex = "/difok/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                    } else {
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("class")) {
+                    # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                    $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "/etc/security/pwquality.conf"
+                    } else {
+                        "/etc/pam.d/system-password"
+                    }
+                    $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                        "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                    } else {
+                        ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                    }
+                    $uncommentRegex = "/minclass/s/ *# *//g"
+
+                    if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                        $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                    } else {
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                        }
+                        $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                    }
+                    Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                }
+
+                if ($PsBoundParameters.ContainsKey("history")) {
+                    # remember = Maximum number of passwords the system remembers (Default = 5)
+                    if ($photonRelease.ScriptOutput -match "3.0") {
+                        $scriptCommand = $null
+                        $historyCommand = $null
+                        $scriptCommand = "sed -E -i.bak '"
+                        $pamPattern = "requisite pam_pwhistory.so enforce_for_root use_authtok"
+                        $rememberPattern = "remember="
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                            } else {
+                                $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                            }
+                        } else {
+                            $historyCommand += "/pam_unix.so/i password  requisite pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                        }
+                        $scriptCommand += $historyCommand
+                        if ($product -eq "vrni") {
+                            $scriptCommand += "' /etc/pam.d/common-password"
+                        } else {
+                            $scriptCommand += "' /etc/pam.d/system-password"
+                        }
+                        Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                    }
+                }
+
+                $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+
+                if ($PsBoundParameters.ContainsKey("retry")) {
+                    # retry = Maximum number of retries of password (Default = 3)
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        if ($checkKeys.ScriptOutput -match "# retry =") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $retryCommand += "/retry/s/ *# *//g"
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        } else {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                        $scriptCommand = $null
+                        $retryCommand = $null
+                        $scriptCommand = "sed -E -i.bak '"
+                        $pamPattern = "requisite pam_pwhistory.so enforce_for_root use_authtok"
+                        $retryPattern = "retry="
+
+                        if ($checkKeys.ScriptOutput -match $pamPattern) {
+                            if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                            } else {
+                                $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                            }
+                        } else {
+                            $retryCommand += "/pam_unix.so/i password  requisite pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                        }
+
+                        $scriptCommand += $retryCommand
+
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            $scriptCommand += "' /etc/security/pwquality.conf"
+                        } else {
+                            $scriptCommand += "' /etc/pam.d/system-password"
+                        }
+
+                        Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                        $scriptCommand = $null
+                        $retryCommand = $null
+                    }
+                }
+            }
+
+            # VMware Aria Operations
+            if ($product -eq "vrops") {
+                $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
+                foreach ($node in $vropsnodes) {
+                    $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                    $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/pwquality.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-password"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                    if ($PsBoundParameters.ContainsKey("minLength")) {
+                        # minlen = Minimum password length (Default = 8)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        }
+                        $uncommentRegex = "/minlen/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                        } else {
+                            $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("uppercase")) {
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                        } else {
+                            $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("lowercase")) {
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                        } else {
+                            $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("numerical")) {
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                        } else {
+                            $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("special")) {
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                        } else {
+                            $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unique")) {
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $uncommentRegex = "/difok/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                        } else {
+                            $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("class")) {
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $uncommentRegex = "/minclass/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                        } else {
+                            $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("sequence")) {
+                        # maxsequence = Maximum number of times a single character may be repeated (Default = 0)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                        } else {
+                            ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $uncommentRegex = "/maxrepeat/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# maxrepeat =" -or $checkKeys.ScriptOutput -match "maxsequence=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$sequenceRegex' $configFile"
+                        } else {
+                            $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ maxsequence=$sequence/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$sequenceRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("history")) {
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# remember =") {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "/remember/s/ *# *//g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += ";s/remember = [-]?[0-9]+/remember = $remember/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $historyCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $rememberPattern = "remember="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                    $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                                } else {
+                                    $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                                }
+                            } else {
+                                $historyCommand += ";/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                            }
+                            $scriptCommand += $historyCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwhistory.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                        }
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+
+                    if ($PsBoundParameters.ContainsKey("retry")) {
+                        # retry = Maximum number of retries of password (Default = 3)
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# retry =") {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "/retry/s/ *# *//g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                $scriptCommand
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $retryPattern = "retry="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                    $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                                } else {
+                                    $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                                }
+                            } else {
+                                $retryCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                            }
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    }
+                }
+            }
+
+            # VMware Aria Operations for Logs
+            if ($product -eq "vrli") {
+                $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
+                foreach ($node in $vrlinodes) {
+                    $scriptCommand = "sed -E -i.bak '"
+                    $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser root -GuestPassword $vrlipassword.password
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/pwquality.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-password"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+
+                    if ($PsBoundParameters.ContainsKey("minLength")) {
+                        # minlen = Minimum password length (Default = 8)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        }
+                        $uncommentRegex = "/minlen/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                        } else {
+                            $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("uppercase")) {
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                        } else {
+                            $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("lowercase")) {
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                        } else {
+                            $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("numerical")) {
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                        } else {
+                            $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("special")) {
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                        } else {
+                            $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unique")) {
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $uncommentRegex = "/difok/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                        } else {
+                            $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("class")) {
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $uncommentRegex = "/minclass/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                        } else {
+                            $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("sequence")) {
+                        # maxsequence = Maximum number of times a single character may be repeated (Default = 0)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                        } else {
+                            ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $uncommentRegex = "/maxrepeat/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# maxrepeat =" -or $checkKeys.ScriptOutput -match "maxsequence=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$sequenceRegex' $configFile"
+                        } else {
+                            $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ maxsequence=$sequence/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$sequenceRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("history")) {
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# remember =") {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "/remember/s/ *# *//g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += ";s/remember = [-]?[0-9]+/remember = $remember/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $historyCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $rememberPattern = "remember="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                    $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                                } else {
+                                    $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                                }
+                            } else {
+                                $historyCommand += ";/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                            }
+                            $scriptCommand += $historyCommand
+                            if ($product -eq "vrni") {
+                                $scriptCommand += "' /etc/pam.d/common-password"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                        }
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+
+                    if ($PsBoundParameters.ContainsKey("retry")) {
+                        # retry = Maximum number of retries of password (Default = 3)
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# retry =") {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "/retry/s/ *# *//g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                $scriptCommand
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $retryPattern = "retry="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                    $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                                } else {
+                                    $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                                }
+                            } else {
+                                $retryCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                            }
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    }
+                }
+            }
+
+            # VMware Aria Operations for Networks
+            if ($product -eq "vrni") {
+                $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
+                $scriptCommand = $null
+                foreach ($node in $vrninodes) {
+                    $scriptCommand = "sudo sed -E -i.bak '"
+                    $scriptCheck = " sudo cat /etc/pam.d/common-password"
+                    $vrninodedata = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                    $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                    $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+
+                    if ($PsBoundParameters.ContainsKey("minLength")) {
+                        # minlen = Minimum password length (Default = 6)
+                        $minLengthCommand = ""
+                        if ($checkKeys.ScriptOutput -match "minlen=") {
+                            $minLengthCommand += ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        } else {
+                            $minLengthCommand += ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                        }
+                        $scriptCommand += $minLengthCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("uppercase")) {
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "ucredit=") {
+                            $uppercaseCommand = ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $scriptCommand += $uppercaseCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("lowercase")) {
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "lcredit=") {
+                            $lowercaseCommand = ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $scriptCommand += $lowercaseCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("numerical")) {
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "dcredit=") {
+                            $numericalCommand = ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $scriptCommand += $numericalCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("special")) {
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        if ($checkKeys.ScriptOutput -match "ocredit=") {
+                            $specialCommand = ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $scriptCommand += $specialCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unique")) {
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        if ($checkKeys.ScriptOutput -match "difok=") {
+                            $uniqueCommand = ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $scriptCommand += $uniqueCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("class")) {
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        if ($checkKeys.ScriptOutput -match "minclass=" ) {
+                            $minClassCommand = ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $scriptCommand += $minClassCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("sequence")) {
+                        # maxrepeat = Maximum number of times a single character may be repeated (Default = 0)
+                        if ($checkKeys.ScriptOutput -match "sequence=" ) {
+                            $maxSequenceCommand = ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $scriptCommand += $maxSequenceCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("history")) {
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        if ($checkKeys.ScriptOutput -match "history=") {
+                            $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                        }
+                        $scriptCommand += $historyCommand
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("retry")) {
+                        if ($checkKeys.ScriptOutput -match "retry=") {
+                            $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                        }
+                        $scriptCommand += $retryCommand
+                    }
+                    $scriptCommand += "' /etc/pam.d/common-password"
+
+                    Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                }
+            }
+
+            # VMware Aria Automation
+            if ($product -eq 'vra') {
+                $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
+                foreach ($node in $vranodes) {
+                    $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                    $photonRelease = Invoke-VMscript -VM $node.split('.')[0] -ScriptText $photonScript -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                    if ($photonRelease.ScriptOutput -match "4.0") {
+                        $scriptCheck = " cat /etc/security/pwquality.conf"
+                    } else {
+                        $scriptCheck = " cat /etc/pam.d/system-password"
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                    if ($PsBoundParameters.ContainsKey("minLength")) {
+                        # minlen = Minimum password length (Default = 8)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                        } else {
+                            ";s/minlen=[-]?[0-9]+/minlen=$minLength/"
+                        }
+                        $uncommentRegex = "/minlen/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minlen =" -or $checkKeys.ScriptOutput -match "minlen=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$minLengthRegex' $configFile"
+                        } else {
+                            $minLengthRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minlen = [-]?[0-9]+/minlen = $minLength/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minlen=$minLength/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$minLengthRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("uppercase")) {
+                        # ucredit = Maximum number of uppercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                        } else {
+                            ";s/ucredit=[-]?[0-9]+/ucredit=$uppercase/"
+                        }
+                        $uncommentRegex = "/ucredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ucredit =" -or $checkKeys.ScriptOutput -match "ucredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uppercaseRegex' $configFile"
+                        } else {
+                            $uppercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ucredit = [-]?[0-9]+/ucredit = $uppercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ucredit=$uppercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uppercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("lowercase")) {
+                        # lcredit = Maximum number of lowercase characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                        } else {
+                            ";s/lcredit=[-]?[0-9]+/lcredit=$lowercase/"
+                        }
+                        $uncommentRegex = "/lcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# lcredit =" -or $checkKeys.ScriptOutput -match "lcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$lowercaseRegex' $configFile"
+                        } else {
+                            $lowercaseRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/lcredit = [-]?[0-9]+/lcredit = $lowercase/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ lcredit=$lowercase/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$lowercaseRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("numerical")) {
+                        # dcredit = Maximum number of digits that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                        } else {
+                            ";s/dcredit=[-]?[0-9]+/dcredit=$numerical/"
+                        }
+                        $uncommentRegex = "/dcredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# dcredit =" -or $checkKeys.ScriptOutput -match "dcredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$numericalRegex' $configFile"
+                        } else {
+                            $numericalRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/dcredit = [-]?[0-9]+/dcredit = $numerical/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ dcredit=$numerical/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$numericalRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("special")) {
+                        # ocredit = Maximum number of other characters that will generate a credit (Default = -1)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                        } else {
+                            ";s/ocredit=[-]?[0-9]+/ocredit=$special/"
+                        }
+                        $uncommentRegex = "/ocredit/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# ocredit =" -or $checkKeys.ScriptOutput -match "ocredit=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$specialRegex' $configFile"
+                        } else {
+                            $specialRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/ocredit = [-]?[0-9]+/ocredit = $special/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ ocredit=$special/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$specialRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("unique")) {
+                        # difok = Minimum number of characters that must be different from the old password (Default = 4)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/difok = [-]?[0-9]+/difok = $unique/g"
+                        } else {
+                            ";s/difok=[-]?[0-9]+/difok=$unique/"
+                        }
+                        $uncommentRegex = "/difok/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# difok =" -or $checkKeys.ScriptOutput -match "difok=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$uniqueRegex' $configFile"
+                        } else {
+                            $uniqueRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/difok = [-]?[0-9]+/difok = $unique/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ difok=$unique/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$uniqueRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("class")) {
+                        # minclass = Minimum number of character types that must be used (e.g., uppercase, lowercase, digits, other) (Default = 4)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/minclass = [-]?[0-9]+/minclass = $class/g"
+                        } else {
+                            ";s/minclass=[-]?[0-9]+/minclass=$class/"
+                        }
+                        $uncommentRegex = "/minclass/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# minclass =" -or $checkKeys.ScriptOutput -match "minclass=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$classRegex' $configFile"
+                        } else {
+                            $classRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/minclass = [-]?[0-9]+/minclass = $class/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ minclass=$class/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$classRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("sequence")) {
+                        # maxsequence = Maximum number of times a single character may be repeated (Default = 0)
+                        $configFile = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "/etc/security/pwquality.conf"
+                        } else {
+                            "/etc/pam.d/system-password"
+                        }
+                        $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                            "s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                        } else {
+                            ";s/maxsequence=[-]?[0-9]+/maxsequence=$sequence/"
+                        }
+                        $uncommentRegex = "/maxrepeat/s/ *# *//g"
+
+                        if ($checkKeys.ScriptOutput -match "# maxrepeat =" -or $checkKeys.ScriptOutput -match "maxsequence=") {
+                            $scriptCommand = "sed -E -i.bak '$uncommentRegex;$sequenceRegex' $configFile"
+                        } else {
+                            $sequenceRegex = if ($photonRelease.ScriptOutput -match "4.0") {
+                                ";s/maxrepeat = [-]?[0-9]+/maxrepeat = $sequence/g"
+                            } else {
+                                ";/pam_cracklib.so/ s/$/ maxsequence=$sequence/"
+                            }
+                            $scriptCommand = "sed -E -i.bak '$sequenceRegex' $configFile"
+                        }
+                        Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                    }
+
+                    if ($PsBoundParameters.ContainsKey("history")) {
+                        # remember = Maximum number of passwords the system remembers (Default = 5)
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# remember =") {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "/remember/s/ *# *//g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += "s/remember = [-]?[0-9]+/remember = $history/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                $scriptCommand
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $historyCommand += ";s/remember = [-]?[0-9]+/remember = $remember/g"
+                                $scriptCommand += $historyCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwhistory.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $historyCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $rememberPattern = "remember="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $rememberPattern) {
+                                    $historyCommand += ";s/remember=[-]?[0-9]+/remember=$history/"
+                                } else {
+                                    $historyCommand += ";/$pamPattern/ s/$/ remember=$history/"
+                                }
+                            } else {
+                                $historyCommand += ";/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root remember=$history"
+                            }
+                            $scriptCommand += $historyCommand
+                            if ($product -eq "vrni") {
+                                $scriptCommand += "' /etc/pam.d/common-password"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                        }
+                    }
+
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+
+                    if ($PsBoundParameters.ContainsKey("retry")) {
+                        # retry = Maximum number of retries of password (Default = 3)
+                        if ($photonRelease.ScriptOutput -match "4.0") {
+                            if ($checkKeys.ScriptOutput -match "# retry =") {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "/retry/s/ *# *//g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                $scriptCommand
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += "s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            } else {
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                                $scriptCommand = "sed -E -i.bak '"
+                                $retryCommand += ";s/retry = [-]?[0-9]+/retry = $retry/g"
+                                $scriptCommand += $retryCommand
+
+                                if ($photonRelease.ScriptOutput -match "4.0") {
+                                    $scriptCommand += "' /etc/security/pwquality.conf"
+                                } else {
+                                    $scriptCommand += "' /etc/pam.d/system-password"
+                                }
+
+                                Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                $scriptCommand = $null
+                                $retryCommand = $null
+                            }
+                        } elseif ($photonRelease.ScriptOutput -match "3.0") {
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                            $scriptCommand = "sed -E -i.bak '"
+                            $pamPattern = "required pam_pwhistory.so use_authtok enforce_for_root"
+                            $retryPattern = "retry="
+                            if ($checkKeys.ScriptOutput -match $pamPattern) {
+                                if ($checkKeys.ScriptOutput -match $retryPattern) {
+                                    $retryCommand += ";s/retry=[-]?[0-9]+/retry=$retry/"
+                                } else {
+                                    $retryCommand += ";/$pamPattern/ s/$/ retry=$retry/"
+                                }
+                            } else {
+                                $retryCommand += "/pam_unix.so/i password  required pam_pwhistory.so use_authtok enforce_for_root retry=$retry"
+                            }
+                            $scriptCommand += $retryCommand
+
+                            if ($photonRelease.ScriptOutput -match "4.0") {
+                                $scriptCommand += "' /etc/security/pwquality.conf"
+                            } else {
+                                $scriptCommand += "' /etc/pam.d/system-password"
+                            }
+
+                            Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                            $scriptCommand = $null
+                            $retryCommand = $null
+                        }
+                    }
+                }
+            }
+        }
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Update-AriaLocalUserPasswordComplexity
+
+Function Update-AriaLocalUserPasswordExpiration {
+    <#
+		.SYNOPSIS
+        Configure password account lockout for local users.
+
+        .DESCRIPTION
+        The Update-AriaLocalUserPasswordExpiration cmdlet configures the password complexity local users.
+
+        .EXAMPLE
+        Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -localuser root -maxdays 90 -mindays 7 -warndays 7
+        This example updates the VMware Aria Automation nodes with new values for each element.
+
+        .EXAMPLE.
+        Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile "passwordPolicyConfig.json"
+        This example updates the VMware Aria Automation nodes using Jthe SON file of preset values.
+
+        .PARAMETER server
+        The fully qualified domain name of the SDDC Manager instance.
+
+        .PARAMETER user
+        The username to authenticate to the SDDC Manager instance.
+
+        .PARAMETER pass
+        The password to authenticate to the SDDC Manager instance.
+
+        .PARAMETER product
+        The product to configure.
+
+        .PARAMETER localuser
+        The local user to configure.
+
+        .PARAMETER maxdays
+        The maximum number of days between password change.
+
+        .PARAMETER mindays
+        The minimum number of days between password change.
+
+        .PARAMETER warndays
+        The number of days before password expiration that a user is warned that password will expire.
+
+        .PARAMETER json
+        Use a JSON file to configure the password complexity.
+
+        .PARAMETER policyPath
+        The path to the policy file.
+
+        .PARAMETER policyFile
+        The path to the policy file.
+    #>
+
+    Param (
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$server,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$pass,
+        [Parameter (Mandatory = $true)] [ValidateSet('vra', 'vrops', 'vrli', 'vrslcm', 'vrni')] [String]$product,
+        [Parameter (Mandatory = $false)] [ValidateSet('root', 'support', 'consoleuser')]  [Array]$localuser,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$maxdays,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$mindays,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Int]$warndays,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [Switch]$json,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyPath,
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
+
+    )
+
+    if (Test-VCFConnection -server $server) {
+        if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
+            if (($vcfVrslcmDetails = Get-vRSLCMServerDetail -fqdn $server -username $user -password $pass)) {
+                if (Test-vRSLCMAuthentication -server $vcfVrslcmDetails.fqdn -user $vcfVrslcmDetails.adminUser -pass $vcfVrslcmDetails.adminPass) {
+                    $domain = Get-VCFWorkloadDomain | Select-Object name, type | Where-Object { $_.type -eq "MANAGEMENT" }
+                    if (($vcfVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domain $domain.name)) {
+                        if (Test-vSphereConnection -server $($vcfVcenterDetails.fqdn)) {
+                            if (Test-vSphereAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Try {
+        if ($PsBoundParameters.ContainsKey("json")) {
+            $version = Get-VCFManager -version
+            if ($PsBoundParameters.ContainsKey("policyFile")) {
+                # VMware Aria Suite Lifecycle
+                if ($product -eq "vrslcm") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaLifecycle.passwordExpiration
+                    $scriptCheck = "cat /etc/passwd"
+                    $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+                    foreach ($user in $localuser) {
+                        if ($checkKeys.ScriptOutput -match $user) {
+                            $policies = @{
+                                # maxdays = Maximum number of days between password change. (By default, the password is set to never expire.)
+                                maxdays  = $requiredConfig.maxDays
+                                # mindays = Minimum number of days between password change. (Default = 0)
+                                mindays  = $requiredConfig.minDays
+                                # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                warndays = $requiredConfig.warningDays
+                            }
+                            foreach ($policy in $policies.GetEnumerator()) {
+                                $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            }
+                        } else {
+                            Write-Output "User $user not found on $node"
+                        }
+                    }
+                }
+
+                # VMware Aria Operations
+                if ($product -eq "vrops") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperations.passwordExpiration
+                    $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
+                    $scriptCheck = "cat /etc/passwd"
+                    foreach ($node in $vropsnodes) {
+                        $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+                        foreach ($user in $localuser) {
+                            $user
+                            if ($checkKeys.ScriptOutput -match $user) {
+                                $policies = @{
+                                    # maxdays = Maximum number of days between password change. (Default = 365)
+                                    maxdays  = $requiredConfig.maxDays
+                                    # mindays = Minimum number of days between password change. (Default = 0)
+                                    mindays  = $requiredConfig.minDays
+                                    # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                    warndays = $requiredConfig.warningDays
+                                }
+                                foreach ($policy in $policies.GetEnumerator()) {
+                                    $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                }
+                            } else {
+                                Write-Output "User $user not found on $node"
+                            }
+                        }
+                    }
+                }
+
+                # VMware Aria Operatons for Logs
+                if ($product -eq 'vrli') {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperationsLogs.passwordExpiration
+                    $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
+                    $scriptCheck = "cat /etc/passwd"
+                    foreach ($node in $vrlinodes) {
+                        $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+                        foreach ($user in $localuser) {
+                            if ($checkKeys.ScriptOutput -match $user) {
+                                $policies = @{
+                                    # maxdays = Maximum number of days between password change. (Default = 365)
+                                    maxdays  = $requiredConfig.maxDays
+                                    # mindays = Minimum number of days between password change. (Default = 0)
+                                    mindays  = $requiredConfig.minDays
+                                    # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                    warndays = $requiredConfig.warningDays
+                                }
+                                foreach ($policy in $policies.GetEnumerator()) {
+                                    $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                }
+                            } else {
+                                Write-Output "User $user not found on $node"
+                            }
+                        }
+                    }
+                }
+
+                # VMware Aria Operations for Networks
+                if ($product -eq "vrni") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).ariaOperationsNetworks.passwordExpiration
+                    $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
+                    foreach ($node in $vrninodes) {
+                        $scriptCheck = "sudo cat /etc/passwd"
+                        $vrninodedata = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                        $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                        $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false
+                        foreach ($user in $localuser) {
+                            if ($checkKeys.ScriptOutput -match $user) {
+                                $policies = @{
+                                    # maxdays = Maximum number of days between password change. (By default, the password is set to never expire.)
+                                    maxdays  = $requiredConfig.maxDays
+                                    # mindays = Minimum number of days between password change. (Default = 0)
+                                    mindays  = $requiredConfig.minDays
+                                    # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                    warndays = $requiredConfig.warningDays
+                                }
+                                foreach ($policy in $policies.GetEnumerator()) {
+                                    $scriptCommand = "sudo chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                                }
+                            } else {
+                                Write-Output "User $user not found on $($node.vmname)"
+                            }
+                        }
+                    }
+                }
+
+                # VMware Aria Automation
+                if ($product -eq "vra") {
+                    $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaAutomation.passwordExpiration
+                    $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
+                    $scriptCheck = "cat /etc/passwd"
+                    foreach ($node in $vranodes) {
+                        $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                        $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                        $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+                        foreach ($user in $localuser) {
+                            if ($checkKeys.ScriptOutput -match $user) {
+                                $policies = @{
+                                    # maxdays = Maximum number of days between password change. (Default = 365)
+                                    maxdays  = $requiredConfig.maxDays
+                                    # mindays = Minimum number of days between password change. (Default = 0)
+                                    mindays  = $requiredConfig.minDays
+                                    # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                    warndays = $requiredConfig.warningDays
+                                }
+
+                                foreach ($policy in $policies.GetEnumerator()) {
+                                    $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                }
+                            } else {
+                                Write-Output "User $user not found on $node"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (-not($PsBoundParameters.ContainsKey("json"))) {
+            # VMware Aria Suite Lifecycle
+            if ($product -eq "vrslcm") {
+                $scriptCheck = "cat /etc/passwd"
+                $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
+                foreach ($user in $localuser) {
+                    if ($checkKeys.ScriptOutput -match $user) {
+                        $policies = @{
+                            # maxdays = Maximum number of days between password change. (By default, the password is set to never expire.)
+                            maxdays  = $maxdays
+                            # mindays = Minimum number of days between password change. (Default = 0)
+                            mindays  = $mindays
+                            # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                            warndays = $warndays
+                        }
+                        foreach ($policy in $policies.GetEnumerator()) {
+                            if ($PsBoundParameters.ContainsKey($policy.Name)) {
+                                $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
+                            }
+                        }
+                    } else {
+                        Write-Output "User $user not found on $node"
+                    }
+                }
+            }
+
+            # VMware Aria Operations
+            if ($product -eq "vrops") {
+                $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
+                $scriptCheck = "cat /etc/passwd"
+                foreach ($node in $vropsnodes) {
+                    $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vropsusername -GuestPassword $vropspassword.password
+                    foreach ($user in $localuser) {
+                        if ($checkKeys.ScriptOutput -match $user) {
+                            $policies = @{
+                                # maxdays = Maximum number of days between password change. (Default = 365)
+                                maxdays  = $maxdays
+                                # mindays = Minimum number of days between password change. (Default = 0)
+                                mindays  = $mindays
+                                # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                warndays = $warndays
+                            }
+                            foreach ($policy in $policies.GetEnumerator()) {
+                                if ($PsBoundParameters.ContainsKey($policy.Name)) {
+                                    $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vropsusername -GuestPassword $vropspassword.password -Confirm:$false | Out-Null
+                                }
+                            }
+                        } else {
+                            Write-Output "User $user not found on $node"
+                        }
+                    }
+                }
+            }
+
+            # VMware Aria Operations for Logs
+            if ($product -eq "vrli") {
+                $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
+                $scriptCheck = "cat /etc/passwd"
+                foreach ($node in $vrlinodes) {
+                    $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser root -GuestPassword $vrlipassword.password
+                    foreach ($user in $localuser) {
+                        if ($checkKeys.ScriptOutput -match $user) {
+                            $policies = @{
+                                # maxdays = Maximum number of days between password change. (Default = 365)
+                                maxdays  = $maxdays
+                                # mindays = Minimum number of days between password change. (Default = 0)
+                                mindays  = $mindays
+                                # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                warndays = $warndays
+                            }
+                            foreach ($policy in $policies.GetEnumerator()) {
+                                if ($PsBoundParameters.ContainsKey($policy.Name)) {
+                                    $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser root -GuestPassword $vrlipassword.password -Confirm:$false | Out-Null
+                                }
+                            }
+                        } else {
+                            Write-Output "User $user not found on $node"
+                        }
+                    }
+                }
+            }
+
+            # VMware Aria Operations for Networks
+            if ($product -eq "vrni") {
+                $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
+                $scriptCheck = "sudo cat /etc/passwd"
+                foreach ($node in $vrninodes) {
+                    $vrninodedata = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties | Where-Object { $_.vmname -eq $node.vmName })
+                    $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
+                    $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $checkKeys = Invoke-VMScript -VM $node.vmname -ScriptText $scriptCheck -GuestUser support -GuestPassword $vrnipassword.password
+                    foreach ($user in $localuser) {
+                        if ($checkKeys.ScriptOutput -match $user) {
+                            $policies = @{
+                                # maxdays = Maximum number of days between password change. (By default, the password is set to never expire.)
+                                maxdays  = $maxdays
+                                # mindays = Minimum number of days between password change. (Default = 0)
+                                mindays  = $mindays
+                                # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                warndays = $warndays
+                            }
+                            foreach ($policy in $policies.GetEnumerator()) {
+                                if ($PsBoundParameters.ContainsKey($policy.Name)) {
+                                    $scriptCommand = "sudo chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.vmname -ScriptText $scriptCommand -GuestUser support -GuestPassword $vrnipassword.password -Confirm:$false | Out-Null
+                                }
+                            }
+                        } else {
+                            Write-Output "User $user not found on $node"
+                        }
+                    }
+                }
+            }
+
+            # VMware Aria Automation
+            if ($product -eq 'vra') {
+                $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
+                $scriptCheck = "cat /etc/passwd"
+                foreach ($node in $vranodes) {
+                    $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
+                    $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
+                    $checkKeys = Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCheck -GuestUser $vrausername -GuestPassword $vrapassword.password
+                    foreach ($user in $localuser) {
+                        if ($checkKeys.ScriptOutput -match $user) {
+                            $policies = @{
+                                # maxdays = Maximum number of days between password change. (Default = 365)
+                                maxdays  = $maxdays
+                                # mindays = Minimum number of days between password change. (Default = 0)
+                                mindays  = $mindays
+                                # warndays = Number of days before password expiration that a user is warned that password will expire. (Default = 7)
+                                warndays = $warndays
+                            }
+                            foreach ($policy in $policies.GetEnumerator()) {
+                                if ($PsBoundParameters.ContainsKey($policy.Name)) {
+                                    $scriptCommand = "chage --$($policy.Name) $($policy.Value) $user"
+                                    Invoke-VMScript -VM $node.split('.')[0] -ScriptText $scriptCommand -GuestUser $vrausername -GuestPassword $vrapassword.password -Confirm:$false | Out-Null
+                                }
+                            }
+                        } else {
+                            Write-Output "User $user not found on $node"
+                        }
+                    }
+                }
+            }
+        }
+    } Catch {
+        Write-Error $_.Exception.Message
+    }
+}
+Export-ModuleMember -Function Update-AriaLocalUserPasswordExpiration
+
+#EndRegion  End Aria Product Password Password Management Functions  ######
+##########################################################################
+
+##########################################################################
 #Region     Begin Shared Password Management Functions              ######
 
 Function Request-LocalUserPasswordExpiration {
@@ -9193,7 +15532,7 @@ Function Request-LocalUserPasswordExpiration {
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to vCenter Server
-		Retrieves the password expiration policy for the specified local user
+		- Retrieves the password expiration policy for the specified local user
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
@@ -9478,7 +15817,7 @@ Function Publish-PasswordRotationPolicy {
         by SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager.
-        - Retrives the credentialg password rotation settings based on the criteria specified by the -domain and -resource
+        - Retrieves the credentialg password rotation settings based on the criteria specified by the -domain and -resource
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
@@ -9631,7 +15970,7 @@ Function Request-PasswordRotationPolicy {
         by SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager.
-        - Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource
+        - Retrieves the credential password rotation settings based on the criteria specified by the -domain and -resource
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
@@ -9987,7 +16326,7 @@ Function Test-VcfPasswordManagementPrereq {
             if ($installedModule) {
                 $installedVersion = $installedModule.Version | Sort-Object -Descending
                 $installedVersion = $installedVersion[0]
-                if ($installedVersion -lt $requiredVersion) { 
+                if ($installedVersion -lt $requiredVersion) {
                     $message = "$($moduleName) $($installedVersion) is installed. Install $($moduleName) $($requiredVersion) or higher."
                     Show-PasswordManagementOutput -type ERROR -message $message
                 } elseif ($installedVersion -ge $requiredVersion) {

@@ -1,4 +1,4 @@
-# Request-LocalUserPasswordExpiration
+# Get-AriaLocalUserPasswordExpiration
 
 ## Synopsis
 
@@ -7,13 +7,16 @@ Retrieves the password expiration policy for the specified local user.
 ## Syntax
 
 ```powershell
-Request-LocalUserPasswordExpiration -server <String> -user <String> -pass <String> -domain <String> -vmName <String> -guestUser <String> -guestPassword <String> -localUser <Array> [-product <String>] [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
+Get-AriaLocalUserPasswordExpiration -server <String> -user <String> [-pass <String>] -domain <String>
+ -vmName <String> -guestUser <String> [-guestPassword <String>] [-sudo] -localUser <Array>
+ [-drift] [-reportPath <String>] [-policyFile <String>] [<CommonParameters>]
 ```
 
 ## Description
 
-The `Request-LocalUserPasswordExpiration` cmdlet retrieves a local user password expiration policy.
-The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
+The `Get-AriaLocalUserPasswordExpiration` cmdlet retrieves a local user password expiration policy.
+
+The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that network connectivity and authentication is possible to vCenter Server
@@ -24,26 +27,26 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
+Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
 ```
 
-This example retrieves the global password expiration policy for a vCenter Server instance.
+This example retrieves the global password expiration policy for a VMware Aria Automation instance.
 
 ### Example 2
 
 ```powershell
-Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
+This example retrieves the global password expiration policy for a VMware Aria Automation instance and checks the configuration drift using the provided configuration JSON.
 
 ### Example 3
 
 ```powershell
-Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
+Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
 ```
 
-This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
+This example retrieves the global password expiration policy for a VMware Aria Automation instance and compares the configuration against the product defaults.
 
 ## Parameters
 
@@ -88,7 +91,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -97,7 +100,7 @@ Accept wildcard characters: False
 
 ### -domain
 
-The name of the workload domain which the product is deployed for.
+The name of the workload domain which the product is deployed.
 
 ```yaml
 Type: String
@@ -152,9 +155,25 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -sudo
+
+sudo flag.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -169,23 +188,6 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -product
-
-The product to retrieve the password expiration policy for.
-One of: sddcManager, vcenterServer, nsxManager, nsxEdge, wsaLocal.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
