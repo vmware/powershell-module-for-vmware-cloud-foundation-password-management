@@ -84,20 +84,20 @@ Describe 'Test Suite' {
         }
 
         Start-SetupLogFile
-        $InputData = Get-Content -Raw 'InputData.json' | ConvertFrom-Json
-        $server = $InputData.'SDDCManager'
-        $user = $InputData.'User'
-        $pass = $InputData.'Password'
-        $domain = $InputData.'Domain'[0]
-        $esxiServer = $InputData.$domain.'Esxi Server'[0]
-        $cluster = $InputData.$domain.'Cluster'[0]
-        $vmName = $InputData.'SDDCManagerVMName'
-        $rootPass = $InputData.'RootPass'
-        $rootUser = $InputData.'RootUser'
-        $guestUser = $InputData.'GuestUser'
-        $localUser = $InputData.'LocalUser'
-        $nsxManagerNode = $InputData.$domain.'Manager Nodes'[0]
-        $nsxEdgeNode = $InputData.$domain.'Edge Nodes'[0]
+        $inputData = Get-Content -Raw 'inputData.json' | ConvertFrom-Json
+        $server = $inputData.'SDDC Manager'
+        $vmName = $inputData.'SDDC Manager VM Name'
+        $user = $inputData.'User'
+        $pass = $inputData.'Password'
+        $rootUser = $inputData.'Root User'
+        $rootPass = $inputData.'Root Password'
+        $guestUser = $inputData.'Guest User'
+        $localUser = $inputData.'Local User'
+        $domain = $inputData.'Domains'[0]
+        $esxiServer = $inputData.$domain.'ESXi Hosts'[0]
+        $cluster = $inputData.$domain.'Clusters'[0]
+        $nsxManagerNode = $inputData.$domain.'NSX Manager Nodes'[0]
+        $nsxEdgeNode = $inputData.$domain.'NSX Edge Nodes'[0]
     }
 
     Describe 'Password Expiration Test Suite' -Tag "PasswordExpirationSuite" {
@@ -473,7 +473,7 @@ Describe 'Test Suite' {
 
                 # Get the index of the NSX Edge.
                 $index = Get-Index -output $currentExpirationSettings -server $nsxEdgeNode -user $rootUser -useLiveData $useLiveData
-                Write-LogToFile -message "The index of the NSX Edge node ${$InputData.$domain.'Edge Nodes'[0]}in the output is $index"
+                Write-LogToFile -message "The index of the NSX Edge node ${$inputData.$domain.'Edge Nodes'[0]}in the output is $index"
             }
 
             # Expect a success.
@@ -545,8 +545,8 @@ Describe 'Test Suite' {
                 $currentExpirationSettings = Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                 # Get the index of the NSX Manager.
-                $index = Get-Index -output $currentExpirationSettings -server $InputData.$domain.'Manager Node'[0] -user $rootUser -useLiveData $useLiveData
-                Write-LogToFile -message "The index of the NSX Manager node ${$InputData.$domain.'Manager Node'[0]} in the output is $index"
+                $index = Get-Index -output $currentExpirationSettings -server $inputData.$domain.'Manager Node'[0] -user $rootUser -useLiveData $useLiveData
+                Write-LogToFile -message "The index of the NSX Manager node $nsxManagerNode in the output is $index"
 
                 # Decrement the Max Days by 1.
                 $maxDays = [int]$currentExpirationSettings[$index].'Max Days' - 1
@@ -569,7 +569,7 @@ Describe 'Test Suite' {
                     $updatedExpirationSettings = Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                     # Get the index of the NSX Manager.
-                    $index = Get-Index -output $updatedExpirationSettings -server $InputData.$domain.'Manager Node'[0] -user $rootUser -useLiveData $useLiveData
+                    $index = Get-Index -output $updatedExpirationSettings -server $inputData.$domain.'Manager Node'[0] -user $rootUser -useLiveData $useLiveData
 
                     # Get the updated Max Days.
                     $outMaxDays = $updatedExpirationSettings[$index].'Max Days'
@@ -968,7 +968,7 @@ Describe 'Test Suite' {
 
                 # Get the index of the NSX Edge.
                 $index = Get-Index -output $currentComplexitySettings -server $nsxEdgeNode -useLiveData $useLiveData
-                Write-LogToFile -message "The index of the NSX Edge node ${$InputData.$domain.'Edge Nodes'[0]} in the output is $index"
+                Write-LogToFile -message "The index of the NSX Edge node $nsxEdgeNode in the output is $index"
 
                 # Increment the input settings by 1.
                 $minLength = [int]$currentComplexitySettings[$index].'Min Length' + 1
