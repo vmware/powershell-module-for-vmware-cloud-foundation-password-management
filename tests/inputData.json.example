@@ -1,0 +1,62 @@
+{
+	"SDDC Manager": "sfo-vcf01.sfo.rainpole.io",
+	"SDDC Manager VM Name": "sfo-vcf01",
+	"User": "administrator@vsphere.local",
+	"Password": "VMw@re1!",
+	"Root User": "root",
+	"Root Password": "VMw@re1!",
+	"Guest User": "root",
+	"Local User": "vcf",
+	"SSO Admin": "admin@local",
+	"SSO Password": "VMw@re1!VMw@re1!",
+	"Domains": [
+		"sfo-m01",
+		"sfo-w01"
+	],
+	"sfo-m01": {
+		"ESXi Hosts": [
+			"sfo01-m01-esx01.sfo.rainpole.io",
+			"sfo01-m01-esx02.sfo.rainpole.io",
+			"sfo01-m01-esx03.sfo.rainpole.io",
+			"sfo01-m01-esx04.sfo.rainpole.io"
+		],
+		"Clusters": [
+			"sfo-m01-cl01"
+		],
+		"NSX Manager": [
+			"sfo-m01-nsx01.sfo.rainpole.io"
+		],
+		"NSX Manager Nodes": [
+			"sfo-m01-nsx01a.sfo.rainpole.io",
+			"sfo-m01-nsx01b.sfo.rainpole.io",
+			"sfo-m01-nsx01c.sfo.rainpole.io"
+		],
+		"NSX Edge Nodes": [
+			"sfo-m01-en01",
+			"sfo-m01-en02"
+		]
+	},
+	"sfo-w01": {
+		"ESXi Hosts": [
+			"sfo01-w01-esx01.sfo.rainpole.io",
+			"sfo01-w01-esx02.sfo.rainpole.io",
+			"sfo01-w01-esx03.sfo.rainpole.io",
+			"sfo01-w01-esx04.sfo.rainpole.io"
+		],
+		"Clusters": [
+			"sfo-w01-cl01"
+		],
+		"NSX Manager": [
+			"sfo-w01-nsx01.sfo.rainpole.io"
+		],
+		"NSX Manager Nodes": [
+			"sfo-w01-nsx01a.sfo.rainpole.io",
+			"sfo-w01-nsx01b.sfo.rainpole.io",
+			"sfo-w01-nsx01c.sfo.rainpole.io"
+		],
+		"NSX Edge Nodes": [
+			"sfo-w01-en01",
+			"sfo-w01-en02"
+		]
+	}
+}

@@ -23,7 +23,7 @@ theme:
   logo: assets/images/icon-white.svg
   icon:
     repo: fontawesome/brands/github
-  palette:  
+  palette:
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: indigo
@@ -120,7 +120,7 @@ markdown_extensions:
 
 # Navigation
 nav:
-- Getting Started: 
+- Getting Started:
   - index.md
   - Installation: install.md
   - Updating: update.md
@@ -153,7 +153,7 @@ nav:
         - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
         - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
       - NSX Manager:
-        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md        
+        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md
         - Request-NsxtManagerAccountLockout: documentation/functions/Request-NsxtManagerAccountLockout.md
         - Update-NsxtManagerAccountLockout: documentation/functions/Update-NsxtManagerAccountLockout.md
       - NSX Edge:
@@ -194,7 +194,7 @@ nav:
       - NSX Edge:
         - Publish-NsxEdgePasswordExpiration: documentation/functions/Publish-NsxEdgePasswordExpiration.md
         - Request-NsxtEdgePasswordExpiration: documentation/functions/Request-NsxtEdgePasswordExpiration.md
-        - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md 
+        - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md
       - ESXi:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiPasswordExpiration: documentation/functions/Request-EsxiPasswordExpiration.md
@@ -240,6 +240,7 @@ nav:
       - Publish-PasswordRotationPolicy: documentation/functions/Publish-PasswordRotationPolicy.md
       - Request-PasswordRotationPolicy: documentation/functions/Request-PasswordRotationPolicy.md
       - Update-PasswordRotationPolicy: documentation/functions/Update-PasswordRotationPolicy.md
+  - Contributor Testing: documentation/testing/index.md
 - Community:
   - community/index.md
   - Contributing: community/contributing.md

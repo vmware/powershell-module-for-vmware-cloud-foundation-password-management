@@ -34,7 +34,7 @@ To submit a pull request, please:
 1. Fork the repository and clone your fork.
 2. Create a topic branch from the `develop` branch. For example, `feat/add-x` or `fix/update-y`.
 3. Modify the source. Please focus the scope on the specific change you are contributing.
-4. Ensure that local tests, if any, pass.
+4. Ensure that the [Pester tests][contributor-testing], if any, pass. Add tests for any new functionality.
 5. Update the documentation, if required. See the `docs` directory for the documentation source.
 6. Commit to your fork [using clear commit messages][git-commit]. Please use [Conventional Commits][conventional-commits].
 7. Submit a pull request, answering any default questions in the pull request, and linking to any related issues for context. See [GitHub flavored markdown syntax][gh-markdown] for references.
@@ -63,7 +63,7 @@ git commit --signoff --message "feat: add support for x
   Added support for x.
 
   Signed-off-by: Jane Doe <jdoe@example.com>
-  
+
   Ref: #123"
 git push origin feat/add-x
 ```
@@ -123,6 +123,7 @@ git push --force-with-lease origin feat/add-x
 Be sure to add a comment to the pull request indicating your new changes are ready to review. GitHub does not generate a notification when you `git push`.
 
 [conventional-commits]: https://www.conventionalcommits.org/en/v1.0.0/
+[contributor-testing]: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management/documentation/testing/
 [git-commit]: http://chris.beams.io/posts/git-commit/
 [gh-discussions]: https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/discussions
 [gh-forks]: https://help.github.com/articles/fork-a-repo/
