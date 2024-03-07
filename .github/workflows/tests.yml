@@ -21,6 +21,8 @@ jobs:
           Set-PSRepository psgallery -InstallationPolicy trusted
           Write-Output "INFO: Installing module 'VMware.vSphere.SsoAdmin' from PSGallery."
           Install-Module -Name VMware.vSphere.SsoAdmin -confirm:$false -Force
+          Write-Output "INFO: Installing module 'VMware.PowerCLI' from PSGallery."
+          Install-Module -Name VMware.PowerCLI -confirm:$false -Force
           $moduleManifest = (Get-ChildItem -Path $env:GITHUB_WORKSPACE -Filter *.psd1).Name
           if ($moduleManifest) {
               Write-Output "SUCCESS: Manifest '$moduleManifest' found in '$env:GITHUB_WORKSPACE'."
@@ -36,7 +38,7 @@ jobs:
           Write-Output "INFO: Reading module manifest '$moduleManifest'."
           $moduleManifestData = Import-PowerShellDataFile -Path $moduleManifest
           $requiredModules = $moduleManifestData.RequiredModules
-          $requiredModules = $requiredModules | Where-Object { $_.ModuleName -ne 'VMware.vSphere.SsoAdmin' }
+          $requiredModules = $requiredModules | Where-Object { $_.ModuleName -ne 'VMware.vSphere.SsoAdmin' -and $_.ModuleName -ne 'VMware.PowerCLI'}
           Write-Output "INFO: Required modules are $($requiredModules.ModuleName -join ', ')." 
           foreach ($module in $requiredModules) {
             $requiredModuleName = $module.ModuleName
