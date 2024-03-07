@@ -188,10 +188,16 @@ jobs:
               Set-Location '/home/runner/.local/share/powershell/Modules/' 
               foreach ($module in $requiredModules) {
                   $requiredModuleName = $module.ModuleName
-                  New-Item $requiredModuleName -ItemType Directory
-                  Write-Output "INFO: Performing workaround for github.com/PowerShell/PowerShell/issues/7722."
-                  Write-Output "INFO: Creating placeholder manifest for $requiredModuleName at $((Get-Location).Path)/$requiredModuleName/$requiredModuleName.psd1"
-                  New-Item "./$requiredModuleName/$requiredModuleName.psd1" -ItemType File
+                  if ($requiredModuleName -eq 'VMware.PowerCLI') {
+                    Write-Output "INFO: Installing version defined in the manifest from the PowerShell Gallery."
+                    Uninstall-Module -Name VMware.PowerCLI -AllVersions -Force
+                    Install-Module -Name VMware.PowerCLI -RequiredVersion $module.RequiredVersion -Force
+                  } else {
+                    New-Item $requiredModuleName -ItemType Directory
+                    Write-Output "INFO: Performing workaround for github.com/PowerShell/PowerShell/issues/7722."
+                    Write-Output "INFO: Creating placeholder manifest for $requiredModuleName at $((Get-Location).Path)/$requiredModuleName/$requiredModuleName.psd1"
+                    New-Item "./$requiredModuleName/$requiredModuleName.psd1" -ItemType File
+                  }
               }
           } else {
               Write-Output "INFO: No module dependencies were found."
