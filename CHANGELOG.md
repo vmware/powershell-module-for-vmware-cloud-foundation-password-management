@@ -16,6 +16,7 @@ Bugfix:
 
 - Fix for missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
 - Fix for `VMware.PowerCLI` module name not being mentioned in the required modules list of the manifest file. [GH-170](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170)
+- Fix for `Test-VcfPasswordManagementPrereq` not working while multiple module versions were present. [GH-174](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174)
 
 ## v1.7.1
 

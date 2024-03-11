@@ -9948,8 +9948,9 @@ Function Test-VcfPasswordManagementPrereq {
             $installedModule = Get-Module -ListAvailable -Name $moduleName
 
             if ($installedModule) {
-                $installedVersion = $installedModule.Version
-                if ($installedVersion -lt $requiredVersion) {
+                $installedVersion = $installedModule.Version | Sort-Object -Descending
+                $installedVersion = $installedVersion[0]
+                if ($installedVersion -lt $requiredVersion) { 
                     $message = "$($moduleName) $($installedVersion) is installed. Install $($moduleName) $($requiredVersion) or higher."
                     Show-PasswordManagementOutput -type ERROR -message $message
                 } elseif ($installedVersion -ge $requiredVersion) {
