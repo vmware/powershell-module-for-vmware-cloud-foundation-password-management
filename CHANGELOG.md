@@ -11,6 +11,7 @@ Breaking Change:
 Enhancement:
 
 - Added 5.1.1.0 to  `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1.1. [GH-164](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164)
+- Enhanced `Get-PasswordPolicyDefault` to show summary in easily readable format. [GH-178](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/178)
 
 Bugfix:
 
