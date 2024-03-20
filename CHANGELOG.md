@@ -6,7 +6,7 @@
 
 Breaking Change:
 
-- Removes support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-159](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159)
+- Removed support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-159](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159)
 
 Enhancement:
 
@@ -14,9 +14,14 @@ Enhancement:
 
 Bugfix:
 
-- Fix for missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
-- Fix for `VMware.PowerCLI` module name not being mentioned in the required modules list of the manifest file. [GH-170](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170)
-- Fix for `Test-VcfPasswordManagementPrereq` not working while multiple module versions were present. [GH-174](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174)
+- Fixed missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
+- Fixed `VMware.PowerCLI` module name not being mentioned in the required modules list of the manifest file. [GH-170](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170)
+- Fixed `Test-VcfPasswordManagementPrereq` not working while multiple module versions were present. [GH-174](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174)
+
+Chore:
+
+- Updated `VMware.PowerCLI` module dependency from v13.1.0 to v13.2.1. [GH-179](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179)
+- Updated `PowerValidatedSolutions` from v2.8.0 to v2.9.0. [GH-179](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179)
 
 ## v1.7.1
 
