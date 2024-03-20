@@ -10,14 +10,15 @@ Breaking Change:
 
 Enhancement:
 
-- Added 5.1.1.0 to  `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1.1. [GH-164](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164)
+- Added 5.1.1.0 to `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1.1. [GH-164](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164)
 - Enhanced `Get-PasswordPolicyDefault` to show summary in easily readable format. [GH-178](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/178)
 
 Bugfix:
 
 - Fixed missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
-- Fixed `VMware.PowerCLI` module name not being mentioned in the required modules list of the manifest file. [GH-170](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170)
+- Fixed `VMware.PowerCLI` module name not being added in the required modules list of the manifest file. [GH-170](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170)
 - Fixed `Test-VcfPasswordManagementPrereq` not working while multiple module versions were present. [GH-174](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174)
+- Fixed `Update-VcenterRootPasswordExpiration` to handle empty email string. [GH-177](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/177)
 
 Chore:
 
@@ -61,7 +62,7 @@ Bugfix:
 
 Enhancement:
 
-- Added 5.1.0.0 to  `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1. [GH-130](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130)
+- Added 5.1.0.0 to `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1. [GH-130](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130)
 - Updated `Update-SddcManagerPasswordComplexity`, `Update-SddcManagerAccountLockout`, and `Update-vCenterAccountLockout` cmdlet to support VMware Cloud Foundation 5.1 by addressing changes in Photon OS 4 for vCenter Server 8.0.2 and SDDC Manager 5.1. [GH-130](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130)
 
 Documentation:
@@ -125,7 +126,7 @@ Bugfix:
 - Updated `Get-PasswordPolicyDefault` to include support for VMware Cloud Foundation 4.5.2. [GH-91](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91)
 - Updated `Get-PasswordPolicyConfig` to include support for VMware Cloud Foundation 4.5.2. [GH-91](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91)
 - Updated `Get-PasswordPolicyDefault` to include support for VMware Cloud Foundation 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
-- Updated `Get-PasswordPolicyConfig` to include support for  VMware Cloud Foundation 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
+- Updated `Get-PasswordPolicyConfig` to include support for VMware Cloud Foundation 4.5.0. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
 - Updated `Invoke-PasswordPolicyManager` to address version support updates and JSON file depth handling. [GH-71](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71)
 - Updated `Request-NsxtEdgePasswordExpiration` to pass the `-transportNodeId` parameter to `Get-NsxtApplianceUser` to retrieve the NSX Edge node ID. [GH-76](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76)
 - Updated `Update-NsxtEdgePasswordExpiration` to pass the `-transportNodeId` parameter to `Get-NsxtApplianceUser` and `Set-NsxtApplianceUserExpirationPolicy` to retrieve the NSX Edge node ID. [GH-76](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76)
@@ -214,7 +215,7 @@ Bugfix:
 - Fixed drift option error for `Publish-VcenterLocalAccountLockout`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
 - Fixed drift option error for `Publish-VcenterLocalPasswordExpiration`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
 - Fixed drift option error for `Publish-VcenterLocalPasswordComplexity`. [GH-34](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34)
-- Handled empty email string values and "0" value for WSADirectory feilds coming from JSON file  `Test-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
+- Handled empty email string values and "0" value for WSADirectory feilds coming from JSON file `Test-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
 - Corrected Description in `Start-PasswordPolicyConfig`. [GH-36](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36)
 
 Enhancement:
