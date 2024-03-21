@@ -4604,14 +4604,13 @@ Function Update-VcenterRootPasswordExpiration {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$user,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$pass,
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$domain,
-        [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$email,
+        [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [String]$email,
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$maxDays,
         [Parameter (Mandatory = $false, ParameterSetName = 'expire')] [ValidateNotNullOrEmpty()] [String]$warnDays,
         [Parameter (Mandatory = $false, ParameterSetName = 'neverexpire')] [ValidateNotNullOrEmpty()] [Switch]$neverexpire
     )
 
     $pass = Get-Password -username $user -password $pass
-
     Try {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
@@ -4631,9 +4630,47 @@ Function Update-VcenterRootPasswordExpiration {
                                         Write-Warning "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                     }
                                 } else {
-                                    if ((Get-VcenterRootPasswordExpiration).max_days_between_password_change -ne $maxDays -or (Get-VcenterRootPasswordExpiration).email -ne $email -or (Get-VcenterRootPasswordExpiration).warn_days_before_password_expiration -ne $warnDays) {
-                                        Set-VcenterRootPasswordExpiration -email $email -maxDays $maxDays -warnDays $warnDays | Out-Null
-                                        if ((Get-VcenterRootPasswordExpiration).max_days_between_password_change -eq $maxDays -or (Get-VcenterRootPasswordExpiration).min_days_between_password_change -eq $minDays -or (Get-VcenterRootPasswordExpiration).warn_days_before_password_expiration -eq $warnDays) {
+                                    $vCenterRootPasswordExpirationSettings = Get-VcenterRootPasswordExpiration
+                                    $runUpdate = $true
+                                    $updateCommand = "Set-VcenterRootPasswordExpiration"
+                                    if ($maxDays) {
+                                        $updateCommand = $updateCommand + " -maxDays $maxDays"
+                                        if (($vCenterRootPasswordExpirationSettings).max_days_between_password_change -ne $maxDays) {
+                                            $runUpdate = $runUpdate -and $true                                            
+                                        } else {
+                                            $runUpdate = $runUpdate -and $false
+                                        }
+                                    } 
+                                    if ($warnDays) {
+                                        $updateCommand = $updateCommand + " -warnDays $warnDays"
+                                        if (($vCenterRootPasswordExpirationSettings).warn_days_before_password_expiration -ne $warnDays) {
+                                            $runUpdate = $runUpdate -and $true    
+                                        } else {
+                                            $runUpdate = $runUpdate -and $false
+                                        }
+                                    } 
+                                    if ($email) {
+                                        $updateCommand = $updateCommand + " -email $email"
+                                        if (($vCenterRootPasswordExpirationSettings).email -ne $email) {
+                                            $runUpdate = $runUpdate -and $true                                            
+                                        } else {
+                                            $runUpdate = $runUpdate -and $false    
+                                        }
+                                    }
+                                    if ($runUpdate) {
+                                        $condition = $true 
+                                        Invoke-Expression $updateCommand | Out-Null
+                                        $vCenterRootPasswordExpirationSettings = Get-VcenterRootPasswordExpiration
+                                        if ($maxDays) {
+                                            $condition =  $condition -and ($vCenterRootPasswordExpirationSettings).max_days_between_password_change -eq $maxDays
+                                        } 
+                                        if ($warnDays) {
+                                            $condition =  $condition -and ($vCenterRootPasswordExpirationSettings).warn_days_before_password_expiration -eq $warnDays
+                                        } 
+                                        if ($email) {
+                                            $condition =  $condition -and ($vCenterRootPasswordExpirationSettings).email -eq $email
+                                        }
+                                        if ($condition) {
                                             Write-Output "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                         } else {
                                             Write-Error "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
