@@ -1327,7 +1327,7 @@ Function Get-PasswordPolicyDefault {
         $defaultConfig | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
         Write-Output "Generated JSON File ($jsonFile) with Product Password Policy Default Values"
     } else {
-        $defaultConfig
+        $defaultConfig | ConvertTo-Json -Depth 25
     }
 }
 Export-ModuleMember -Function Get-PasswordPolicyDefault
