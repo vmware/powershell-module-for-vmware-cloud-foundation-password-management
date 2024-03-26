@@ -97,6 +97,7 @@ Describe 'Test Suite' {
         $esxiServer = $inputData.$domain.'ESXi Hosts'[0]
         $cluster = $inputData.$domain.'Clusters'[0]
         $nsxManagerNode = $inputData.$domain.'NSX Manager Nodes'[0]
+        $nsxManager = $inputData.$domain.'NSX Manager'[0]
         $nsxEdgeNode = $inputData.$domain.'NSX Edge Nodes'[0]
     }
 
@@ -473,7 +474,7 @@ Describe 'Test Suite' {
 
                 # Get the index of the NSX Edge.
                 $index = Get-Index -output $currentExpirationSettings -server $nsxEdgeNode -user $rootUser -useLiveData $useLiveData
-                Write-LogToFile -message "The index of the NSX Edge node ${$inputData.$domain.'Edge Nodes'[0]}in the output is $index"
+                Write-LogToFile -message "The index of the NSX Edge node $nsxEdgeNode in the output is $index"
             }
 
             # Expect a success.
@@ -545,7 +546,7 @@ Describe 'Test Suite' {
                 $currentExpirationSettings = Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                 # Get the index of the NSX Manager.
-                $index = Get-Index -output $currentExpirationSettings -server $inputData.$domain.'Manager Node'[0] -user $rootUser -useLiveData $useLiveData
+                $index = Get-Index -output $currentExpirationSettings -server $nsxManager -user $rootUser -useLiveData $useLiveData
                 Write-LogToFile -message "The index of the NSX Manager node $nsxManagerNode in the output is $index"
 
                 # Decrement the Max Days by 1.
@@ -569,7 +570,7 @@ Describe 'Test Suite' {
                     $updatedExpirationSettings = Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                     # Get the index of the NSX Manager.
-                    $index = Get-Index -output $updatedExpirationSettings -server $inputData.$domain.'Manager Node'[0] -user $rootUser -useLiveData $useLiveData
+                    $index = Get-Index -output $updatedExpirationSettings -server $nsxManager -user $rootUser -useLiveData $useLiveData
 
                     # Get the updated Max Days.
                     $outMaxDays = $updatedExpirationSettings[$index].'Max Days'
