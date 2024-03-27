@@ -8,17 +8,29 @@ Breaking Change:
 
 - Removed support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. [GH-159](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159)
 
-Enhancement:
-
-- Added 5.1.1.0 to `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1.1. [GH-164](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164)
-- Enhanced `Get-PasswordPolicyDefault` to show summary in easily readable format. [GH-178](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/178)
-
 Bugfix:
 
 - Fixed missing account lockout policy data for SDDC Manager and vCenter Server. [GH-160](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160)
 - Fixed `VMware.PowerCLI` module name not being added in the required modules list of the manifest file. [GH-170](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170)
 - Fixed `Test-VcfPasswordManagementPrereq` not working while multiple module versions were present. [GH-174](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174)
 - Fixed `Update-VcenterRootPasswordExpiration` to handle empty email string. [GH-177](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/177)
+
+Enhancement:
+
+- Added `5.1.1.0` to `Get-PasswordPolicyDefault` and `Get-PasswordPolicyConfig` to support VMware Cloud Foundation 5.1.1. [GH-164](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164)
+- Enhanced `Get-PasswordPolicyDefault` to show summary in easily readable format. [GH-178](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/178)
+- Added functions to retrieve password policies for each available VMware Aria product deployed in a VMware Cloud Foundation instance. [GH-166](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/166)
+  - `Get-AriaLocalUserAccountLockout` cmdlet to retrieve the password account lockout for the VMware Aria product appliances local users.
+  - `Get-AriaLocalUserPasswordComplexity` cmdlet to retrieve the password complexity for the VMware Aria product appliances local users.
+  - `Get-AriaLocalUserPasswordExpiration` cmdlet to retrieve the password expiration policy for the specified Aria product appliances local user.
+  - `Request-AriaLocalUserAccountLockout` cmdlet to retrieve the VMware Aria product appliances password account lockout.
+  - `Request-AriaLocalUserPasswordComplexity` cmdlet to retrieve the VMware Aria product appliances password complexity.
+  - `Request-AriaLocalUserPasswordExpiration` cmdlet to retrieve the VMware Aria product appliances password expiration.
+  - `Publish-AriaLocalUserPasswordPolicy` cmdlet to publish the password policies for the VMware Aria product appliances local users.
+  - `Update-AriaLocalUserAccountLockout` cmdlet to update all password account lockout for the VMware Aria product appliances local users.
+  - `Update-AriaLocalUserPasswordExpiration` cmdlet to update all password expiration for the VMware Aria product appliances local users.
+  - `Update-AriaLocalUserPasswordComplexity` cmdlet to update all password complexity for the VMware Aria product appliances local users.
+
 
 Chore:
 

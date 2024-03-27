@@ -171,6 +171,11 @@ nav:
         - Request-WsaLocalUserAccountLockout: documentation/functions/Request-WsaLocalUserAccountLockout.md
         - Update-WsaAccountLockout: documentation/functions/Update-WsaAccountLockout.md
         - Update-WsaLocalUserAccountLockout: documentation/functions/Update-WsaLocalUserAccountLockout.md
+      - Aria:
+        - Publish-AriaLocalUserPasswordPolicy: documentation/functions/Publish-AriaLocalUserPasswordPolicy.md
+        - Request-AriaLocalUserAccountLockout: documentation/functions/Request-AriaLocalUserAccountLockout.md
+        - Get-AriaLocalUserAccountLockout: documentation/functions/Get-AriaLocalUserAccountLockout.md
+        - Update-AriaLocalUserAccountLockout: documentation/functions/Update-AriaLocalUserPasswordAccountLockout.md
     - Password Expiration:
       - SDDC Manager:
         - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
@@ -204,6 +209,11 @@ nav:
         - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
         - Request-WsaPasswordExpiration: documentation/functions/Request-WsaPasswordExpiration.md
         - Update-WsaPasswordExpiration: documentation/functions/Update-WsaPasswordExpiration.md
+      - Aria:
+        - Publish-AriaLocalUserPasswordPolicy: documentation/functions/Publish-AriaLocalUserPasswordPolicy.md
+        - Request-AriaLocalUserPasswordExpiration: documentation/functions/Request-AriaLocalUserPasswordExpiration.md
+        - Get-AriaLocalUserPasswordExpiration: documentation/functions/Get-AriaLocalUserPasswordExpiration.md
+        - Update-AriaLocalUserPasswordExpiration: documentation/functions/Update-AriaLocalUserPasswordExpiration.md
     - Password Complexity:
       - SDDC Manager:
         - Publish-SddcManagerPasswordComplexity: documentation/functions/Publish-SddcManagerPasswordComplexity.md
@@ -236,6 +246,11 @@ nav:
         - Request-WsaLocalUserPasswordComplexity: documentation/functions/Request-WsaLocalUserPasswordComplexity.md
         - Update-WsaPasswordComplexity: documentation/functions/Update-WsaPasswordComplexity.md
         - Update-WsaLocalUserPasswordComplexity: documentation/functions/Update-WsaLocalUserPasswordComplexity.md
+      - Aria:
+        - Publish-AriaLocalUserPasswordPolicy: documentation/functions/Publish-AriaLocalUserPasswordPolicy.md
+        - Request-AriaLocalUserPasswordComplexity: documentation/functions/Request-AriaLocalUserPasswordComplexity.md
+        - Get-AriaLocalUserPasswordComplexity: documentation/functions/Get-AriaLocalUserPasswordComplexity.md
+        - Update-AriaLocalUserPasswordComplexity: documentation/functions/Update-AriaLocalUserPasswordComplexity.md
     - Password Rotation:
       - Publish-PasswordRotationPolicy: documentation/functions/Publish-PasswordRotationPolicy.md
       - Request-PasswordRotationPolicy: documentation/functions/Request-PasswordRotationPolicy.md

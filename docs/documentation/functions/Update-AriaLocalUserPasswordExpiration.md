@@ -1,40 +1,42 @@
-# Start-PasswordPolicyConfig
+# Update-AriaLocalUserPasswordExpiration
 
 ## Synopsis
 
-Configures all password policies.
+Configure password account lockout for local users.
 
 ## Syntax
 
 ```powershell
-Start-PasswordPolicyConfig -sddcManagerFqdn <String> -sddcManagerUser <String> -sddcManagerPass <String> -sddcRootPass <String> -reportPath <String> -policyFile <String> [-wsaFqdn <String>] [-wsaRootPass <String>] [-wsaAdminPass <String>] [<CommonParameters>]
+Update-AriaLocalUserPasswordExpiration [-server] <String> [-user] <String> [-pass] <String> [-product] <String>
+ [[-localuser] <Array>] [[-maxdays] <Int32>] [[-mindays] <Int32>] [[-warndays] <Int32>] [-json]
+ [[-policyPath] <String>] [[-policyFile] <String>] [<CommonParameters>]
 ```
 
 ## Description
 
-The `Start-PasswordPolicyConfig` configures the password policies across all components of the VMware Cloud Foundation instance using the JSON configuration file provided.
+The `Update-AriaLocalUserPasswordExpiration` cmdlet configures the password expiration for local users
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -localuser root -maxdays 90 -mindays 7 -warndays 7
 ```
 
-This examples configures all password policies for all components across a VMware Cloud Foundation instance.
+This Example updates the VMware Aria Automation nodes with new values for each element.
 
 ### Example 2
 
 ```powershell
-Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json" -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
+Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile "passwordPolicyConfig.json"
 ```
 
-This example configures all password policies for all components across a VMware Cloud Foundation instance and a Workspace ONE Access instance.
+This example updates the VMware Aria Automation using Jthe SON file of preset values.
 
 ## Parameters
 
-### -sddcManagerFqdn
+### -server
 
 The fully qualified domain name of the SDDC Manager instance.
 
@@ -44,13 +46,13 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -sddcManagerUser
+### -user
 
 The username to authenticate to the SDDC Manager instance.
 
@@ -60,13 +62,13 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -sddcManagerPass
+### -pass
 
 The password to authenticate to the SDDC Manager instance.
 
@@ -76,15 +78,15 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -sddcRootPass
+### -product
 
-The password for the SDDC Manager appliance root account.
+The product to configure.
 
 ```yaml
 Type: String
@@ -92,23 +94,103 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -reportPath
+### -localuser
 
-The path to save the policy report.
+The local user to configure.
+
+```yaml
+Type: Array
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -maxdays
+
+The maximum number of days between password change.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 6
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -mindays
+
+The minimum number of days between password change.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 7
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -warndays
+
+The number of days before password expiration that a user is warned that password will expire.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 8
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -json
+
+Use a JSON file to configure the password complexity.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -policyPath
+
+The path to the policy file.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: Named
+Required: False
+Position: 9
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -116,23 +198,7 @@ Accept wildcard characters: False
 
 ### -policyFile
 
-The path to the JSON file containing the policy configuration.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -wsaFqdn
-
-The fully qualified domain name of the Workspace ONE Access instance.
+The path to the policy file.
 
 ```yaml
 Type: String
@@ -140,39 +206,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -wsaRootPass
-
-The password for the Workspace ONE Access appliance root account.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -wsaAdminPass
-
-The password for the Workspace ONE Access admin account.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
+Position: 10
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
