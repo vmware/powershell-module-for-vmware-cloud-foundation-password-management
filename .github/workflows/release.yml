@@ -185,12 +185,11 @@ jobs:
               Write-Output "SUCCESS: Module dependencies were found."
               Write-Output "INFO: Required modules are $($requiredModules.ModuleName -join ', ')."
               Write-Output "INFO: Setting location to the PowerShell modules location on a Ubuntu-based GitHub runner."
-              Set-Location '/home/runner/.local/share/powershell/Modules/' 
+              Set-Location '/home/runner/.local/share/powershell/Modules/'
               foreach ($module in $requiredModules) {
                   $requiredModuleName = $module.ModuleName
                   if ($requiredModuleName -eq 'VMware.PowerCLI') {
                     Write-Output "INFO: Installing version defined in the manifest from the PowerShell Gallery."
-                    Uninstall-Module -Name VMware.PowerCLI -AllVersions -Force
                     Install-Module -Name VMware.PowerCLI -RequiredVersion $module.RequiredVersion -Force
                   } else {
                     New-Item $requiredModuleName -ItemType Directory
@@ -238,4 +237,3 @@ jobs:
           } else {
               Write-Error "FAILED: Module manifest file not found at path '$moduleManifest'."
           }
-    

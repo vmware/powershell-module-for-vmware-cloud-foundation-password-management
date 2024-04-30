@@ -1,8 +1,8 @@
 # Release History
 
-## v1.7.2
+## v1.8.0
 
-> Release Date: Unreleased
+> Release Date: 2024-04-30
 
 Breaking Change:
 
