@@ -4265,7 +4265,7 @@
         <li class="md-nav__item">
   <a href="#description" class="md-nav__link">
     <span class="md-ellipsis">
-      DESCRIPTION
+      Description
     </span>
   </a>
   
@@ -4909,7 +4909,7 @@
         <li class="md-nav__item">
   <a href="#description" class="md-nav__link">
     <span class="md-ellipsis">
-      DESCRIPTION
+      Description
     </span>
   </a>
   
@@ -5165,7 +5165,7 @@
  <span class="p">[[</span><span class="n">-special</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[[</span><span class="n">-unique</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[[</span><span class="n">-history</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[[</span><span class="n">-retry</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[[</span><span class="n">-class</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span>
  <span class="p">[[</span><span class="n">-sequence</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">Int32</span><span class="p">&gt;]</span> <span class="p">[</span><span class="n">-json</span><span class="p">]</span> <span class="p">[[</span><span class="n">-policyPath</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[[</span><span class="n">-policyFile</span><span class="p">]</span> <span class="p">&lt;</span><span class="n">String</span><span class="p">&gt;]</span> <span class="p">[&lt;</span><span class="n">CommonParameters</span><span class="p">&gt;]</span>
 </code></pre></div>
-<h2 id="description">DESCRIPTION<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>The <code>Update-AriaLocalUserPasswordComplexity</code> cmdlet configures the password complexity for local users</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="example-1">Example 1<a class="headerlink" href="#example-1" title="Permanent link">&para;</a></h3>
@@ -5214,7 +5214,37 @@
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 </code></pre></div>
 <h3 id="-product">-product<a class="headerlink" href="#-product" title="Permanent link">&para;</a></h3>
-<p>The product to configure.</p>
+<p>The product to configure. One of: 'vra', 'vrops', 'vrli', 'vrslcm', and 'vrni'.</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Product Option</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VMware Aria Suite Lifecycle</td>
+<td><code>vrslcm</code></td>
+</tr>
+<tr>
+<td>VMware Aria Operations</td>
+<td><code>vrops</code></td>
+</tr>
+<tr>
+<td>VMware Aria Operations for Logs</td>
+<td><code>vrli</code></td>
+</tr>
+<tr>
+<td>VMware Aria Operations for Networks</td>
+<td><code>vrni</code></td>
+</tr>
+<tr>
+<td>VMware Aria Automation</td>
+<td><code>vra</code></td>
+</tr>
+</tbody>
+</table>
 <div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">String</span>
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span>
 <span class="nt">Aliases</span><span class="p">:</span>
