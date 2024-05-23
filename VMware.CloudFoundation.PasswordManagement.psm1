@@ -2954,7 +2954,7 @@ Function Publish-SddcManagerPasswordExpiration {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $allSddcManagerPasswordExpirationObject
+                    $allSddcManagerPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
                     if ($allSddcManagerPasswordExpirationObject.Count -eq 0) { $notManagement = $true }
                     if ($notManagement) {
@@ -3069,7 +3069,7 @@ Function Publish-SddcManagerPasswordComplexity {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $sddcManagerPasswordComplexityObject
+                    $sddcManagerPasswordComplexityObject | ConvertTo-Json -Depth 10
                 } else {
                     if ($sddcManagerPasswordComplexityObject.Count -eq 0) { $notManagement = $true }
                     if ($notManagement) {
@@ -3184,7 +3184,7 @@ Function Publish-SddcManagerAccountLockout {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $sddcManagerAccountLockoutObject
+                    $sddcManagerAccountLockoutObject | ConvertTo-Json -Depth 10
                 } else {
                     if ($sddcManagerAccountLockoutObject.Count -eq 0) { $notManagement = $true }
                     if ($notManagement) {
@@ -3997,7 +3997,7 @@ Function Publish-SsoPasswordPolicy {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $ssoPasswordPolicyObject
+                    $ssoPasswordPolicyObject | ConvertTo-Json -Depth 10
                 } else {
                     if ($ssoPasswordPolicyObject.Count -eq 0) { $notManagement = $true }
                     if ($notManagement) {
@@ -5020,7 +5020,7 @@ Function Publish-VcenterPasswordExpiration {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $vcenterPasswordExpirationObject
+                    $vcenterPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
                     $vcenterPasswordExpirationObject = $vcenterPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration"></a><h3>vCenter Server - Password Expiration</h3>' -As Table
                     $vcenterPasswordExpirationObject = Convert-CssClassStyle -htmldata $vcenterPasswordExpirationObject
@@ -5118,7 +5118,7 @@ Function Publish-VcenterLocalPasswordExpiration {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $vcenterLocalPasswordExpirationObject
+                    $vcenterLocalPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
                     $vcenterLocalPasswordExpirationObject = $vcenterLocalPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration-local"></a><h3>vCenter Server - Password Expiration (Local Users)</h3>' -As Table
                     $vcenterLocalPasswordExpirationObject = Convert-CssClassStyle -htmldata $vcenterLocalPasswordExpirationObject
@@ -5220,7 +5220,7 @@ Function Publish-VcenterLocalPasswordComplexity {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $vcenterLocalPasswordComplexityObject
+                    $vcenterLocalPasswordComplexityObject | ConvertTo-Json -Depth 10
                 } else {
                     $vcenterLocalPasswordComplexityObject = $vcenterLocalPasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-complexity-local"></a><h3>vCenter Server - Password Complexity (Local Users)</h3>' -As Table
                     $vcenterLocalPasswordComplexityObject = Convert-CssClassStyle -htmldata $vcenterLocalPasswordComplexityObject
@@ -5322,7 +5322,7 @@ Function Publish-VcenterLocalAccountLockout {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $vcenterLocalAccountLockoutObject
+                    $vcenterLocalAccountLockoutObject | ConvertTo-Json -Depth 10
                 } else {
                     $vcenterLocalAccountLockoutObject = $vcenterLocalAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-account-lockout-local"></a><h3>vCenter Server - Account Lockout (Local Users)</h3>' -As Table
                     $vcenterLocalAccountLockoutObject = Convert-CssClassStyle -htmldata $vcenterLocalAccountLockoutObject
@@ -6227,7 +6227,7 @@ Function Publish-NsxManagerPasswordExpiration {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $nsxManagerPasswordExpirationObject
+                    $nsxManagerPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
                     $nsxManagerPasswordExpirationObject = $nsxManagerPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="nsxmanager-password-expiration"></a><h3>NSX Manager - Password Expiration</h3>' -As Table
                     $nsxManagerPasswordExpirationObject = Convert-CssClassStyle -htmldata $nsxManagerPasswordExpirationObject
@@ -6329,7 +6329,7 @@ Function Publish-NsxManagerPasswordComplexity {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $nsxManagerPasswordComplexityObject
+                    $nsxManagerPasswordComplexityObject | ConvertTo-Json -Depth 10
                 } else {
                     $nsxManagerPasswordComplexityObject = $nsxManagerPasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="nsxmanager-password-complexity"></a><h3>NSX Manager - Password Complexity</h3>' -As Table
                     $nsxManagerPasswordComplexityObject = Convert-CssClassStyle -htmldata $nsxManagerPasswordComplexityObject
@@ -6431,7 +6431,7 @@ Function Publish-NsxManagerAccountLockout {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $nsxManagerAccountLockoutObject
+                    $nsxManagerAccountLockoutObject | ConvertTo-Json -Depth 10
                 } else {
                     $nsxManagerAccountLockoutObject = $nsxManagerAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="nsxmanager-account-lockout"></a><h3>NSX Manager - Account Lockout</h3>' -As Table
                     $nsxManagerAccountLockoutObject = Convert-CssClassStyle -htmldata $nsxManagerAccountLockoutObject
@@ -7237,7 +7237,7 @@ Function Publish-NsxEdgePasswordExpiration {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $nsxEdgePasswordExpirationObject
+                    $nsxEdgePasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
                     $nsxEdgePasswordExpirationObject = $nsxEdgePasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="nsxedge-password-expiration"></a><h3>NSX Edge - Password Expiration</h3>' -As Table
                     $nsxEdgePasswordExpirationObject = Convert-CssClassStyle -htmldata $nsxEdgePasswordExpirationObject
@@ -7339,7 +7339,7 @@ Function Publish-NsxEdgePasswordComplexity {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $nsxEdgePasswordComplexityObject
+                    $nsxEdgePasswordComplexityObject | ConvertTo-Json -Depth 10
                 } else {
                     $nsxEdgePasswordComplexityObject = $nsxEdgePasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="nsxedge-password-complexity"></a><h3>NSX Edge - Password Complexity</h3>' -As Table
                     $nsxEdgePasswordComplexityObject = Convert-CssClassStyle -htmldata $nsxEdgePasswordComplexityObject
@@ -7441,7 +7441,7 @@ Function Publish-NsxEdgeAccountLockout {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $nsxEdgeAccountLockoutObject
+                    $nsxEdgeAccountLockoutObject | ConvertTo-Json -Depth 10
                 } else {
                     $nsxEdgeAccountLockoutObject = $nsxEdgeAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="nsxedge-account-lockout"></a><h3>NSX Edge - Account Lockout</h3>' -As Table
                     $nsxEdgeAccountLockoutObject = Convert-CssClassStyle -htmldata $nsxEdgeAccountLockoutObject
@@ -8332,7 +8332,7 @@ Function Publish-EsxiPasswordPolicy {
                     }
                 }
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $esxiPasswordPolicyObject
+                    $esxiPasswordPolicyObject | ConvertTo-Json -Depth 10
                 } else {
                     $esxiPasswordPolicyObject = $esxiPasswordPolicyObject | Sort-Object 'Workload Domain', 'Cluster', 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
                     $esxiPasswordPolicyObject = Convert-CssClassStyle -htmldata $esxiPasswordPolicyObject
@@ -9288,7 +9288,7 @@ Function Publish-WsaDirectoryPasswordPolicy {
         $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch
         $wsaDirectoryPasswordPolicyObject = Invoke-Expression $command
         if ($PsBoundParameters.ContainsKey('json')) {
-            $wsaDirectoryPasswordPolicyObject
+            $wsaDirectoryPasswordPolicyObject | ConvertTo-Json -Depth 10
         } else {
             if ($wsaDirectoryPasswordPolicyObject.Count -eq 0) {
                 $wsaDirectoryPasswordPolicyObject = $wsaDirectoryPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Workspace ONE Access Not Requested</p>'
@@ -9404,7 +9404,7 @@ Function Publish-WsaLocalPasswordPolicy {
                 $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch + $customSwitch
                 $wsaLocalPasswordPolicyObject = Invoke-Expression $command
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $wsaLocalPasswordPolicyObject
+                    $wsaLocalPasswordPolicyObject | ConvertTo-Json -Depth 10
                 } else {
                     if ($wsaLocalPasswordPolicyObject.Count -eq 0) {
                         $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Standalone Workspace ONE Access Not Requested</p>'
@@ -15862,10 +15862,9 @@ Function Publish-PasswordRotationPolicy {
 
                 # If the json parameter is specified, return the results as JSON.
                 if ($PsBoundParameters.ContainsKey('json')) {
-                    $passwordRotationObject | ConvertTo-Json
+                    $passwordRotationObject | ConvertTo-Json -Depth 10
                 } else {
                     # Otherwise, return the results as HTML.
-                    # $passwordRotationObject = $passwordRotationObject | Sort-Object 'Workload Domain', 'System', 'Resource', 'Type', 'User' | ConvertTo-Html -Fragment -PreContent
                     # Return the results as HTML but create an anchor for each resource type.
                     if ($passwordRotationObject) {
                         # Check if the $passwordRotationObject variable has any items.

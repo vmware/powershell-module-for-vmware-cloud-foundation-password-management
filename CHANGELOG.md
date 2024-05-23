@@ -1,5 +1,11 @@
 # Release History
 
+## v1.8.1 (Unreleased)
+
+Bugfix:
+
+- Updated all `Publish-*` cmdlets to correctly output as JSON with using the `-json` parameter. [GH-194](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/194)
+
 ## v1.8.0
 
 > Release Date: 2024-04-30
