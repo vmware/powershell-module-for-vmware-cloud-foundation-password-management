@@ -1,10 +1,21 @@
 # Release History
 
-## v1.8.1 (Unreleased)
+## v1.8.1
+
+> Release Date: 2024-05-28
 
 Bugfix:
 
 - Updated all `Publish-*` cmdlets to correctly output as JSON with using the `-json` parameter. [GH-194](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/194)
+
+Documentation:
+
+- Updated documentation for `Request-AriaLocal*`, `Publish-AriaLocal*`, and `Update-AriaLocal*` cmdlets. [GH-192](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192)
+- Removed documentation for non-exported `Get-AriaLocal*` cmdlets. [GH-192](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192)
+
+Chore:
+
+- Updated `PowerValidatedSolutions` from v2.9.0 to v2.10.0. [GH-195](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/195)
 
 ## v1.8.0
 
