@@ -6,11 +6,6 @@ Bugfix:
 
 - Updated all `Publish-*` cmdlets to correctly output as JSON with using the `-json` parameter. [GH-194](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/194)
 
-Documentation:
-
-- Updated documentation for `Request-AriaLocal*`, `Publish-AriaLocal*`, and `Update-AriaLocal*` cmdlets. [GH-192](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192)
-- Removed documentation for non-exported `Get-AriaLocal*` cmdlets. [GH-192](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192)
-
 ## v1.8.0
 
 > Release Date: 2024-04-30
