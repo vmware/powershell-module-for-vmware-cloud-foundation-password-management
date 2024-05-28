@@ -18,11 +18,11 @@
         <link rel="prev" href="../Publish-AriaLocalUserPasswordPolicy/">
       
       
-        <link rel="next" href="../Get-AriaLocalUserPasswordComplexity/">
+        <link rel="next" href="../Update-AriaLocalUserPasswordComplexity/">
       
       
       <link rel="icon" href="../../../favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.25">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -1847,8 +1847,6 @@
       
         
       
-        
-      
     
     
       
@@ -1915,27 +1913,6 @@
   
   <span class="md-ellipsis">
     Request-AriaLocalUserAccountLockout
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Get-AriaLocalUserAccountLockout/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get-AriaLocalUserAccountLockout
   </span>
   
 
@@ -2980,8 +2957,6 @@
       
         
       
-        
-      
     
     
       
@@ -3048,27 +3023,6 @@
   
   <span class="md-ellipsis">
     Request-AriaLocalUserPasswordExpiration
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Get-AriaLocalUserPasswordExpiration/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get-AriaLocalUserPasswordExpiration
   </span>
   
 
@@ -4094,8 +4048,6 @@
       
         
       
-        
-      
     
     
       
@@ -4416,27 +4368,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Get-AriaLocalUserPasswordComplexity/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get-AriaLocalUserPasswordComplexity
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -5116,6 +5047,37 @@
 <li>Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle.</li>
 <li>Retrieves the password complexity policy.</li>
 </ul>
+<p>Products that are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Product</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vrslcm</code></td>
+<td>VMware Aria Suite Lifecycle</td>
+</tr>
+<tr>
+<td><code>vrops</code></td>
+<td>VMware Aria Operations</td>
+</tr>
+<tr>
+<td><code>vrli</code></td>
+<td>VMware Aria Operations for Logs</td>
+</tr>
+<tr>
+<td><code>vrni</code></td>
+<td>VMware Aria Operations for Networks</td>
+</tr>
+<tr>
+<td><code>vra</code></td>
+<td>VMware Aria Automation</td>
+</tr>
+</tbody>
+</table>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="example-1">Example 1<a class="headerlink" href="#example-1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">Request-ariaPasswordExpiration</span> <span class="n">-server</span> <span class="n">sfo-vcf01</span><span class="p">.</span><span class="n">sfo</span><span class="p">.</span><span class="n">rainpole</span><span class="p">.</span><span class="n">io</span> <span class="n">-user</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">com</span> <span class="n">-pass</span> <span class="n">VMw</span><span class="nv">@re1</span><span class="p">!</span> <span class="n">-product</span> <span class="n">vra</span>
@@ -5284,7 +5246,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-04-22T16:09:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-04-22</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-05-24T20:21:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-05-24</span>
   </span>
 
     
@@ -5339,13 +5301,13 @@
         
         
           
-          <a href="../Get-AriaLocalUserPasswordComplexity/" class="md-footer__link md-footer__link--next" aria-label="Next: Get-AriaLocalUserPasswordComplexity">
+          <a href="../Update-AriaLocalUserPasswordComplexity/" class="md-footer__link md-footer__link--next" aria-label="Next: Update-AriaLocalUserPasswordComplexity">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Get-AriaLocalUserPasswordComplexity
+                Update-AriaLocalUserPasswordComplexity
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -5388,7 +5350,7 @@ The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.081f42fc.min.js"></script>
       
         <script src="../../../js/timeago.min.js"></script>
       

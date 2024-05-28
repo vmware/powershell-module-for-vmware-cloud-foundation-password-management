@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.25">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -523,6 +523,15 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v181" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.8.1
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#v180" class="md-nav__link">
@@ -1972,8 +1981,6 @@
       
         
       
-        
-      
     
     
       
@@ -2040,27 +2047,6 @@
   
   <span class="md-ellipsis">
     Request-AriaLocalUserAccountLockout
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../documentation/functions/Get-AriaLocalUserAccountLockout/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get-AriaLocalUserAccountLockout
   </span>
   
 
@@ -3105,8 +3091,6 @@
       
         
       
-        
-      
     
     
       
@@ -3173,27 +3157,6 @@
   
   <span class="md-ellipsis">
     Request-AriaLocalUserPasswordExpiration
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../documentation/functions/Get-AriaLocalUserPasswordExpiration/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get-AriaLocalUserPasswordExpiration
   </span>
   
 
@@ -4215,8 +4178,6 @@
       
         
       
-        
-      
     
     
       
@@ -4283,27 +4244,6 @@
   
   <span class="md-ellipsis">
     Request-AriaLocalUserPasswordComplexity
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../documentation/functions/Get-AriaLocalUserPasswordComplexity/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get-AriaLocalUserPasswordComplexity
   </span>
   
 
@@ -4733,6 +4673,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v181" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.8.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v180" class="md-nav__link">
     <span class="md-ellipsis">
       v1.8.0
@@ -4854,6 +4803,23 @@
 
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
+<h2 id="v181">v1.8.1<a class="headerlink" href="#v181" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Release Date: 2024-05-28</p>
+</blockquote>
+<p>Bugfix:</p>
+<ul>
+<li>Updated all <code>Publish-*</code> cmdlets to correctly output as JSON with using the <code>-json</code> parameter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/194">GH-194</a></li>
+</ul>
+<p>Documentation:</p>
+<ul>
+<li>Updated documentation for <code>Request-AriaLocal*</code>, <code>Publish-AriaLocal*</code>, and <code>Update-AriaLocal*</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">GH-192</a></li>
+<li>Removed documentation for non-exported <code>Get-AriaLocal*</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">GH-192</a></li>
+</ul>
+<p>Chore:</p>
+<ul>
+<li>Updated <code>PowerValidatedSolutions</code> from v2.9.0 to v2.10.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/195">GH-195</a></li>
+</ul>
 <h2 id="v180">v1.8.0<a class="headerlink" href="#v180" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2024-04-30</p>
@@ -4891,6 +4857,7 @@
 <li>Added Pester tests for password rotation. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/185">GH-185</a></li>
 <li>Updated <code>VMware.PowerCLI</code> module dependency from v13.1.0 to v13.2.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179">GH-179</a></li>
 <li>Updated <code>PowerValidatedSolutions</code> from v2.8.0 to v2.9.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179">GH-179</a></li>
+<li>Updated documentation to add products. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">GH-192</a></li>
 </ul>
 <h2 id="v171">v1.7.1<a class="headerlink" href="#v171" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5238,7 +5205,7 @@ The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br
     <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
       
         <script src="../js/timeago.min.js"></script>
       
