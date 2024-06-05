@@ -6,12 +6,12 @@
 # Generated on: 2024-05-28
 
 @{
-
     # Script module or binary module file associated with this manifest.
     RootModule        = '.\VMware.CloudFoundation.PasswordManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.8.1.1001'
+    ModuleVersion     = '1.8.2.1000'
+
     # ID used to uniquely identify this module
     GUID              = '34e5a0c7-6e6e-4f72-8b3c-1c28248f8ac9'
 
@@ -137,10 +137,6 @@
     # HelpInfo URI of this module
     # HelpInfoURI = ''
 
-    # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-    # DefaultCommandPrefix = ''
-
-}
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
 
