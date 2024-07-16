@@ -10,7 +10,7 @@
     RootModule        = '.\VMware.CloudFoundation.PasswordManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.8.2.1002'
+    ModuleVersion     = '1.8.2.1003'
 
     # ID used to uniquely identify this module
     GUID              = '34e5a0c7-6e6e-4f72-8b3c-1c28248f8ac9'
@@ -57,7 +57,7 @@
         }
         @{
             ModuleName    = 'PowerValidatedSolutions';
-            ModuleVersion = '2.10.0'
+            ModuleVersion = '2.11.0'
         }
         @{
             ModuleName    = 'VMware.PowerCLI';

@@ -9,6 +9,10 @@ Enhancement:
 - Enhanced to support Photon OS 4.0 and 5.0 based appliances. [GH-202](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/202)
 - Enhanced `Get-PasswordPolicyDefault` to support VMware Cloud Foundation 5.2. [GH-204](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/204)
 
+Chore:
+
+- Updated `PowerValidatedSolutions` from v2.10.0 to v2.11.0. [GH-207](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/207)
+
 ## v1.8.1
 
 > Release Date: 2024-05-28
