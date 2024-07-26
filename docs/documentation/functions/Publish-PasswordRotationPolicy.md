@@ -33,7 +33,7 @@ The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass
 ### Example 1
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains
+Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
 ```
 
 This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
@@ -41,7 +41,7 @@ This example publishes the credential password rotation settings for all resourc
 ### Example 2
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01
+Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-m01
 ```
 
 This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
@@ -49,7 +49,7 @@ This example publishes the credential password rotation settings for all resourc
 ### Example 3
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -resource nsxManager
 ```
 
 This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
@@ -57,7 +57,7 @@ This example publishes the credential password rotation settings for the NSX Man
 ### Example 4
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
+Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
 ```
 
 This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
@@ -65,7 +65,7 @@ This example publishes the credential password rotation settings for the NSX Man
 ### Example 5
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains -json
+Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -json
 ```
 
 This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.

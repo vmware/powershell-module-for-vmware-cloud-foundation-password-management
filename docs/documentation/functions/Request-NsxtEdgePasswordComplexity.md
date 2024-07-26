@@ -25,7 +25,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
 ```
 
 This example retrieves the password complexity policy for each NSX Edge node for a workload domain.
@@ -33,7 +33,7 @@ This example retrieves the password complexity policy for each NSX Edge node for
 ### Example 2
 
 ```powershell
-Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
 This example retrieves the password complexity policy for each NSX Edge node for a workload domain and checks the configuration drift using the provided configuration JSON.
@@ -41,7 +41,7 @@ This example retrieves the password complexity policy for each NSX Edge node for
 ### Example 3
 
 ```powershell
-Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
 ```
 
 This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults.
@@ -49,7 +49,7 @@ This example retrieves the password complexity policy for each NSX Edge node for
 ### Example 4
 
 ```powershell
- Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -unmanagedEdgeNode sfo-edg01m -unmanagedEdgeNodePass VMw@re1!VMw@re1!
+ Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -unmanagedEdgeNode sfo-edg01m -unmanagedEdgeNodePass VMw@re1!VMw@re1!
 ```
 
 This example retrieves the password complexity policy for an NSX Edge node that is not managed by SDDC Manager.

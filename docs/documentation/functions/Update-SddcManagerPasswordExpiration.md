@@ -23,7 +23,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minDays 0 -maxDays 90 -warnDays 14
+Update-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -minDays 0 -maxDays 90 -warnDays 14
 ```
 
 This example updates the password expiration policy for the default local users on an SDDC Manager.

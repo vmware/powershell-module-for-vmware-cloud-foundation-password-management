@@ -33,7 +33,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
+Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
 ```
 
 This example configures the configures password expiration settings for a vCenter Server instance `root` account to expire after 999 days with email for warning set to "<admin@rainpole.io>".
@@ -41,7 +41,7 @@ This example configures the configures password expiration settings for a vCente
 ### Example 2
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -neverexpire
+Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -neverexpire
 ```
 
 This example configures the configures password expiration settings for a vCenter Server instance `root` account to never expire.

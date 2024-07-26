@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
 ```
 
 This example retrieves the `root` user password expiration policy for a vCenter Server instance.
@@ -32,7 +32,7 @@ This example retrieves the `root` user password expiration policy for a vCenter 
 ### Example 2
 
 ```powershell
-Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
 This example retrieves the `root` user password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the `root` user password expiration policy for a vCenter 
 ### Example 3
 
 ```powershell
-Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
 ```
 
 This example retrieves the `root` user password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.

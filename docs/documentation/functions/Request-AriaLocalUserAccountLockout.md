@@ -50,7 +50,7 @@ This example retrieves the password expiration policy for VMware Aria Automation
 ### Example 4
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory
+Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -vidm -settings directory
 ```
 
 This example retrieves the password expiration policy for Workspace ONE Access instances for directory users.
@@ -58,7 +58,7 @@ This example retrieves the password expiration policy for Workspace ONE Access i
 ### Example 5
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -vidm -settings directory -vidmdrift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
 This example retrieves the password expiration policy for Workspace ONE Access instances for directory users and checks the configuration drift using the provided configuration JSON.
@@ -66,7 +66,7 @@ This example retrieves the password expiration policy for Workspace ONE Access i
 ### Example 6
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VM@re1!VMware1! -vidm -settings directory -vidmdrift
+Request-AriaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -vidm -settings directory -vidmdrift
 ```
 
 This example retrieves the password expiration policy for Workspace ONE Access instances for directory users and compares the configuration against the product defaults.

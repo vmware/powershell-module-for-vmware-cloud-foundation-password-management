@@ -23,7 +23,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
+Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1!
 ```
 
 This example retrieves the password expiration policy for an SDDC Manager.
@@ -31,7 +31,7 @@ This example retrieves the password expiration policy for an SDDC Manager.
 ### Example 2
 
 ```powershell
-Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
 This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
@@ -39,7 +39,7 @@ This example retrieves the password expiration policy for an SDDC Manager and co
 ### Example 3
 
 ```powershell
-Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
+Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift
 ```
 
 This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against the product defaults.

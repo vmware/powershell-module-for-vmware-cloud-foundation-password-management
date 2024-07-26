@@ -22,7 +22,7 @@ The `Update-PasswordRotationPolicy` cmdlet updates the credential password rotat
 ### Example 1
 
 ```powershell
-Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate disabled
+Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate disabled
 ```
 
 This example disables the credential password rotation settings for a credential managed by SDDC Manager.
@@ -30,7 +30,7 @@ This example disables the credential password rotation settings for a credential
 ### Example 2
 
 ```powershell
-Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
+Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
 ```
 
 This example enables the credential password rotation settings for a credential managed by SDDC Manager.

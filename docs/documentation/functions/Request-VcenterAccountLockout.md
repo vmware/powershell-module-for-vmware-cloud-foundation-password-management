@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
 ```
 
 This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
@@ -32,7 +32,7 @@ This example retrieves the account lockout policy for a vCenter Server instance 
 ### Example 2
 
 ```powershell
-Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
 This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the account lockout policy for a vCenter Server instance 
 ### Example 3
 
 ```powershell
-Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
 ```
 
 This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
