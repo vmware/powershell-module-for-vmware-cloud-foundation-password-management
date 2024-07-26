@@ -2,12 +2,21 @@
 
 ## v1.8.3
 
-> Release Date: Not Released
+> Release Date: 2024-08-21
+
+Bug Fix:
+
+- Updates the `Update-AriaLocalUserPasswordComplexity` function for VMware Aria Operations for Networks history setting. [GH-213](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213)
+- Updates the `Get-AriaLocalUserPasswordComplexity` function for VMware Aria Operations for Networks. [GH-213](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213)
 
 Chore:
 
 - Added Pester tests for VMware Aria components. [GH-211](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/211)
 - Updated `PowerValidatedSolutions` from v2.11.0 to v2.11.1. [GH-214](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/214)
+
+Refactor:
+
+- Refactors each `Request-AriaLocalUser*` functions to return `Not configured.` if the value is not set. GH-213](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213)
 
 ## v1.8.2
 
