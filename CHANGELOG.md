@@ -7,6 +7,7 @@
 Chore:
 
 - Added Pester tests for VMware Aria components. [GH-211](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/211)
+- Updated `PowerValidatedSolutions` from v2.11.0 to v2.11.1. [GH-214](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/214)
 
 ## v1.8.2
 
