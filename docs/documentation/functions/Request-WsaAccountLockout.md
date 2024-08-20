@@ -30,7 +30,7 @@ This example retrieves the account lockout policy for Workspace ONE Access insta
 ### Example 2
 
 ```powershell
-Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
@@ -38,7 +38,7 @@ This example retrieves the local user password complexity policy for Workspace O
 ### Example 3
 
 ```powershell
-Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
+Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.

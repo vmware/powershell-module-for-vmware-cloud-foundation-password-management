@@ -2311,15 +2311,15 @@ Function Request-SddcManagerPasswordExpiration {
         - Retrieves the password expiration policy
 
         .EXAMPLE
-        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
+        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1!
         This example retrieves the password expiration policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
-        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
+        Request-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift
         This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2398,15 +2398,15 @@ Function Request-SddcManagerPasswordComplexity {
 		- Retrieves the password complexity policy
 
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
+        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1!
         This example retrieves the password complexity policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
+        Request-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift
         This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2488,15 +2488,15 @@ Function Request-SddcManagerAccountLockout {
 		- Retrieves the account lockout policy for an SDDC Manager
 
         .EXAMPLE
-        Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1!
+        Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1!
         This example retrieves the account lockout policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the account lockout policy for an SDDC Manager and and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
-        Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -drift
+        Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift
         This example retrieves the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2577,7 +2577,7 @@ Function Update-SddcManagerPasswordExpiration {
 		- Configures the password expiration policy
 
         .EXAMPLE
-        Update-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minDays 0 -maxDays 90 -warnDays 14
+        Update-SddcManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -minDays 0 -maxDays 90 -warnDays 14
         This example updates the password expiration policy for the default local users on an SDDC Manager.
 
         .PARAMETER server
@@ -2651,7 +2651,7 @@ Function Update-SddcManagerPasswordComplexity {
 		- Configures the password complexity policy
 
         .EXAMPLE
-        Update-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
+        Update-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
         This example configures the password complexity policy for an SDDC Manager.
 
         .PARAMETER server
@@ -2797,7 +2797,7 @@ Function Update-SddcManagerAccountLockout {
 		- Configures the account lockout policy
 
         .EXAMPLE
-        Update-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -rootPass VMw@re1! -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
+        Update-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
         This example configures the account lockout policy for an SDDC Manager.
 
         .PARAMETER server
@@ -3233,15 +3233,15 @@ Function Request-SsoPasswordExpiration {
 		- Retrieves the global password expiration policy
 
         .EXAMPLE
-        Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain.
 
         .EXAMPLE
-        Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
-        Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3347,15 +3347,15 @@ Function Request-SsoPasswordComplexity {
         - Retrieves the password complexity policy
 
         .EXAMPLE
-        Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01.
 
         .EXAMPLE
-        Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
-        Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3469,15 +3469,15 @@ Function Request-SsoAccountLockout {
         - Retrieves the account lockout policy
 
         .EXAMPLE
-        Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01.
 
         .EXAMPLE
-        Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json.
 
         .EXAMPLE
-        Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3584,7 +3584,7 @@ Function Update-SsoPasswordExpiration {
 		- Configures the vCenter Single Sign-On password expiration policy
 
         .EXAMPLE
-        Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999
+        Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxDays 999
         This example configures the password expiration policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
@@ -3674,7 +3674,7 @@ Function Update-SsoPasswordComplexity {
 		- Configures the vCenter Single Sign-On password complexity policy
 
         .EXAMPLE
-        Update-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
+        Update-SsoPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
         This example configures the password complexity policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
@@ -3808,7 +3808,7 @@ Function Update-SsoAccountLockout {
 		- Configures the vCenter Single Sign-On account lockout policy
 
         .EXAMPLE
-        Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 5 -failureInterval 180 -unlockInterval 900
+        Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -failures 5 -failureInterval 180 -unlockInterval 900
         This example configures the account lockout policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
@@ -4046,15 +4046,15 @@ Function Request-VcenterPasswordExpiration {
 		- Retrieves the global password expiration policy
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the global password expiration policy for a vCenter Server instance
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4148,15 +4148,15 @@ Function Request-VcenterPasswordComplexity {
 		- Retrieves the password complexity policy
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain.
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4317,15 +4317,15 @@ Function Request-VcenterAccountLockout {
 		- Retrieves the account lockout policy
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4420,7 +4420,7 @@ Function Update-VcenterPasswordExpiration {
 		- Configures the global password expiration policy
 
         .EXAMPLE
-        Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
+        Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
         This example configures the global password expiration policy for a vCenter Server instance
 
         .PARAMETER server
@@ -4501,7 +4501,7 @@ Function Update-VcenterPasswordComplexity {
 		- Configures the password complexity policy
 
         .EXAMPLE
-        Update-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
+        Update-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
         This example configures the password complexity policy for a vCenter Server instance based on the workload domain
 
         .PARAMETER server
@@ -4619,7 +4619,7 @@ Function Update-VcenterAccountLockout {
 		- Configures the account lockout policy
 
         .EXAMPLE
-        Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
+        Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
         This example configures the account lockout policy for a vCenter Server instance based on the workload domain
 
         .PARAMETER server
@@ -4716,15 +4716,15 @@ Function Request-VcenterRootPasswordExpiration {
 		- Retrieves the root user password expiration policy
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the root user password expiration policy for a vCenter Server instance
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the root user password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the root user password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4820,11 +4820,11 @@ Function Update-VcenterRootPasswordExpiration {
 		- Configures the root user password expiration policy
 
         .EXAMPLE
-        Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
+        Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
         This example configures the configures password expiration settings for a vCenter Server instance root account to expire after 999 days with email for warning set to "admin@rainpole.io"
 
         .EXAMPLE
-        Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -neverexpire
+        Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -neverexpire
         This example configures the configures password expiration settings for a vCenter Server instance root account to never expire
 
         .PARAMETER server
@@ -5367,15 +5367,15 @@ Function Request-NsxtManagerPasswordExpiration {
 		- Retrieves the password expiration policy for all users
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5465,15 +5465,15 @@ Function Request-NsxtManagerPasswordComplexity {
 		- Retrieves the password complexity policy
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5637,15 +5637,15 @@ Function Request-NsxtManagerAccountLockout {
         - Retrieves the account lockpout policy
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the account lockout policy for the NSX Local Manager nodes in sfo-m01 workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5741,7 +5741,7 @@ Function Update-NsxtManagerPasswordExpiration {
         - Updates the password expiration policy
 
         .EXAMPLE
-        Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
+        Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxdays 999
         This example configures the password expiration policy in NSX Local Manager for all local users in the sfo-m01 workload domain
 
         .PARAMETER server
@@ -5829,7 +5829,7 @@ Function Update-NsxtManagerPasswordComplexity {
 		- Updates the password complexity policy
 
         .EXAMPLE
-        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+        Update-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Local Manager node for a workload domain
 
         .PARAMETER server
@@ -6034,7 +6034,7 @@ Function Update-NsxtManagerAccountLockout {
         - Configure the account lockout policy
 
         .EXAMPLE
-        Update-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900 -apiFailures 5 -apiFailureInterval 120 -apiUnlockInterval 900
+        Update-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900 -apiFailures 5 -apiFailureInterval 120 -apiUnlockInterval 900
         This example configures the account lockout policy in NSX Local Manager nodes in the sfo-m01 workload domain
 
         .PARAMETER server
@@ -6475,15 +6475,15 @@ Function Request-NsxtEdgePasswordExpiration {
 		- Retrieves the password expiration policy for all users
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6576,19 +6576,19 @@ Function Request-NsxtEdgePasswordComplexity {
 		- Retrieves the password complexity policy
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -unmanagedEdgeNode sfo-edg01m -unmanagedEdgeNodePass VMw@re1!VMw@re1!
+        Request-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -unmanagedEdgeNode sfo-edg01m -unmanagedEdgeNodePass VMw@re1!VMw@re1!
         This example retrieves the password complexity policy for an NSX Edge node that is not managed by SDDC Manager.
 
 
@@ -6741,15 +6741,15 @@ Function Request-NsxtEdgeAccountLockout {
         - Retrieves the account lockout policy
 
         .EXAMPLE
-        Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain
 
         .EXAMPLE
-        Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+        Request-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
         This example retrieving the account lockout policy for NSX Edge nodes in sfo-m01 workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6843,7 +6843,7 @@ Function Update-NsxtEdgePasswordExpiration {
         - Updates the password expiration policy
 
         .EXAMPLE
-        Update-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxdays 999
+        Update-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxdays 999
         This example configures the password expiration policy for NSX Edge node local users in the sfo-m01 workload domain
 
         .PARAMETER server
@@ -6934,7 +6934,7 @@ Function Update-NsxtEdgePasswordComplexity {
 		- Updates the password complexity policy
 
         .EXAMPLE
-        Update-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+        Update-NsxtEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Edge node for a workload domain
 
         .PARAMETER server
@@ -7058,7 +7058,7 @@ Function Update-NsxtEdgeAccountLockout {
         - Configure the account lockout policy
 
         .EXAMPLE
-        Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900
+        Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900
         This example configures the account lockout policy of the NSX Edge nodes in sfo-m01 workload domain
 
         .PARAMETER user
@@ -7488,15 +7488,15 @@ Function Request-EsxiPasswordExpiration {
         - Retrieves the password expiration policy for all ESXi hosts in a cluster
 
         .EXAMPLE
-        Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+        Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
         This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
-        Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
+        Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
         This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7612,15 +7612,15 @@ Function Request-EsxiPasswordComplexity {
         - Retrieves the password complexity policy for all ESXi hosts in a cluster
 
         .EXAMPLE
-        Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+        Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
         This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
-        Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
+        Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
         This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7750,15 +7750,15 @@ Function Request-EsxiAccountLockout {
         - Retrieves the account lockout policy for all ESXi hosts in the cluster
 
         .EXAMPLE
-        Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
+        Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
         This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
-        Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
+        Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
         This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7876,11 +7876,11 @@ Function Update-EsxiPasswordExpiration {
         - Configures the password expiration policy for all ESXi hosts in the cluster
 
         .EXAMPLE
-        Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999
+        Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01
 
         .EXAMPLE
-        Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999 -detail false
+        Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999 -detail false
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01 but does not show the detail per host
 
         .PARAMETER server
@@ -7982,11 +7982,11 @@ Function Update-EsxiPasswordComplexity {
         - Configures the password complexity policy for all ESXi hosts in the cluster
 
         .EXAMPLE
-        Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
+        Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01
 
         .EXAMPLE
-        Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
+        Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
 
         .PARAMETER server
@@ -8105,11 +8105,11 @@ Function Update-EsxiAccountLockout {
         - Configures the account lockout policy for all ESXi hosts in the cluster
 
         .EXAMPLE
-        Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900
+        Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01
 
         .EXAMPLE
-        Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900 -detail false
+        Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900 -detail false
         This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
 
         .PARAMETER server
@@ -8382,11 +8382,11 @@ Function Request-WsaPasswordExpiration {
         This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
+        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift
         This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8465,11 +8465,11 @@ Function Request-WsaPasswordComplexity {
         This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
+        Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift
         This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8551,15 +8551,15 @@ Function Request-WsaLocalUserPasswordComplexity {
 		- Retrieves the local user password complexity policy for Workspace ONE Access
 
         .EXAMPLE
-        Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
+        Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
         This example retrieves the local user password complexity policy for Workspace ONE Access
 
         .EXAMPLE
-        Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
+        Request-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8644,15 +8644,15 @@ Function Request-WsaLocalUserAccountLockout {
 		- Retrieves the account lockout policy of Workspace ONE Access
 
         .EXAMPLE
-        Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
+        Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
         This example retrieves the account lockout policy for Workspace ONE Access
 
         .EXAMPLE
-        Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
+        Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8736,11 +8736,11 @@ Function Request-WsaAccountLockout {
         This example retrieves the account lockout policy for Workspace ONE Access instance sfo-wsa01
 
         .EXAMPLE
-        Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
+        Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8817,7 +8817,7 @@ Function Update-WsaPasswordExpiration {
 		- Configures the Workspace ONE Access password expiration policy
 
         .EXAMPLE
-        Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
+        Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
         This example configures the password expiration policy for Workspace ONE Access
 
         .PARAMETER server
@@ -8893,7 +8893,7 @@ Function Update-WsaPasswordComplexity {
 		- Configures the Workspace ONE Access password complexity policy
 
         .EXAMPLE
-        Update-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
+        Update-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
         This example configures the password complexity policy for Workspace ONE Access
 
         .PARAMETER server
@@ -8984,7 +8984,7 @@ Function Update-WsaLocalUserPasswordComplexity {
 		- Configures the password complexity policy
 
         .EXAMPLE
-        Update-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -minLength 1 -history 5 -maxRetry 3
+        Update-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -minLength 1 -history 5 -maxRetry 3
         This example configures the local user password complexity policy for Workspace ONE Access
 
         .PARAMETER server
@@ -9070,7 +9070,7 @@ Function Update-WsaAccountLockout {
 		- Configures the Workspace ONE Access account lockout policy
 
         .EXAMPLE
-        Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
+        Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
         This example configures the account lockout policy for Workspace ONE Access
 
         .PARAMETER server
@@ -9139,7 +9139,7 @@ Function Update-WsaLocalUserAccountLockout {
 		- Configures the account lockout policy
 
         .EXAMPLE
-        Update-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -failures 3 -unlockInterval 900 -rootUnlockInterval 900
+        Update-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -failures 3 -unlockInterval 900 -rootUnlockInterval 900
         This example configures the account lockout policy for Workspace ONE Access
 
         .PARAMETER server
@@ -9223,23 +9223,23 @@ Function Publish-WsaDirectoryPasswordPolicy {
         - Retrieves the requested password policy for Workspace ONE Access and converts to HTML
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains
+        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
         This example returns the password expiration policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordComplexity -allDomains
+        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
         This example returns the password complexity policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy AccountLockout -allDomains
+        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
         This example returns the account lockout policy for Workspace ONE Access Directory Users
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift
+        Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains -drift
         This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -9628,7 +9628,7 @@ Function Get-AriaLocalUserPasswordExpiration {
 		- Retrieves the password expiration policy for the specified local user
 
         .EXAMPLE
-        Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
+        Get-AriaLocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
         This example retrieves the global password expiration policy for a VMware Aria Automation instance.
 
         .PARAMETER server
@@ -15475,15 +15475,15 @@ Function Request-LocalUserPasswordExpiration {
 		- Retrieves the password expiration policy for the specified local user
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
+        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
         This example retrieves the global password expiration policy for a vCenter Server instance
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
         This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
+        Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
         This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -15620,7 +15620,7 @@ Function Update-LocalUserPasswordExpiration {
 		- Configures the local user password expiration policy
 
         .EXAMPLE
-        Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
+        Update-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -vmName sfo-wsa01 -guestUser root -guestPassword VMw@re1! -localUser "root","sshuser" -minDays 0 -maxDays 999 -warnDays 14
         This example updates the password expiration policy for the specified local users on the specified virtual machine.
 
         .PARAMETER server
@@ -15761,23 +15761,23 @@ Function Publish-PasswordRotationPolicy {
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
         This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-m01
         This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -resource nsxManager
         This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
         This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains -json
+        Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains -json
         This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.
 
         .PARAMETER server
@@ -15913,19 +15913,19 @@ Function Request-PasswordRotationPolicy {
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1!
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1!
         This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
         This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -resource nsxManager
         This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource nsxManager
+        Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -resource nsxManager
         This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
 
         .PARAMETER server
@@ -16111,11 +16111,11 @@ Function Update-PasswordRotationPolicy {
         - Updates the credential password rotation settings based on the credential criteria specified.
 
         .EXAMPLE
-        Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate disabled
+        Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate disabled
         This example disables the credential password rotation settings for a credential managed by SDDC Manager.
 
         .EXAMPLE
-        Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
+        Update-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -resource vcenterServer -resourceName sfo-m01-vc01.sfo.rainpole.io -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
         This example enables the credential password rotation settings for a credential managed by SDDC Manager.
 
         .PARAMETER server

@@ -22,7 +22,7 @@ The `Update-WsaPasswordExpiration` cmdlet configures the password expiration pol
 ### Example 1
 
 ```powershell
-Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
+Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
 ```
 
 This example configures the password expiration policy for Workspace ONE Access.

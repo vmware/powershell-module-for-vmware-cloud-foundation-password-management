@@ -22,7 +22,7 @@ The `Update-WsaAccountLockout` cmdlet configures the account lockout policy for 
 ### Example 1
 
 ```powershell
-Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
+Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
 ```
 
 This example configures the account lockout policy for Workspace ONE Access.
