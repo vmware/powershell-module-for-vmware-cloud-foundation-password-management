@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.30">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.32">
     
     
       
@@ -523,6 +523,15 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v183" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.8.3
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#v182" class="md-nav__link">
@@ -4682,6 +4691,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v183" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.8.3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v182" class="md-nav__link">
     <span class="md-ellipsis">
       v1.8.2
@@ -4821,6 +4839,24 @@
 
 
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
+<h2 id="v183">v1.8.3<a class="headerlink" href="#v183" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Release Date: 2024-08-21</p>
+</blockquote>
+<p>Bug Fix:</p>
+<ul>
+<li>Updates the <code>Update-AriaLocalUserPasswordComplexity</code> function for VMware Aria Operations for Networks history setting. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213">GH-213</a></li>
+<li>Updates the <code>Get-AriaLocalUserPasswordComplexity</code> function for VMware Aria Operations for Networks. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213">GH-213</a></li>
+</ul>
+<p>Chore:</p>
+<ul>
+<li>Added Pester tests for VMware Aria components. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/211">GH-211</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> from v2.11.0 to v2.11.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/214">GH-214</a></li>
+</ul>
+<p>Refactor:</p>
+<ul>
+<li>Refactors each <code>Request-AriaLocalUser*</code> functions to return <code>Not configured.</code> if the value is not set. GH-213](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213)</li>
+</ul>
 <h2 id="v182">v1.8.2<a class="headerlink" href="#v182" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Release Date: 2024-07-24</p>
@@ -5236,7 +5272,7 @@ The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br
     <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.footer", "navigation.header", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      <script src="../assets/javascripts/bundle.471ce7a9.min.js"></script>
       
         <script src="../js/timeago.min.js"></script>
       
