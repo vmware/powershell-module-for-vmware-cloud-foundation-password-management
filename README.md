@@ -47,7 +47,9 @@ You can also start a discussion on the GitHub [discussions][gh-discussions] area
 
 ## License
 
-Copyright 2023-2024 Broadcom. All Rights Reserved.
+© Broadcom. All Rights Reserved.
+The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.
+SPDX-License-Identifier: BSD-2
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
