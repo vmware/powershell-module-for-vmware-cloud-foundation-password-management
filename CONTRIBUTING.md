@@ -2,8 +2,6 @@
 
 The project team welcomes contributions from the community. Whether it is a bug report, an enhancement request, or documentation update, we greatly value feedback and contributions from our community.
 
-Before you start working with project, please read our [Developer Certificate of Origin][vmware-cla-dco].
-
 All contributions to this repository must be signed as described on that page. Your signature certifies that you wrote the patch or have the right to pass it on as an open-source patch.
 
 ## Issues
@@ -130,4 +128,3 @@ Be sure to add a comment to the pull request indicating your new changes are rea
 [gh-issues]:https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues
 [gh-markdown]: https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown
 [gh-pulls]: https://help.github.com/articles/creating-a-pull-request/
-[vmware-cla-dco]: https://cla.vmware.com/dco
