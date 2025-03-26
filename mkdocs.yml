@@ -148,7 +148,7 @@ nav:
         - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
         - Request-SsoAccountLockout: documentation/functions/Request-SsoAccountLockout.md
         - Update-SsoAccountLockout: documentation/functions/Update-SsoAccountLockout.md
-      - vCenter Server:
+      - vCenter:
         - Publish-VcenterLocalAccountLockout: documentation/functions/Publish-VcenterLocalAccountLockout.md
         - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
         - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
@@ -160,7 +160,7 @@ nav:
         - Publish-NsxEdgeAccountLockout: documentation/functions/Publish-NsxEdgeAccountLockout.md
         - Request-NsxtEdgeAccountLockout: documentation/functions/Request-NsxtEdgeAccountLockout.md
         - Update-NsxtEdgeAccountLockout: documentation/functions/Update-NsxtEdgeAccountLockout.md
-      - ESXi:
+      - ESX:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiAccountLockout: documentation/functions/Request-EsxiAccountLockout.md
         - Update-EsxiAccountLockout: documentation/functions/Update-EsxiAccountLockout.md
@@ -180,7 +180,7 @@ nav:
         - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
         - Request-SddcManagerPasswordExpiration: documentation/functions/Request-SddcManagerPasswordExpiration.md
         - Update-SddcManagerPasswordExpiration: documentation/functions/Update-SddcManagerPasswordExpiration.md
-      - vCenter Server:
+      - vCenter:
         - Publish-VcenterLocalPasswordExpiration: documentation/functions/Publish-VcenterLocalPasswordExpiration.md
         - Publish-VcenterPasswordExpiration: documentation/functions/Publish-VcenterPasswordExpiration.md
         - Request-VcenterPasswordExpiration: documentation/functions/Request-VcenterPasswordExpiration.md
@@ -199,7 +199,7 @@ nav:
         - Publish-NsxEdgePasswordExpiration: documentation/functions/Publish-NsxEdgePasswordExpiration.md
         - Request-NsxtEdgePasswordExpiration: documentation/functions/Request-NsxtEdgePasswordExpiration.md
         - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md
-      - ESXi:
+      - ESX:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiPasswordExpiration: documentation/functions/Request-EsxiPasswordExpiration.md
         - Update-EsxiPasswordExpiration: documentation/functions/Update-EsxiPasswordExpiration.md
@@ -217,7 +217,7 @@ nav:
         - Publish-SddcManagerPasswordComplexity: documentation/functions/Publish-SddcManagerPasswordComplexity.md
         - Request-SddcManagerPasswordComplexity: documentation/functions/Request-SddcManagerPasswordComplexity.md
         - Update-SddcManagerPasswordComplexity: documentation/functions/Update-SddcManagerPasswordComplexity.md
-      - vCenter Server:
+      - vCenter:
         - Publish-VcenterLocalPasswordComplexity: documentation/functions/Publish-VcenterLocalPasswordComplexity.md
         - Request-VcenterPasswordComplexity: documentation/functions/Request-VcenterPasswordComplexity.md
         - Update-VcenterPasswordComplexity: documentation/functions/Update-VcenterPasswordComplexity.md
@@ -233,7 +233,7 @@ nav:
         - Publish-NsxEdgePasswordComplexity: documentation/functions/Publish-NsxEdgePasswordComplexity.md
         - Request-NsxtEdgePasswordComplexity: documentation/functions/Request-NsxtEdgePasswordComplexity.md
         - Update-NsxtEdgePasswordComplexity: documentation/functions/Update-NsxtEdgePasswordComplexity.md
-      - ESXi:
+      - ESX:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiPasswordComplexity: documentation/functions/Request-EsxiPasswordComplexity.md
         - Update-EsxiPasswordComplexity: documentation/functions/Update-EsxiPasswordComplexity.md

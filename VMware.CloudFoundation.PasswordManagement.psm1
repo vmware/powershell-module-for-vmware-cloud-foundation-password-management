@@ -1191,7 +1191,7 @@ Function Get-PasswordPolicyDefault {
 
     Param (
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$generateJson,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0', '4.4.1.0', '4.5.0.0', '4.5.1.0', '4.5.2.0', '5.0.0.0', '5.1.0.0', '5.1.1.0', '5.2.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0', '4.4.1.0', '4.5.0.0', '4.5.1.0', '4.5.2.0', '5.0.0.0', '5.1.0.0', '5.1.1.0', '5.2.0.0', '5.2.1.0')] [String]$version,
         [Parameter (Mandatory = $true, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [String]$jsonFile,
         [Parameter (Mandatory = $false, ParameterSetName = 'json')] [ValidateNotNullOrEmpty()] [Switch]$force
     )
@@ -1572,7 +1572,7 @@ Export-ModuleMember -Function Get-PasswordPolicyDefault
 Function Get-PasswordPolicyConfig {
     Param (
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$reportPath,
-        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0', '4.4.1.0', '4.5.0.0', '4.5.1.0', '4.5.2.0', '5.0.0.0', '5.1.0.0', '5.1.1.0', '5.2.0.0')] [String]$version,
+        [Parameter (Mandatory = $true)] [ValidateSet('4.4.0.0', '4.4.1.0', '4.5.0.0', '4.5.1.0', '4.5.2.0', '5.0.0.0', '5.1.0.0', '5.1.1.0', '5.2.0.0', '5.2.1.0')] [String]$version,
         [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [String]$policyFile
     )
 
