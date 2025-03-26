@@ -1,6 +1,6 @@
 {
-	"SDDC Manager": "sfo-vcf01.sfo.rainpole.io",
-	"SDDC Manager VM Name": "sfo-vcf01",
+	"SDDC Manager": "vcf01-m01-sm01.example.com",
+	"SDDC Manager VM Name": "sm01",
 	"User": "administrator@vsphere.local",
 	"Password": "VMw@re1!",
 	"Root User": "root",
@@ -10,74 +10,74 @@
 	"SSO Admin": "admin@local",
 	"SSO Password": "VMw@re1!VMw@re1!",
 	"Domains": [
-		"sfo-m01",
-		"sfo-w01"
+		"vcf01-m01",
+		"vcf01-w01"
 	],
-	"sfo-m01": {
+	"vcf01-m01": {
 		"Aria" : {
-			"Aria Suite Lifecycle": "xint-vrslcm01.rainpole.io",
-			"Aria Operations": "xint-vrops01a.rainpole.io",
-			"Aria Operations Logs":  "sfo-vrli01a.sfo.rainpole.io",
-			"Aria Automation": "xint-vra01a.rainpole.io",
-			"Workspace ONE Access":  "xint-wsa01a.rainpole.io"
+			"Aria Suite Lifecycle": "vcf01-m01-lcm01.example.com",
+			"Aria Operations": "vcf01-m01-ops01a.example.com",
+			"Aria Operations Logs":  "vcf01-m01-logs01a.example.com",
+			"Aria Automation": "vcf01-m01-auto01a.example.com",
+			"Workspace ONE Access":  "vcf01-m01-wsa01a.example.com"
 		},
-		"ESXi Hosts": [
-			"sfo01-m01-esx01.sfo.rainpole.io",
-			"sfo01-m01-esx02.sfo.rainpole.io",
-			"sfo01-m01-esx03.sfo.rainpole.io",
-			"sfo01-m01-esx04.sfo.rainpole.io"
+		"ESX Hosts": [
+			"vcf01-m01-esx01.example.com",
+			"vcf01-m01-esx02.example.com",
+			"vcf01-m01-esx03.example.com",
+			"vcf01-m01-esx04.example.com"
 		],
 		"Clusters": [
-			"sfo-m01-cl01"
+			"vcf01-m01-cl01"
 		],
 		"NSX Manager": [
-			"sfo-m01-nsx01.sfo.rainpole.io"
+			"vcf01-m01-nsx01.example.com"
 		],
 		"NSX Manager Nodes": [
-			"sfo-m01-nsx01a.sfo.rainpole.io",
-			"sfo-m01-nsx01b.sfo.rainpole.io",
-			"sfo-m01-nsx01c.sfo.rainpole.io"
+			"vcf01-m01-nsx01a.example.com",
+			"vcf01-m01-nsx01b.example.com",
+			"vcf01-m01-nsx01c.example.com"
 		],
 		"NSX Edge Nodes": [
-			"sfo-m01-en01",
-			"sfo-m01-en02"
+			"vcf01-m01-en01",
+			"vcf01-m01-en02"
 		],
 		"NSX Edge FQDN": [
-			"sfo-m01-en01.sfo.rainpole.io",
-			"sfo-m01-en02.sfo.rainpole.io"
+			"vcf01-m01-en01.example.com",
+			"vcf01-m01-en02.example.com"
 		],
-		"vCenter Server": [
-			"sfo-m01-vc01.sfo.rainpole.io"
+		"vCenter": [
+			"vcf01-m01-vc01.example.com"
 		]
 	},
-	"sfo-w01": {
-		"ESXi Hosts": [
-			"sfo01-w01-esx01.sfo.rainpole.io",
-			"sfo01-w01-esx02.sfo.rainpole.io",
-			"sfo01-w01-esx03.sfo.rainpole.io",
-			"sfo01-w01-esx04.sfo.rainpole.io"
+	"vcf01-w01": {
+		"ESX Hosts": [
+			"vcf01-w01-esx01.example.com",
+			"vcf01-w01-esx02.example.com",
+			"vcf01-w01-esx03.example.com",
+			"vcf01-w01-esx04.example.com"
 		],
 		"Clusters": [
-			"sfo-w01-cl01"
+			"vcf01-w01-cl01"
 		],
 		"NSX Manager": [
-			"sfo-w01-nsx01.sfo.rainpole.io"
+			"vcf01-w01-nsx01.example.com"
 		],
 		"NSX Manager Nodes": [
-			"sfo-w01-nsx01a.sfo.rainpole.io",
-			"sfo-w01-nsx01b.sfo.rainpole.io",
-			"sfo-w01-nsx01c.sfo.rainpole.io"
+			"vcf01-w01-nsx01a.example.com",
+			"vcf01-w01-nsx01b.example.com",
+			"vcf01-w01-nsx01c.example.com"
 		],
 		"NSX Edge Nodes": [
-			"sfo-w01-en01",
-			"sfo-w01-en02"
+			"vcf01-w01-en01",
+			"vcf01-w01-en02"
 		],
 		"NSX Edge FQDN": [
-			"sfo-w01-en01.sfo.rainpole.io",
-			"sfo-w01-en02.sfo.rainpole.io"
+			"vcf01-w01-en01.example.com",
+			"vcf01-w01-en02.example.com"
 		],
-		"vCenter Server": [
-			"sfo-w01-vc01.sfo.rainpole.io"
+		"vCenter": [
+			"vcf01-w01-vc01.example.com"
 		]
 	}
 }
