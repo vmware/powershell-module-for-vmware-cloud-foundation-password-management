@@ -1,3 +1,7 @@
+# © Broadcom. All Rights Reserved.
+# The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-2
+
 Describe 'Test Suite' {
     BeforeAll {
         $useLiveData = $true
@@ -118,13 +122,13 @@ Describe 'Test Suite' {
         $guestUser = $inputData.'Guest User'
         $localUser = $inputData.'Local User'
         $domain = $inputData.'Domains'[0]
-        $esxiServer = $inputData.$domain.'ESXi Hosts'[0]
+        $esxiServer = $inputData.$domain.'ESX Hosts'[0]
         $cluster = $inputData.$domain.'Clusters'[0]
         $nsxManagerNode = $inputData.$domain.'NSX Manager Nodes'[0]
         $nsxManager = $inputData.$domain.'NSX Manager'[0]
         $nsxEdgeNode = $inputData.$domain.'NSX Edge Nodes'[0]
         $nsxEdgeFqdn = $inputData.$domain.'NSX Edge FQDN'[0]
-        $vcenterServer = $inputData.$domain.'vCenter Server'[0]
+        $vcenterServer = $inputData.$domain.'vCenter'[0]
         $ariaDomain = $inputData.'Domains'[0]
         $ariaSuiteLifecycle = $inputData.$ariaDomain."Aria"."Aria Suite Lifecycle"
         $ariaOperations = $inputData.$ariaDomain."Aria"."Aria Operations"
@@ -135,31 +139,31 @@ Describe 'Test Suite' {
 
 
     Describe 'Password Expiration Test Suite' -Tag "PasswordExpirationSuite" {
-        # ESXi Password Expiration
-        Describe 'ESXi Password Expiration' -Tag "EsxiPasswordExpiration" {
+        # ESX Password Expiration
+        Describe 'ESX Password Expiration' -Tag "EsxiPasswordExpiration" {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of ESXi Password Expiration Positive Testcase"
-                    # Request the current ESXi host password expiration settings.
+                    Write-LogToFile -message "Start of ESX Password Expiration Positive Testcase"
+                    # Request the current ESX host password expiration settings.
                     $currentExpirationSettings = Request-EsxiPasswordExpiration -server $server -user $user -pass $pass -domain $domain -cluster $cluster
 
-                    # Get the index of the first ESXi host in the output.
+                    # Get the index of the first ESX host in the output.
                     $index = Get-Index -output $currentExpirationSettings -server $esxiServer -useLiveData $useLiveData
-                    Write-LogToFile -message "The index of the ESXi host $esxiServer in the output is $index."
+                    Write-LogToFile -message "The index of the ESX host $esxiServer in the output is $index."
 
                     # Decrement the Max Days by 1.
                     $maxDays = [int]$currentExpirationSettings[$index].'Max Days' - 1
                     Write-LogToFile -message "Decremented Max Days: $maxDays"
 
-                    # Update the ESXi host password expiration settings.
+                    # Update the ESX host password expiration settings.
                     $updateResult = Update-EsxiPasswordExpiration -server $server -user $user -pass $pass -domain $domain -cluster $cluster -maxDays $maxDays
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated ESXi host password expiration settings.
+                    # Request the updated ESX host password expiration settings.
                     $updatedExpirationSettings = Request-EsxiPasswordExpiration -server $server -user $user -pass $pass -domain $domain -cluster $cluster
 
-                    # Get the index of the first ESXi host in the output.
+                    # Get the index of the first ESX host in the output.
                     $index = Get-Index -output $updatedExpirationSettings -server $esxiServer -useLiveData $useLiveData
 
                     # Get the updated Max Days.
@@ -174,18 +178,18 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of ESXi Password Expiration Positive Testcase"
+                    Write-LogToFile -message "End of ESX Password Expiration Positive Testcase"
                 }
             }
 
             # Expect a failure.
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of ESXi Password Expiration Negative Testcase"
+                    Write-LogToFile -message "Start of ESX Password Expiration Negative Testcase"
                     # Set MaxDays to an invalid value
                     $invalidMaxDays = -1
 
-                    # Attempt to update the ESXi host password expiration settings.
+                    # Attempt to update the ESX host password expiration settings.
                     $updateResult = Update-EsxiPasswordExpiration -server $server -user $user -pass $pass -domain $domain -cluster $cluster -maxDays $invalidMaxDays
 
                     # Output the update result.
@@ -200,7 +204,7 @@ Describe 'Test Suite' {
                     # If an error was thrown, fail the test.
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of ESXi Password Expiration Negative Testcase"
+                    Write-LogToFile -message "End of ESX Password Expiration Negative Testcase"
                 }
             }
         }
@@ -248,7 +252,7 @@ Describe 'Test Suite' {
                     # Set MaxDays to an invalid value
                     $invalidMaxDays = -1
 
-                    # Attempt to update the ESXi host password expiration settings.
+                    # Attempt to update the ESX host password expiration settings.
                     $updateResult = Update-SsoPasswordExpiration -server $server -user $user -pass $pass -domain $domain -maxDays $invalidMaxDays
 
                     # Output the update result.
@@ -272,7 +276,7 @@ Describe 'Test Suite' {
         # vCenter Password Expiration
         Describe 'vCenter Password Expiration' -Tag "vCenterPasswordExpiration" {
             BeforeEach {
-                # Request the current vCenter Server password expiration settings
+                # Request the current vCenter password expiration settings
                 $currentExpirationSettings = Request-VcenterPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                 # Increment the values by 1.
@@ -284,17 +288,17 @@ Describe 'Test Suite' {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Password Expiration Positive Testcase"
+                    Write-LogToFile -message "Start of vCenter Password Expiration Positive Testcase"
 
                     Write-LogToFile -message "Incremented Min Days: $minDays"
                     Write-LogToFile -message "Incremented Max Days: $maxDays"
                     Write-LogToFile -message "Incremented Warn Days: $warnDays"
 
-                    # Update the vCenter Server password expiration settings.
+                    # Update the vCenter password expiration settings.
                     $updateResult = Update-VcenterPasswordExpiration -server $server -user $user -pass $pass -domain $domain -minDays $minDays -warnDays $warnDays -maxDays $maxDays
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated vCenter Server password expiration settings.
+                    # Request the updated vCenter password expiration settings.
                     $updatedExpirationSettings = Request-VcenterPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                     # Get the updated values.
@@ -315,7 +319,7 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Password Expiration Positive Testcase"
+                    Write-LogToFile -message "End of vCenter Password Expiration Positive Testcase"
                 }
             }
 
@@ -323,11 +327,11 @@ Describe 'Test Suite' {
             # Accepting negative value so gave bigger value.
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Password Expiration Negative Testcase"
+                    Write-LogToFile -message "Start of vCenter Password Expiration Negative Testcase"
                     # Set MaxDays to an invalid value
                     $invalidMaxDays = 100000000000000000000
 
-                    # Attempt to update the vCenter Server password expiration settings.
+                    # Attempt to update the vCenter password expiration settings.
                     $updateResult = Update-VcenterPasswordExpiration -server $server -user $user -pass $pass -domain $domain -minDays $invalidMaxDays -warnDays $invalidMaxDays -maxDays $invalidMaxDays
 
                     # Output the update result.
@@ -342,7 +346,7 @@ Describe 'Test Suite' {
                     # If an error was thrown, fail the test.
                     $true | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Password Expiration Negative Testcase"
+                    Write-LogToFile -message "End of vCenter Password Expiration Negative Testcase"
                 }
             }
         }
@@ -350,7 +354,7 @@ Describe 'Test Suite' {
         # vCenter root Password Expiration
         Describe 'vCenter root Password Expiration' -Tag "vCenterRootPasswordExpiration" {
             BeforeEach {
-                # Request the current vCenter Server root password expiration settings
+                # Request the current vCenter root password expiration settings
                 $currentExpirationSettings = Request-VcenterRootPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                 # Increment the values by 1.
@@ -363,17 +367,17 @@ Describe 'Test Suite' {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Root Password Expiration Positive Testcase"
+                    Write-LogToFile -message "Start of vCenter Root Password Expiration Positive Testcase"
                     Write-LogToFile -message "Incremented Warn Days: $warnDays"
                     Write-LogToFile -message "Incremented Max Days: $maxDays"
                     Write-LogToFile -message "Incremented Min Days: $minDays"
                     Write-LogToFile -message "existing email: $email"
 
-                    # Update the vCenter Server root password expiration settings.
+                    # Update the vCenter root password expiration settings.
                     $updateResult = Update-VcenterRootPasswordExpiration -server $server -user $user -pass $pass -domain $domain -warnDays $warnDays -maxDays $maxDays -email $email
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated vCenter Server root password expiration settings.
+                    # Request the updated vCenter root password expiration settings.
                     $updatedExpirationSettings = Request-VcenterRootPasswordExpiration -server $server -user $user -pass $pass -domain $domain
 
                     # Get the updated Max Days.
@@ -394,18 +398,18 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Root Password Expiration Positive Testcase"
+                    Write-LogToFile -message "End of vCenter Root Password Expiration Positive Testcase"
                 }
             }
 
             # Expect a failure.
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Root Password Expiration Negative Testcase"
+                    Write-LogToFile -message "Start of vCenter Root Password Expiration Negative Testcase"
                     # Set MaxDays to an invalid value
                     $invalidMaxDays = 10000000000000000000
 
-                    # Attempt to update the vCenter Server root password expiration settings.
+                    # Attempt to update the vCenter root password expiration settings.
                     $updateResult = Update-VcenterRootPasswordExpiration -server $server -user $user -pass $pass -domain $domain -warnDays $warnDays -maxDays $invalidMaxDays -email $email
 
                     # Output the update result.
@@ -420,7 +424,7 @@ Describe 'Test Suite' {
                     # If an error was thrown, fail the test.
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Root Password Expiration Negative Testcase"
+                    Write-LogToFile -message "End of vCenter Root Password Expiration Negative Testcase"
                 }
             }
         }
@@ -968,15 +972,15 @@ Describe 'Test Suite' {
 
     # Start of password complexity test suite
     Describe 'Password Complexity Test Suite' -Tag "PasswordComplexitySuite" {
-        # ESXi Password Complexity
-        Describe 'ESXi Password Complexity' -Tag "EsxiPasswordComplexity" {
+        # ESX Password Complexity
+        Describe 'ESX Password Complexity' -Tag "EsxiPasswordComplexity" {
             BeforeEach {
-                # Request the current ESXi host password complexity settings
+                # Request the current ESX host password complexity settings
                 $currentComplexitySettings = Request-EsxiPasswordComplexity -server $server -user $user -pass $pass -domain $domain -cluster $cluster
 
-                # Get the index of the ESXi host.
+                # Get the index of the ESX host.
                 $index = Get-Index -output $currentComplexitySettings -server $esxiServer -useLiveData $useLiveData
-                Write-LogToFile -message "The index of the ESXi host $esxiServer in the output is $index."
+                Write-LogToFile -message "The index of the ESX host $esxiServer in the output is $index."
 
                 # Increment the History by 1.
                 $policy = $currentComplexitySettings[$index].'Policy'
@@ -986,18 +990,18 @@ Describe 'Test Suite' {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of ESXi Host Password Complexity Positive Testcase"
+                    Write-LogToFile -message "Start of ESX Host Password Complexity Positive Testcase"
                     Write-LogToFile -message "Incremented Policy: $policy"
                     Write-LogToFile -message "Incremented History: $history"
 
-                    # Update the ESXi host password complexity settings.
+                    # Update the ESX host password complexity settings.
                     $updateResult = Update-EsxiPasswordComplexity -server $server -user $user -pass $pass -domain $domain -cluster $cluster -policy $policy -history $history
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated ESXi host password complexity settings.
+                    # Request the updated ESX host password complexity settings.
                     $updatedComplexitySettings = Request-EsxiPasswordComplexity -server $server -user $user -pass $pass -domain $domain -cluster $cluster
 
-                    # Get the index of the ESXi host.
+                    # Get the index of the ESX host.
                     $index = Get-Index -output $updatedComplexitySettings -server $esxiServer -useLiveData $useLiveData
 
                     # Get the updated History.
@@ -1014,19 +1018,19 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of ESXi Host Password Complexity Positive Testcase"
+                    Write-LogToFile -message "End of ESX Host Password Complexity Positive Testcase"
                 }
             }
 
             # Expect a failure.
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of ESXi Host Password Complexity Negative Testcase"
+                    Write-LogToFile -message "Start of ESX Host Password Complexity Negative Testcase"
                     # Set History to an invalid value
                     $invalidHistory = 10000000000000000000000
                     $invalidPolicy = -1
 
-                    # Attempt to update the ESXi host password expiration settings.
+                    # Attempt to update the ESX host password expiration settings.
                     $updateResult = Update-EsxiPasswordComplexity -server $server -user $user -pass $pass -domain $domain -cluster $cluster -policy $invalidPolicy -history $invalidHistory
 
                     # Output the update result.
@@ -1041,7 +1045,7 @@ Describe 'Test Suite' {
                     # For this negative testcase, exception has to be caught, so testcases passes.
                     $true | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of ESXi Host Password Complexity Negative Testcase"
+                    Write-LogToFile -message "End of ESX Host Password Complexity Negative Testcase"
                 }
             }
         }
@@ -1113,7 +1117,7 @@ Describe 'Test Suite' {
                 Try {
                     Write-LogToFile -message "Start of sso Password Complexity Negative Testcase"
                     $history = -1
-                    # Attempt to update the ESXi host password expiration settings.
+                    # Attempt to update the ESX host password expiration settings.
                     $updateResult = Update-SsoPasswordComplexity -server $server -user $user -pass $pass -domain $domain -minLength $minLength -maxLength $maxLength -minAlpha $minAlpha -minLower $minLower -minUpper $minUpper -minNum $minNum -minSpecial $minSpecial -maxIdenticalAdj $maxIdenticalAdj -history $history
 
                     # Output the update result.
@@ -1246,15 +1250,15 @@ Describe 'Test Suite' {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Password Complexity Positive Testcase"
-                    # Request the current vCenter Server password complexity settings
+                    Write-LogToFile -message "Start of vCenter Password Complexity Positive Testcase"
+                    # Request the current vCenter password complexity settings
                     Write-LogToFile -message "MinLength: $minLength -- MinLower: $minLower -- MinUpper: $minUpper -- MinNum: $minNum -- MinSpecial: $minSpecial -- MaxUnique: $maxUnique -- History:$history "
 
-                    # Update the vCenter Server password complexity settings.
+                    # Update the vCenter password complexity settings.
                     $updateResult = Update-VcenterPasswordComplexity -server $server -user $user -pass $pass -domain $domain -minLength $minLength -minLower $minLower -minUpper $minUpper -minNum $minNum -minSpecial $minSpecial -history $history
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated vCenter Server password complexity settings.
+                    # Request the updated vCenter password complexity settings.
                     $updatedComplexitySettings = Request-VcenterPasswordComplexity -server $server -user $user -pass $pass -domain $domain
 
                     # Get the updated settings data.
@@ -1281,18 +1285,18 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Password Complexity Positive Testcase"
+                    Write-LogToFile -message "End of vCenter Password Complexity Positive Testcase"
                 }
             }
 
             # Expect a failure.
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Password Complexity Negative Testcase"
+                    Write-LogToFile -message "Start of vCenter Password Complexity Negative Testcase"
                     # Set MinLength to an invalid value
                     $minLength = 10000000000000000000000000000
 
-                    # Attempt to update the vCenter Server password complexity settings.
+                    # Attempt to update the vCenter password complexity settings.
                     $updateResult = Update-VcenterPasswordComplexity -server $server -user $user -pass $pass -domain $domain -minLength $minLength -minLower $minLower -minUpper $minUpper -minNum $minNum -minSpecial $minSpecial -history $history
                     # Output the update result.
                     Write-LogToFile -message "Update Result: $updateResult"
@@ -1306,7 +1310,7 @@ Describe 'Test Suite' {
                     # For this negative testcase, exception has to be caught, so testcases passes.
                     $true | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Password Complexity Negative Testcase"
+                    Write-LogToFile -message "End of vCenter Password Complexity Negative Testcase"
                 }
             }
         }
@@ -1926,15 +1930,15 @@ Describe 'Test Suite' {
     }
 
     Describe 'Account Lockout Test Suite' -Tag "AccountLockoutSuite" {
-        # ESXi Account Lockout
-        Describe 'ESXi Account Lockout' -Tag "EsxiAccountLockout" {
+        # ESX Account Lockout
+        Describe 'ESX Account Lockout' -Tag "EsxiAccountLockout" {
             BeforeEach {
-                # Request the current ESXi host account lockout settings.
+                # Request the current ESX host account lockout settings.
                 $currentLockoutSettings = Request-EsxiAccountLockout -server $server -user $user -pass $pass -domain $domain -cluster $cluster
 
-                # Get the index of the ESXi host.
+                # Get the index of the ESX host.
                 $index = Get-Index -output $currentLockoutSettings -server $esxiServer -useLiveData $useLiveData
-                Write-LogToFile -message "The index of the ESXi host $esxiServer in the output is $index."
+                Write-LogToFile -message "The index of the ESX host $esxiServer in the output is $index."
 
                 # Increment the Max Failures and Unlock Interval by 1.
                 $maxFailures = [int]$currentLockoutSettings[$index].'Max Failures' + 1
@@ -1944,18 +1948,18 @@ Describe 'Test Suite' {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of ESXi Host Account Lockout Positive Testcase"
+                    Write-LogToFile -message "Start of ESX Host Account Lockout Positive Testcase"
                     Write-LogToFile -message "Incremented Max Failures: $maxFailures"
                     Write-LogToFile -message "Incremented Unlock Interval: $unlockInterval"
 
-                    # Update the ESXi host account lockout settings.
+                    # Update the ESX host account lockout settings.
                     $updateResult = Update-EsxiAccountLockout -server $server -user $user -pass $pass -domain $domain -cluster $cluster -failures $maxFailures -unlockInterval $unlockInterval
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated ESXi host account lockout settings.
+                    # Request the updated ESX host account lockout settings.
                     $updatedLockoutSettings = Request-EsxiAccountLockout -server $server -user $user -pass $pass -domain $domain -cluster $cluster
 
-                    # Get the index of the ESXi host.
+                    # Get the index of the ESX host.
                     $index = Get-Index -output $updatedLockoutSettings -server $esxiServer -useLiveData $useLiveData
 
                     # Get the updated Max Failures and Unlock Interval.
@@ -1973,19 +1977,19 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -be $true
                 } Finally {
-                    Write-LogToFile -message "End of ESXi Host Account Lockout Positive Testcase"
+                    Write-LogToFile -message "End of ESX Host Account Lockout Positive Testcase"
                 }
             }
 
             # Expect a failure. working
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of ESXi Host Account Lockout Negative Testcase"
+                    Write-LogToFile -message "Start of ESX Host Account Lockout Negative Testcase"
                     # Set History to an invalid value
                     $invalidUnlockInterval = -1
                     $invalidFailures = -1
 
-                    # Attempt to update the ESXi host account lockout settings.
+                    # Attempt to update the ESX host account lockout settings.
                     $updateResult = Update-EsxiAccountLockout -server $server -user $user -pass $pass -domain $domain -cluster $cluster -failures $invalidFailures -unlockInterval $invalidUnlockInterval
 
                     #Output the update result.
@@ -2000,7 +2004,7 @@ Describe 'Test Suite' {
                     # For this negative testcase, exception has to be caught, so testcases passes.
                     $true | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of ESXi Host Account Lockout Negative Testcase"
+                    Write-LogToFile -message "End of ESX Host Account Lockout Negative Testcase"
                 }
             }
         }
@@ -2086,7 +2090,7 @@ Describe 'Test Suite' {
         # vCenter Account Lockout
         Describe 'vCenter Account Lockout' -Tag "vCenterAccountLockout" {
             BeforeEach {
-                # Request the current vCenter Server account lockout settings.
+                # Request the current vCenter account lockout settings.
                 $currentLockoutSettings = Request-VcenterAccountLockout -server $server -user $user -pass $pass -domain $domain
 
                 # Increment the Max Failures a$currentLockoutSettings.'Max Failures'nd Unlock Interval by 1.
@@ -2098,16 +2102,16 @@ Describe 'Test Suite' {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Account Lockout Positive Testcase"
+                    Write-LogToFile -message "Start of vCenter Account Lockout Positive Testcase"
                     Write-LogToFile -message "Incremented Max Failures: $maxFailures"
                     Write-LogToFile -message "Incremented Root Unlock Interval: $rootUnlockInterval"
                     Write-LogToFile -message "Incremented Unlock Interval: $unlockInterval"
 
-                    # Update the vCenter Server account lockout settings.
+                    # Update the vCenter account lockout settings.
                     $updateResult = Update-VcenterAccountLockout -server $server -user $user -pass $pass -domain $domain -failures $maxFailures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval
                     Write-LogToFile -message "Update Result: $updateResult"
 
-                    # Request the updated vCenter Server account lockout settings.
+                    # Request the updated vCenter account lockout settings.
                     $updatedLockoutSettings = Request-VcenterAccountLockout -server $server -user $user -pass $pass -domain $domain
 
                     # Get the updated Max Failures and Unlock Interval.
@@ -2128,18 +2132,18 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Account Lockout Positive Testcase"
+                    Write-LogToFile -message "End of vCenter Account Lockout Positive Testcase"
                 }
             }
 
             # Expect a failure. Max failures is taking -1 as input, as it is of type int32, so gave value beyond 2^32
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Account Lockout Positive Testcase"
+                    Write-LogToFile -message "Start of vCenter Account Lockout Positive Testcase"
                     # Set max failures to an invalid value.
                     $invalidValue = 100000000000000
 
-                    # Attempt to update the vCenter Server root account lockout settings.
+                    # Attempt to update the vCenter root account lockout settings.
                     $updateResult = Update-VcenterAccountLockout -server $server -user $user -pass $pass -domain $domain -failures $invalidValue -unlockInterval $invalidValue -rootUnlockInterval $invalidValue
 
                     # Output the update result.
@@ -2154,7 +2158,7 @@ Describe 'Test Suite' {
                     # For this negative testcase, exception has to be caught, so testcases passes.
                     $true | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Account Lockout Negative Testcase"
+                    Write-LogToFile -message "End of vCenter Account Lockout Negative Testcase"
                 }
             }
         }
@@ -3024,19 +3028,19 @@ Describe 'Test Suite' {
         }
         #>
 
-        # vCenter Server Password Rotation
-        Describe 'vCenter Server Password Rotation' -Tag "vCenterPasswordRotation" {
+        # vCenter Password Rotation
+        Describe 'vCenter Password Rotation' -Tag "vCenterPasswordRotation" {
             # Expect a success.
             It 'Expect Success' -Tag "Positive" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Password Rotation Testcase"
+                    Write-LogToFile -message "Start of vCenter Password Rotation Testcase"
 
-                    # Request the current vCenter Server password rotation settings.
+                    # Request the current vCenter password rotation settings.
                     $currentRotationSettings = Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $domain -resource 'vcenterServer'
 
-                    # Get the index of the first vCenter Server in the output.
+                    # Get the index of the first vCenter in the output.
                     $index = Get-Index -output $currentRotationSettings -server $vcenterServer -user 'root' -Type 'SSH' -useLiveData $useLiveData
-                    Write-LogToFile -message "The index of the vCenter Server $vcenterServer in the output is $index."
+                    Write-LogToFile -message "The index of the vCenter $vcenterServer in the output is $index."
 
                     # Check the Frequency of auto rotation.
                     $frequencyDays = $currentRotationSettings[$index].'Frequency Days'
@@ -3044,14 +3048,14 @@ Describe 'Test Suite' {
 
                     if ($frequencyDays -match 'Disabled') {
 
-                        # Update the vCenter Server password rotation settings.
+                        # Update the vCenter password rotation settings.
                         $updateResult = Update-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $domain -resource 'vcenterServer' -resourceName $vcenterServer -credential 'SSH' -credentialName 'root' -autoRotate 'enabled' -frequencyInDays 90
                         Write-LogToFile -message "Update Result: $updateResult"
 
-                        # Request the updated vCenter Server password rotation settings.
+                        # Request the updated vCenter password rotation settings.
                         $updatedRotationSettings = Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $domain -resource 'vcenterServer'
 
-                        # Get the index of the first vCenter Server in the output.
+                        # Get the index of the first vCenter in the output.
                         $index = Get-Index -output $updatedRotationSettings -server $vcenterServer -useLiveData $useLiveData -user 'root' -Type 'SSH'
 
                         # Get the updated Max Days.
@@ -3064,13 +3068,13 @@ Describe 'Test Suite' {
                         $outFrequencyDays | Should -Be 90
 
                     } else {
-                        # Update the vCenter Server password rotation settings.
+                        # Update the vCenter password rotation settings.
                         $updateResult = Update-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $domain -resource 'vcenterServer' -resourceName $vcenterServer -credential 'SSH' -credentialName 'root' -autoRotate 'disabled'
                         Write-LogToFile -message "Update Result: $updateResult"
 
                         $updatedRotationSettings = Request-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $domain -resource 'vcenterServer'
 
-                        # Get the index of the first vCenter Server in the output.
+                        # Get the index of the first vCenter in the output.
                         $index = Get-Index -output $updatedRotationSettings -server $vcenterServer -useLiveData $useLiveData -user 'root' -Type 'SSH'
 
                         # Get the updated Frequency in Days.
@@ -3087,18 +3091,18 @@ Describe 'Test Suite' {
                     Write-LogToFile -Type ERROR -message "An error occurred: $_"
                     $false | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Password Rotation Positive Testcase"
+                    Write-LogToFile -message "End of vCenter Password Rotation Positive Testcase"
                 }
             }
 
             # Expect a failure.
             It 'Expect Failure' -Tag "Negative" {
                 Try {
-                    Write-LogToFile -message "Start of vCenter Server Password Rotation Negative Testcase"
+                    Write-LogToFile -message "Start of vCenter Password Rotation Negative Testcase"
                     # Set the Frequency to an invalid value
                     $frequencyInDays = 100000000000000000000000000000
 
-                    # Attempt to update the vCenter Server password rotation settings.
+                    # Attempt to update the vCenter password rotation settings.
                     $updateResult = Update-PasswordRotationPolicy -server $server -user $user -pass $pass -domain $domain -resource 'vcenterServer' -resourceName $vcenterServer -credential SSH -credentialName root -autoRotate enabled -frequencyInDays $frequencyInDays
 
                     # Output the update result.
@@ -3113,7 +3117,7 @@ Describe 'Test Suite' {
                     # If an error was thrown, fail the test.
                     $true | Should -Be $true
                 } Finally {
-                    Write-LogToFile -message "End of vCenter Server Password Rotation Negative Testcase"
+                    Write-LogToFile -message "End of vCenter Password Rotation Negative Testcase"
                 }
             }
         }
