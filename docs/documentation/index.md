@@ -17,8 +17,8 @@ The module provides coverage for the following:
 
     * VMware SDDC Manager
     * VMware vCenter Single Sign-On
-    * VMware vCenter Server
-    * VMware ESXi
+    * VMware vCenter
+    * VMware ESX
     * VMware NSX Local Manager
     * VMware NSX Edge
     * VMware Aria Suite Lifecycle
@@ -36,7 +36,7 @@ The module provides coverage for the following:
 
     * VMware SDDC Manager
     * VMware vCenter Single Sign-On
-    * VMware vCenter Server
+    * VMware vCenter
     * VMware NSX Local Manager
     * VMware NSX Edge
     * VMware Aria Suite Lifecycle
@@ -46,7 +46,7 @@ The module provides coverage for the following:
     * VMware Workspace ONE Access
 
     ???+ note "Note"
-        - VMware ESXi password rotation is not managed by SDDC Manager.
+        - VMware ESX password rotation is not managed by SDDC Manager.
         - VMware Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
 
 

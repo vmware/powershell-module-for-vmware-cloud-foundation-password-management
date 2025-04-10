@@ -22,8 +22,8 @@ The module provides coverage for the following:
 
     * VMware SDDC Manager
     * VMware vCenter Single Sign-On
-    * VMware vCenter Server
-    * VMware ESXi
+    * VMware vCenter
+    * VMware ESX
     * VMware NSX Local Manager
     * VMware NSX Edge
     * VMware Aria Suite Lifecycle
@@ -41,7 +41,7 @@ The module provides coverage for the following:
 
     * VMware SDDC Manager
     * VMware vCenter Single Sign-On
-    * VMware vCenter Server
+    * VMware vCenter
     * VMware NSX Local Manager
     * VMware NSX Edge
     * VMware Aria Suite Lifecycle
@@ -51,7 +51,7 @@ The module provides coverage for the following:
     * VMware Workspace ONE Access
 
     ???+ note "Note"
-        - VMware ESXi password rotation is not managed by SDDC Manager.
+        - VMware ESX password rotation is not managed by SDDC Manager.
         - VMware Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
 
 ## Requirements
@@ -92,10 +92,10 @@ The following table lists the required PowerShell module dependencies for this m
 
 PowerShell Module                                    | Version   | Publisher | Reference
 -----------------------------------------------------|-----------|-----------|---------------------------------------------------------------------------
-[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.2.1 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
+[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.3.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
 [VMware.vSphere.SsoAdmin][psgallery-module-ssoadmin] | >= 1.3.9  | Broadcom  | :fontawesome-brands-github: &nbsp; [GitHub][github-module-ssoadmin]
 [PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.10.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.12.1 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
 [docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
 [docs-vmware-cloud-foundation-ppm-5-2]: https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-operations/GUID-18A95158-30F5-460F-AF80-33F25B6533D0.html
