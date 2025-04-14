@@ -27,7 +27,7 @@ Default settings for VMware products include:
 - VMware SDDC Manager
 - VMware ESXi
 - VMware vCenter Single Sign-On
-- VMware vCenter Server
+- VMware vCenter
 - VMware NSX Manager
 - VMware NSX Edge
 - VMware Workspace ONE Access
@@ -45,19 +45,20 @@ This example returns the default password policy settings for the VMware Cloud F
 ### Example 2
 
 ```powershell
-Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0.0'
+Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5.0.0.0'
 ```
 
-This example creates a JSON file named `passwordPolicyConfig.json` with the default password policy settings for the given version of VMware Cloud Foundation.
+This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
 
 ### Example 3
 
 ```powershell
-Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0.0' -force
+Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5.0.0.0' -force
 ```
 
-This example creates a JSON file named `passwordPolicyConfig.json` with the default password policy settings for the given version of VMware Cloud Foundation.
-If `passwordPolicyConfig.json` is already present, it is overwritten due to 'force' parameter.
+This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
+
+If the policy configuration file is already present, it is overwritten due to 'force' parameter.
 
 ## Parameters
 

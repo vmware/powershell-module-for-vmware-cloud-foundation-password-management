@@ -24,10 +24,10 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-NsxtManagerPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxdays 999
+Update-NsxtManagerPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxdays 999
 ```
 
-This example configures the password expiration policy in NSX Local Manager for all local users in the sfo-m01 workload domain.
+This example configures the password expiration policy in NSX Local Manager for all local users in the workload domain.
 
 ## Parameters
 

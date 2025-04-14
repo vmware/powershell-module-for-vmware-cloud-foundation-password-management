@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Updates the `root` user password expiration policy for a vCenter Server instance.
+Updates the `root` user password expiration policy for a vCenter instance.
 
 ## Syntax
 
@@ -21,11 +21,12 @@ Update-VcenterRootPasswordExpiration -server <String> -user <String> -pass <Stri
 
 ## Description
 
-The `Update-VcenterRootPasswordExpiration` cmdlet configures the `root` user password expiration policy of a vCenter Server.
+The `Update-VcenterRootPasswordExpiration` cmdlet configures the `root` user password expiration policy of a vCenter instance.
+
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the `root` user password expiration policy
 
 ## Examples
@@ -33,18 +34,18 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
+Update-VcenterRootPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -email <email_address> -maxDays 999 -warnDays 14
 ```
 
-This example configures the configures password expiration settings for a vCenter Server instance `root` account to expire after 999 days with email for warning set to "<admin@rainpole.io>".
+This example configures the password expiration settings for a vCenter instance `root` account to expire after 999 days with email for warning.
 
 ### Example 2
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -neverexpire
+Update-VcenterRootPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -neverexpire
 ```
 
-This example configures the configures password expiration settings for a vCenter Server instance `root` account to never expire.
+This example configures the password expiration settings for a vCenter instance `root` account to never expire.
 
 ## Parameters
 

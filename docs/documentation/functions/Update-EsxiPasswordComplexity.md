@@ -17,27 +17,27 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Gathers the ESXi hosts for the cluster specificed
-- Configures the password complexity policy for all ESXi hosts in the cluster
+- Validates that network connectivity and authentication is possible to vCenter
+- Gathers the ESX hosts for the cluster specified
+- Configures the password complexity policy for all ESX hosts in the cluster
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
+Update-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
 ```
 
-This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01.
+This example configures all ESX hosts within the cluster in the workload domain
 
 ### Example 2
 
 ```powershell
-Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
+Update-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
 ```
 
-This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host.
+This example configures all ESX hosts within the cluster in the workload domain but does not show the detail per host.
 
 ## Parameters
 
@@ -123,7 +123,7 @@ Accept wildcard characters: False
 
 ### -policy
 
-The policy to apply to the ESXi hosts.
+The policy to apply to the ESX hosts.
 
 ```yaml
 Type: String

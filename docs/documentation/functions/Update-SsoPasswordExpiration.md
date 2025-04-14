@@ -16,7 +16,7 @@ The `Update-SsoPasswordExpiration` cmdlet configures the password expiration pol
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the vCenter Single Sign-On password expiration policy
 
 ## Examples
@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxDays 999
+Update-SsoPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxDays 999
 ```
 
 This example configures the password expiration policy for a vCenter Single Sign-On domain.

@@ -31,7 +31,7 @@ This Example updates the VMware Aria Automation nodes with new values for each e
 ### Example 2
 
 ```powershell
-Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile "passwordPolicyConfig.json"
+Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile <policy_file>.json
 ```
 
 This example updates the VMware Aria Automation using Jthe SON file of preset values.

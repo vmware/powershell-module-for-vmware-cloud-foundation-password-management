@@ -16,7 +16,7 @@ The `Request-SsoPasswordExpiration` cmdlet retrieves the password expiration pol
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Retrieves the global password expiration policy
 
 ## Examples
@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
+Request-SsoPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain.
@@ -32,15 +32,15 @@ This example retrieves the password expiration policy for the vCenter Single Sig
 ### Example 2
 
 ```powershell
-Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-SsoPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against passwordPolicyConfig.json.
+This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the policy configuration file.
 
 ### Example 3
 
 ```powershell
-Request-SsoPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
+Request-SsoPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
 ```
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults.

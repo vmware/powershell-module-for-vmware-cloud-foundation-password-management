@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Retrieves the password complexity policy for a vCenter Server instance based on the workload domain.
+Retrieves the password complexity policy for a vCenter instance based on the workload domain.
 
 ## Syntax
 
@@ -12,38 +12,38 @@ Request-VcenterPasswordComplexity -server <String> -user <String> -pass <String>
 
 ## Description
 
-The `Request-VcenterPasswordComplexity` cmdlet retrieves the password complexity policy of a vCenter Server.
+The `Request-VcenterPasswordComplexity` cmdlet retrieves the password complexity policy of a vCenter instance.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Retrieves the password complexity policy for a vCenter Server instance based on the workload domain
+- Validates that network connectivity and authentication is possible to vCenter
+- Retrieves the password complexity policy for a vCenter instance based on the workload domain
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
+Request-VcenterPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
-This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain.
+This example retrieves the password complexity policy for a vCenter instance based on the workload domain.
 
 ### Example 2
 
 ```powershell
-Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-VcenterPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
+This example retrieves the password complexity policy for a vCenter instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
 ### Example 3
 
 ```powershell
-Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
+Request-VcenterPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
 ```
 
-This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
+This example retrieves the password complexity policy for a vCenter instance based on the workload domain and compares the configuration against the product defaults.
 
 ## Parameters
 

@@ -24,7 +24,7 @@ The `Publish-NsxEdgeAccountLockout` cmdlet returns account lockout policy for lo
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Publishes the account lockout policy for NSX Edge nodes for a workload domain or all workload domains.
 
 ## Examples
@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
+Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -allDomains
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for all workload domains.
@@ -40,7 +40,7 @@ This example returns account lockout policy for each NSX Edge nodes for all work
 ### Example 2
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
+Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for a workload domain.
@@ -48,15 +48,15 @@ This example returns account lockout policy for each NSX Edge nodes for a worklo
 ### Example 3
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
+This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the policy configuration file.
 
 ### Example 4
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
+Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
