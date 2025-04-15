@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -allDomains
+Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for all workload domains.
@@ -40,7 +40,7 @@ This example returns account lockout policy for each NSX Edge nodes for all work
 ### Example 2
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for a workload domain.
@@ -48,7 +48,7 @@ This example returns account lockout policy for each NSX Edge nodes for a worklo
 ### Example 3
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the policy configuration file.
@@ -56,7 +56,7 @@ This example returns account lockout policy for each NSX Edge nodes for a worklo
 ### Example 4
 
 ```powershell
-Publish-NsxEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
 ```
 
 This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the product defaults.

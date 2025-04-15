@@ -23,7 +23,7 @@ The `Update-AriaLocalUserPasswordExpiration` cmdlet configures the password expi
 ### Example 1
 
 ```powershell
-Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -localuser root -maxdays 90 -mindays 7 -warndays 7
+Update-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -localuser <local_username> -maxdays 90 -mindays 7 -warndays 7
 ```
 
 This Example updates the VMware Aria Automation nodes with new values for each element.
@@ -31,10 +31,10 @@ This Example updates the VMware Aria Automation nodes with new values for each e
 ### Example 2
 
 ```powershell
-Update-AriaLocalUserPasswordExpiration -server sf0-vcf01 -user admin@local -pass VMware1!VMware1 -product vra -json -reportPath "F:\" -policyFile <policy_file>.json
+Update-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -json -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example updates the VMware Aria Automation using Jthe SON file of preset values.
+This example updates the VMware Aria Automation using the JSON file values.
 
 ## Parameters
 

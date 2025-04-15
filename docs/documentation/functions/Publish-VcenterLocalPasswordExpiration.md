@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-VcenterLocalPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -allDomains
+Publish-VcenterLocalPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
 ```
 
 This example returns password expiration policy for each local user of vCenter for all workload domains.
@@ -40,7 +40,7 @@ This example returns password expiration policy for each local user of vCenter f
 ### Example 2
 
 ```powershell
-Publish-VcenterLocalPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-VcenterLocalPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example returns password expiration policy for each local user of vCenter and checks the configuration drift using the provided configuration JSON.
@@ -48,7 +48,7 @@ This example returns password expiration policy for each local user of vCenter a
 ### Example 3
 
 ```powershell
-Publish-VcenterLocalPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+Publish-VcenterLocalPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
 ```
 
 This example returns password expiration policy for each local user of vCenter and compares the configuration against the product defaults.

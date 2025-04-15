@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -failures 5 -failureInterval 180 -unlockInterval 900
+Update-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -failures 5 -failureInterval 180 -unlockInterval 900
 ```
 
 This example configures the account lockout policy for a vCenter Single Sign-On domain.

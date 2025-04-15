@@ -26,7 +26,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-EsxiAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900
+Update-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900
 ```
 
 This example configures all ESX hosts within the cluster in the workload domain
@@ -34,7 +34,7 @@ This example configures all ESX hosts within the cluster in the workload domain
 ### Example 2
 
 ```powershell
-Update-EsxiAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900 -detail false
+Update-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900 -detail false
 ```
 
 This example configures all ESX hosts within the cluster in the workload domain but does not show the detail per host.

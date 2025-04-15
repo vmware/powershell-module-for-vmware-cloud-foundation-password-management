@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
+Update-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
 ```
 
 This example configures the account lockout policy for an SDDC Manager.

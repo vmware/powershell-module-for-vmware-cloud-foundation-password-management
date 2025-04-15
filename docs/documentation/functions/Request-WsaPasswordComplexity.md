@@ -22,7 +22,7 @@ The `Request-WsaPasswordComplexity` cmdlet retrieves the Workspace ONE Access pa
 ### Example 1
 
 ```powershell
-Request-WsaPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password>
+Request-WsaPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password>
 ```
 
 This example retrieves the password complexity policy for Workspace ONE Access instance.
@@ -30,7 +30,7 @@ This example retrieves the password complexity policy for Workspace ONE Access i
 ### Example 2
 
 ```powershell
-Request-WsaPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the password complexity policy for Workspace ONE Access instance and checks the configuration drift using the provided configuration JSON.
@@ -38,7 +38,7 @@ This example retrieves the password complexity policy for Workspace ONE Access i
 ### Example 3
 
 ```powershell
-Request-WsaPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -drift
+Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift
 ```
 
 This example retrieves the password complexity policy for Workspace ONE Access instance and compares the configuration against the product defaults.

@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-WsaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <fqdn> -wsaRootPass <root_password> -minLength 1 -history 5 -maxRetry 3
+Update-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -minLength 1 -history 5 -maxRetry 3
 ```
 
 This example configures the local user password complexity policy for Workspace ONE Access.

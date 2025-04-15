@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-VcenterLocalPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -allDomains
+Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
 ```
 
 This example returns password complexity policy for each vCenter for all workload domains.
@@ -40,7 +40,7 @@ This example returns password complexity policy for each vCenter for all workloa
 ### Example 2
 
 ```powershell
-Publish-VcenterLocalPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
 ```
 
 This example returns password complexity policy for a vCenter instance.
@@ -48,7 +48,7 @@ This example returns password complexity policy for a vCenter instance.
 ### Example 3
 
 ```powershell
-Publish-VcenterLocalPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example returns password complexity policy for a vCenter and checks the configuration drift using the provided configuration JSON.
@@ -56,7 +56,7 @@ This example returns password complexity policy for a vCenter and checks the con
 ### Example 4
 
 ```powershell
-Publish-VcenterLocalPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
 ```
 
 This example returns password complexity policy for a vCenter and compares the configuration against the product defaults.

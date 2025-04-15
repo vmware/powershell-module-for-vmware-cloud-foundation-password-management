@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-NsxtEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+Request-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
 This example retrieving the account lockout policy for NSX Edge nodes in the workload domain.
@@ -32,7 +32,7 @@ This example retrieving the account lockout policy for NSX Edge nodes in the wor
 ### Example 2
 
 ```powershell
-Request-NsxtEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieving the account lockout policy for NSX Edge nodes in the workload domain and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieving the account lockout policy for NSX Edge nodes in the wor
 ### Example 3
 
 ```powershell
-Request-NsxtEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+Request-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
 ```
 
 This example retrieving the account lockout policy for NSX Edge nodes in the workload domain and compares the configuration against the product defaults.

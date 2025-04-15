@@ -31,7 +31,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+Publish-WsaDirectoryPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
 ```
 
 This example returns the password expiration policy for Workspace ONE Access Directory Users.
@@ -39,7 +39,7 @@ This example returns the password expiration policy for Workspace ONE Access Dir
 ### Example 2
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+Publish-WsaDirectoryPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
 ```
 
 This example returns the password complexity policy for Workspace ONE Access Directory Users.
@@ -47,7 +47,7 @@ This example returns the password complexity policy for Workspace ONE Access Dir
 ### Example 3
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+Publish-WsaDirectoryPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
 ```
 
 This example returns the account lockout policy for Workspace ONE Access Directory Users.
@@ -55,7 +55,7 @@ This example returns the account lockout policy for Workspace ONE Access Directo
 ### Example 4
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-WsaDirectoryPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the policy configuration file.
@@ -63,7 +63,7 @@ This example returns the password expiration policy for Workspace ONE Access Dir
 ### Example 5
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains -drift
+Publish-WsaDirectoryPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains -drift
 ```
 
 This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.

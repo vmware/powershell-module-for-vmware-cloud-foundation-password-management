@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-LocalUserPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user>
+Request-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user>
 ```
 
 This example retrieves the global password expiration policy for a vCenter instance.
@@ -32,7 +32,7 @@ This example retrieves the global password expiration policy for a vCenter insta
 ### Example 2
 
 ```powershell
-Request-LocalUserPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the global password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the global password expiration policy for a vCenter insta
 ### Example 3
 
 ```powershell
-Request-LocalUserPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user> -drift
+Request-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user> -drift
 ```
 
 This example retrieves the global password expiration policy for a vCenter instance and compares the configuration against the product defaults.

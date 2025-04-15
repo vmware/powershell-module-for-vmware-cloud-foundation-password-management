@@ -26,7 +26,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name>
+Request-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name>
 ```
 
 This example retrieves all ESX hosts password complexity policy for the cluster in the workload domain.
@@ -34,7 +34,7 @@ This example retrieves all ESX hosts password complexity policy for the cluster 
 ### Example 2
 
 ```powershell
-Request-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves all ESX hosts password complexity policy for the cluster in the workload domain and checks the configuration drift using the provided configuration JSON.
@@ -42,7 +42,7 @@ This example retrieves all ESX hosts password complexity policy for the cluster 
 ### Example 3
 
 ```powershell
-Request-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift
+Request-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift
 ```
 
 This example retrieves all ESX hosts password complexity policy for the cluster in the workload domain and compares the configuration against the product defaults.
