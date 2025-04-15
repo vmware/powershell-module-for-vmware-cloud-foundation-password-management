@@ -1,17 +1,20 @@
 <!-- markdownlint-disable first-line-h1 no-inline-html -->
 # Reference
 
-`VMware.CloudFoundation.PasswordManagement` is a PowerShell module that supports the ability to report and configure the password policy settings across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
+`VMware.CloudFoundation.PasswordManagement` is a PowerShell module designed to help you report on
+and manage password policy settings within your VMware Cloud Foundation environment.
 
-With these cmdlets, you can perform the following actions on a VMware Cloud Foundation instance or a specific workload domain.
+Using this module, you can perform various tasks on a VMware Cloud Foundation instance or a specific
+workload domain.
 
 The module provides coverage for the following:
 
 === ":material-shield-check: &nbsp; Password Policies"
 
-    1. Generate a password policy report for password expiration, password complexity, and account lockout.
-    2. Generate a password policy report with configuration drift using a password policy configuration file.
-    3. Update the password polices using a password policy configuration file.
+    1. Generate detailed password policy reports, including information on password expiration, complexity, and account lockout settings.
+    2. Identify configuration drift by generating password policy reports using a predefined configuration file.
+    3. Update password policies seamlessly using a password policy configuration file.
+    4. Create comprehensive password rotation reports for all accounts managed by SDDC Manager.
 
     Components:
 
@@ -48,6 +51,3 @@ The module provides coverage for the following:
     ???+ note "Note"
         - VMware ESX password rotation is not managed by SDDC Manager.
         - VMware Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
-
-
-[docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
