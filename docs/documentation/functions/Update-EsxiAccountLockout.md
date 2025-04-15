@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Updates ESXi account lockout policy.
+Updates the account lockout policy for all ESX hosts in a cluster.
 
 ## Syntax
 
@@ -12,7 +12,7 @@ Update-EsxiAccountLockout [-server] <String> [-user] <String> [-pass] <String> [
 
 ## Description
 
-The `Update-EsxiAccountLockout` cmdlet configures the account lockout policy on ESXi.
+The `Update-EsxiAccountLockout` cmdlet configures the account lockout policy on an ESX host.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
