@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains
+Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains
 ```
 
 This example returns password expiration policy for Workspace ONE Access Directory Users.
@@ -40,7 +40,7 @@ This example returns password expiration policy for Workspace ONE Access Directo
 ### Example 2
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains
+Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains
 ```
 
 This example returns password complexity policy for Workspace ONE Access Directory Users.
@@ -48,7 +48,7 @@ This example returns password complexity policy for Workspace ONE Access Directo
 ### Example 3
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains
+Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains
 ```
 
 This example returns account lockout policy for Workspace ONE Access Directory Users.
@@ -56,7 +56,7 @@ This example returns account lockout policy for Workspace ONE Access Directory U
 ### Example 4
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the policy configuration file.
@@ -64,7 +64,7 @@ This example returns password expiration policy for Workspace ONE Access Directo
 ### Example 5
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains -drift
+Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains -drift
 ```
 
 This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.

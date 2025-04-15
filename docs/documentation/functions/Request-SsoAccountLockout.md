@@ -25,7 +25,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+Request-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
 This example retrieves the account lockout policy for vCenter Single Sign-On domain of the workload domain.
@@ -33,7 +33,7 @@ This example retrieves the account lockout policy for vCenter Single Sign-On dom
 ### Example 2
 
 ```powershell
-Request-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the account lockout policy for vCenter Single Sign-On domain of the workload domain and compares the configuration against the policy configuration file.
@@ -41,7 +41,7 @@ This example retrieves the account lockout policy for vCenter Single Sign-On dom
 ### Example 3
 
 ```powershell
-Request-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+Request-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
 ```
 
 This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults.

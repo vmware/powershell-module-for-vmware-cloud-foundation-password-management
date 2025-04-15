@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
+Request-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
 ```
 
 This example retrieves the account lockout policy for an SDDC Manager.
@@ -32,7 +32,7 @@ This example retrieves the account lockout policy for an SDDC Manager.
 ### Example 2
 
 ```powershell
-Request-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the account lockout policy for an SDDC Manager and and compares the configuration against the policy configuration file.
@@ -40,7 +40,7 @@ This example retrieves the account lockout policy for an SDDC Manager and and co
 ### Example 3
 
 ```powershell
-Request-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
+Request-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
 ```
 
 This example retrieves the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.

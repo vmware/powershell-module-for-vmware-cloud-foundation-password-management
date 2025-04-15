@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SsoPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxDays 999
+Update-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxDays 999
 ```
 
 This example configures the password expiration policy for a vCenter Single Sign-On domain.

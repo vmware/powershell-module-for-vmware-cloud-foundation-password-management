@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-WsaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <fqdn> -wsaRootPass <root_password> -failures 3 -unlockInterval 900 -rootUnlockInterval 900
+Update-WsaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -failures 3 -unlockInterval 900 -rootUnlockInterval 900
 ```
 
 This example configures the account lockout policy for Workspace ONE Access.

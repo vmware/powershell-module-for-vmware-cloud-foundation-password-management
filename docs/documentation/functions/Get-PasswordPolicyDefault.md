@@ -40,7 +40,7 @@ Default settings for VMware products include:
 Get-PasswordPolicyDefault -version '5.0.0.0'
 ```
 
-This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0.0.
+This example returns the default password policy settings for the VMware Cloud Foundation version.
 
 ### Example 2
 
@@ -58,7 +58,7 @@ Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5
 
 This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
 
-If the policy configuration file is already present, it is overwritten due to 'force' parameter.
+If the policy configuration file is already present, it is overwritten due to `force` parameter.
 
 ## Parameters
 

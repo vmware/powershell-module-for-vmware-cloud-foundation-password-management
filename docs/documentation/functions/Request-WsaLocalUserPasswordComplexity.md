@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-WsaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <fqdn> -wsaRootPass <root_password>
+Request-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password>
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access.
@@ -32,7 +32,7 @@ This example retrieves the local user password complexity policy for Workspace O
 ### Example 2
 
 ```powershell
-Request-WsaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <fqdn> -wsaRootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the local user password complexity policy for Workspace O
 ### Example 3
 
 ```powershell
-Request-WsaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <fqdn> -wsaRootPass <root_password> -drift
+Request-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -drift
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.

@@ -26,7 +26,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
+Update-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
 ```
 
 This example configures all ESX hosts within the cluster in the workload domain
@@ -34,7 +34,7 @@ This example configures all ESX hosts within the cluster in the workload domain
 ### Example 2
 
 ```powershell
-Update-EsxiPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
+Update-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
 ```
 
 This example configures all ESX hosts within the cluster in the workload domain but does not show the detail per host.

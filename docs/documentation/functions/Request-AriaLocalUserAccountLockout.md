@@ -26,7 +26,7 @@ The `Request-AriaLocalUserAccountLockout` cmdlet retrieves the VMware Aria Autom
 ### Example 1
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -product vra
+Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra
 ```
 
 This example retrieves the password expiration policy for VMware Aria Automation instances.
@@ -34,7 +34,7 @@ This example retrieves the password expiration policy for VMware Aria Automation
 ### Example 2
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
@@ -42,7 +42,7 @@ This example retrieves the password expiration policy for VMware Aria Automation
 ### Example 3
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
+Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
 ```
 
 This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
@@ -50,7 +50,7 @@ This example retrieves the password expiration policy for VMware Aria Automation
 ### Example 4
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory
+Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory
 ```
 
 This example retrieves the password expiration policy for Workspace ONE Access instances for directory users.
@@ -58,7 +58,7 @@ This example retrieves the password expiration policy for Workspace ONE Access i
 ### Example 5
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
+Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the password expiration policy for Workspace ONE Access instances for directory users and checks the configuration drift using the provided configuration JSON.
@@ -66,7 +66,7 @@ This example retrieves the password expiration policy for Workspace ONE Access i
 ### Example 6
 
 ```powershell
-Request-AriaLocalUserAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
+Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
 ```
 
 This example retrieves the password expiration policy for Workspace ONE Access instances for directory users and compares the configuration against the product defaults.

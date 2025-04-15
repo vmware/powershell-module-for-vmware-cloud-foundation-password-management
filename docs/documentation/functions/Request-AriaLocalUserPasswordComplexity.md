@@ -26,7 +26,7 @@ The `Request-AriaLocalUserPasswordComplexity` cmdlet retrieves the VMware Aria p
 ### Example 1
 
 ```powershell
-Request-ariaPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -product vra
+Request-ariaPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra
 ```
 
 This example retrieves the password complexity policy for VMware Aria Automation instances.
@@ -34,7 +34,7 @@ This example retrieves the password complexity policy for VMware Aria Automation
 ### Example 2
 
 ```powershell
-Request-AriaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the password complexity policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
@@ -42,7 +42,7 @@ This example retrieves the password complexity policy for VMware Aria Automation
 ### Example 3
 
 ```powershell
-Request-AriaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
+Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
 ```
 
 This example retrieves the password complexity policy for VMware Aria Automation instances and compares the configuration against the product defaults.
@@ -50,7 +50,7 @@ This example retrieves the password complexity policy for VMware Aria Automation
 ### Example 4
 
 ```powershell
-Request-AriaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory.
+Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory.
 ```
 
 This example retrieves the password complexity policy for Workspace ONE Access directory users.
@@ -58,7 +58,7 @@ This example retrieves the password complexity policy for Workspace ONE Access d
 ### Example 5
 
 ```powershell
-Request-AriaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
+Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the password complexity policy for Workspace ONE Access directory users and checks the configuration drift using the provided configuration JSON.
@@ -66,7 +66,7 @@ This example retrieves the password complexity policy for Workspace ONE Access d
 ### Example 6
 
 ```powershell
-Request-AriaLocalUserPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
+Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
 ```
 
 This example retrieves the password complexity policy for Workspace ONE Access directory users and compares the configuration against the product defaults.

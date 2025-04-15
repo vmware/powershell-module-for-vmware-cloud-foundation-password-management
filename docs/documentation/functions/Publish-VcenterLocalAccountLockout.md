@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -allDomains
+Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
 ```
 
 This example returns password account lockout for each vCenter for all workload domains.
@@ -40,7 +40,7 @@ This example returns password account lockout for each vCenter for all workload 
 ### Example 2
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
 ```
 
 This example returns password account lockout for a vCenter instance.
@@ -48,7 +48,7 @@ This example returns password account lockout for a vCenter instance.
 ### Example 3
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example returns password account lockout for a vCenter and checks the configuration drift using the provided configuration JSON.
@@ -56,7 +56,7 @@ This example returns password account lockout for a vCenter and checks the confi
 ### Example 4
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
 ```
 
 This example returns password account lockout for a vCenter and compares the configuration against the product defaults.
