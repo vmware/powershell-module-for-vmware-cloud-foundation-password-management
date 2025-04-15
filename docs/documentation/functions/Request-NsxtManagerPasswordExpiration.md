@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+Request-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
 ```
 
 This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain.
@@ -32,7 +32,7 @@ This example retrieves the password expiration policy for all users for the NSX 
 ### Example 2
 
 ```powershell
-Request-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the password expiration policy for all users for the NSX 
 ### Example 3
 
 ```powershell
-Request-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+Request-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
 ```
 
 This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and compares the configuration against the product defaults.

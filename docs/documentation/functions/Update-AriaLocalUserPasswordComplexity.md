@@ -24,15 +24,15 @@ The `Update-AriaLocalUserPasswordComplexity` cmdlet configures the password comp
 ### Example 1
 
 ```powershell
-Update-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
+Update-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
 ```
 
-This Example updates the VMware Aria Automation nodes with new values for each element.
+This example updates the VMware Aria Automation nodes with new values for each element.
 
 ### Example 2
 
 ```powershell
-Update-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -json -reportPath <report_path> -policyFile <policy_file>.json
+Update-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example updates the VMware Aria Automation using the JSON file of preset values.

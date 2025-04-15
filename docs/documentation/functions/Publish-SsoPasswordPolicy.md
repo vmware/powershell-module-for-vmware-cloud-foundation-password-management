@@ -33,7 +33,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
 ```
 
 This example returns password expiration policy for vCenter Single Sign-On across all workload domains.
@@ -41,7 +41,7 @@ This example returns password expiration policy for vCenter Single Sign-On acros
 ### Example 2
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name>
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
 ```
 
 This example returns password expiration policy for vCenter Single Sign-On for a workload domain.
@@ -49,7 +49,7 @@ This example returns password expiration policy for vCenter Single Sign-On for a
 ### Example 3
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
 ```
 
 This example returns password complexity policy for vCenter Single Sign-On across all workload domains.
@@ -57,7 +57,7 @@ This example returns password complexity policy for vCenter Single Sign-On acros
 ### Example 4
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -workloadDomain <workload_domain_name>
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
 ```
 
 This example returns password complexity policy for vCenter Single Sign-On for a workload domain.
@@ -65,7 +65,7 @@ This example returns password complexity policy for vCenter Single Sign-On for a
 ### Example 5
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
 ```
 
 This example returns account lockout policy for vCenter Single Sign-On across all workload domains.
@@ -73,7 +73,7 @@ This example returns account lockout policy for vCenter Single Sign-On across al
 ### Example 6
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -workloadDomain <workload_domain_name>
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
 ```
 
 This example returns account lockout policy for vCenter Single Sign-On for a workload domain.
@@ -81,7 +81,7 @@ This example returns account lockout policy for vCenter Single Sign-On for a wor
 ### Example 7
 
 ```powershell
-Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example returns password expiration policy for vCenter Single Sign-On for a workload domain and compares the configuration against the policy configuration file.
@@ -139,7 +139,7 @@ Accept wildcard characters: False
 ### -policy
 
 The policy to publish.
-One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+One of: `PasswordExpiration`, `PasswordComplexity`, `AccountLockout`.
 
 ```yaml
 Type: String

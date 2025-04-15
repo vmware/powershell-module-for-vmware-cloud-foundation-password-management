@@ -23,7 +23,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
+Request-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password]
 ```
 
 This example retrieves the password complexity policy for an SDDC Manager.
@@ -31,7 +31,7 @@ This example retrieves the password complexity policy for an SDDC Manager.
 ### Example 2
 
 ```powershell
-Request-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the policy configuration file.
@@ -39,7 +39,7 @@ This example retrieves the password complexity policy for an SDDC Manager and co
 ### Example 3
 
 ```powershell
-Request-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
+Request-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift
 ```
 
 This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.

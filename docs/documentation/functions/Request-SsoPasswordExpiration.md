@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+Request-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
 ```
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain.
@@ -32,7 +32,7 @@ This example retrieves the password expiration policy for the vCenter Single Sig
 ### Example 2
 
 ```powershell
-Request-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the policy configuration file.
@@ -40,7 +40,7 @@ This example retrieves the password expiration policy for the vCenter Single Sig
 ### Example 3
 
 ```powershell
-Request-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+Request-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
 ```
 
 This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults.

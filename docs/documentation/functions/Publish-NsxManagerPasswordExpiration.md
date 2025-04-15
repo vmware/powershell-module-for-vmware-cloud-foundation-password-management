@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
 ```
 
 This example returns password expiration policy for each local user of NSX Local Manager for all workload domains.
@@ -40,7 +40,7 @@ This example returns password expiration policy for each local user of NSX Local
 ### Example 2
 
 ```powershell
-Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
 ```
 
 This example returns password expiration policy for each local user of NSX Local Manager for a workload domain.
@@ -48,7 +48,7 @@ This example returns password expiration policy for each local user of NSX Local
 ### Example 3
 
 ```powershell
-Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the policy configuration file.
@@ -56,7 +56,7 @@ This example returns password expiration policy for each local user of NSX Local
 ### Example 4
 
 ```powershell
-Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
 ```
 
 This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the product defaults.

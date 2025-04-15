@@ -26,7 +26,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -maxDays 999
+Update-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -maxDays 999
 ```
 
 This example configures all ESX hosts within the cluster named in the workload domain.
@@ -34,7 +34,7 @@ This example configures all ESX hosts within the cluster named in the workload d
 ### Example 2
 
 ```powershell
-Update-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -maxDays 999 -detail false
+Update-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -maxDays 999 -detail false
 ```
 
 This example configures all ESX hosts within the cluster named in the workload domain but does not show the detail per host.

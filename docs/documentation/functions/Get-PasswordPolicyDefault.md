@@ -45,7 +45,7 @@ This example returns the default password policy settings for the VMware Cloud F
 ### Example 2
 
 ```powershell
-Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5.0.0.0'
+Get-PasswordPolicyDefault -generateJson -jsonFile [policy_file].json -version '5.0.0.0'
 ```
 
 This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
@@ -53,7 +53,7 @@ This example creates a JSON file with the default password policy settings for t
 ### Example 3
 
 ```powershell
-Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5.0.0.0' -force
+Get-PasswordPolicyDefault -generateJson -jsonFile [policy_file].json -version '5.0.0.0' -force
 ```
 
 This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
