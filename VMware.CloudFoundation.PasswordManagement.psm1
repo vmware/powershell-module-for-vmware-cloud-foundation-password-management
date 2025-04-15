@@ -65,7 +65,7 @@ Set-Variable -Name "skippedStatus" -Value "SKIPPED" -Scope Global
 Set-Variable -Name "preValidationFailureStatus" -Value "PRE_VALIDATION_FAILED" -Scope Global
 Set-Variable -Name "postValidationFailureStatus" -Value "POST_VALIDATION_FAILED" -Scope Global
 Set-Variable -Name "managedPasswordMinLength" -Value "20" -Scope Global
-Set-Variable -Name "minLengthExceeds" -Value "SDDC Manager is not able to the rotate password. Minimum length is greater than the managed range: $minumumPasswordLengthMax." -Scope Global
+Set-Variable -Name "minLengthExceeds" -Value "SDDC Manager is not able to the rotate password. Minimum length is greater than the managed range: $minimumPasswordLengthMax." -Scope Global
 Set-Variable -Name "minLengthNotExceeds" -Value "SDDC Manager is able to rotate the password." -Scope Global
 
 #EndRegion  End Global Variables                                    ######
@@ -148,11 +148,11 @@ Function Invoke-PasswordRotationManager {
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
                 $defaultReport = Set-CreateReportDirectoryRotation -path $reportPath -sddcManagerFqdn $sddcManagerFqdn # Setup Report Location and Report File
                 if ($PsBoundParameters.ContainsKey("allDomains")) {
-                    $reportname = $defaultReport.Split('.')[0] + "-" + $sddcManagerFqdn.Split(".")[0] + ".htm"
+                    $reportName = $defaultReport.Split('.')[0] + "-" + $sddcManagerFqdn.Split(".")[0] + ".htm"
                     $workflowMessage = "VMware Cloud Foundation instance ($sddcManagerFqdn)"
                     $commandSwitch = "-allDomains"
                 } else {
-                    $reportname = $defaultReport.Split('.')[0] + "-" + $workloadDomain + ".htm"
+                    $reportName = $defaultReport.Split('.')[0] + "-" + $workloadDomain + ".htm"
                     $workflowMessage = "Workload Domain ($workloadDomain)"
                     $commandSwitch = "-workloadDomain $workloadDomain"
                 }
@@ -197,7 +197,7 @@ Function Invoke-PasswordRotationManager {
                         }
                     }
 
-                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server password rotation policy for $workflowMessage."
+                    Write-LogMessage -Type INFO -Message "Collecting vCenter password rotation policy for $workflowMessage."
                     $vcenterServerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'vcenterServer' $($commandSwitch)" | ConvertFrom-Json
 
                     Write-LogMessage -Type INFO -Message "Collecting NSX Manager password rotation policy for $workflowMessage."
@@ -209,7 +209,7 @@ Function Invoke-PasswordRotationManager {
                     # VMware Aria Suite Resources: Build Password Rotation Object
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFariaLifecycle) {
+                        if (Get-VCFAriaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -277,7 +277,7 @@ Function Invoke-PasswordRotationManager {
                     $nsxEdgePasswordRotationObj | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordRotation
 
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFariaLifecycle) {
+                        if (Get-VCFAriaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -320,7 +320,7 @@ Function Invoke-PasswordRotationManager {
                             $resourceTitleCase = switch ($resource) {
                                 'sddcManager' { 'SDDC Manager' }
                                 'sso' { 'vCenter Single Sign-On' }
-                                'vcenterServer' { 'vCenter Server' }
+                                'vcenterServer' { 'vCenter' }
                                 'nsxManager' { 'NSX Manager' }
                                 'nsxEdge' { 'NSX Edge' }
                             }
@@ -331,7 +331,7 @@ Function Invoke-PasswordRotationManager {
                     # VMware Aria Suite Resources: Combine Password Rotation Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFariaLifecycle) {
+                        if (Get-VCFAriaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -384,7 +384,7 @@ Function Invoke-PasswordRotationManager {
                         }
                     }
 
-                    Write-LogMessage -Type INFO -Message "Collecting vCenter Server password rotation policy for $workflowMessage."
+                    Write-LogMessage -Type INFO -Message "Collecting vCenter password rotation policy for $workflowMessage."
                     $vcenterServerPasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'vcenterServer' $($commandSwitch)"
 
                     Write-LogMessage -Type INFO -Message "Collecting NSX Manager password rotation policy for $workflowMessage."
@@ -396,7 +396,7 @@ Function Invoke-PasswordRotationManager {
                     # VMware Aria Suite Resources: Collect Password Rotation Settings Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-                        if (Get-VCFariaLifecycle) {
+                        if (Get-VCFAriaLifecycle) {
                             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
                             foreach ($resource in $ariaResources) {
                                 switch ($resource) {
@@ -619,11 +619,11 @@ Function Invoke-PasswordPolicyManager {
                 Start-SetupLogFile -Path $reportPath -ScriptName $MyInvocation.MyCommand.Name # Setup Log Location and Log File
                 $defaultReport = Set-CreateReportDirectory -path $reportPath -sddcManagerFqdn $sddcManagerFqdn # Setup Report Location and Report File
                 if ($PsBoundParameters.ContainsKey("allDomains")) {
-                    $reportname = $defaultReport.Split('.')[0] + "-" + $sddcManagerFqdn.Split(".")[0] + ".htm"
+                    $reportName = $defaultReport.Split('.')[0] + "-" + $sddcManagerFqdn.Split(".")[0] + ".htm"
                     $workflowMessage = "VMware Cloud Foundation instance ($sddcManagerFqdn)"
                     $commandSwitch = "-allDomains"
                 } else {
-                    $reportname = $defaultReport.Split('.')[0] + "-" + $workloadDomain + ".htm"
+                    $reportName = $defaultReport.Split('.')[0] + "-" + $workloadDomain + ".htm"
                     $workflowMessage = "Workload Domain ($workloadDomain)"
                     $commandSwitch = "-workloadDomain $workloadDomain"
                 }
@@ -654,10 +654,10 @@ Function Invoke-PasswordPolicyManager {
                 $ssoPasswordComplexity = Invoke-Expression "Publish-SsoPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
                 $ssoAccountLockout = Invoke-Expression "Publish-SsoPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
 
-                Write-LogMessage -Type INFO -Message "Collecting vCenter Server Password Expiration Policy for $workflowMessage."
+                Write-LogMessage -Type INFO -Message "Collecting vCenter Password Expiration Policy for $workflowMessage."
                 $vcenterPasswordExpiration = Invoke-Expression "Publish-VcenterPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass $($commandSwitch)"
 
-                Write-LogMessage -Type INFO -Message "Collecting vCenter Server (Local User) Password Policies for $workflowMessage."
+                Write-LogMessage -Type INFO -Message "Collecting vCenter (Local User) Password Policies for $workflowMessage."
                 $vcenterLocalPasswordExpiration = Invoke-Expression "Publish-VcenterLocalPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass $($commandSwitch)"
                 $vcenterLocalPasswordComplexity = Invoke-Expression "Publish-VcenterLocalPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass $($commandSwitch)"
                 $vcenterLocalAccountLockout = Invoke-Expression "Publish-VcenterLocalAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass $($commandSwitch)"
@@ -672,7 +672,7 @@ Function Invoke-PasswordPolicyManager {
                 $nsxEdgePasswordComplexity = Invoke-Expression "Publish-NsxEdgePasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass $($commandSwitch)"
                 $nsxEdgeAccountLockout = Invoke-Expression "Publish-NsxEdgeAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass $($commandSwitch)"
 
-                Write-LogMessage -Type INFO -Message "Collecting ESXi Password Policies for $workflowMessage."
+                Write-LogMessage -Type INFO -Message "Collecting ESX Password Policies for $workflowMessage."
                 $esxiPasswordExpiration = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordExpiration $($commandSwitch)"
                 $esxiPasswordComplexity = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
                 $esxiAccountLockout = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
@@ -803,7 +803,7 @@ Function Invoke-PasswordPolicyManager {
                         $reportData += $wsaLocalAccountLockout
                     } else {
                         $reportData += ($wsaDirectoryAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-account-lockout"></a><h3>Standalone Workspace ONE Access Directory - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-account-lockout"></a><h3>Stanalone Workspace ONE Access (Local Users) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-account-lockout"></a><h3>Standalone Workspace ONE Access (Local Users) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
 
                     if ($PsBoundParameters.ContainsKey("darkMode")) {
@@ -946,24 +946,24 @@ Function Start-PasswordPolicyConfig {
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                 Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for vCenter Single Sign-On" -Colour Yellow
 
-                # Configuring Password Policies for vCenter Server
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for vCenter Server" -Colour Yellow
+                # Configuring Password Policies for vCenter
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for vCenter" -Colour Yellow
                 foreach ($workloadDomain in $allWorkloadDomains) {
-                    Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for vCenter Server for Workload Domain ($($workloadDomain.name))" -Colour Yellow
-                    Write-LogMessage -Type INFO -Message "Configuring vCenter Server: Password Expiration Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for vCenter for Workload Domain ($($workloadDomain.name))" -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Configuring vCenter: Password Expiration Policy for Workload Domain ($($workloadDomain.name))"
                     $StatusMsg = Update-VcenterPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $($workloadDomain.name) -maxDays $customPolicy.vcenterServer.passwordExpiration.maxDays -minDays $customPolicy.vcenterServer.passwordExpiration.minDays -warnDays $customPolicy.vcenterServer.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                    Write-LogMessage -Type INFO -Message "Configuring vCenter Server Local Users: Password Expiration Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Configuring vCenter Local Users: Password Expiration Policy for Workload Domain ($($workloadDomain.name))"
                     $StatusMsg = Update-VcenterRootPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain.name -email $customPolicy.vcenterServerLocal.passwordExpiration.email -maxDays $customPolicy.vcenterServerLocal.passwordExpiration.maxDays -warnDays $customPolicy.vcenterServerLocal.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                    Write-LogMessage -Type INFO -Message "Configuring vCenter Server Local Users: Password Complexity Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Configuring vCenter Local Users: Password Complexity Policy for Workload Domain ($($workloadDomain.name))"
                     $StatusMsg = Update-VcenterPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain.name -minLength $customPolicy.vcenterServerLocal.passwordComplexity.minLength -minLowercase $customPolicy.vcenterServerLocal.passwordComplexity.minLowercase -minUppercase $customPolicy.vcenterServerLocal.passwordComplexity.minUppercase -minNumerical $customPolicy.vcenterServerLocal.passwordComplexity.minNumerical -minSpecial $customPolicy.vcenterServerLocal.passwordComplexity.minSpecial -minUnique $customPolicy.vcenterServerLocal.passwordComplexity.minUnique -history $customPolicy.vcenterServerLocal.passwordComplexity.history -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                    Write-LogMessage -Type INFO -Message "Configuring vCenter Server Local Users: Account Lockout Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Configuring vCenter Local Users: Account Lockout Policy for Workload Domain ($($workloadDomain.name))"
                     $StatusMsg = Update-VcenterAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $workloadDomain.name -failures $customPolicy.vcenterServerLocal.accountLockout.maxFailures -unlockInterval $customPolicy.vcenterServerLocal.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.vcenterServerLocal.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                 }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for vCenter Server" -Colour Yellow
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for vCenter" -Colour Yellow
 
                 # Configuring Password Policies for NSX Local Managers
                 Write-LogMessage -Type INFO -Message "Configuring Password Policies for NSX Local Managers" -Colour Yellow
@@ -997,31 +997,31 @@ Function Start-PasswordPolicyConfig {
                 }
                 Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for NSX Edge Nodes" -Colour Yellow
 
-                # Configuring Password Policies for ESXi Hosts
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for ESXi Hosts" -Colour Yellow
+                # Configuring Password Policies for ESX Hosts
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for ESX Hosts" -Colour Yellow
                 foreach ($workloadDomain in $allWorkloadDomains) {
-                    Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for the ESXi Hosts for Workload Domain ($($workloadDomain.name))" -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Starting the Process of Configuring Password Policies for the ESX Hosts for Workload Domain ($($workloadDomain.name))" -Colour Yellow
                     $clusters = $workloadDomain.clusters
-                    Write-LogMessage -Type INFO -Message "Configuring ESXi Hosts: Password Expiration Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Configuring ESX Hosts: Password Expiration Policy for Workload Domain ($($workloadDomain.name))"
                     foreach ($cluster in $clusters) {
                         $clusterName = (Get-VCFCluster -id $cluster.id).name
                         $StatusMsg = Update-EsxiPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $($workloadDomain.name) -cluster $clusterName -maxDays $customPolicy.esxi.passwordExpiration.maxDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
-                        if ( $StatusMsg -match "SUCCESSFUL" ) { Write-LogMessage -Type INFO -Message "Update Password Expiration Policy on ESXi Hosts for Worload Domain / Cluster ($($workloadDomain.name) / $clusterName): SUCCESSFUL" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message "Update Password Expiration Policy on ESXi Hosts for Worload Domain / Cluster ($($workloadDomain.name) / $clusterName), already set: SKIPPED" -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                        if ( $StatusMsg -match "SUCCESSFUL" ) { Write-LogMessage -Type INFO -Message "Update Password Expiration Policy on ESX Hosts for Workload Domain / Cluster ($($workloadDomain.name) / $clusterName): SUCCESSFUL" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message "Update Password Expiration Policy on ESX Hosts for Workload Domain / Cluster ($($workloadDomain.name) / $clusterName), already set: SKIPPED" -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     }
-                    Write-LogMessage -Type INFO -Message "Configuring ESXi Hosts: Password Complexity Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Configuring ESX Hosts: Password Complexity Policy for Workload Domain ($($workloadDomain.name))"
                     foreach ($cluster in $clusters) {
                         $clusterName = (Get-VCFCluster -id $cluster.id).name
                         $StatusMsg = Update-EsxiPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $($workloadDomain.name) -cluster $clusterName -policy $customPolicy.esxi.passwordComplexity.policy -history $customPolicy.esxi.passwordComplexity.history -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
-                        if ( $StatusMsg -match "SUCCESSFUL" ) { Write-LogMessage -Type INFO -Message "Update Password Complexity Policy on ESXi Hosts for Worload Domain / Cluster ($($workloadDomain.name) / $clusterName): SUCCESSFUL" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message "Update Password Complexity Policy on ESXi Hosts for Worload Domain / Cluster ($($workloadDomain.name) / $clusterName), already set: SKIPPED" -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                        if ( $StatusMsg -match "SUCCESSFUL" ) { Write-LogMessage -Type INFO -Message "Update Password Complexity Policy on ESX Hosts for Workload Domain / Cluster ($($workloadDomain.name) / $clusterName): SUCCESSFUL" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message "Update Password Complexity Policy on ESX Hosts for Workload Domain / Cluster ($($workloadDomain.name) / $clusterName), already set: SKIPPED" -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     }
-                    Write-LogMessage -Type INFO -Message "Configuring ESXi Hosts: Account Lockout Policy for Workload Domain ($($workloadDomain.name))"
+                    Write-LogMessage -Type INFO -Message "Configuring ESX Hosts: Account Lockout Policy for Workload Domain ($($workloadDomain.name))"
                     foreach ($cluster in $clusters) {
                         $clusterName = (Get-VCFCluster -id $cluster.id).name
                         $StatusMsg = Update-EsxiAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -domain $($workloadDomain.name) -cluster $clusterName -failures $customPolicy.esxi.accountLockout.maxFailures -unlockInterval $customPolicy.esxi.accountLockout.unlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
-                        if ( $StatusMsg -match "SUCCESSFUL" ) { Write-LogMessage -Type INFO -Message "Update Account Lockout Policy on ESXi Hosts for Worload Domain / Cluster ($($workloadDomain.name) / $clusterName): SUCCESSFUL" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message "Update Account Lockout Policy on ESXi Hosts for Worload Domain / Cluster ($($workloadDomain.name) / $clusterName), already set: SKIPPED" -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
+                        if ( $StatusMsg -match "SUCCESSFUL" ) { Write-LogMessage -Type INFO -Message "Update Account Lockout Policy on ESX Hosts for Workload Domain / Cluster ($($workloadDomain.name) / $clusterName): SUCCESSFUL" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message "Update Account Lockout Policy on ESX Hosts for Workload Domain / Cluster ($($workloadDomain.name) / $clusterName), already set: SKIPPED" -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     }
                 }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for ESXi Hosts" -Colour Yellow
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for ESX Hosts" -Colour Yellow
 
                 # Configuring Password Policies for Workspace ONE Access
                 if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
@@ -1149,9 +1149,9 @@ Function Get-PasswordPolicyDefault {
         The Get-PasswordPolicyDefault cmdlet returns the default password policy settings, it can also be used to
         generate the base JSON file used with Password Policy Manager. Default settings for VMware products include:
         - VMware SDDC Manager
-        - VMware ESXi
+        - VMware ESX
         - VMware vCenter Single Sign-On
-        - VMware vCenter Server
+        - VMware vCenter
         - VMware NSX Manager
         - VMware NSX Edge
         - VMware Workspace ONE Access
@@ -1220,7 +1220,7 @@ Function Get-PasswordPolicyDefault {
     $vcfVersion = New-Object -TypeName psobject
     $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
 
-    # Build Default ESXi Password Policy Settings
+    # Build Default ESX Password Policy Settings
     $esxiPasswordExpiration = New-Object -TypeName psobject
     $esxiPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "99999"
     $esxiPasswordComplexity = New-Object -TypeName psobject
@@ -1256,7 +1256,7 @@ Function Get-PasswordPolicyDefault {
     $ssoPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $ssoPasswordComplexity
     $ssoPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $ssoAccountLockout
 
-    # Build Default vCenter Server Password Policy Settings
+    # Build Default vCenter Password Policy Settings
     $vcenterPasswordExpiration = New-Object -TypeName psobject
     $vcenterPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
     $vcenterPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
@@ -1264,7 +1264,7 @@ Function Get-PasswordPolicyDefault {
     $vcenterPasswordPolicy = New-Object -TypeName psobject
     $vcenterPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vcenterPasswordExpiration
 
-    # Build Default vCenter Server Local Users Password Policy Settings
+    # Build Default vCenter Local Users Password Policy Settings
     $vcenterLocalPasswordExpiration = New-Object -TypeName psobject
     $vcenterLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
     $vcenterLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
@@ -1884,7 +1884,7 @@ Function Set-CreateReportDirectory {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn
     )
 
-    $filetimeStamp = Get-Date -Format "MM-dd-yyyy_hh_mm_ss"
+    $fileTimestamp = Get-Date -Format "MM-dd-yyyy_hh_mm_ss"
     $Global:reportFolder = $path + '\PasswordPolicyManager\'
     if ($PSEdition -eq "Core" -and ($PSVersionTable.OS).Split(' ')[0] -eq "Linux") {
         $reportFolder = ($reportFolder).split('\') -join '/' | Split-Path -NoQualifier
@@ -1892,7 +1892,7 @@ Function Set-CreateReportDirectory {
     if (!(Test-Path -Path $reportFolder)) {
         New-Item -Path $reportFolder -ItemType "directory" | Out-Null
     }
-    $reportName = $reportFolder + $filetimeStamp + "-passwordPolicyManager" + ".htm"
+    $reportName = $reportFolder + $fileTimestamp + "-passwordPolicyManager" + ".htm"
     $reportName
 }
 
@@ -1902,7 +1902,7 @@ Function Set-CreateReportDirectoryRotation {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn
     )
 
-    $filetimeStamp = Get-Date -Format "MM-dd-yyyy_hh_mm_ss"
+    $fileTimestamp = Get-Date -Format "MM-dd-yyyy_hh_mm_ss"
     $Global:reportFolder = join-path -Path $path -ChildPath 'PasswordRotationManager\'
     if ($PSEdition -eq "Core" -and ($PSVersionTable.OS).Split(' ')[0] -eq "Linux") {
         $reportFolder = ($reportFolder).split('\') -join '/' | Split-Path -NoQualifier
@@ -1910,7 +1910,7 @@ Function Set-CreateReportDirectoryRotation {
     if (!(Test-Path -Path $reportFolder)) {
         New-Item -Path $reportFolder -ItemType "directory" | Out-Null
     }
-    $reportName = $reportFolder + $filetimeStamp + "-passwordRotationManager" + ".htm"
+    $reportName = $reportFolder + $fileTimestamp + "-passwordRotationManager" + ".htm"
     $reportName
 }
 
@@ -2130,11 +2130,11 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-password-expiration">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-password-expiration">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-expiration">vCenter Server</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-expiration">vCenter</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter (Local)</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-password-expiration">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-password-expiration">ESXi</a></li>
+                    <li><a class="nav-link" href="#esxi-password-expiration">ESX</a></li>
                     <li><a class="nav-link" href="#standalone-wsa-directory-password-expiration">Standalone Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#standalone-wsa-local-password-expiration">Standalone Workspace ONE (Local)</a></li>
                     <li><a class="nav-link" href="#vrslcm-local-password-expiration">Aria Suite Lifecycle (Local)</a></li>
@@ -2150,10 +2150,10 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-password-complexity">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-password-complexity">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter (Local)</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-password-complexity">ESXi</a></li>
+                    <li><a class="nav-link" href="#esxi-password-complexity">ESX</a></li>
                     <li><a class="nav-link" href="#standalone-wsa-directory-password-complexity">Standalone Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#standalone-wsa-local-password-complexity">Standalone Workspace ONE (Local)</a></li>
                     <li><a class="nav-link" href="#vrslcm-local-password-complexity">Aria Suite Lifecycle (Local)</a></li>
@@ -2169,10 +2169,10 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-account-lockout">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-account-lockout">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter (Local)</a></li>
                     <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-account-lockout">ESXi</a></li>
+                    <li><a class="nav-link" href="#esxi-account-lockout">ESX</a></li>
                     <li><a class="nav-link" href="#standalone-wsa-directory-account-lockout">Standalone Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#standalone-wsa-local-account-lockout">Standalone Workspace ONE (Local)</a></li>
                     <li><a class="nav-link" href="#vrslcm-local-account-lockout">Aria Suite Lifecycle (Local)</a></li>
@@ -2218,11 +2218,11 @@ Function Save-ClarityReportNavigationForRotation {
                     <li><a class="nav-link" href="#vcenter-single-sign-on-password-rotation">vCenter Single Sign-On</a></li>'
     }
     $clarityCssNavigation += '
-                    <li><a class="nav-link" href="#vcenter-server-password-rotation">vCenter Server</a></li>
+                    <li><a class="nav-link" href="#vcenter-server-password-rotation">vCenter</a></li>
                     <li><a class="nav-link" href="#nsx-manager-password-rotation">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsx-edge-password-rotation">NSX Edge</a></li>'
     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
-        if (Get-VCFariaLifecycle) {
+        if (Get-VCFAriaLifecycle) {
             $ariaResources = @('ariaLifecycle', 'ariaOperationsLogs', 'ariaOperations', 'ariaAutomation', 'workspaceOneAccess')
             foreach ($resource in $ariaResources) {
                 switch ($resource) {
@@ -2484,7 +2484,7 @@ Function Request-SddcManagerAccountLockout {
         The Request-SddcManagerAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the account lockout policy for an SDDC Manager
 
         .EXAMPLE
@@ -2736,7 +2736,7 @@ Function Update-SddcManagerPasswordComplexity {
                                 $scriptCommand = "sed -E -i.bak -e 's/password.*required.*pam_pwquality.so.*/password   required pam_pwquality.so dcredit=$minNumerical ucredit=$minUppercase lcredit=$minLowercase ocredit=$minSpecial minlen=$minLength difok=$minUnique minclass=$minClass maxsequence=$maxSequence enforce_for_root/"
                                 $scriptCommand += "' -e 's/password.*required.*pam_pwhistory.so.*/password   required pam_pwhistory.so remember=$history retry=$maxRetry enforce_for_root use_authtok/"
                                 $scriptCommand += "' /etc/pam.d/system-password"
-                                Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -Guestuser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
+                                Invoke-VMScript -VM ($server.Split("."))[0] -ScriptText $scriptCommand -GuestUser "root" -GuestPass $rootPass -Confirm:$false | Out-Null
                                 # validate if changes take effect
                                 $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($server.Split("."))[-0] -guestUser root -guestPassword $rootPass
                                 $chkUpdatedConfig = $updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'History' -eq $history -and $updatedConfiguration.'Max Retries' -eq $maxRetry
@@ -2747,7 +2747,7 @@ Function Update-SddcManagerPasswordComplexity {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Min Class' -eq $minClass
                                 }
                                 if ($chkUpdatedConfig) {
-                                    Write-Output "Update Password Complexity Policy on SDDC Manasger ($server): SUCCESSFUL"
+                                    Write-Output "Update Password Complexity Policy on SDDC Manager ($server): SUCCESSFUL"
                                 } else {
                                     Write-Error "Update Password Complexity Policy on SDDC Manager ($server): POST_VALIDATION_FAILED"
                                 }
@@ -2762,7 +2762,7 @@ Function Update-SddcManagerPasswordComplexity {
                                     $chkUpdatedConfig = $chkUpdatedConfig -and $updatedConfiguration.'Min Class' -eq $minClass
                                 }
                                 if ($chkUpdatedConfig) {
-                                    Write-Output "Update Password Complexity Policy on SDDC Manasger ($server): SUCCESSFUL"
+                                    Write-Output "Update Password Complexity Policy on SDDC Manager ($server): SUCCESSFUL"
                                 } else {
                                     Write-Error "Update Password Complexity Policy on SDDC Manager ($server): POST_VALIDATION_FAILED"
                                 }
@@ -2793,7 +2793,7 @@ Function Update-SddcManagerAccountLockout {
         The Update-SddcManagerAccountLockout cmdlet configures the account lockout policy for an SDDC Manager. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the account lockout policy
 
         .EXAMPLE
@@ -2877,7 +2877,7 @@ Function Publish-SddcManagerPasswordExpiration {
         The Publish-SddcManagerPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects password expiration policy for each local user of SDDC Manager
 
         .EXAMPLE
@@ -2993,7 +2993,7 @@ Function Publish-SddcManagerPasswordComplexity {
         The Publish-SddcManagerPasswordComplexity cmdlet returns password complexity policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects password complexity policy for an SDDC Manager
 
         .EXAMPLE
@@ -3108,7 +3108,7 @@ Function Publish-SddcManagerAccountLockout {
         The Publish-SddcManagerAccountLockout cmdlet returns account lockout policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects account lockout policy forSDDC Manager
 
         .EXAMPLE
@@ -3184,13 +3184,13 @@ Function Publish-SddcManagerAccountLockout {
                 $sddcManagerAccountLockoutObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
                     if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain -and $_.type -eq "MANAGEMENT" }) {
-                        $sddcManagerAccountlockout = Invoke-Expression $command ; $sddcManagerAccountLockoutObject += $sddcManagerAccountlockout
+                        $sddcManagerAccountLockout = Invoke-Expression $command ; $sddcManagerAccountLockoutObject += $sddcManagerAccountLockout
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
                         if ($domain | Where-Object { $_.type -eq "MANAGEMENT" }) {
-                            $sddcManagerAccountlockout = Invoke-Expression $command ; $sddcManagerAccountLockoutObject += $sddcManagerAccountlockout
+                            $sddcManagerAccountLockout = Invoke-Expression $command ; $sddcManagerAccountLockoutObject += $sddcManagerAccountLockout
                         }
                     }
                 }
@@ -3229,7 +3229,7 @@ Function Request-SsoPasswordExpiration {
         The Request-SsoPasswordExpiration cmdlet retrieves the password expiration policy for a vCenter Single Sign-On
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the global password expiration policy
 
         .EXAMPLE
@@ -3580,7 +3580,7 @@ Function Update-SsoPasswordExpiration {
         The Update-SsoPasswordExpiration cmdlet configures the password expiration policy for a vCenter Single Sign-On
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the vCenter Single Sign-On password expiration policy
 
         .EXAMPLE
@@ -3636,12 +3636,12 @@ Function Update-SsoPasswordExpiration {
                                 if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -ne $maxDays) {
                                     Get-SsoPasswordPolicy -server $ssoAdminServer | Set-SsoPasswordPolicy -PasswordLifetimeDays $maxDays | Out-Null
                                     if ((Get-SsoPasswordPolicy -server $ssoAdminServer).PasswordLifetimeDays -eq $maxDays) {
-                                        Write-Output "Update Single Sign-On Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        Write-Output "Update Single Sign-On Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
-                                        Write-Error "Update Single Sign-On Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        Write-Error "Update Single Sign-On Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Warning "Update Single Sign-On Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                    Write-Warning "Update Single Sign-On Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
                         }
@@ -3670,7 +3670,7 @@ Function Update-SsoPasswordComplexity {
         The Update-SsoPasswordComplexity cmdlet configures the password complexity policy of a vCenter Single Sign-On
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the vCenter Single Sign-On password complexity policy
 
         .EXAMPLE
@@ -3770,12 +3770,12 @@ Function Update-SsoPasswordComplexity {
                                     Get-SsoPasswordPolicy -server $ssoAdminServer | Set-SsoPasswordPolicy -MinLength $minLength -MaxLength $maxLength -MinAlphabeticCount $minAlphabetic -MinLowercaseCount $minLowercase -MinUppercaseCount $minUppercase -MinNumericCount $minNumeric -MinSpecialCharCount $minSpecial -MaxIdenticalAdjacentCharacters $maxIdenticalAdjacent -ProhibitedPreviousPasswordsCount $history | Out-Null
                                     $passwordComplexityConfigAfter = Get-SsoPasswordPolicy -server $ssoAdminServer
                                     if ($passwordComplexityConfigAfter.MinLength -eq $minLength -and $passwordComplexityConfigAfter.MaxLength -eq $maxLength -and $passwordComplexityConfigAfter.MinAlphabeticCount -eq $minAlphabetic -and $passwordComplexityConfigAfter.MinLowercaseCount -eq $minLowercase -and $passwordComplexityConfigAfter.MinUppercaseCount -eq $minUppercase -and $passwordComplexityConfigAfter.MinNumericCount -eq $minNumeric -and $passwordComplexityConfigAfter.MinSpecialCharCount -eq $minSpecial -and $passwordComplexityConfigAfter.MaxIdenticalAdjacentCharacters -eq $maxIdenticalAdjacent -and $passwordComplexityConfigAfter.ProhibitedPreviousPasswordsCount -eq $history) {
-                                        Write-Output "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        Write-Output "Update Single Sign-On Password Complexity Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
-                                        Write-Error "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        Write-Error "Update Single Sign-On Password Complexity Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Warning "Update Single Sign-On Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                    Write-Warning "Update Single Sign-On Password Complexity Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
                         }
@@ -3804,7 +3804,7 @@ Function Update-SsoAccountLockout {
         The Update-SsoAccountLockout cmdlet configures the account lockout policy of a vCenter Single Sign-On domain.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the vCenter Single Sign-On account lockout policy
 
         .EXAMPLE
@@ -3870,12 +3870,12 @@ Function Update-SsoAccountLockout {
                                     Get-SsoLockoutPolicy -server $ssoAdminServer | Set-SsoLockoutPolicy -AutoUnlockIntervalSec $unlockInterval -FailedAttemptIntervalSec $failureInterval -MaxFailedAttempts $failures | Out-Null
                                     $lockoutPolicyAfter = Get-SsoLockoutPolicy -server $ssoAdminServer
                                     if ($lockoutPolicyAfter.MaxFailedAttempts -eq $failures -and $lockoutPolicyAfter.FailedAttemptIntervalSec -eq $failureInterval -and $lockoutPolicyAfter.AutoUnlockIntervalSec -eq $unlockInterval) {
-                                        Write-Output "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        Write-Output "Update Single Sign-On Account Lockout Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
-                                        Write-Error "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        Write-Error "Update Single Sign-On Account Lockout Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Warning "Update Single Sign-On Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                    Write-Warning "Update Single Sign-On Account Lockout Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
                         }
@@ -3904,7 +3904,7 @@ Function Publish-SsoPasswordPolicy {
         The Publish-SsoPasswordPolicy cmdlet retrieves the requested password policy for vCenter Single Sign-On and
         converts the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Retrieves the requested password policy for vCenter Single Sign-On and converts to HTML
 
         .EXAMPLE
@@ -4036,26 +4036,26 @@ Export-ModuleMember -Function Publish-SsoPasswordPolicy
 Function Request-VcenterPasswordExpiration {
     <#
 		.SYNOPSIS
-		Retrieves the global password expiration policy for a vCenter Server instance.
+		Retrieves the global password expiration policy for a vCenter instance.
 
         .DESCRIPTION
         The Request-VcenterPasswordExpiration cmdlet retrieves the global password expiration policy for a vCenter
         Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the global password expiration policy
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
-        This example retrieves the global password expiration policy for a vCenter Server instance
+        This example retrieves the global password expiration policy for a vCenter instance
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the global password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
+        This example retrieves the global password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4114,7 +4114,7 @@ Function Request-VcenterPasswordExpiration {
                                     $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.max_days -ne $requiredConfig.maxDays) { "$($VcenterPasswordExpiration.max_days) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterPasswordExpiration.max_days)" } } else { "$($VcenterPasswordExpiration.max_days)" })
                                     $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.warn_days -ne $requiredConfig.warningDays) { "$($VcenterPasswordExpiration.warn_days) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterPasswordExpiration.warn_days)" } } else { "$($VcenterPasswordExpiration.warn_days)" })
                                 } else {
-                                    Write-Error "Unable to retrieve password expiration policy from vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
+                                    Write-Error "Unable to retrieve password expiration policy from vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                                 return $VcenterPasswordExpirationObject
                             }
@@ -4141,23 +4141,23 @@ Function Request-VcenterPasswordComplexity {
 		Retrieves the password complexity policy.
 
         .DESCRIPTION
-        The Request-VcenterPasswordComplexity cmdlet retrieves the password complexity policy of a vCenter Server.
+        The Request-VcenterPasswordComplexity cmdlet retrieves the password complexity policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the password complexity policy
 
         .EXAMPLE
         Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
-        This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain.
+        This example retrieves the password complexity policy for a vCenter instance based on the workload domain.
 
         .EXAMPLE
         Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the password complexity policy for a vCenter instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the password complexity policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
+        This example retrieves the password complexity policy for a vCenter instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4307,26 +4307,26 @@ Export-ModuleMember -Function Request-VcenterPasswordComplexity
 Function Request-VcenterAccountLockout {
     <#
 		.SYNOPSIS
-		Retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
+		Retrieves the account lockout policy for a vCenter instance based on the workload domain.
 
         .DESCRIPTION
-        The Request-VcenterAccountLockout cmdlet retrieves the account lockout policy of a vCenter Server.
+        The Request-VcenterAccountLockout cmdlet retrieves the account lockout policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the account lockout policy
 
         .EXAMPLE
         Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
-        This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain.
+        This example retrieves the account lockout policy for a vCenter instance based on the workload domain.
 
         .EXAMPLE
         Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the account lockout policy for a vCenter instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the account lockout policy for a vCenter Server instance based on the workload domain and compares the configuration against the product defaults.
+        This example retrieves the account lockout policy for a vCenter instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4413,15 +4413,15 @@ Function Update-VcenterPasswordExpiration {
 		Updates the global password expiration policy.
 
         .DESCRIPTION
-        The Update-VcenterPasswordExpiration cmdlet configures the global password expiration policy of a vCenter Server.
+        The Update-VcenterPasswordExpiration cmdlet configures the global password expiration policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the global password expiration policy
 
         .EXAMPLE
         Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
-        This example configures the global password expiration policy for a vCenter Server instance
+        This example configures the global password expiration policy for a vCenter instance
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4467,12 +4467,12 @@ Function Update-VcenterPasswordExpiration {
                                 if ((Get-VcenterPasswordExpiration).max_days -ne $maxDays -or (Get-VcenterPasswordExpiration).min_days -ne $minDays -or (Get-VcenterPasswordExpiration).warn_days -ne $warnDays) {
                                     Set-VcenterPasswordExpiration -maxDays $maxDays -minDays $minDays -warnDays $warnDays | Out-Null
                                     if ((Get-VcenterPasswordExpiration).max_days -eq $maxDays -and (Get-VcenterPasswordExpiration).min_days -eq $minDays -and (Get-VcenterPasswordExpiration).warn_days -eq $warnDays) {
-                                        Write-Output "Update Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        Write-Output "Update Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
-                                        Write-Error "Update Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        Write-Error "Update Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Warning "Update Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                    Write-Warning "Update Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
                         }
@@ -4494,15 +4494,15 @@ Function Update-VcenterPasswordComplexity {
 		Updates the password complexity policy.
 
         .DESCRIPTION
-        The Update-VcenterPasswordComplexity cmdlet configures the password complexity policy of a vCenter Server.
+        The Update-VcenterPasswordComplexity cmdlet configures the password complexity policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the password complexity policy
 
         .EXAMPLE
         Update-VcenterPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
-        This example configures the password complexity policy for a vCenter Server instance based on the workload domain
+        This example configures the password complexity policy for a vCenter instance based on the workload domain
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4581,12 +4581,12 @@ Function Update-VcenterPasswordComplexity {
                                     Set-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -minLength $minLength -uppercase $minUppercase -lowercase $minLowercase -numerical $minNumerical -special $minSpecial -unique $minUnique -history $history | Out-Null
                                     $updatedConfiguration = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
                                     if ($updatedConfiguration.'Min Length' -eq $minLength -and $updatedConfiguration.'Min Lowercase' -eq $minLowercase -and $updatedConfiguration.'Min Uppercase' -eq $minUppercase -and $updatedConfiguration.'Min Numerical' -eq $minNumerical -and $updatedConfiguration.'Min Special' -eq $minSpecial -and $updatedConfiguration.'Min Unique' -eq $minUnique -and $updatedConfiguration.'History' -eq $history) {
-                                        Write-Output "Update Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        Write-Output "Update Password Complexity Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
-                                        Write-Error "Update Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        Write-Error "Update Password Complexity Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Warning "Update Password Complexity Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                    Write-Warning "Update Password Complexity Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
                         }
@@ -4609,18 +4609,18 @@ Export-ModuleMember -Function Update-VcenterPasswordComplexity
 Function Update-VcenterAccountLockout {
     <#
 		.SYNOPSIS
-		Updates the account lockout policy of vCenter Server.
+		Updates the account lockout policy of vCenter.
 
         .DESCRIPTION
-        The Update-VcenterAccountLockout cmdlet configures the account lockout policy of a vCenter Server. The cmdlet
+        The Update-VcenterAccountLockout cmdlet configures the account lockout policy of a vCenter instance. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the account lockout policy
 
         .EXAMPLE
         Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
-        This example configures the account lockout policy for a vCenter Server instance based on the workload domain
+        This example configures the account lockout policy for a vCenter instance based on the workload domain
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4678,12 +4678,12 @@ Function Update-VcenterAccountLockout {
                                     Set-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -failures $failures -unlockInterval $unlockInterval -rootUnlockInterval $rootUnlockInterval | Out-Null
                                     $updatedConfiguration = Get-LocalAccountLockout -vmName ($vcfVcenterDetails.fqdn.Split("."))[0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal
                                     if ($updatedConfiguration.'Max Failures' -eq $failures -and $updatedConfiguration.'Unlock Interval (sec)' -eq $unlockInterval -and $updatedConfiguration.'Root Unlock Interval (sec)' -eq $rootUnlockInterval) {
-                                        Write-Output "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                        Write-Output "Update Account Lockout Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                     } else {
-                                        Write-Error "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                        Write-Error "Update Account Lockout Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Warning "Update Account Lockout Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                    Write-Warning "Update Account Lockout Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                 }
                             }
                         }
@@ -4710,22 +4710,22 @@ Function Request-VcenterRootPasswordExpiration {
 
         .DESCRIPTION
         The Request-VcenterRootPasswordExpiration cmdlet retrieves the root user password expiration policy for a
-        vCenter Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        vCenter. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the root user password expiration policy
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
-        This example retrieves the root user password expiration policy for a vCenter Server instance
+        This example retrieves the root user password expiration policy for a vCenter instance
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the root user password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the root user password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
-        This example retrieves the root user password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
+        This example retrieves the root user password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4786,7 +4786,7 @@ Function Request-VcenterRootPasswordExpiration {
                                     $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.warn_days_before_password_expiration -ne $requiredConfig.warningDays) { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" } } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" })
                                     $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Email" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.email -ne $requiredConfig.email) { "$($VcenterRootPasswordExpiration.email) [ $($requiredConfig.email) ]" } else { "$($VcenterRootPasswordExpiration.email)" } } else { "$($VcenterRootPasswordExpiration.email)" })
                                 } else {
-                                    Write-Error "Unable to retrieve root password expiration policy from vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
+                                    Write-Error "Unable to retrieve root password expiration policy from vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                                 return $VcenterRootPasswordExpirationObject
                             }
@@ -4814,18 +4814,18 @@ Function Update-VcenterRootPasswordExpiration {
 
         .DESCRIPTION
         The Update-VcenterRootPasswordExpiration cmdlet configures the root user password expiration policy of a
-        vCenter Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
+        vCenter. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the root user password expiration policy
 
         .EXAMPLE
         Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -email "admin@rainpole.io" -maxDays 999 -warnDays 14
-        This example configures the configures password expiration settings for a vCenter Server instance root account to expire after 999 days with email for warning set to "admin@rainpole.io"
+        This example configures the configures password expiration settings for a vCenter instance root account to expire after 999 days with email for warning set to "admin@rainpole.io"
 
         .EXAMPLE
         Update-VcenterRootPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -neverexpire
-        This example configures the configures password expiration settings for a vCenter Server instance root account to never expire
+        This example configures the configures password expiration settings for a vCenter instance root account to never expire
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -4875,12 +4875,12 @@ Function Update-VcenterRootPasswordExpiration {
                                     if ((Get-VcenterRootPasswordExpiration).max_days_between_password_change -ne -1) {
                                         Set-VcenterRootPasswordExpiration -neverexpire | Out-Null
                                         if ((Get-VcenterRootPasswordExpiration).max_days_between_password_change -ne -1) {
-                                            Write-Output "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                            Write-Output "Update Root Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                         } else {
-                                            Write-Error "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                            Write-Error "Update Root Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                         }
                                     } else {
-                                        Write-Warning "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                        Write-Warning "Update Root Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                     }
                                 } else {
                                     $vCenterRootPasswordExpirationSettings = Get-VcenterRootPasswordExpiration
@@ -4924,12 +4924,12 @@ Function Update-VcenterRootPasswordExpiration {
                                             $condition = $condition -and ($vCenterRootPasswordExpirationSettings).email -eq $email
                                         }
                                         if ($condition) {
-                                            Write-Output "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
+                                            Write-Output "Update Root Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): SUCCESSFUL"
                                         } else {
-                                            Write-Error "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
+                                            Write-Error "Update Root Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)): POST_VALIDATION_FAILED"
                                         }
                                     } else {
-                                        Write-Warning "Update Root Password Expiration Policy on vCenter Server ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
+                                        Write-Warning "Update Root Password Expiration Policy on vCenter ($($vcfVcenterDetails.fqdn)), already set: SKIPPED"
                                     }
                                 }
                             }
@@ -4949,26 +4949,26 @@ Export-ModuleMember -Function Update-VcenterRootPasswordExpiration
 Function Publish-VcenterPasswordExpiration {
     <#
         .SYNOPSIS
-        Publishes the password expiration policy for vCenter Server for a workload domain or all workload domains.
+        Publishes the password expiration policy for vCenter for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-VcenterPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Collects password expiration policy for vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Collects password expiration policy for vCenter
 
         .EXAMPLE
         Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example returns password expiration policy for each vCenter Server
+        This example returns password expiration policy for each vCenter
 
         .EXAMPLE
         Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example returns password expiration policy for a vCenter Server and checks the configuration drift using the provided configuration JSON.
+        This example returns password expiration policy for a vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example returns password expiration policy for a vCenter Server and compares the configuration against the product defaults.
+        This example returns password expiration policy for a vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5033,7 +5033,7 @@ Function Publish-VcenterPasswordExpiration {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterPasswordExpirationObject = $vcenterPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration"></a><h3>vCenter Server - Password Expiration</h3>' -As Table
+                    $vcenterPasswordExpirationObject = $vcenterPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration"></a><h3>vCenter - Password Expiration</h3>' -As Table
                     $vcenterPasswordExpirationObject = Convert-CssClassStyle -htmldata $vcenterPasswordExpirationObject
                     $vcenterPasswordExpirationObject
                 }
@@ -5048,26 +5048,26 @@ Export-ModuleMember -Function Publish-VcenterPasswordExpiration
 Function Publish-VcenterLocalPasswordExpiration {
     <#
         .SYNOPSIS
-        Publishes the password expiration policy for each local user of vCenter Server for a workload domain or all workload domains.
+        Publishes the password expiration policy for each local user of vCenter for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-VcenterLocalPasswordExpiration cmdlet returns password expiration policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Collects password expiration policy for each local user of vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Collects password expiration policy for each local user of vCenter
 
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example returns password expiration policy for each local user of vCenter Server for all workload domains.
+        This example returns password expiration policy for each local user of vCenter for all workload domains.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example returns password expiration policy for each local user of vCenter Server and checks the configuration drift using the provided configuration JSON.
+        This example returns password expiration policy for each local user of vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example returns password expiration policy for each local user of vCenter Server and compares the configuration against the product defaults.
+        This example returns password expiration policy for each local user of vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5131,7 +5131,7 @@ Function Publish-VcenterLocalPasswordExpiration {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterLocalPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterLocalPasswordExpirationObject = $vcenterLocalPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration-local"></a><h3>vCenter Server - Password Expiration (Local Users)</h3>' -As Table
+                    $vcenterLocalPasswordExpirationObject = $vcenterLocalPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration-local"></a><h3>vCenter - Password Expiration (Local Users)</h3>' -As Table
                     $vcenterLocalPasswordExpirationObject = Convert-CssClassStyle -htmldata $vcenterLocalPasswordExpirationObject
                     $vcenterLocalPasswordExpirationObject
                 }
@@ -5146,30 +5146,30 @@ Export-ModuleMember -Function Publish-VcenterLocalPasswordExpiration
 Function Publish-VcenterLocalPasswordComplexity {
     <#
         .SYNOPSIS
-        Publishes the password complexity policy for each vCenter Server instance for a workload domain or all workload domains.
+        Publishes the password complexity policy for each vCenter instance for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-VcenterLocalPasswordComplexity cmdlet returns password complexity policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Collects password complexity policy for each vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Collects password complexity policy for each vCenter
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example returns password complexity policy for each vCenter Server for all workload domains.
+        This example returns password complexity policy for each vCenter for all workload domains.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example returns password complexity policy for a vCenter Server
+        This example returns password complexity policy for a vCenter
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example returns password complexity policy for a vCenter Server and checks the configuration drift using the provided configuration JSON.
+        This example returns password complexity policy for a vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterLocalPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example returns password complexity policy for a vCenter Server and compares the configuration against the product defaults.
+        This example returns password complexity policy for a vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5233,7 +5233,7 @@ Function Publish-VcenterLocalPasswordComplexity {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterLocalPasswordComplexityObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterLocalPasswordComplexityObject = $vcenterLocalPasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-complexity-local"></a><h3>vCenter Server - Password Complexity (Local Users)</h3>' -As Table
+                    $vcenterLocalPasswordComplexityObject = $vcenterLocalPasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-complexity-local"></a><h3>vCenter - Password Complexity (Local Users)</h3>' -As Table
                     $vcenterLocalPasswordComplexityObject = Convert-CssClassStyle -htmldata $vcenterLocalPasswordComplexityObject
                     $vcenterLocalPasswordComplexityObject
                 }
@@ -5248,30 +5248,30 @@ Export-ModuleMember -Function Publish-VcenterLocalPasswordComplexity
 Function Publish-VcenterLocalAccountLockout {
     <#
         .SYNOPSIS
-        Publish account lockout policy for each vCenter Server instance for a workload domain or all workload domains.
+        Publish account lockout policy for each vCenter instance for a workload domain or all workload domains.
 
         .DESCRIPTION
         The Publish-VcenterLocalAccountLockout cmdlet returns account lockout policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Collects password account lockout for each vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Collects password account lockout for each vCenter
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
-        This example returns password account lockout for each vCenter Server for all workload domains.
+        This example returns password account lockout for each vCenter for all workload domains.
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
-        This example returns password account lockout for a vCenter Server
+        This example returns password account lockout for a vCenter
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example returns password account lockout for a vCenter Server and checks the configuration drift using the provided configuration JSON.
+        This example returns password account lockout for a vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
-        This example returns password account lockout for a vCenter Server and compares the configuration against the product defaults.
+        This example returns password account lockout for a vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -5335,7 +5335,7 @@ Function Publish-VcenterLocalAccountLockout {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterLocalAccountLockoutObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterLocalAccountLockoutObject = $vcenterLocalAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-account-lockout-local"></a><h3>vCenter Server - Account Lockout (Local Users)</h3>' -As Table
+                    $vcenterLocalAccountLockoutObject = $vcenterLocalAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-account-lockout-local"></a><h3>vCenter - Account Lockout (Local Users)</h3>' -As Table
                     $vcenterLocalAccountLockoutObject = Convert-CssClassStyle -htmldata $vcenterLocalAccountLockoutObject
                     $vcenterLocalAccountLockoutObject
                 }
@@ -5634,7 +5634,7 @@ Function Request-NsxtManagerAccountLockout {
         a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that network connectivity and authentication is possible to NSX Local Manager
-        - Retrieves the account lockpout policy
+        - Retrieves the account lockout policy
 
         .EXAMPLE
         Request-NsxtManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
@@ -5869,7 +5869,7 @@ Function Update-NsxtManagerPasswordComplexity {
         The maximum number of retries for a password.
 
         .PARAMETER maxRepeats
-        The maximum number of times a single charecter may be repeated in a password.
+        The maximum number of times a single character may be repeated in a password.
 
         .PARAMETER maxSequence
         The maximum number of monotonic sequence in a password.
@@ -6151,7 +6151,7 @@ Function Publish-NsxManagerPasswordExpiration {
         The Publish-NsxManagerPasswordExpiration cmdlet returns password expiration policy for local users of NSX Local
         Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects password expiration policy for each local user of NSX Local Manager
 
         .EXAMPLE
@@ -6261,7 +6261,7 @@ Function Publish-NsxManagerPasswordComplexity {
         The Publish-NsxManagerPasswordComplexity cmdlet returns password complexity policy for local users of NSX Local
         Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects password complexity policy for each NSX Local Manager
 
         .EXAMPLE
@@ -6363,7 +6363,7 @@ Function Publish-NsxManagerAccountLockout {
         The Publish-NsxManagerAccountLockout cmdlet returns account lockout policy for local users of NSX Local
         Manager. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects account lockout policy for each NSX Local Manager
 
         .EXAMPLE
@@ -7151,7 +7151,7 @@ Function Publish-NsxEdgePasswordExpiration {
         The Publish-NsxEdgePasswordExpiration cmdlet returns password expiration policy for local users of NSX Edge
         nodes. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects password expiration policy for each local user of NSX Edge
 
         .EXAMPLE
@@ -7271,7 +7271,7 @@ Function Publish-NsxEdgePasswordComplexity {
         The Publish-NsxEdgePasswordComplexity cmdlet returns password complexity policy for local users of NSX Edge
         Mnodes. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects password complexity policy for each local user of NSX Edge
 
         .EXAMPLE
@@ -7373,7 +7373,7 @@ Function Publish-NsxEdgeAccountLockout {
         The Publish-NsxEdgeAccountLockout cmdlet returns account lockout policy for local users of NSX Edge
         nodes. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Collects account lockout policy for NSX Edge node
 
         .EXAMPLE
@@ -7470,34 +7470,34 @@ Export-ModuleMember -Function Publish-NsxEdgeAccountLockout
 ##########################################################################
 
 ##########################################################################
-#Region     Begin ESXi Password Management Functions                ######
+#Region     Begin ESX Password Management Functions                ######
 
 Function Request-EsxiPasswordExpiration {
     <#
         .SYNOPSIS
-        Retrieves the password expiration policy for ESXi hosts in a cluster.
+        Retrieves the password expiration policy for ESX hosts in a cluster.
 
         .DESCRIPTION
-        The Request-EsxiPasswordExpiration cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
+        The Request-EsxiPasswordExpiration cmdlet retrieves a list of ESX hosts for a cluster displaying the currently
         configured password expiration policy (Advanced Setting Security.PasswordMaxDays). The cmdlet connects to SDDC
         Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts for the cluster specificed
-        - Retrieves the password expiration policy for all ESXi hosts in a cluster
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Gathers the ESX hosts for the cluster specificed
+        - Retrieves the password expiration policy for all ESX hosts in a cluster
 
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
-        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
+        This example retrieves all ESX hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
+        This example retrieves all ESX hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
-        This example retrieves all ESXi hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
+        This example retrieves all ESX hosts password expiration policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7567,15 +7567,15 @@ Function Request-EsxiPasswordExpiration {
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
-                                                Write-Error "Unable to retrieve password expiration policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
+                                                Write-Error "Unable to retrieve password expiration policy from ESX host ($esxiHost.Name): PRE_VALIDATION_FAILED"
                                             }
                                         }
                                         return $esxiPasswdPolicy
                                     } else {
-                                        Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
+                                        Write-Warning "No ESX hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
+                                    Write-Error "Unable to locate Cluster ($cluster) in vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                             }
                         }
@@ -7598,30 +7598,30 @@ Export-ModuleMember -Function Request-EsxiPasswordExpiration
 Function Request-EsxiPasswordComplexity {
     <#
         .SYNOPSIS
-        Retrieves the password complexity policy for all ESXi hosts in a cluster.
+        Retrieves the password complexity policy for all ESX hosts in a cluster.
 
         .DESCRIPTION
-        The Request-EsxiPasswordComplexity cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
+        The Request-EsxiPasswordComplexity cmdlet retrieves a list of ESX hosts for a cluster displaying the currently
         configured password complexity policy (Advanced Settings Security.PasswordHistory and
         Security.PasswordQualityControl). The cmdlet connects to the SDDC Manager using the -server, -user, and -pass
         values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts for the cluster specificed
-        - Retrieves the password complexity policy for all ESXi hosts in a cluster
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Gathers the ESX hosts for the cluster specificed
+        - Retrieves the password complexity policy for all ESX hosts in a cluster
 
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
-        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
+        This example retrieves all ESX hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
+        This example retrieves all ESX hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
-        This example retrieves all ESXi hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
+        This example retrieves all ESX hosts password complexity policy for the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7681,9 +7681,9 @@ Function Request-EsxiPasswordComplexity {
                                     $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
                                     if ($esxiHosts) {
                                         Foreach ($esxiHost in $esxiHosts) {
-                                            # retreving ESXi Advanced Setting: Security.PasswordHistory
+                                            # retreving ESX Advanced Setting: Security.PasswordHistory
                                             $passwordHistory = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordHistory" }
-                                            # retreving ESXi Advanced Setting: Security.PasswordQualityControl
+                                            # retreving ESX Advanced Setting: Security.PasswordQualityControl
                                             $passwordQualityControl = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }
                                             if ($passwordHistory -and $passwordQualityControl) {
                                                 $nodePasswdPolicy = New-Object -TypeName psobject
@@ -7705,15 +7705,15 @@ Function Request-EsxiPasswordComplexity {
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
-                                                Write-Error "Unable to retrieve password complexity policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
+                                                Write-Error "Unable to retrieve password complexity policy from ESX host ($esxiHost.Name): PRE_VALIDATION_FAILED"
                                             }
                                         }
                                         return $esxiPasswdPolicy
                                     } else {
-                                        Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
+                                        Write-Warning "No ESX hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
+                                    Write-Error "Unable to locate Cluster ($cluster) in vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                             }
                         }
@@ -7736,30 +7736,30 @@ Export-ModuleMember -Function Request-EsxiPasswordComplexity
 Function Request-EsxiAccountLockout {
     <#
         .SYNOPSIS
-        Retrieves the account lockout policy for all ESXi hosts in a cluster.
+        Retrieves the account lockout policy for all ESX hosts in a cluster.
 
         .DESCRIPTION
-        The Request-EsxiAccountLockout cmdlet retrieves a list of ESXi hosts for a cluster displaying the currently
+        The Request-EsxiAccountLockout cmdlet retrieves a list of ESX hosts for a cluster displaying the currently
         configured account lockout policy (Advanced Settings Security.AccountLockFailures and
         Security.AccountUnlockTime). The cmdlet connects to the SDDC Manager using the -server, -user, and -pass
         values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts for the cluster specificed
-        - Retrieves the account lockout policy for all ESXi hosts in the cluster
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Gathers the ESX hosts for the cluster specificed
+        - Retrieves the account lockout policy for all ESX hosts in the cluster
 
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01
-        This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01
+        This example retrieves the account lockout policy for all ESX hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01
 
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the account lockout policy for all ESX hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -drift
-        This example retrieves the account lockout policy for all ESXi hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
+        This example retrieves the account lockout policy for all ESX hosts in the cluster named sfo-m01-cl01 in workload domain sfo-m01 and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7819,9 +7819,9 @@ Function Request-EsxiAccountLockout {
                                     $esxiHosts = Get-Cluster $cluster | Get-VMHost | Sort-Object -Property Name
                                     if ($esxiHosts) {
                                         Foreach ($esxiHost in $esxiHosts) {
-                                            # retreving ESXi Advanced Setting: Security.PasswordHistory
+                                            # retreving ESX Advanced Setting: Security.PasswordHistory
                                             $lockFailues = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountLockFailures" }
-                                            # retreving ESXi Advanced Setting: Security.PasswordQualityControl
+                                            # retreving ESX Advanced Setting: Security.PasswordQualityControl
                                             $unlockTime = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }
                                             if ($lockFailues -and $unlockTime) {
                                                 $nodePasswdPolicy = New-Object -TypeName psobject
@@ -7833,15 +7833,15 @@ Function Request-EsxiAccountLockout {
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
-                                                Write-Error "Unable to retrieve account lockout policy from ESXi host ($esxiHost.Name): PRE_VALIDATION_FAILED"
+                                                Write-Error "Unable to retrieve account lockout policy from ESX host ($esxiHost.Name): PRE_VALIDATION_FAILED"
                                             }
                                         }
                                         return $esxiPasswdPolicy
                                     } else {
-                                        Write-Warning "No ESXi hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
+                                        Write-Warning "No ESX hosts found within cluster named ($cluster): PRE_VALIDATION_FAILED"
                                     }
                                 } else {
-                                    Write-Error "Unable to locate Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
+                                    Write-Error "Unable to locate Cluster ($cluster) in vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
                             }
                         }
@@ -7864,24 +7864,24 @@ Export-ModuleMember -Function Request-EsxiAccountLockout
 Function Update-EsxiPasswordExpiration {
     <#
 		.SYNOPSIS
-        Updates the password expiration period in days for all ESXi hosts in a cluster.
+        Updates the password expiration period in days for all ESX hosts in a cluster.
 
         .DESCRIPTION
-		The Update-EsxiPasswordExpiration cmdlet configures the password expiration policy on ESXi. The cmdlet connects
+		The Update-EsxiPasswordExpiration cmdlet configures the password expiration policy on an ESX host. The cmdlet connects
         to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts for the cluster specificed
-        - Configures the password expiration policy for all ESXi hosts in the cluster
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Gathers the ESX hosts for the cluster specificed
+        - Configures the password expiration policy for all ESX hosts in the cluster
 
         .EXAMPLE
         Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999
-        This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01
+        This example configures all ESX hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01
 
         .EXAMPLE
         Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999 -detail false
-        This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01 but does not show the detail per host
+        This example configures all ESX hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01 but does not show the detail per host
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -7932,22 +7932,22 @@ Function Update-EsxiPasswordExpiration {
                                             Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }) -Value $maxDays -Confirm:$false | Out-Null
                                             if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }) -match $maxDays) {
                                                 if ($detail -eq "true") {
-                                                    Write-Output "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost): SUCCESSFUL"
+                                                    Write-Output "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESX Host ($esxiHost): SUCCESSFUL"
                                                 }
                                             } else {
-                                                Write-Error "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost): POST_VALIDATION_FAILED"
+                                                Write-Error "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESX Host ($esxiHost): POST_VALIDATION_FAILED"
                                             }
                                         } else {
                                             if ($detail -eq "true") {
-                                                Write-Warning "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESXi Host ($esxiHost), already set: SKIPPED"
+                                                Write-Warning "Update Advanced System Setting (Security.PasswordMaxDays) to ($maxDays) on ESX Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
                                     }
                                     if ($detail -eq "false") {
-                                        Write-Output "Update Advanced System Setting (Security.PasswordQualityControl) to ($maxDays) on all ESXi Hosts for Workload Domain ($domain): SUCCESSFUL"
+                                        Write-Output "Update Advanced System Setting (Security.PasswordQualityControl) to ($maxDays) on all ESX Hosts for Workload Domain ($domain): SUCCESSFUL"
                                     }
                                 } else {
-                                    Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($vcfVcenterDetails.fqdn), check details and retry: PRE_VALIDATION_FAILED"
+                                    Write-Error "Unable to find Cluster ($cluster) in vCenter ($vcfVcenterDetails.fqdn), check details and retry: PRE_VALIDATION_FAILED"
                                 }
                             }
                         }
@@ -7970,24 +7970,24 @@ Export-ModuleMember -Function Update-EsxiPasswordExpiration
 Function Update-EsxiPasswordComplexity {
     <#
 		.SYNOPSIS
-        Updates ESXi password complexity policy.
+        Updates ESX password complexity policy.
 
         .DESCRIPTION
-        The Update-EsxiPasswordComplexity cmdlet configures the password complexity policy on ESXi. The cmdlet connects
+        The Update-EsxiPasswordComplexity cmdlet configures the password complexity policy on an ESX host. The cmdlet connects
         to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts for the cluster specificed
-        - Configures the password complexity policy for all ESXi hosts in the cluster
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Gathers the ESX hosts for the cluster specificed
+        - Configures the password complexity policy for all ESX hosts in the cluster
 
         .EXAMPLE
         Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
-        This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01
+        This example configures all ESX hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01
 
         .EXAMPLE
         Update-EsxiPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
-        This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
+        This example configures all ESX hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8005,7 +8005,7 @@ Function Update-EsxiPasswordComplexity {
         The name of the cluster to update the policy for.
 
         .PARAMETER policy
-        The policy to apply to the ESXi hosts.
+        The policy to apply to the ESX hosts.
 
         .PARAMETER history
         The number of previous passwords that a password cannot match.
@@ -8041,36 +8041,36 @@ Function Update-EsxiPasswordComplexity {
                                             Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }) -Value $policy -Confirm:$false | Out-Null
                                             if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }).value -match $policy) {
                                                 if ($detail -eq "true") {
-                                                    Write-Output "Update Password Complexity Policy (Security.PasswordQualityControl) on ESXi Host ($esxiHost): SUCCESSFUL"
+                                                    Write-Output "Update Password Complexity Policy (Security.PasswordQualityControl) on ESX Host ($esxiHost): SUCCESSFUL"
                                                 }
                                             } else {
-                                                Write-Error "Update Password Complexity Policy (Security.PasswordQualityControl) on ESXi Host ($esxiHost): POST_VALIDATION_FAILED"
+                                                Write-Error "Update Password Complexity Policy (Security.PasswordQualityControl) on ESX Host ($esxiHost): POST_VALIDATION_FAILED"
                                             }
                                         } else {
                                             if ($detail -eq "true") {
-                                                Write-Warning "Update Password Complexity Policy (Security.PasswordQualityControl) on ESXi Host ($esxiHost), already set: SKIPPED"
+                                                Write-Warning "Update Password Complexity Policy (Security.PasswordQualityControl) on ESX Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
                                         if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordHistory" }).value -ne $history) {
                                             Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordHistory" }) -Value $history -Confirm:$false | Out-Null
                                             if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordHistory" }) -match $history) {
                                                 if ($detail -eq "true") {
-                                                    Write-Output "Update Password Complexity Policy (Security.PasswordHistory) to ($history) on ESXi Host ($esxiHost): SUCCESSFUL"
+                                                    Write-Output "Update Password Complexity Policy (Security.PasswordHistory) to ($history) on ESX Host ($esxiHost): SUCCESSFUL"
                                                 }
                                             } else {
-                                                Write-Error "Update Password Complexity Policy (Security.PasswordHistory) to ($history) on ESXi Host ($esxiHost): POST_VALIDATION_FAILED"
+                                                Write-Error "Update Password Complexity Policy (Security.PasswordHistory) to ($history) on ESX Host ($esxiHost): POST_VALIDATION_FAILED"
                                             }
                                         } else {
                                             if ($detail -eq "true") {
-                                                Write-Warning "Update Password Complexity Policy (Security.PasswordHistory) to ($history) on ESXi Host ($esxiHost), already set: SKIPPED"
+                                                Write-Warning "Update Password Complexity Policy (Security.PasswordHistory) to ($history) on ESX Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
                                     }
                                     if ($detail -eq "false") {
-                                        Write-Output "Update Password Complexity Policy (Security.PasswordQualityControl and Security.PasswordHistory) on all ESXi Hosts for Workload Domain ($domain): SUCCESSFUL"
+                                        Write-Output "Update Password Complexity Policy (Security.PasswordQualityControl and Security.PasswordHistory) on all ESX Hosts for Workload Domain ($domain): SUCCESSFUL"
                                     }
                                 } else {
-                                    Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)), check details and retry: PRE_VALIDATION_FOUND"
+                                    Write-Error "Unable to find Cluster ($cluster) in vCenter ($($vcfVcenterDetails.fqdn)), check details and retry: PRE_VALIDATION_FOUND"
                                 }
                             }
                         }
@@ -8093,24 +8093,24 @@ Export-ModuleMember -Function Update-EsxiPasswordComplexity
 Function Update-EsxiAccountLockout {
     <#
 		.SYNOPSIS
-        Updates ESXi account lockout policy.
+        Updates ESX account lockout policy.
 
         .DESCRIPTION
-        The Update-EsxiAccountLockout cmdlet configures the account lockout policy on ESXi. The cmdlet connects
+        The Update-EsxiAccountLockout cmdlet configures the account lockout policy on an ESX host. The cmdlet connects
         to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
         - Validates that the workload domain exists in the SDDC Manager inventory
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Gathers the ESXi hosts for the cluster specificed
-        - Configures the account lockout policy for all ESXi hosts in the cluster
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Gathers the ESX hosts for the cluster specificed
+        - Configures the account lockout policy for all ESX hosts in the cluster
 
         .EXAMPLE
         Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900
-        This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01
+        This example configures all ESX hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01
 
         .EXAMPLE
         Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900 -detail false
-        This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
+        This example configures all ESX hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8164,36 +8164,36 @@ Function Update-EsxiAccountLockout {
                                             Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountLockFailures" }) -Value $failures -Confirm:$false | Out-Null
                                             if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountLockFailures" }).value -match $failures) {
                                                 if ($detail -eq "true") {
-                                                    Write-Output "Update Password Complexity Policy (Security.AccountLockFailures) to ($failures) on ESXi Host ($esxiHost): SUCCESSFUL"
+                                                    Write-Output "Update Password Complexity Policy (Security.AccountLockFailures) to ($failures) on ESX Host ($esxiHost): SUCCESSFUL"
                                                 }
                                             } else {
-                                                Write-Error "Update Password Complexity Policy (Security.AccountLockFailures) to ($failures) on ESXi Host ($esxiHost): POST_VALIDATION_FAILED"
+                                                Write-Error "Update Password Complexity Policy (Security.AccountLockFailures) to ($failures) on ESX Host ($esxiHost): POST_VALIDATION_FAILED"
                                             }
                                         } else {
                                             if ($detail -eq "true") {
-                                                Write-Warning "Update Password Complexity Policy (Security.AccountLockFailures) to ($failures) on ESXi Host ($esxiHost), already set: SKIPPED"
+                                                Write-Warning "Update Password Complexity Policy (Security.AccountLockFailures) to ($failures) on ESX Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
                                         if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }).value -ne $unlockInterval) {
                                             Set-AdvancedSetting -AdvancedSetting (Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }) -Value $unlockInterval -Confirm:$false | Out-Null
                                             if ((Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }) -match $unlockInterval) {
                                                 if ($detail -eq "true") {
-                                                    Write-Output "Update Password Complexity Policy (Security.AccountUnlockTime) to ($unlockInterval) on ESXi Host ($esxiHost): SUCCESSFUL"
+                                                    Write-Output "Update Password Complexity Policy (Security.AccountUnlockTime) to ($unlockInterval) on ESX Host ($esxiHost): SUCCESSFUL"
                                                 }
                                             } else {
-                                                Write-Error "Update Password Complexity Policy (Security.AccountUnlockTime) to ($unlockInterval) on ESXi Host ($esxiHost): POST_VALIDATION_FAILED"
+                                                Write-Error "Update Password Complexity Policy (Security.AccountUnlockTime) to ($unlockInterval) on ESX Host ($esxiHost): POST_VALIDATION_FAILED"
                                             }
                                         } else {
                                             if ($detail -eq "true") {
-                                                Write-Warning "Update Password Complexity Policy (Security.AccountUnlockTime) to ($unlockInterval) on ESXi Host ($esxiHost), already set: SKIPPED"
+                                                Write-Warning "Update Password Complexity Policy (Security.AccountUnlockTime) to ($unlockInterval) on ESX Host ($esxiHost), already set: SKIPPED"
                                             }
                                         }
                                     }
                                     if ($detail -eq "false") {
-                                        Write-Output "Update Password Complexity Policy (Security.AccountLockFailures and Security.AccountUnlockTime) on all ESXi Hosts for Workload Domain ($domain): SUCCESSFUL"
+                                        Write-Output "Update Password Complexity Policy (Security.AccountLockFailures and Security.AccountUnlockTime) on all ESX Hosts for Workload Domain ($domain): SUCCESSFUL"
                                     }
                                 } else {
-                                    Write-Error "Unable to find Cluster ($cluster) in vCenter Server ($($vcfVcenterDetails.fqdn)), check details and retry: PRE_VALIDATION_FOUND"
+                                    Write-Error "Unable to find Cluster ($cluster) in vCenter ($($vcfVcenterDetails.fqdn)), check details and retry: PRE_VALIDATION_FOUND"
                                 }
                             }
                         }
@@ -8216,46 +8216,46 @@ Export-ModuleMember -Function Update-EsxiAccountLockout
 Function Publish-EsxiPasswordPolicy {
     <#
         .SYNOPSIS
-        Publishes the password policies for ESXi hosts for a workload domain or all workload domains.
+        Publishes the password policies for ESX hosts for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Publish-EsxiPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
+        The Publish-EsxiPasswordPolicy cmdlet retrieves the requested password policy for all ESX hosts and converts
         the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
-        - Retrieves the requested password policy for all ESXi hosts and converts to HTML
+        - Validates that network connectivity and authentication is possible to vCenter
+        - Retrieves the requested password policy for all ESX hosts and converts to HTML
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
-        This example returns password expiration policy for all ESXi hosts across all workload domains.
+        This example returns password expiration policy for all ESX hosts across all workload domains.
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01
-        This example returns password expiration policy for all ESXi hosts for a workload domain
+        This example returns password expiration policy for all ESX hosts for a workload domain
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
-        This example returns password complexity policy for all ESXi hosts across all workload domains.
+        This example returns password complexity policy for all ESX hosts across all workload domains.
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-w01
-        This example returns password complexity policy for all ESXi hosts for a workload domain
+        This example returns password complexity policy for all ESX hosts for a workload domain
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
-        This example returns account lockout policy for all ESXi hosts across all workload domains.
+        This example returns account lockout policy for all ESX hosts across all workload domains.
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-w01
-        This example returns account lockout policy for all ESXi hosts for a workload domain
+        This example returns account lockout policy for all ESX hosts for a workload domain
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example returns password expiration policy for all ESXi hosts across all workload domains and compares the configuration against the passwordPolicyConfig.json
+        This example returns password expiration policy for all ESX hosts across all workload domains and compares the configuration against the passwordPolicyConfig.json
 
         .EXAMPLE
         Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift
-        This example returns password expiration policy for all ESXi hosts across all workload domains and compares the configuration against the product defaults.
+        This example returns password expiration policy for all ESX hosts across all workload domains and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -8303,9 +8303,9 @@ Function Publish-EsxiPasswordPolicy {
 
     $pass = Get-Password -username $user -password $pass
 
-    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-EsxiPasswordExpiration"; $preHtmlContent = '<a id="esxi-password-expiration"></a><h3>ESXi - Password Expiration</h3>' }
-    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-EsxiPasswordComplexity"; $preHtmlContent = '<a id="esxi-password-complexity"></a><h3>ESXi - Password Complexity</h3>' }
-    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-EsxiAccountLockout"; $preHtmlContent = '<a id="esxi-account-lockout"></a><h3>ESXi - Account Lockout</h3>' }
+    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-EsxiPasswordExpiration"; $preHtmlContent = '<a id="esxi-password-expiration"></a><h3>ESX - Password Expiration</h3>' }
+    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-EsxiPasswordComplexity"; $preHtmlContent = '<a id="esxi-password-complexity"></a><h3>ESX - Password Complexity</h3>' }
+    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-EsxiAccountLockout"; $preHtmlContent = '<a id="esxi-account-lockout"></a><h3>ESX - Account Lockout</h3>' }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
@@ -8361,7 +8361,7 @@ Function Publish-EsxiPasswordPolicy {
 }
 Export-ModuleMember -Function Publish-EsxiPasswordPolicy
 
-#EndRegion  End ESXi Password Management Functions                  ######
+#EndRegion  End ESX Password Management Functions                  ######
 ##########################################################################
 
 ##########################################################################
@@ -8547,7 +8547,7 @@ Function Request-WsaLocalUserPasswordComplexity {
         The Request-WsaLocalUserPasswordComplexity cmdlet retrieves the local user password complexity policy for
         Workspace ONE Access. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the local user password complexity policy for Workspace ONE Access
 
         .EXAMPLE
@@ -8980,7 +8980,7 @@ Function Update-WsaLocalUserPasswordComplexity {
         The Update-WsaLocalUserPasswordComplexity cmdlet configures the local user password complexity policy for
         Workspace ONE Access. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the password complexity policy
 
         .EXAMPLE
@@ -9135,7 +9135,7 @@ Function Update-WsaLocalUserAccountLockout {
         The Update-WsaLocalUserAccountLockout cmdlet configures the account lockout policy of Workspace ONE Access.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the account lockout policy
 
         .EXAMPLE
@@ -9321,10 +9321,10 @@ Function Publish-WsaLocalPasswordPolicy {
         Publishes the password policies for Workspace ONE Access Local Users.
 
         .DESCRIPTION
-        The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for all ESXi hosts and converts
+        The Publish-WsaDirectoryPasswordPolicy cmdlet retrieves the requested password policy for all ESX hosts and converts
         the output to HTML. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
         - Retrieves the requested password policy for Workspace ONE Access Local Users and converts to HTML
 
         .EXAMPLE
@@ -9448,7 +9448,7 @@ Function Get-AriaLocalUserPasswordExpiration {
         The Get-AriaLocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the password expiration policy for the specified local user
 
         .EXAMPLE
@@ -15487,20 +15487,20 @@ Function Request-LocalUserPasswordExpiration {
         The Request-LocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Retrieves the password expiration policy for the specified local user
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
-        This example retrieves the global password expiration policy for a vCenter Server instance
+        This example retrieves the global password expiration policy for a vCenter instance
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
-        This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the global password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
-        This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
+        This example retrieves the global password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -15632,7 +15632,7 @@ Function Update-LocalUserPasswordExpiration {
         The Update-LocalUserPasswordExpiration cmdlet configures a local user password expiration policy. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter Server
+        - Validates that network connectivity and authentication is possible to vCenter
 		- Configures the local user password expiration policy
 
         .EXAMPLE
@@ -15834,7 +15834,7 @@ Function Publish-PasswordRotationPolicy {
     if ($resource) {
         switch ($resource) {
             'sso' { $resourceName = 'vCenter Single Sign-On' }
-            'vcenterServer' { $resourceName = 'vCenter Server' }
+            'vcenterServer' { $resourceName = 'vCenter' }
             'nsxManager' { $resourceName = 'NSX Manager' }
             'nsxEdge' { $resourceName = 'NSX Edge' }
             'ariaLifecycle' { $resourceName = 'Aria Suite Lifecycle' }
@@ -15879,7 +15879,7 @@ Function Publish-PasswordRotationPolicy {
                 }
 
                 # Define the custom sort order for resourceType
-                $resourceTypeOrder = @('SDDC Manager', 'vCenter Single Sign-On', 'vCenter Server', 'NSX Manager', 'NSX Edge', 'Aria Suite Lifecycle', 'Aria Operations for Logs', 'Aria Operations', 'Aria Automation', 'Workspace ONE Access')
+                $resourceTypeOrder = @('SDDC Manager', 'vCenter Single Sign-On', 'vCenter', 'NSX Manager', 'NSX Edge', 'Aria Suite Lifecycle', 'Aria Operations for Logs', 'Aria Operations', 'Aria Automation', 'Workspace ONE Access')
 
                 # Sort the array by resourceType using the custom sort order
                 $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression = { $resourceTypeOrder.IndexOf($_.Resource) } }, 'System', 'User'
@@ -15995,14 +15995,14 @@ Function Request-PasswordRotationPolicy {
             # Validate that authentication is possible to SDDC Manager.
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 # Retrieve the credential password rotation settings for the specified resource type on the specified workload domain, if specified.
-                # ESXi host are ineligible for automated password rotation.
+                # ESX host are ineligible for automated password rotation.
                 $passwordRotations = Get-VCFCredentialExpiry | Where-Object { $_.resource.resourceType -like $resourceType -and (!$domain -or $_.resource.domainName -eq $domain -and $_.resource.resourceType -notlike "ESXI") }
                 # Iterate through the credential password rotation settings.
                 $passwordRotationObject = foreach ($passwordRotation in $passwordRotations) {
                     # Determine the resource name based on the resource type.
                     switch ($passwordRotation.resource.resourceType) {
                         'PSC' { $resourceName = 'vCenter Single Sign-On' }
-                        'VCENTER' { $resourceName = 'vCenter Server' }
+                        'VCENTER' { $resourceName = 'vCenter' }
                         'NSXT_MANAGER' { $resourceName = 'NSX Manager' }
                         'NSXT_EDGE' { $resourceName = 'NSX Edge' }
                         'VRSLCM' { $resourceName = 'Aria Suite Lifecycle' }
@@ -16096,7 +16096,7 @@ Function Request-PasswordRotationPolicy {
                 }
 
                 # Define the custom sort order for resourceType
-                $resourceTypeOrder = @('SDDC Manager', 'vCenter Single Sign-On', 'vCenter Server', 'NSX Manager', 'NSX Edge', 'Aria Suite Lifecycle', 'Aria Operations for Logs', 'Aria Operations', 'Aria Automation', 'Workspace ONE Access')
+                $resourceTypeOrder = @('SDDC Manager', 'vCenter Single Sign-On', 'vCenter', 'NSX Manager', 'NSX Edge', 'Aria Suite Lifecycle', 'Aria Operations for Logs', 'Aria Operations', 'Aria Automation', 'Workspace ONE Access')
 
                 # Sort the $passwordRotationObjects array by resourceType using the custom sort order
                 $passwordRotationObject = $passwordRotationObject | Sort-Object -Property 'Workload Domain', @{Expression = { $resourceTypeOrder.IndexOf($_.Resource) } }, 'System', 'Type', 'User'
@@ -16183,7 +16183,7 @@ Function Update-PasswordRotationPolicy {
     # Set the resource type.
     switch ($resource) {
         'sso' { $resourceType = 'PSC'; $resourceDescription = 'vCenter Single Sign-On' }
-        'vcenterServer' { $resourceType = 'VCENTER'; $resourceDescription = 'vCenter Server' }
+        'vcenterServer' { $resourceType = 'VCENTER'; $resourceDescription = 'vCenter' }
         'nsxManager' { $resourceType = 'NSXT_MANAGER'; $resourceDescription = 'NSX Manager' }
         'nsxEdge' { $resourceType = 'NSXT_EDGE'; $resourceDescription = 'NSX Edge' }
         'ariaLifecycle' { $resourceType = 'VRSLCM'; $resourceDescription = 'Aria Suite Lifecycle' }

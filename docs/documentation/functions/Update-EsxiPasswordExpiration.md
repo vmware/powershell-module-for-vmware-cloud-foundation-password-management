@@ -12,7 +12,7 @@ Update-EsxiPasswordExpiration [-server] <String> [-user] <String> [-pass] <Strin
 
 ## Description
 
-The `Update-EsxiPasswordExpiration` cmdlet configures the password expiration policy on ESXi.
+The `Update-EsxiPasswordExpiration` cmdlet configures the password expiration policy on an ESX host.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager

@@ -25,7 +25,7 @@ The `Get-PasswordPolicyDefault` cmdlet returns the default password policy setti
 Default settings for VMware products include:
 
 - VMware SDDC Manager
-- VMware ESXi
+- VMware ESX
 - VMware vCenter Single Sign-On
 - VMware vCenter
 - VMware NSX Manager
