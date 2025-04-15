@@ -16,7 +16,7 @@ The `Update-SddcManagerAccountLockout` cmdlet configures the account lockout pol
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the account lockout policy
 
 ## Examples
@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
+Update-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
 ```
 
 This example configures the account lockout policy for an SDDC Manager.

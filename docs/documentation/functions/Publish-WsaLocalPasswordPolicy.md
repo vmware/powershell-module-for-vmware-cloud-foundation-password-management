@@ -20,11 +20,11 @@ Publish-WsaLocalPasswordPolicy -server <String> -user <String> -pass <String> -w
 
 ## Description
 
-The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and converts the output to HTML.
+The `Publish-WsaDirectoryPasswordPolicy` cmdlet retrieves the requested password policy for all ESX hosts and converts the output to HTML.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Retrieves the requested password policy for Workspace ONE Access local users and converts to HTML
 
 ## Examples
@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
+Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains
 ```
 
 This example returns password expiration policy for Workspace ONE Access Directory Users.
@@ -40,7 +40,7 @@ This example returns password expiration policy for Workspace ONE Access Directo
 ### Example 2
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
+Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains
 ```
 
 This example returns password complexity policy for Workspace ONE Access Directory Users.
@@ -48,7 +48,7 @@ This example returns password complexity policy for Workspace ONE Access Directo
 ### Example 3
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains
+Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains
 ```
 
 This example returns account lockout policy for Workspace ONE Access Directory Users.
@@ -56,15 +56,15 @@ This example returns account lockout policy for Workspace ONE Access Directory U
 ### Example 4
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the `passwordPolicyConfig.json` file.
+This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the policy configuration file.
 
 ### Example 5
 
 ```powershell
-Publish-WsaLocalPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -allDomains -drift
+Publish-WsaLocalPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <fqdn> -wsaRootPass <root_password> -allDomains -drift
 ```
 
 This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.

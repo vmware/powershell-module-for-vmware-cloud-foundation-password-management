@@ -16,7 +16,7 @@ The `Request-SddcManagerAccountLockout` cmdlet retrieves the account lockout pol
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Retrieves the account lockout policy for an SDDC Manager
 
 ## Examples
@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1!
+Request-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
 ```
 
 This example retrieves the account lockout policy for an SDDC Manager.
@@ -32,15 +32,15 @@ This example retrieves the account lockout policy for an SDDC Manager.
 ### Example 2
 
 ```powershell
-Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example retrieves the account lockout policy for an SDDC Manager and and compares the configuration against passwordPolicyConfig.json.
+This example retrieves the account lockout policy for an SDDC Manager and and compares the configuration against the policy configuration file.
 
 ### Example 3
 
 ```powershell
-Request-SddcManagerAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -rootPass VMw@re1! -drift
+Request-SddcManagerAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
 ```
 
 This example retrieves the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.

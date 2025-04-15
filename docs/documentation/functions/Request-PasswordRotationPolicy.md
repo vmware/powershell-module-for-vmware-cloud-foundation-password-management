@@ -25,7 +25,7 @@ The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass
 ### Example 1
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1!
+Request-PasswordRotationPolicy -server <fqdn> -user <admin_username> -pass <admin_password>
 ```
 
 This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
@@ -33,15 +33,15 @@ This example retrieves the credential password rotation settings for all resourc
 ### Example 2
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
+Request-PasswordRotationPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
-This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the workload domain.
 
 ### Example 3
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -resource nsxManager
+Request-PasswordRotationPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -resource nsxManager
 ```
 
 This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
@@ -49,10 +49,10 @@ This example retrieves the credential password rotation settings for the NSX Man
 ### Example 4
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -resource nsxManager
+Request-PasswordRotationPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource nsxManager
 ```
 
-This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the workload domain.
 
 ## Parameters
 

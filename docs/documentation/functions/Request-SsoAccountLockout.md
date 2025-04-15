@@ -25,23 +25,23 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
+Request-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
-This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01.
+This example retrieves the account lockout policy for vCenter Single Sign-On domain of the workload domain.
 
 ### Example 2
 
 ```powershell
-Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example retrieves the account lockout policy for vCenter Single Sign-On domain of workload domain sfo-m01 and compares the configuration against passwordPolicyConfig.json.
+This example retrieves the account lockout policy for vCenter Single Sign-On domain of the workload domain and compares the configuration against the policy configuration file.
 
 ### Example 3
 
 ```powershell
-Request-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
+Request-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
 ```
 
 This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults.

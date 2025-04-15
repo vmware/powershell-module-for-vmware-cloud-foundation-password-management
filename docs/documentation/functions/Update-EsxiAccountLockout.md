@@ -17,27 +17,27 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Gathers the ESXi hosts for the cluster specificed
-- Configures the account lockout policy for all ESXi hosts in the cluster
+- Validates that network connectivity and authentication is possible to vCenter
+- Gathers the ESX hosts for the cluster specified
+- Configures the account lockout policy for all ESX hosts in the cluster
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900
+Update-EsxiAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900
 ```
 
-This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01.
+This example configures all ESX hosts within the cluster in the workload domain
 
 ### Example 2
 
 ```powershell
-Update-EsxiAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -failures 5 -unlockInterval 900 -detail false
+Update-EsxiAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900 -detail false
 ```
 
-This example configures all ESXi hosts within the cluster named sfo-m01-cl01 of the workload domain sfo-m01 but does not show the detail per host.
+This example configures all ESX hosts within the cluster in the workload domain but does not show the detail per host.
 
 ## Parameters
 

@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01
+Request-NsxtManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
 ```
 
 This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain.
@@ -32,7 +32,7 @@ This example retrieves the password complexity policy for each NSX Local Manager
 ### Example 2
 
 ```powershell
-Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-NsxtManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
 This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the password complexity policy for each NSX Local Manager
 ### Example 3
 
 ```powershell
-Request-NsxtManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -drift
+Request-NsxtManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
 ```
 
 This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults.

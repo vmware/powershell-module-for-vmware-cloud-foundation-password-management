@@ -24,10 +24,10 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-NsxtEdgeAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cliFailures 5 -cliUnlockInterval 900
+Update-NsxtEdgeAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cliFailures 5 -cliUnlockInterval 900
 ```
 
-This example configures the account lockout policy of the NSX Edge nodes in sfo-m01 workload domain.
+This example configures the account lockout policy of the NSX Edge nodes in the workload domain.
 
 ## Parameters
 

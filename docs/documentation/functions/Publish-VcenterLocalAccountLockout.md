@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Publish account lockout policy for each vCenter Server for a workload domain or all workload domains.
+Publish account lockout policy for each vCenter for a workload domain or all workload domains.
 
 ## Syntax
 
@@ -24,42 +24,42 @@ The `Publish-VcenterLocalAccountLockout` cmdlet returns account lockout policy f
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Collects password account lockout for each vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
+- Collects password account lockout for each vCenter
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
+Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -allDomains
 ```
 
-This example returns password account lockout for each vCenter Server for all workload domains.
+This example returns password account lockout for each vCenter for all workload domains.
 
 ### Example 2
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
+Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
 ```
 
-This example returns password account lockout for a vCenter Server.
+This example returns password account lockout for a vCenter instance.
 
 ### Example 3
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example returns password account lockout for a vCenter Server and checks the configuration drift using the provided configuration JSON.
+This example returns password account lockout for a vCenter and checks the configuration drift using the provided configuration JSON.
 
 ### Example 4
 
 ```powershell
-Publish-VcenterLocalAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
+Publish-VcenterLocalAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
 ```
 
-This example returns password account lockout for a vCenter Server and compares the configuration against the product defaults.
+This example returns password account lockout for a vCenter and compares the configuration against the product defaults.
 
 ## Parameters
 

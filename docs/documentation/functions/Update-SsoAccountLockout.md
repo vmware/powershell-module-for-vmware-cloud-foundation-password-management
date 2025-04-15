@@ -16,7 +16,7 @@ The `Update-SsoAccountLockout` cmdlet configures the account lockout policy of a
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the vCenter Single Sign-On account lockout policy
 
 ## Examples
@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SsoAccountLockout -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -failures 5 -failureInterval 180 -unlockInterval 900
+Update-SsoAccountLockout -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -failures 5 -failureInterval 180 -unlockInterval 900
 ```
 
 This example configures the account lockout policy for a vCenter Single Sign-On domain.

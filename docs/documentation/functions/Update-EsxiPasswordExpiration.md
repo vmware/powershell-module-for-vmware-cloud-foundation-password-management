@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Updates the password expiration period in days for all ESXi hosts in a cluster.
+Updates the password expiration period in days for all ESX hosts in a cluster.
 
 ## Syntax
 
@@ -17,27 +17,27 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
 - Validates that the workload domain exists in the SDDC Manager inventory
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Gathers the ESXi hosts for the cluster specificed
-- Configures the password expiration policy for all ESXi hosts in the cluster
+- Validates that network connectivity and authentication is possible to vCenter
+- Gathers the ESX hosts for the cluster specified
+- Configures the password expiration policy for all ESX hosts in the cluster
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999
+Update-EsxiPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -maxDays 999
 ```
 
-This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01.
+This example configures all ESX hosts within the cluster named in the workload domain.
 
 ### Example 2
 
 ```powershell
-Update-EsxiPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -domain sfo-m01 -cluster sfo-m01-cl01 -maxDays 999 -detail false
+Update-EsxiPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -maxDays 999 -detail false
 ```
 
-This example configures all ESXi hosts within the cluster named sfo-m01-cl01 for the workload domain sfo-m01 but does not show the detail per host.
+This example configures all ESX hosts within the cluster named in the workload domain but does not show the detail per host.
 
 ## Parameters
 

@@ -22,26 +22,26 @@ The `Request-WsaPasswordExpiration` cmdlet retrieves the Workspace ONE Access pa
 ### Example 1
 
 ```powershell
-Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
+Request-WsaPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password>
 ```
 
-This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io.
+This example retrieves the password expiration policy for Workspace ONE Access instance <fqdn>.
 
 ### Example 2
 
 ```powershell
-Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-WsaPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and checks the configuration drift using the provided configuration JSON.
+This example retrieves the password expiration policy for Workspace ONE Access instance <fqdn> and checks the configuration drift using the provided configuration JSON.
 
 ### Example 3
 
 ```powershell
-Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -drift
+Request-WsaPasswordExpiration -server <fqdn> -user <admin_username> -pass <admin_password> -drift
 ```
 
-This example retrieves the password expiration policy for Workspace ONE Access instance sfo-wsa01.sfo.rainpole.io and compares the configuration against the product defaults.
+This example retrieves the password expiration policy for Workspace ONE Access instance <fqdn> and compares the configuration against the product defaults.
 
 ## Parameters
 

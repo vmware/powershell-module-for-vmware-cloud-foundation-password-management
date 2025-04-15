@@ -22,7 +22,7 @@ Publish-AriaLocalUserPasswordPolicy -server <String> -user <String> [-pass <Stri
 
 ## Description
 
-The `Publish-AriaLocalUserPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and converts
+The `Publish-AriaLocalUserPasswordPolicy` cmdlet retrieves the requested password policy for all ESX hosts and converts
 the output to HTML.
 
 The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
@@ -37,7 +37,7 @@ The cmdlet connects to the SDDC Manager using the -server, -user, and -pass valu
 ### Example 1
 
 ```powershell
-Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
+Publish-AriaLocalUserPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
 ```
 
 This example returns password expiration policy for all VMware Aria products for all domains.
@@ -45,7 +45,7 @@ This example returns password expiration policy for all VMware Aria products for
 ### Example 2
 
 ```powershell
-Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-m01
+Publish-AriaLocalUserPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name>
 ```
 
 This example returns password expiration policy for all VMware Aria products for the management domain.
@@ -53,7 +53,7 @@ This example returns password expiration policy for all VMware Aria products for
 ### Example 3
 
 ```powershell
-Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
+Publish-AriaLocalUserPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
 ```
 
 This example returns password complexity policy for all VMware Aria products for all domains.
@@ -61,7 +61,7 @@ This example returns password complexity policy for all VMware Aria products for
 ### Example 4
 
 ```powershell
-Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-m01
+Publish-AriaLocalUserPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -workloadDomain <workload_domain_name>
 ```
 
 This example returns password complexity policy for all VMware Aria products for the management domain.
@@ -69,7 +69,7 @@ This example returns password complexity policy for all VMware Aria products for
 ### Example 5
 
 ```powershell
-Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
+Publish-AriaLocalUserPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
 ```
 
 This example returns password account lockout policy for all VMware Aria products for all domains.
@@ -77,7 +77,7 @@ This example returns password account lockout policy for all VMware Aria product
 ### Example 6
 
 ```powershell
-Publish-AriaLocalUserPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-m01
+Publish-AriaLocalUserPasswordPolicy -server <fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -workloadDomain <workload_domain_name>
 ```
 
 This example returns password account lockout policy for all VMware Aria products for the management domain.

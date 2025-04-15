@@ -24,7 +24,7 @@ The `Publish-SddcManagerPasswordComplexity` cmdlet returns password complexity p
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Collects password complexity policy for an SDDC Manager
 
 ## Examples
@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -allDomains
+Publish-SddcManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -allDomains
 ```
 
 This example returns password complexity policy for an SDDC Manager.
@@ -40,7 +40,7 @@ This example returns password complexity policy for an SDDC Manager.
 ### Example 2
 
 ```powershell
-Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-w01
+Publish-SddcManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name>
 ```
 
 This example will NOT return the password complexity policy for an SDDC Manager as the workload domain provided is not the management domain.
@@ -48,15 +48,15 @@ This example will NOT return the password complexity policy for an SDDC Manager 
 ### Example 3
 
 ```powershell
-Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-SddcManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
 ```
 
-This example returns the password complexity policy for an SDDC Manager and compares the configuration against passwordPolicyConfig.json.
+This example returns the password complexity policy for an SDDC Manager and compares the configuration against the policy configuration file.
 
 ### Example 4
 
 ```powershell
-Publish-SddcManagerPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -workloadDomain sfo-m01 -drift
+Publish-SddcManagerPasswordComplexity -server <fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift
 ```
 
 This example returns the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
