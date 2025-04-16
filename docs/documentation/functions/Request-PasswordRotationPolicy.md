@@ -25,7 +25,7 @@ The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass
 ### Example 1
 
 ```powershell
-Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password>
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password]
 ```
 
 This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
@@ -33,7 +33,7 @@ This example retrieves the credential password rotation settings for all resourc
 ### Example 2
 
 ```powershell
-Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
 ```
 
 This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the workload domain.
@@ -41,7 +41,7 @@ This example retrieves the credential password rotation settings for all resourc
 ### Example 3
 
 ```powershell
-Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -resource nsxManager
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -resource nsxManager
 ```
 
 This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
@@ -49,7 +49,7 @@ This example retrieves the credential password rotation settings for the NSX Man
 ### Example 4
 
 ```powershell
-Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource nsxManager
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource nsxManager
 ```
 
 This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the workload domain.
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 
 ### -resource
 
-The resource type to retrieve the user password rotation settings for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+The resource type to retrieve the user password rotation settings for. One of: `sso`, `vcenterServer`, `nsxManager`, `nsxEdge`, `ariaLifecycle`, `ariaOperations`, `ariaOperationsLogs`, `ariaAutomation`, `workspaceOneAccess`, `backup`.
 
 ```yaml
 Type: String

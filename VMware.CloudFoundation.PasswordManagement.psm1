@@ -84,11 +84,11 @@ Function Invoke-PasswordRotationManager {
         The Invoke-PasswordRotationManager generates a Password Rotation Manager Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
-        Invoke-PasswordRotationManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains
+        Invoke-PasswordRotationManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains
         This example runs a password rotation report for all workload domains within an SDDC Manager instance.
 
         .EXAMPLE
-        Invoke-PasswordRotationManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -workloadDomain <workload_domain_name>
+        Invoke-PasswordRotationManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -workloadDomain [workload_domain_name]
         This example runs a password rotation report for a specific Workload Domain within an SDDC Manager instance.
 
         .PARAMETER sddcManagerFqdn
@@ -521,23 +521,23 @@ Function Invoke-PasswordPolicyManager {
         The Invoke-PasswordPolicyManager generates a Password Policy Manager Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains
+        Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains
         This example runs a password policy report for all workload domains within an SDDC Manager instance.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -wsaRootPass <wsa_admin_password>
+        Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -wsaRootPass [wsa_admin_password]
         This example runs a password policy report for all workload domains within an SDDC Manager instance and Workspace ONE Access.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -workloadDomain <workload_domain_name>
+        Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -workloadDomain [workload_domain_name]
         This example runs a password policy report for a specific Workload Domain within an SDDC Manager instance.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains -drift -policyFile <policy_file>.json
+        Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -drift -policyFile [policy_file].json
         This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the JSON provided.
 
         .EXAMPLE
-        Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains -drift
+        Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -drift
         This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the product defaults.
 
         .PARAMETER sddcManagerFqdn
@@ -685,9 +685,9 @@ Function Invoke-PasswordPolicyManager {
 
                 if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                     Write-LogMessage -Type INFO -Message "Collecting Workspace ONE Access Local Directory Password Policies for $workflowMessage."
-                    $wsaDirectoryPasswordExpiration = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user <admin_username> -pass $wsaAdminPass -policy PasswordExpiration $($commandSwitch)"
-                    $wsaDirectoryPasswordComplexity = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user <admin_username> -pass $wsaAdminPass -policy PasswordComplexity $($commandSwitch)"
-                    $wsaDirectoryAccountLockout = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user <admin_username> -pass $wsaAdminPass -policy AccountLockout $($commandSwitch)"
+                    $wsaDirectoryPasswordExpiration = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy PasswordExpiration $($commandSwitch)"
+                    $wsaDirectoryPasswordComplexity = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy PasswordComplexity $($commandSwitch)"
+                    $wsaDirectoryAccountLockout = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy AccountLockout $($commandSwitch)"
 
                     Write-LogMessage -Type INFO -Message "Collecting Workspace ONE Access Local User Password Policies for $workflowMessage."
                     $wsaLocalPasswordExpiration = Invoke-Expression "Publish-WsaLocalPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordExpiration -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass $($commandSwitch)"
@@ -847,11 +847,11 @@ Function Start-PasswordPolicyConfig {
         Foundation instance using the JSON configuration file provided.
 
         .EXAMPLE
-        Start-PasswordPolicyConfig -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -policyFile <policy_file>.json
+        Start-PasswordPolicyConfig -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -policyFile [policy_file].json
         This examples configures all password policies for all components across a VMware Cloud Foundation instance.
 
         .EXAMPLE
-        Start-PasswordPolicyConfig -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -policyFile <policy_file>.json -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -wsaRootPass <wsa_admin_password>
+        Start-PasswordPolicyConfig -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -policyFile [policy_file].json -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -wsaRootPass [wsa_admin_password]
         This example configures all password policies for all components across a VMware Cloud Foundation instance and a Workspace ONE Access instance.
 
         .PARAMETER sddcManagerFqdn
@@ -1029,13 +1029,13 @@ Function Start-PasswordPolicyConfig {
                     # Workspace ONE Access Directory Password Policies
                     Write-LogMessage -Type INFO -Message "Configuring Password Policies for Workspace ONE Access Local Directory" -Colour Yellow
                     Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Directory: Password Expiration Policy for instance ($($wsaFqdn))"
-                    $StatusMsg = Update-WsaPasswordExpiration -server $wsaFqdn -user <admin_username> -pass $wsaAdminPass -maxDays $customPolicy.wsaDirectory.passwordExpiration.passwordLifetime -warnDays $customPolicy.wsaDirectory.passwordExpiration.passwordReminder -reminderDays $customPolicy.wsaDirectory.passwordExpiration.passwordReminderFrequency -tempPasswordHours $customPolicy.wsaDirectory.passwordExpiration.temporaryPassword -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                    $StatusMsg = Update-WsaPasswordExpiration -server $wsaFqdn -user admin -pass $wsaAdminPass -maxDays $customPolicy.wsaDirectory.passwordExpiration.passwordLifetime -warnDays $customPolicy.wsaDirectory.passwordExpiration.passwordReminder -reminderDays $customPolicy.wsaDirectory.passwordExpiration.passwordReminderFrequency -tempPasswordHours $customPolicy.wsaDirectory.passwordExpiration.temporaryPassword -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Directory: Password Complexity Policy for instance ($($wsaFqdn))"
-                    $StatusMsg = Update-WsaPasswordComplexity -server $wsaFqdn -user <admin_username> -pass $wsaAdminPass -minLength $customPolicy.wsaDirectory.passwordComplexity.minLength -minLowercase $customPolicy.wsaDirectory.passwordComplexity.minLowercase -minUppercase $customPolicy.wsaDirectory.passwordComplexity.minUppercase -minNumeric $customPolicy.wsaDirectory.passwordComplexity.minNumerical -minSpecial $customPolicy.wsaDirectory.passwordComplexity.minSpecial -maxIdenticalAdjacent $customPolicy.wsaDirectory.passwordComplexity.maxIdenticalAdjacent -maxPreviousCharacters $customPolicy.wsaDirectory.passwordComplexity.history -history $customPolicy.wsaDirectory.passwordComplexity.history -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                    $StatusMsg = Update-WsaPasswordComplexity -server $wsaFqdn -user admin -pass $wsaAdminPass -minLength $customPolicy.wsaDirectory.passwordComplexity.minLength -minLowercase $customPolicy.wsaDirectory.passwordComplexity.minLowercase -minUppercase $customPolicy.wsaDirectory.passwordComplexity.minUppercase -minNumeric $customPolicy.wsaDirectory.passwordComplexity.minNumerical -minSpecial $customPolicy.wsaDirectory.passwordComplexity.minSpecial -maxIdenticalAdjacent $customPolicy.wsaDirectory.passwordComplexity.maxIdenticalAdjacent -maxPreviousCharacters $customPolicy.wsaDirectory.passwordComplexity.history -history $customPolicy.wsaDirectory.passwordComplexity.history -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Directory: Account Lockout Policy for instance ($($wsaFqdn))"
-                    $StatusMsg = Update-WsaAccountLockout -server $wsaFqdn -user <admin_username> -pass $wsaAdminPass -failures $customPolicy.wsaDirectory.accountLockout.maxFailures -failureInterval $customPolicy.wsaDirectory.accountLockout.failedAttemptInterval -unlockInterval $customPolicy.wsaDirectory.accountLockout.unlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
+                    $StatusMsg = Update-WsaAccountLockout -server $wsaFqdn -user admin -pass $wsaAdminPass -failures $customPolicy.wsaDirectory.accountLockout.maxFailures -failureInterval $customPolicy.wsaDirectory.accountLockout.failedAttemptInterval -unlockInterval $customPolicy.wsaDirectory.accountLockout.unlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                     Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Workspace ONE Access Local Directory" -Colour Yellow
 
@@ -1167,11 +1167,11 @@ Function Get-PasswordPolicyDefault {
         This example returns the default password policy settings for the VMware Cloud Foundation version.
 
         .EXAMPLE
-        Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5.0.0.0'
+        Get-PasswordPolicyDefault -generateJson -jsonFile [policy_file].json -version '5.0.0.0'
         This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
 
         .EXAMPLE
-        Get-PasswordPolicyDefault -generateJson -jsonFile <policy_file>.json -version '5.0.0.0'
+        Get-PasswordPolicyDefault -generateJson -jsonFile [policy_file].json -version '5.0.0.0'
         This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
         If the policy configuration file is already present, it is overwritten due to 'force' parameter.
 
@@ -2312,15 +2312,15 @@ Function Request-SddcManagerPasswordExpiration {
         - Retrieves the password expiration policy.
 
         .EXAMPLE
-        Request-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
+        Request-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password]
         This example retrieves the password expiration policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Request-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
+        Request-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift
         This example retrieves the password expiration policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2395,19 +2395,19 @@ Function Request-SddcManagerPasswordComplexity {
         .DESCRIPTION
         The Request-SddcManagerPasswordComplexity cmdlet retrieves the password complexity policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
-        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
 		- Retrieves the password complexity policy.
 
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
+        Request-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password]
         This example retrieves the password complexity policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Request-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
+        Request-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift
         This example retrieves the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2485,19 +2485,19 @@ Function Request-SddcManagerAccountLockout {
         The Request-SddcManagerAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the account lockout policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password>
+        Request-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password]
         This example retrieves the account lockout policy for an SDDC Manager.
 
         .EXAMPLE
-        Request-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the account lockout policy for an SDDC Manager and and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Request-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -drift
+        Request-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -drift
         This example retrieves the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2574,11 +2574,11 @@ Function Update-SddcManagerPasswordExpiration {
         .DESCRIPTION
         The Update-SddcManagerPasswordExpiration cmdlet configures the password complexity policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
-        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
 		- Configures the password expiration policy.
 
         .EXAMPLE
-        Update-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -minDays 0 -maxDays 90 -warnDays 14
+        Update-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -minDays 0 -maxDays 90 -warnDays 14
         This example updates the password expiration policy for the default local users on an SDDC Manager.
 
         .PARAMETER server
@@ -2648,11 +2648,11 @@ Function Update-SddcManagerPasswordComplexity {
         .DESCRIPTION
         The Update-SddcManagerPasswordComplexity cmdlet configures the password complexity policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
-        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
 		- Configures the password complexity policy.
 
         .EXAMPLE
-        Update-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
+        Update-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
         This example configures the password complexity policy for an SDDC Manager.
 
         .PARAMETER server
@@ -2794,11 +2794,11 @@ Function Update-SddcManagerAccountLockout {
         The Update-SddcManagerAccountLockout cmdlet configures the account lockout policy for an SDDC Manager. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the account lockout policy.
 
         .EXAMPLE
-        Update-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
+        Update-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -failures 3 -unlockInterval 86400 -rootUnlockInterval 300
         This example configures the account lockout policy for an SDDC Manager.
 
         .PARAMETER server
@@ -2882,19 +2882,19 @@ Function Publish-SddcManagerPasswordExpiration {
         - Collects password expiration policy for each local user of SDDC Manager.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -allDomains
+        Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -allDomains
         This example returns password expiration policy for each local user of SDDC Manager.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name>
+        Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name]
         This example will NOT return the password expiration policy for each local user of SDDC Manager as the workload domain provided is not the management domain.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns the password expiration policy for each local user of SDDC Manager and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift
+        Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift
         This example returns the password expiration policy for each local user of SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -2998,19 +2998,19 @@ Function Publish-SddcManagerPasswordComplexity {
         - Collects password complexity policy for an SDDC Manager.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -allDomains
+        Publish-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -allDomains
         This example returns password complexity policy for an SDDC Manager.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name>
+        Publish-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name]
         This example will NOT return the password complexity policy for an SDDC Manager as the workload domain provided is not the management domain.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns the password complexity policy for an SDDC Manager and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift
+        Publish-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift
         This example returns the password complexity policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3113,19 +3113,19 @@ Function Publish-SddcManagerAccountLockout {
         - Collects account lockout policy forSDDC Manager.
 
         .EXAMPLE
-        Publish-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -allDomains
+        Publish-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -allDomains
         This example returns account lockout policy for an SDDC Manager.
 
         .EXAMPLE
-        Publish-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name>
+        Publish-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name]
         This example will NOT return the account lockout policy for an SDDC Manager as the workload domain provided is not the management domain.
 
         .EXAMPLE
-        Publish-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns the account lockout policy for an SDDC Manager and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-SddcManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift
+        Publish-SddcManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift
         This example returns the account lockout policy for an SDDC Manager and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3230,19 +3230,19 @@ Function Request-SsoPasswordExpiration {
         The Request-SsoPasswordExpiration cmdlet retrieves the password expiration policy for a vCenter Single Sign-On
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the global password expiration policy.
 
         .EXAMPLE
-        Request-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain.
 
         .EXAMPLE
-        Request-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Request-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the password expiration policy for the vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3348,15 +3348,15 @@ Function Request-SsoPasswordComplexity {
         - Retrieves the password complexity policy.
 
         .EXAMPLE
-        Request-SsoPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-SsoPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of the workload domain.
 
         .EXAMPLE
-        Request-SsoPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-SsoPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of the workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Request-SsoPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-SsoPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the password complexity policy for vCenter Single Sign-On domain of the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3470,15 +3470,15 @@ Function Request-SsoAccountLockout {
         - Retrieves the account lockout policy.
 
         .EXAMPLE
-        Request-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-SsoAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the account lockout policy for vCenter Single Sign-On domain of the workload domain.
 
         .EXAMPLE
-        Request-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-SsoAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the account lockout policy for vCenter Single Sign-On domain of the workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Request-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-SsoAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the account lockout policy for vCenter Single Sign-On domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -3581,11 +3581,11 @@ Function Update-SsoPasswordExpiration {
         The Update-SsoPasswordExpiration cmdlet configures the password expiration policy for a vCenter Single Sign-On
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the vCenter Single Sign-On password expiration policy.
 
         .EXAMPLE
-        Update-SsoPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxDays 999
+        Update-SsoPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -maxDays 999
         This example configures the password expiration policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
@@ -3671,11 +3671,11 @@ Function Update-SsoPasswordComplexity {
         The Update-SsoPasswordComplexity cmdlet configures the password complexity policy of a vCenter Single Sign-On
         domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the vCenter Single Sign-On password complexity policy.
 
         .EXAMPLE
-        Update-SsoPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
+        Update-SsoPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -minLength 15 -maxLength 20 -minAlphabetic 2 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -history 5
         This example configures the password complexity policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
@@ -3805,11 +3805,11 @@ Function Update-SsoAccountLockout {
         The Update-SsoAccountLockout cmdlet configures the account lockout policy of a vCenter Single Sign-On domain.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the vCenter Single Sign-On account lockout policy.
 
         .EXAMPLE
-        Update-SsoAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -failures 5 -failureInterval 180 -unlockInterval 900
+        Update-SsoAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -failures 5 -failureInterval 180 -unlockInterval 900
         This example configures the account lockout policy for a vCenter Single Sign-On domain.
 
         .PARAMETER server
@@ -3909,31 +3909,31 @@ Function Publish-SsoPasswordPolicy {
         - Retrieves the requested password policy for vCenter Single Sign-On and converts to HTML.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
         This example returns password expiration policy for vCenter Single Sign-On across all workload domains.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name>
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
         This example returns password expiration policy for vCenter Single Sign-On for a workload domain.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
         This example returns password complexity policy for vCenter Single Sign-On across all workload domains.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -workloadDomain <workload_domain_name>
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
         This example returns password complexity policy for vCenter Single Sign-On for a workload domain.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
         This example returns account lockout policy for vCenter Single Sign-On across all workload domains.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -workloadDomain <workload_domain_name>
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
         This example returns account lockout policy for vCenter Single Sign-On for a workload domain.
 
         .EXAMPLE
-        Publish-SsoPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-SsoPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for vCenter Single Sign-On for a workload domain and compares the configuration against the policy configuration file.
 
         .PARAMETER server
@@ -4043,19 +4043,19 @@ Function Request-VcenterPasswordExpiration {
         The Request-VcenterPasswordExpiration cmdlet retrieves the global password expiration policy for a vCenter
         Server. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the global password expiration policy.
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the global password expiration policy for a vCenter instance.
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the global password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the global password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4145,19 +4145,19 @@ Function Request-VcenterPasswordComplexity {
         The Request-VcenterPasswordComplexity cmdlet retrieves the password complexity policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the password complexity policy.
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-VcenterPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password complexity policy for a vCenter instance based on the workload domain.
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-VcenterPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for a vCenter instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-VcenterPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the password complexity policy for a vCenter instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4314,19 +4314,19 @@ Function Request-VcenterAccountLockout {
         The Request-VcenterAccountLockout cmdlet retrieves the account lockout policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the account lockout policy.
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-VcenterAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the account lockout policy for a vCenter instance based on the workload domain.
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-VcenterAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the account lockout policy for a vCenter instance based on the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-VcenterAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the account lockout policy for a vCenter instance based on the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4417,11 +4417,11 @@ Function Update-VcenterPasswordExpiration {
         The Update-VcenterPasswordExpiration cmdlet configures the global password expiration policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the global password expiration policy.
 
         .EXAMPLE
-        Update-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxDays 999 -minDays 0 -warnDays 14
+        Update-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -maxDays 999 -minDays 0 -warnDays 14
         This example configures the global password expiration policy for a vCenter instance
 
         .PARAMETER server
@@ -4498,11 +4498,11 @@ Function Update-VcenterPasswordComplexity {
         The Update-VcenterPasswordComplexity cmdlet configures the password complexity policy of a vCenter instance.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the password complexity policy.
 
         .EXAMPLE
-        Update-VcenterPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
+        Update-VcenterPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -history 5
         This example configures the password complexity policy for a vCenter instance based on the workload domain
 
         .PARAMETER server
@@ -4616,11 +4616,11 @@ Function Update-VcenterAccountLockout {
         The Update-VcenterAccountLockout cmdlet configures the account lockout policy of a vCenter instance. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the account lockout policy.
 
         .EXAMPLE
-        Update-VcenterAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -failures 3 -unlockInterval 900 -rootUnlockInterval 300
+        Update-VcenterAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -failures 3 -unlockInterval 900 -rootUnlockInterval 300
         This example configures the account lockout policy for a vCenter instance based on the workload domain
 
         .PARAMETER server
@@ -4713,19 +4713,19 @@ Function Request-VcenterRootPasswordExpiration {
         The Request-VcenterRootPasswordExpiration cmdlet retrieves the root user password expiration policy for a
         vCenter. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the root user password expiration policy.
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the root user password expiration policy for a vCenter instance.
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the root user password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the root user password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -4817,15 +4817,15 @@ Function Update-VcenterRootPasswordExpiration {
         The Update-VcenterRootPasswordExpiration cmdlet configures the root user password expiration policy of a
         vCenter. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the root user password expiration policy.
 
         .EXAMPLE
-        Update-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -email "admin@rainpole.io" -maxDays 999 -warnDays 14
-        This example configures the configures password expiration settings for a vCenter instance root account to expire after 999 days with email for warning set to "admin@rainpole.io".
+        Update-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -email [email_address] -maxDays 999 -warnDays 14
+        This example configures the configures password expiration settings for a vCenter instance root account to expire after 999 days with email for warning set.
 
         .EXAMPLE
-        Update-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -neverexpire
+        Update-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -neverexpire
         This example configures the configures password expiration settings for a vCenter instance root account to never expire
 
         .PARAMETER server
@@ -4960,15 +4960,15 @@ Function Publish-VcenterPasswordExpiration {
         - Collects password expiration policy for vCenter.
 
         .EXAMPLE
-        Publish-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password expiration policy for each vCenter.
 
         .EXAMPLE
-        Publish-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for a vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Publish-VcenterPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password expiration policy for a vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5059,15 +5059,15 @@ Function Publish-VcenterLocalPasswordExpiration {
         - Collects password expiration policy for each local user of vCenter.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-VcenterLocalPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password expiration policy for each local user of vCenter for all workload domains.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-VcenterLocalPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for each local user of vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-VcenterLocalPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password expiration policy for each local user of vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5157,19 +5157,19 @@ Function Publish-VcenterLocalPasswordComplexity {
         - Collects password complexity policy for each vCenter.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-VcenterLocalPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password complexity policy for each vCenter for all workload domains.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-VcenterLocalPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns password complexity policy for a vCenter.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-VcenterLocalPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password complexity policy for a vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Publish-VcenterLocalPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-VcenterLocalPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password complexity policy for a vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5259,19 +5259,19 @@ Function Publish-VcenterLocalAccountLockout {
         - Collects password account lockout for each vCenter.
 
         .EXAMPLE
-        Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-VcenterLocalAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password account lockout for each vCenter for all workload domains.
 
         .EXAMPLE
-        Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-VcenterLocalAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns password account lockout for a vCenter.
 
         .EXAMPLE
-        Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-VcenterLocalAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password account lockout for a vCenter and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Publish-VcenterLocalAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-VcenterLocalAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password account lockout for a vCenter and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5364,19 +5364,19 @@ Function Request-NsxtManagerPasswordExpiration {
         Manager cluster users for a workload domain. The cmdlet connects to th SDDC Manager using the -server, -user,
         and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to NSX Local Manager
+        - Validates that network connectivity and authentication is possible to NSX Local Manager.
 		- Retrieves the password expiration policy for all users.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the password expiration policy for all users for the NSX Local Manager cluster for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5462,19 +5462,19 @@ Function Request-NsxtManagerPasswordComplexity {
         The Request-NsxtManagerPasswordComplexity cmdlet retrieves the password complexity policy for each NSX Local Manager
         node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to NSX Local Manager
+        - Validates that network connectivity and authentication is possible to NSX Local Manager.
 		- Retrieves the password complexity policy.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-NsxtManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-NsxtManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the password complexity policy for each NSX Local Manager node for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5638,15 +5638,15 @@ Function Request-NsxtManagerAccountLockout {
         - Retrieves the account lockout policy.
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the account lockout policy for the NSX Local Manager nodes in the workload domain.
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-NsxtManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the account lockout policy for the NSX Local Manager nodes in the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-NsxtManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the account lockout policy for the NSX Local Manager nodes in the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -5742,7 +5742,7 @@ Function Update-NsxtManagerPasswordExpiration {
         - Updates the password expiration policy.
 
         .EXAMPLE
-        Update-NsxtManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxdays 999
+        Update-NsxtManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -maxdays 999
         This example configures the password expiration policy in NSX Local Manager for all local users in the workload domain
 
         .PARAMETER server
@@ -5826,11 +5826,11 @@ Function Update-NsxtManagerPasswordComplexity {
         The Update-NsxtManagerPasswordComplexity cmdlet updates the password complexity policy for each NSX Local Manager
         node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to NSX Local Manager
+        - Validates that network connectivity and authentication is possible to NSX Local Manager.
 		- Updates the password complexity policy.
 
         .EXAMPLE
-        Update-NsxtManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+        Update-NsxtManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Local Manager node for a workload domain
 
         .PARAMETER server
@@ -6035,7 +6035,7 @@ Function Update-NsxtManagerAccountLockout {
         - Configure the account lockout policy.
 
         .EXAMPLE
-        Update-NsxtManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cliFailures 5 -cliUnlockInterval 900 -apiFailures 5 -apiFailureInterval 120 -apiUnlockInterval 900
+        Update-NsxtManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cliFailures 5 -cliUnlockInterval 900 -apiFailures 5 -apiFailureInterval 120 -apiUnlockInterval 900
         This example configures the account lockout policy in NSX Local Manager nodes in the workload domain
 
         .PARAMETER server
@@ -6156,19 +6156,19 @@ Function Publish-NsxManagerPasswordExpiration {
         - Collects password expiration policy for each local user of NSX Local Manager.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password expiration policy for each local user of NSX Local Manager for all workload domains.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns password expiration policy for each local user of NSX Local Manager for a workload domain.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-NsxManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password expiration policy for each local user of NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6266,19 +6266,19 @@ Function Publish-NsxManagerPasswordComplexity {
         - Collects password complexity policy for each NSX Local Manager.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-NsxManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password complexity policy for each NSX Local Manager for all workload domains.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-NsxManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns password complexity policy for each NSX Local Manager for a workload domain.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-NsxManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password complexity policy of NSX Local Manager for a workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-NsxManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains -drift
+        Publish-NsxManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains -drift
         This example returns password complexity policy of NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6368,19 +6368,19 @@ Function Publish-NsxManagerAccountLockout {
         - Collects account lockout policy for each NSX Local Manager.
 
         .EXAMPLE
-        Publish-NsxManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-NsxManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns account lockout policy for each NSX Local Manager for all workload domains.
 
         .EXAMPLE
-        Publish-NsxManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-NsxManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns account lockout policy for each NSX Local Manager for a workload domain.
 
         .EXAMPLE
-        Publish-NsxManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-NsxManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns account lockout policy for each NSX Local Manager for a workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-NsxManagerAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-NsxManagerAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns account lockout policy for each NSX Local Manager for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6472,19 +6472,19 @@ Function Request-NsxtEdgePasswordExpiration {
         The Request-NsxtEdgePasswordExpiration cmdlet retrieves the password complexity policy for all NSX Edge node users
         for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to NSX Local Manager
+        - Validates that network connectivity and authentication is possible to NSX Local Manager.
 		- Retrieves the password expiration policy for all users.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6573,23 +6573,23 @@ Function Request-NsxtEdgePasswordComplexity {
         The Request-NsxtEdgePasswordComplexity cmdlet retrieves the password complexity policy for each NSX Edge
         node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to NSX Local Manager
+        - Validates that network connectivity and authentication is possible to NSX Local Manager.
 		- Retrieves the password complexity policy.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-NsxtEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the password complexity policy for each NSX Edge node for a workload domain and compares the configuration against the product defaults.
 
         .EXAMPLE
-        Request-NsxtEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -unmanagedEdgeNode <vm_name> -unmanagedEdgeNodePass <admin_password>
+        Request-NsxtEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -unmanagedEdgeNode [vm_name] -unmanagedEdgeNodePass [admin_password]
         This example retrieves the password complexity policy for an NSX Edge node that is not managed by SDDC Manager.
 
         .PARAMETER server
@@ -6741,15 +6741,15 @@ Function Request-NsxtEdgeAccountLockout {
         - Retrieves the account lockout policy.
 
         .EXAMPLE
-        Request-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-NsxtEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieving the account lockout policy for NSX Edge nodes in the workload domain.
 
         .EXAMPLE
-        Request-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-NsxtEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieving the account lockout policy for NSX Edge nodes in the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -drift
+        Request-NsxtEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
         This example retrieving the account lockout policy for NSX Edge nodes in the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -6843,7 +6843,7 @@ Function Update-NsxtEdgePasswordExpiration {
         - Updates the password expiration policy.
 
         .EXAMPLE
-        Update-NsxtEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -maxdays 999
+        Update-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -maxdays 999
         This example configures the password expiration policy for NSX Edge node local users in the workload domain
 
         .PARAMETER server
@@ -6930,11 +6930,11 @@ Function Update-NsxtEdgePasswordComplexity {
         The Update-NsxtEdgePasswordComplexity cmdlet updates the password complexity policy for each NSX Edge
         node for a workload domain. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to NSX Local Manager
+        - Validates that network connectivity and authentication is possible to NSX Local Manager.
 		- Updates the password complexity policy.
 
         .EXAMPLE
-        Update-NsxtEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
+        Update-NsxtEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -minLength 15 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -maxRetry 3
         This example updates the password complexity policy for each NSX Edge node for a workload domain
 
         .PARAMETER server
@@ -7058,7 +7058,7 @@ Function Update-NsxtEdgeAccountLockout {
         - Configure the account lockout policy.
 
         .EXAMPLE
-        Update-NsxtEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cliFailures 5 -cliUnlockInterval 900
+        Update-NsxtEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cliFailures 5 -cliUnlockInterval 900
         This example configures the account lockout policy of the NSX Edge nodes in the workload domain
 
         .PARAMETER user
@@ -7155,19 +7155,19 @@ Function Publish-NsxEdgePasswordExpiration {
         - Collects password expiration policy for each local user of NSX Edge.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-NsxEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password expiration policy for each local user of NSX Edge nodes for all workload domains.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-NsxEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns password expiration policy for each local user of NSX Edge nodes for a workload domain.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-NsxEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-NsxEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password expiration policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7275,19 +7275,19 @@ Function Publish-NsxEdgePasswordComplexity {
         - Collects password complexity policy for each local user of NSX Edge.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns password complexity policy for each local user of NSX Edge nodes for all workload domains.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-NsxEdgePasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7377,19 +7377,19 @@ Function Publish-NsxEdgeAccountLockout {
         - Collects account lockout policy for NSX Edge node.
 
         .EXAMPLE
-        Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-NsxEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example returns account lockout policy for each NSX Edge nodes for all workload domains.
 
         .EXAMPLE
-        Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-NsxEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example returns account lockout policy for each NSX Edge nodes for a workload domain.
 
         .EXAMPLE
-        Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-NsxEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-NsxEdgeAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -drift
+        Publish-NsxEdgeAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
         This example returns account lockout policy for each NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7488,15 +7488,15 @@ Function Request-EsxiPasswordExpiration {
         - Retrieves the password expiration policy for all ESX hosts in a cluster.
 
         .EXAMPLE
-        Request-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name>
+        Request-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name]
         This example retrieves all ESX hosts password expiration policy for the cluster in the workload domain.
 
         .EXAMPLE
-        Request-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves all ESX hosts password expiration policy for the cluster in the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift
+        Request-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -drift
         This example retrieves all ESX hosts password expiration policy for the cluster in the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7612,15 +7612,15 @@ Function Request-EsxiPasswordComplexity {
         - Retrieves the password complexity policy for all ESX hosts in a cluster.
 
         .EXAMPLE
-        Request-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name>
+        Request-EsxiPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name]
         This example retrieves all ESX hosts password complexity policy for the cluster in the workload domain.
 
         .EXAMPLE
-        Request-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-EsxiPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves all ESX hosts password complexity policy for the cluster in the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift
+        Request-EsxiPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -drift
         This example retrieves all ESX hosts password complexity policy for the cluster in the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7750,15 +7750,15 @@ Function Request-EsxiAccountLockout {
         - Retrieves the account lockout policy for all ESX hosts in the cluster.
 
         .EXAMPLE
-        Request-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name>
+        Request-EsxiAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name]
         This example retrieves the account lockout policy for all ESX hosts in the cluster in the workload domain.
 
         .EXAMPLE
-        Request-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-EsxiAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the account lockout policy for all ESX hosts in the cluster in the workload domain and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -drift
+        Request-EsxiAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -drift
         This example retrieves the account lockout policy for all ESX hosts in the cluster in the workload domain and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -7876,11 +7876,11 @@ Function Update-EsxiPasswordExpiration {
         - Configures the password expiration policy for all ESX hosts in the cluster.
 
         .EXAMPLE
-        Update-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -maxDays 999
+        Update-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -maxDays 999
         This example configures all ESX hosts within the cluster for the workload domain.
 
         .EXAMPLE
-        Update-EsxiPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -maxDays 999 -detail false
+        Update-EsxiPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -maxDays 999 -detail false
         This example configures all ESX hosts within the cluster for the workload domain but does not show the detail per host
 
         .PARAMETER server
@@ -7982,11 +7982,11 @@ Function Update-EsxiPasswordComplexity {
         - Configures the password complexity policy for all ESX hosts in the cluster.
 
         .EXAMPLE
-        Update-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
+        Update-EsxiPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5
         This example configures all ESX hosts within the cluster in the workload domain.
 
         .EXAMPLE
-        Update-EsxiPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
+        Update-EsxiPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -policy "retry=5 min=disabled,disabled,disabled,disabled,15" -history 5 -detail false
         This example configures all ESX hosts within the cluster in the workload domain but does not show the detail per host
 
         .PARAMETER server
@@ -8105,11 +8105,11 @@ Function Update-EsxiAccountLockout {
         - Configures the account lockout policy for all ESX hosts in the cluster.
 
         .EXAMPLE
-        Update-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900
+        Update-EsxiAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -failures 5 -unlockInterval 900
         This example configures all ESX hosts within the cluster in the workload domain.
 
         .EXAMPLE
-        Update-EsxiAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -cluster <cluster_name> -failures 5 -unlockInterval 900 -detail false
+        Update-EsxiAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -cluster [cluster_name] -failures 5 -unlockInterval 900 -detail false
         This example configures all ESX hosts within the cluster in the workload domain but does not show the detail per host
 
         .PARAMETER server
@@ -8226,35 +8226,35 @@ Function Publish-EsxiPasswordPolicy {
         - Retrieves the requested password policy for all ESX hosts and converts to HTML.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
         This example returns password expiration policy for all ESX hosts across all workload domains.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name>
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
         This example returns password expiration policy for all ESX hosts for a workload domain.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
         This example returns password complexity policy for all ESX hosts across all workload domains.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -workloadDomain <workload_domain_name>
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
         This example returns password complexity policy for all ESX hosts for a workload domain.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
         This example returns account lockout policy for all ESX hosts across all workload domains.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -workloadDomain <workload_domain_name>
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
         This example returns account lockout policy for all ESX hosts for a workload domain.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for all ESX hosts across all workload domains and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name> -drift
+        Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift
         This example returns password expiration policy for all ESX hosts across all workload domains and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8378,16 +8378,16 @@ Function Request-WsaPasswordExpiration {
         - Retrieves the password expiration policy.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password>
-        This example retrieves the password expiration policy for Workspace ONE Access instance.sfo.rainpole.io.
+        Request-WsaPasswordExpiration -server [wsa_fqdn] -user [admin_username] -pass [admin_password]
+        This example retrieves the password expiration policy for Workspace ONE Access instance.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
-        This example retrieves the password expiration policy for Workspace ONE Access instance.sfo.rainpole.io and checks the configuration drift using the provided configuration JSON.
+        Request-WsaPasswordExpiration -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift -reportPath [report_path] -policyFile [policy_file].json
+        This example retrieves the password expiration policy for Workspace ONE Access instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift
-        This example retrieves the password expiration policy for Workspace ONE Access instance.sfo.rainpole.io and compares the configuration against the product defaults.
+        Request-WsaPasswordExpiration -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift
+        This example retrieves the password expiration policy for Workspace ONE Access instance and compares the configuration against the product defaults.
 
         .PARAMETER server
         The fully qualified domain name of the Workspace ONE Access instance.
@@ -8461,15 +8461,15 @@ Function Request-WsaPasswordComplexity {
         - Retrieves the password complexity policy for Workspace ONE Access instance.
 
         .EXAMPLE
-        Request-WsaPasswordComplexity -server <wsa_fqdn> -user <admin_username> -pass <admin_password>
+        Request-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password]
         This example retrieves the password complexity policy for Workspace ONE Access instance.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+         Request-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for Workspace ONE Access instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift
+         Request-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift
         This example retrieves the password complexity policy for Workspace ONE Access instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8547,19 +8547,19 @@ Function Request-WsaLocalUserPasswordComplexity {
         The Request-WsaLocalUserPasswordComplexity cmdlet retrieves the local user password complexity policy for
         Workspace ONE Access. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the local user password complexity policy for Workspace ONE Access.
 
         .EXAMPLE
-        Request-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password>
+        Request-WsaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password]
         This example retrieves the local user password complexity policy for Workspace ONE Access.
 
         .EXAMPLE
-        Request-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-WsaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -drift
+        Request-WsaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8640,19 +8640,19 @@ Function Request-WsaLocalUserAccountLockout {
         .DESCRIPTION
         The Request-WsaLocalUserAccountLockout cmdlet retrieves the account lockout policy for an SDDC Manager.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
-        - Validates that network connectivity and authentication is possible to SDDC Manager
+        - Validates that network connectivity and authentication is possible to SDDC Manager.
 		- Retrieves the account lockout policy of Workspace ONE Access.
 
         .EXAMPLE
-        Request-WsaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password>
+        Request-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password]
         This example retrieves the account lockout policy for Workspace ONE Access.
 
         .EXAMPLE
-        Request-WsaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -drift
+        Request-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8732,15 +8732,15 @@ Function Request-WsaAccountLockout {
         - Retrieves the account lockout policy.
 
         .EXAMPLE
-        Request-WsaAccountLockout -server <wsa_fqdn> -user <admin_username> -pass <admin_password>
+        Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password]
         This example retrieves the account lockout policy for Workspace ONE Access instance.
 
         .EXAMPLE
-        Request-WsaAccountLockout -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-WsaAccountLockout -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -drift
+        Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift
         This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -8813,11 +8813,11 @@ Function Update-WsaPasswordExpiration {
         .DESCRIPTION
         The Update-WsaPasswordExpiration cmdlet configures the password expiration policy for a Workspace ONE Access
         instance.
-        - Validates that network connectivity and authentication is possible to Workspace ONE Access
+        - Validates that network connectivity and authentication is possible to Workspace ONE Access.
 		- Configures the Workspace ONE Access password expiration policy.
 
         .EXAMPLE
-        Update-WsaPasswordExpiration -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
+        Update-WsaPasswordExpiration -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
         This example configures the password expiration policy for Workspace ONE Access
 
         .PARAMETER server
@@ -8889,11 +8889,11 @@ Function Update-WsaPasswordComplexity {
         .DESCRIPTION
         The Update-WsaPasswordComplexity cmdlet configures the password complexity policy for a Workspace ONE Access
         instance.
-        - Validates that network connectivity and authentication is possible to Workspace ONE Access
+        - Validates that network connectivity and authentication is possible to Workspace ONE Access.
 		- Configures the Workspace ONE Access password complexity policy.
 
         .EXAMPLE
-        Update-WsaPasswordComplexity -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
+        Update-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
         This example configures the password complexity policy for Workspace ONE Access
 
         .PARAMETER server
@@ -8980,11 +8980,11 @@ Function Update-WsaLocalUserPasswordComplexity {
         The Update-WsaLocalUserPasswordComplexity cmdlet configures the local user password complexity policy for
         Workspace ONE Access. The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the password complexity policy.
 
         .EXAMPLE
-        Update-WsaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -minLength 1 -history 5 -maxRetry 3
+        Update-WsaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -minLength 1 -history 5 -maxRetry 3
         This example configures the local user password complexity policy for Workspace ONE Access
 
         .PARAMETER server
@@ -9066,11 +9066,11 @@ Function Update-WsaAccountLockout {
 
         .DESCRIPTION
         The Update-WsaAccountLockout cmdlet configures the account lockout policy for Workspace ONE Access.
-        - Validates that network connectivity and authentication is possible to Workspace ONE Access
+        - Validates that network connectivity and authentication is possible to Workspace ONE Access.
 		- Configures the Workspace ONE Access account lockout policy.
 
         .EXAMPLE
-        Update-WsaAccountLockout -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -failures 5 -failureInterval 180 -unlockInterval 900
+        Update-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -failures 5 -failureInterval 180 -unlockInterval 900
         This example configures the account lockout policy for Workspace ONE Access
 
         .PARAMETER server
@@ -9135,11 +9135,11 @@ Function Update-WsaLocalUserAccountLockout {
         The Update-WsaLocalUserAccountLockout cmdlet configures the account lockout policy of Workspace ONE Access.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the account lockout policy.
 
         .EXAMPLE
-        Update-WsaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -failures 3 -unlockInterval 900 -rootUnlockInterval 900
+        Update-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -failures 3 -unlockInterval 900 -rootUnlockInterval 900
         This example configures the account lockout policy for Workspace ONE Access
 
         .PARAMETER server
@@ -9223,23 +9223,23 @@ Function Publish-WsaDirectoryPasswordPolicy {
         - Retrieves the requested password policy for Workspace ONE Access and converts to HTML.
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+        Publish-WsaDirectoryPasswordPolicy -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
         This example returns the password expiration policy for Workspace ONE Access Directory Users.
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+        Publish-WsaDirectoryPasswordPolicy -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
         This example returns the password complexity policy for Workspace ONE Access Directory Users.
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+        Publish-WsaDirectoryPasswordPolicy -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
         This example returns the account lockout policy for Workspace ONE Access Directory Users.
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-WsaDirectoryPasswordPolicy -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-WsaDirectoryPasswordPolicy -server <wsa_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains -drift
+        Publish-WsaDirectoryPasswordPolicy -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains -drift
         This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -9328,23 +9328,23 @@ Function Publish-WsaLocalPasswordPolicy {
         - Retrieves the requested password policy for Workspace ONE Access Local Users and converts to HTML.
 
         .EXAMPLE
-        Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains
+        Publish-WsaLocalPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -allDomains
         This example returns password expiration policy for Workspace ONE Access Directory Users.
 
         .EXAMPLE
-        Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains
+        Publish-WsaLocalPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -allDomains
         This example returns password complexity policy for Workspace ONE Access Directory Users.
 
         .EXAMPLE
-        Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains
+        Publish-WsaLocalPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -allDomains
         This example returns account lockout policy for Workspace ONE Access Directory Users.
 
         .EXAMPLE
-        Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Publish-WsaLocalPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -allDomains -drift -reportPath [report_path] -policyFile [policy_file].json
         This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the policy configuration file.
 
         .EXAMPLE
-        Publish-WsaLocalPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -allDomains -drift
+        Publish-WsaLocalPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -allDomains -drift
         This example returns password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -9448,11 +9448,11 @@ Function Get-AriaLocalUserPasswordExpiration {
         The Get-AriaLocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy.
         The cmdlet connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the password expiration policy for the specified local user.
 
         .EXAMPLE
-        Get-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_username>
+        Get-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username]
         This example retrieves the global password expiration policy for a VMware Aria Automation instance.
 
         .PARAMETER server
@@ -9579,19 +9579,19 @@ Function Get-AriaLocalUserPasswordComplexity {
         The Get-AriaLocalUserPasswordComplexity cmdlet retrieves the password complexity for local users.
 
         .EXAMPLE
-        Get-AriaLocalUserPasswordComplexity -vmName <vm_name> -guestUser root -guestPassword <guest_password> -product vrli
+        Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrli
         This example retrieves the password complexity from a VMware Aria Operations for Logs appliance.
 
         .EXAMPLE
-        Get-AriaLocalUserPasswordComplexity -vmName <vm_name> -guestUser root -guestPassword <guest_password> -product vrops
+        Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrops
         This example retrieves the password complexity from a VMware Aria Operations appliance.
 
         .EXAMPLE
-        Get-AriaLocalUserPasswordComplexity -vmName <vm_name> -guestUser support -guestPassword <guest_password> -product vrni
+        Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser support -guestPassword [guest_password] -product vrni
         This example retrieves the password complexity from a VMware Aria Operations for Networks appliance.
 
         .EXAMPLE
-        Get-AriaLocalUserPasswordComplexity -vmName <vm_name> -guestUser root -guestPassword <guest_password> -product vra
+        Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vra
         This example retrieves the password complexity from a VMware Aria Automation appliance.
 
         .PARAMETER vmName
@@ -9693,19 +9693,19 @@ Function Get-AriaLocalUserAccountLockout {
         The Get-AriaLocalUserAccountLockout cmdlets retrieves the account lockout for local users.
 
         .EXAMPLE
-        Get-AriaLocalUserAccountLockout -vmName <vm_name> -guestUser root -guestPassword <guest_password> -product vrli
+        Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrli
         This example retrieves the account lockout from a VMware Aria Operations for Logs appliance.
 
         .EXAMPLE
-        Get-AriaLocalUserAccountLockout -vmName <vm_name> -guestUser root -guestPassword <guest_password> -product vrops
+        Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrops
         This example retrieves the account lockout from a VMware Aria Operations appliance.
 
         .EXAMPLE
-        Get-AriaLocalUserAccountLockout -vmName <vm_name> -guestUser support -guestPassword <guest_password> -product vrni
+        Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser support -guestPassword [guest_password] -product vrni
         This example retrieves the account lockout from a VMware Aria Operations for Networks appliance.
 
         .EXAMPLE
-        Get-AriaLocalUserAccountLockout -vmName <vm_name> -guestUser root -guestPassword <guest_password> -product vra
+        Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vra
         This example retrieves the account lockout from a VMware Aria Automation appliance.
 
         .PARAMETER vmName
@@ -9774,27 +9774,27 @@ Function Request-AriaLocalUserPasswordExpiration {
         - Retrieves the password expiration policy.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra
+        Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra
         This example retrieves the password expiration policy for VMware Aria Automation instances.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
+        Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift
         This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory
+        Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory
         This example retrieves the password expiration policy for Workspace ONE Access directory users.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory -vidmdrift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for Workspace ONE Access directory users and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
+        Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory -vidmdrift
         This example retrieves the password expiration policy for Workspace ONE Access directory users and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -10075,27 +10075,27 @@ Function Request-AriaLocalUserPasswordComplexity {
         - Retrieves the password complexity policy.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra
+        Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra
         This example retrieves the password complexity policy for VMware Aria Automation instances.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
+        Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift
         This example retrieves the password complexity policy for VMware Aria Automation instances and compares the configuration against the product defaults.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory.
+        Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory.
         This example retrieves the password complexity policy for Workspace ONE Access directory users.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory -vidmdrift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password complexity policy for Workspace ONE Access directory users and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
+        Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory -vidmdrift
         This example retrieves the password complexity policy for Workspace ONE Access directory users and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -10419,27 +10419,27 @@ Function Request-AriaLocalUserAccountLockout {
         - Retrieves the password account lockout policy.
 
         .EXAMPLE
-        Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra
+        Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra
         This example retrieves the password expiration policy for VMware Aria Automation instances.
 
         .EXAMPLE
-        Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -drift
+        Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift
         This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
 
         .EXAMPLE
-        Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory
+        Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory
         This example retrieves the password expiration policy for Workspace ONE Access instances for directory users.
 
         .EXAMPLE
-        Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory -vidmdrift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the password expiration policy for Workspace ONE Access instances for directory users and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-AriaLocalUserAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -vidm -settings directory -vidmdrift
+        Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory -vidmdrift
         This example retrieves the password expiration policy for Workspace ONE Access instances for directory users and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -10718,27 +10718,27 @@ Function Publish-AriaLocalUserPasswordPolicy {
         - Validates which VMware Aria products are installed.
 
         .EXAMPLE
-        Publish-AriaLocalUserPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+        Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
         This example returns password expiration policy for all VMware Aria products for all domains.
 
         .EXAMPLE
-        Publish-AriaLocalUserPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name>
+        Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
         This example returns password expiration policy for all VMware Aria products for the management domain.
 
         .EXAMPLE
-        Publish-AriaLocalUserPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+        Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
         This example returns password complexity policy for all VMware Aria products for all domains.
 
         .EXAMPLE
-        Publish-AriaLocalUserPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -workloadDomain <workload_domain_name>
+        Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
         This example returns password complexity policy for all VMware Aria products for the management domain.
 
         .EXAMPLE
-        Publish-AriaLocalUserPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+        Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
         This example returns password account lockout policy for all VMware Aria products for all domains.
 
         .EXAMPLE
-        Publish-AriaLocalUserPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -workloadDomain <workload_domain_name>
+        Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
         This example returns password account lockout policy for all VMware Aria products for the management domain.
 
         .PARAMETER server
@@ -10924,11 +10924,11 @@ Function Update-AriaLocalUserPasswordExpiration {
         The Update-AriaLocalUserPasswordExpiration cmdlet configures the password expiration local users.
 
         .EXAMPLE
-        Update-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -localuser <local_username> -maxdays 90 -mindays 7 -warndays 7
+        Update-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -localuser [local_username] -maxdays 90 -mindays 7 -warndays 7
         This example updates the VMware Aria Automation nodes with new values for each element.
 
         .EXAMPLE.
-        Update-AriaLocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -json -reportPath <report_path> -policyFile <policy_file>.json
+        Update-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
         This example updates the VMware Aria Automation nodes using the JSON file values.
 
         .PARAMETER server
@@ -11315,11 +11315,11 @@ Function Update-AriaLocalUserPasswordComplexity {
         The Update-AriaLocalUserPasswordComplexity cmdlet configures the password complexity local users.
 
         .EXAMPLE
-        Update-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
+        Update-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
         This example updates the VMware Aria Automation nodes with new values for each element.
 
         .EXAMPLE
-        Update-AriaLocalUserPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -json -reportPath <report_path> -policyFile <policy_file>.json
+        Update-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
         This example updates VMware Aria Automation using the JSON file values.
 
         .PARAMETER server
@@ -14498,11 +14498,11 @@ Function Update-AriaLocalUserPasswordAccountLockout {
         The Update-AriaLocalUserPasswordAccountLockout cmdlet configures the Account Lockout settings for local users.
 
         .EXAMPLE
-        Update-AriaLocalUserPasswordAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -failures 5 -unlockInterval 900 -rootUnlockInterval 900
+        Update-AriaLocalUserPasswordAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -failures 5 -unlockInterval 900 -rootUnlockInterval 900
         This example updates the VMware Aria Automation nodes with new values for each element.
 
         .EXAMPLE
-        Update-AriaLocalUserPasswordAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -json -reportPath <report_path> -policyFile <policy_file>.json
+        Update-AriaLocalUserPasswordAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
         This example updates VMware Aria Automation nodes using the JSON file values.
 
         .PARAMETER server
@@ -15487,19 +15487,19 @@ Function Request-LocalUserPasswordExpiration {
         The Request-LocalUserPasswordExpiration cmdlet retrieves a local user password expiration policy. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Retrieves the password expiration policy for the specified local user.
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_username>
+        Request-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -product vcenterServer -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username]
         This example retrieves the global password expiration policy for a vCenter instance.
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_username> -drift -reportPath <report_path> -policyFile <policy_file>.json
+        Request-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -product vcenterServer -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username] -drift -reportPath [report_path] -policyFile [policy_file].json
         This example retrieves the global password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
-        Request-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -product vcenterServer -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_username> -drift
+        Request-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -product vcenterServer -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username] -drift
         This example retrieves the global password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
         .PARAMETER server
@@ -15632,11 +15632,11 @@ Function Update-LocalUserPasswordExpiration {
         The Update-LocalUserPasswordExpiration cmdlet configures a local user password expiration policy. The cmdlet
         connects to the SDDC Manager using the -server, -user, and -pass values:
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to vCenter
+        - Validates that network connectivity and authentication is possible to vCenter.
 		- Configures the local user password expiration policy.
 
         .EXAMPLE
-        Update-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_username>,<ssh_username> -minDays 0 -maxDays 999 -warnDays 14
+        Update-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username],[ssh_username] -minDays 0 -maxDays 999 -warnDays 14
         This example updates the password expiration policy for the specified local users on the specified virtual machine.
 
         .PARAMETER server
@@ -15777,23 +15777,23 @@ Function Publish-PasswordRotationPolicy {
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains
+        Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
         This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name>
+        Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
         This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for the workload domain.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -resource nsxManager
+        Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -resource nsxManager
         This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -workloadDomain <workload_domain_name> -resource nsxManager
+        Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -resource nsxManager
         This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the workload domain.
 
         .EXAMPLE
-        Publish-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -allDomains -json
+        Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains -json
         This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.
 
         .PARAMETER server
@@ -15929,19 +15929,19 @@ Function Request-PasswordRotationPolicy {
         values or all resource types for all workload domains if no values are specified.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password>
+        Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password]
         This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name>
+        Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
         This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the workload domain.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -resource nsxManager
+        Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -resource nsxManager
         This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
 
         .EXAMPLE
-        Request-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource nsxManager
+        Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource nsxManager
         This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the workload domain.
 
         .PARAMETER server
@@ -16127,11 +16127,11 @@ Function Update-PasswordRotationPolicy {
         - Updates the credential password rotation settings based on the credential criteria specified.
 
         .EXAMPLE
-        Update-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource vcenterServer -resourceName <resource_fqdn> -credential SSH -credentialName root -autoRotate disabled
+        Update-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource vcenterServer -resourceName [resource_fqdn] -credential SSH -credentialName root -autoRotate disabled
         This example disables the credential password rotation settings for a credential managed by SDDC Manager.
 
         .EXAMPLE
-        Update-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource vcenterServer -resourceName <resource_fqdn> -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
+        Update-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource vcenterServer -resourceName [resource_fqdn] -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
         This example enables the credential password rotation settings for a credential managed by SDDC Manager.
 
         .PARAMETER server

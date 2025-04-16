@@ -24,7 +24,8 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-LocalUserPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -vmName <vm_name> -guestUser root -guestPassword <guest_password> -localUser <root_user>,<ssh_user> -minDays 0 -maxDays 999 -warnDays 14
+Update-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username],[ssh_user] -minDays 0 -maxDays 999 -warnDays 14
+
 ```
 
 This example updates the password expiration policy for the specified local users on the specified virtual machine.

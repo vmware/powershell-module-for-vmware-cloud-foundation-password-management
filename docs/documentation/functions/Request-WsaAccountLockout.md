@@ -22,7 +22,7 @@ The `Request-WsaAccountLockout` cmdlet retrieves the Workspace ONE Access accoun
 ### Example 1
 
 ```powershell
-Request-WsaAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password>
+Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password]
 ```
 
 This example retrieves the account lockout policy for Workspace ONE Access instance.
@@ -30,7 +30,7 @@ This example retrieves the account lockout policy for Workspace ONE Access insta
 ### Example 2
 
 ```powershell
-Request-WsaAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
@@ -38,7 +38,7 @@ This example retrieves the local user password complexity policy for Workspace O
 ### Example 3
 
 ```powershell
-Request-WsaAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -drift
+Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.

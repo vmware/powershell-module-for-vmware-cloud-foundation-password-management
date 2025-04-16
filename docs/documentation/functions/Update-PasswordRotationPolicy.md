@@ -22,7 +22,8 @@ The `Update-PasswordRotationPolicy` cmdlet updates the credential password rotat
 ### Example 1
 
 ```powershell
-Update-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource vcenterServer -resourceName <resource_fqdn> -credential SSH -credentialName root -autoRotate disabled
+Update-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource vcenterServer -resourceName [resource_fqdn] -credential SSH -credentialName [credential_name] -autoRotate disabled
+
 ```
 
 This example disables the credential password rotation settings for a credential managed by SDDC Manager.
@@ -30,7 +31,7 @@ This example disables the credential password rotation settings for a credential
 ### Example 2
 
 ```powershell
-Update-PasswordRotationPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -resource vcenterServer -resourceName <resource_fqdn> -credential SSH -credentialName root -autoRotate enabled -frequencyInDays 90
+Update-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource vcenterServer -resourceName [resource_fqdn] -credential SSH -credentialName [credential_name] -autoRotate enabled -frequencyInDays 90
 ```
 
 This example enables the credential password rotation settings for a credential managed by SDDC Manager.
@@ -103,8 +104,9 @@ Accept wildcard characters: False
 
 ### -resource
 
-The resource type to retrieve the credential password rotation settings for.
-One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+The resource type to retrieve the credential password rotation settings for. One of: `sso`,
+`vcenterServer`, `nsxManager`, `nsxEdge`, `ariaLifecycle`, `ariaOperations`, `ariaOperationsLogs`,
+`ariaAutomation`, `workspaceOneAccess`, and `backup`.
 
 ```yaml
 Type: String
@@ -137,7 +139,7 @@ Accept wildcard characters: False
 ### -credential
 
 The credential type to retrieve the user password rotation settings for.
-One of: ssh, api, audit, sso.
+One of: `ssh`, `api`, `audit`, and `sso`.
 
 ```yaml
 Type: String
@@ -170,7 +172,7 @@ Accept wildcard characters: False
 ### -autoRotate
 
 Enable or disable the credential password rotation for the credential by SDDC Manager.
-One of: enabled, disabled.
+One of: `enabled` and `disabled`.
 
 ```yaml
 Type: String

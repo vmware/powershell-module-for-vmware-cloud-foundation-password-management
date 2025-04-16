@@ -34,7 +34,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -email <email_address> -maxDays 999 -warnDays 14
+Update-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -email [email_address] -maxDays 999 -warnDays 14
 ```
 
 This example configures the password expiration settings for a vCenter instance `root` account to expire after 999 days with email for warning.
@@ -42,7 +42,7 @@ This example configures the password expiration settings for a vCenter instance 
 ### Example 2
 
 ```powershell
-Update-VcenterRootPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -domain <workload_domain_name> -neverexpire
+Update-VcenterRootPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -neverexpire
 ```
 
 This example configures the password expiration settings for a vCenter instance `root` account to never expire.

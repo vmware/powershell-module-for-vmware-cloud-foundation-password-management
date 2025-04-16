@@ -24,7 +24,7 @@ Products that are supported:
 ### Example 1
 
 ```powershell
-Update-AriaLocalUserPasswordAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -failures 5 -unlockInterval 900 -rootUnlockInterval 900
+Update-AriaLocalUserPasswordAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -failures 5 -unlockInterval 900 -rootUnlockInterval 900
 ```
 
 This example updates the VMware Aria Automation nodes with new values for each element.
@@ -32,7 +32,7 @@ This example updates the VMware Aria Automation nodes with new values for each e
 ### Example 2
 
 ```powershell
-Update-AriaLocalUserPasswordAccountLockout -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -product vra -json -reportPath <report_path> -policyFile <policy_file>.json
+Update-AriaLocalUserPasswordAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example updates the VMware Aria Automation using the JSON file values.

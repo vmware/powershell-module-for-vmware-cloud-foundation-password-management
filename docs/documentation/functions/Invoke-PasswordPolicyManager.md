@@ -27,7 +27,7 @@ The `Invoke-PasswordPolicyManager` generates a Password Policy Manager Report fo
 ### Example 1
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance.
@@ -35,7 +35,7 @@ This example runs a password policy report for all workload domains within an SD
 ### Example 2
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains -wsaFqdn <wsa_fqdn> -wsaRootPass <wsa_root_password> -wsaAdminPass <wsa_admin_password>
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -wsaAdminPass [wsa_admin_password]
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance and Workspace ONE Access.
@@ -43,7 +43,7 @@ This example runs a password policy report for all workload domains within an SD
 ### Example 3
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -workloadDomain <workload_domain_name>
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -workloadDomain [workload_domain_name]
 ```
 
 This example runs a password policy report for a specific workload domain within an SDDC Manager instance.
@@ -51,7 +51,7 @@ This example runs a password policy report for a specific workload domain within
 ### Example 4
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains -drift -policyFile <policy_file>.json
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -drift -policyFile [policy_file].json
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the JSON provided.
@@ -59,7 +59,7 @@ This example runs a password policy report for all workload domains within an SD
 ### Example 5
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn <sddc_manager_fqdn> -sddcManagerUser <admin_username> -sddcManagerPass <admin_password> -sddcRootPass <root_password> -reportPath <report_path> -darkMode -allDomains -drift
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -drift
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the product defaults.

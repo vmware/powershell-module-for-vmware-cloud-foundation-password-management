@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -allDomains
+Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -allDomains
 ```
 
 This example returns password expiration policy for each local user of SDDC Manager.
@@ -40,7 +40,7 @@ This example returns password expiration policy for each local user of SDDC Mana
 ### Example 2
 
 ```powershell
-Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name>
+Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name]
 ```
 
 This example will NOT return the password expiration policy for each local user of SDDC Manager as the workload domain provided is not the management domain.
@@ -48,7 +48,7 @@ This example will NOT return the password expiration policy for each local user 
 ### Example 3
 
 ```powershell
-Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example returns the password expiration policy for each local user of SDDC Manager and compares the configuration against the policy configuration file.
@@ -56,7 +56,7 @@ This example returns the password expiration policy for each local user of SDDC 
 ### Example 4
 
 ```powershell
-Publish-SddcManagerPasswordExpiration -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -sddcRootPass <root_password> -workloadDomain <workload_domain_name> -drift
+Publish-SddcManagerPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -sddcRootPass [root_password] -workloadDomain [workload_domain_name] -drift
 ```
 
 This example returns the password expiration policy for each local user of SDDC Manager and compares the configuration against the product defaults.

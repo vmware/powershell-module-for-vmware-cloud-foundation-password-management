@@ -22,7 +22,7 @@ The `Update-WsaPasswordComplexity` cmdlet configures the password complexity pol
 ### Example 1
 
 ```powershell
-Update-WsaPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
+Update-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
 ```
 
 This example configures the password complexity policy for Workspace ONE Access.

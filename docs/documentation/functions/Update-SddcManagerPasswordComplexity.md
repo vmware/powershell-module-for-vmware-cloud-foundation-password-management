@@ -23,7 +23,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-SddcManagerPasswordComplexity -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -rootPass <root_password> -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
+Update-SddcManagerPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -rootPass [root_password] -minLength 6 -minLowercase -1 -minUppercase -1  -minNumerical -1 -minSpecial -1 -minUnique 4 -minClass 4 -maxSequence 0 -history 5 -maxRetry 3
 ```
 
 This example configures the password complexity policy for an SDDC Manager.

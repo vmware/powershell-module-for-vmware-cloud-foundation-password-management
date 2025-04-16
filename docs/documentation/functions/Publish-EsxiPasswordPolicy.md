@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -allDomains
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
 ```
 
 This example returns password expiration policy for all ESX hosts across all for a workload domain.
@@ -40,7 +40,7 @@ This example returns password expiration policy for all ESX hosts across all for
 ### Example 2
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name>
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
 ```
 
 This example returns password expiration policy for all ESX hosts for a workload domain.
@@ -48,7 +48,7 @@ This example returns password expiration policy for all ESX hosts for a workload
 ### Example 3
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -allDomains
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
 ```
 
 This example returns password complexity policy for all ESX hosts across all for a workload domain.
@@ -56,7 +56,7 @@ This example returns password complexity policy for all ESX hosts across all for
 ### Example 4
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordComplexity -workloadDomain <workload_domain_name>
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
 ```
 
 This example returns password complexity policy for all ESX hosts for a workload domain.
@@ -64,7 +64,7 @@ This example returns password complexity policy for all ESX hosts for a workload
 ### Example 5
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -allDomains
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
 ```
 
 This example returns account lockout policy for all ESX hosts across all for a workload domain.
@@ -72,7 +72,7 @@ This example returns account lockout policy for all ESX hosts across all for a w
 ### Example 6
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy AccountLockout -workloadDomain <workload_domain_name>
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
 ```
 
 This example returns account lockout policy for all ESX hosts for a workload domain.
@@ -80,7 +80,7 @@ This example returns account lockout policy for all ESX hosts for a workload dom
 ### Example 7
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name> -drift -reportPath <report_path> -policyFile <policy_file>.json
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example returns password expiration policy for all ESX hosts across all for a workload domain and compares the configuration against the policy configuration file.
@@ -88,7 +88,7 @@ This example returns password expiration policy for all ESX hosts across all for
 ### Example 8
 
 ```powershell
-Publish-EsxiPasswordPolicy -server <sddc_manager_fqdn> -user <admin_username> -pass <admin_password> -policy PasswordExpiration -workloadDomain <workload_domain_name> -drift
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift
 ```
 
 This example returns password expiration policy for all ESX hosts across all for a workload domain and compares the configuration against the product defaults.
@@ -146,7 +146,7 @@ Accept wildcard characters: False
 ### -policy
 
 The policy to publish.
-One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+One of: `PasswordExpiration`, `PasswordComplexity`, `AccountLockout`.
 
 ```yaml
 Type: String
