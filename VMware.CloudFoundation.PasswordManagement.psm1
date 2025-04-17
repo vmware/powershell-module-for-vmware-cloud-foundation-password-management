@@ -4201,7 +4201,6 @@ Function Request-VcenterPasswordComplexity {
     $pass = Get-Password -username $user -password $pass
 
     Try {
-        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4211,8 +4210,8 @@ Function Request-VcenterPasswordComplexity {
                             if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                                 if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                     if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                            $mgmtConnected = $true
+                                        if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                            return
                                         }
                                     }
                                 }
@@ -4378,8 +4377,8 @@ Function Request-VcenterAccountLockout {
                         if ($vcenterDomain.type -ne "MANAGEMENT") {
                             if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "MANAGEMENT")) {
                                 if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                        $mgmtConnected = $true
+                                    if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                        return
                                     }
                                 }
                             }
@@ -4562,7 +4561,6 @@ Function Update-VcenterPasswordComplexity {
     $pass = Get-Password -username $user -password $pass
 
     Try {
-        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if (Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4572,8 +4570,8 @@ Function Update-VcenterPasswordComplexity {
                             if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                                 if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                     if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                        if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                            $mgmtConnected = $true
+                                        if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                            return
                                         }
                                     }
                                 }
@@ -4664,7 +4662,6 @@ Function Update-VcenterAccountLockout {
     $pass = Get-Password -username $user -password $pass
 
     Try {
-        $mgmtConnected = $false
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($vcenterDomain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $domain }) {
@@ -4672,8 +4669,8 @@ Function Update-VcenterAccountLockout {
                         if ($vcenterDomain.type -ne "MANAGEMENT") {
                             if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                 if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                        $mgmtConnected = $true
+                                    if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                        return
                                     }
                                 }
                             }
@@ -5538,8 +5535,8 @@ Function Request-NsxtManagerPasswordComplexity {
                                         if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                                             if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                                 if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                                        $mgmtConnected = $true
+                                                    if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                                        return
                                                     }
                                                 }
                                             }
@@ -6227,20 +6224,17 @@ Function Publish-NsxManagerPasswordExpiration {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 $nsxManagerPasswordExpirationObject = New-Object System.Collections.ArrayList
                 if ($PsBoundParameters.ContainsKey('workloadDomain')) {
-                    if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $workloadDomain -listNodes)) {
-                        # foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
-                        $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $workloadDomain" + $commandSwitch
-                        $nsxPasswordExpiration = Invoke-Expression $command ; $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
-                        # }
+                    if (Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $workloadDomain -listNodes) {
+                        $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $workloadDomain$commandSwitch"
+                        $nsxPasswordExpiration = Invoke-Expression $command
+                        $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
                     }
                 } elseif ($PsBoundParameters.ContainsKey('allDomains')) {
                     $allWorkloadDomains = Get-VCFWorkloadDomain
                     foreach ($domain in $allWorkloadDomains ) {
-                        if (($vcfNsxDetails = Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain.name -listNodes)) {
-                            # foreach ($nsxtManagerNode in $vcfNsxDetails.nodes) {
+                        if (Get-NsxtServerDetail -fqdn $server -username $user -password $pass -domain $domain.name -listNodes) {
                             $command = "Request-NsxtManagerPasswordExpiration -server $server -user $user -pass $pass -domain $($domain.name)" + $commandSwitch
                             $nsxPasswordExpiration = Invoke-Expression $command ; $nsxManagerPasswordExpirationObject += $nsxPasswordExpiration
-                            # }
                         }
                     }
                 }
@@ -9514,8 +9508,8 @@ Function Get-AriaLocalUserPasswordExpiration {
                                         if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                                             if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                                 if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                                        $mgmtConnected = $true
+                                                    if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                                        return
                                                     }
                                                 }
                                             }
@@ -15567,10 +15561,11 @@ Function Request-LocalUserPasswordExpiration {
         if (Test-VCFConnection -server $server) {
             if (Test-VCFAuthentication -server $server -user $user -pass $pass) {
                 if ($drift) {
-                    $version = Get-VCFManager -version
                     if ($PsBoundParameters.ContainsKey('policyFile')) {
+                        $version = Get-VCFManager -version
                         $command = '(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
                     } else {
+                        $version = Get-VCFManager -version
                         $command = '(Get-PasswordPolicyConfig -version $version).' + $product + '.passwordExpiration'
                     }
                     $requiredConfig = Invoke-Expression $command
@@ -15585,8 +15580,8 @@ Function Request-LocalUserPasswordExpiration {
                                         if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                                             if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                                 if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                                        $mgmtConnected = $true
+                                                    if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                                        return
                                                     }
                                                 }
                                             }
@@ -15713,8 +15708,8 @@ Function Update-LocalUserPasswordExpiration {
                                         if (Get-VCFWorkloadDomain | Where-Object { $_.type -eq "MANAGEMENT" }) {
                                             if (($vcfMgmtVcenterDetails = Get-vCenterServerDetail -server $server -user $user -pass $pass -domainType "Management")) {
                                                 if (Test-vSphereConnection -server $($vcfMgmtVcenterDetails.fqdn)) {
-                                                    if (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass) {
-                                                        $mgmtConnected = $true
+                                                    if (-not (Test-vSphereAuthentication -server $vcfMgmtVcenterDetails.fqdn -user $vcfMgmtVcenterDetails.ssoAdmin -pass $vcfMgmtVcenterDetails.ssoAdminPass)) {
+                                                        return
                                                     }
                                                 }
                                             }
