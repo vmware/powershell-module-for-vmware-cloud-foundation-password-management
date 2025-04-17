@@ -73,15 +73,15 @@ Set-Variable -Name "minLengthNotExceeds" -Value "SDDC Manager is able to rotate 
 ##########################################################################
 
 ##########################################################################
-#Region     Begin Password Rotation Manager Functions               ######
+#Region     Begin Password Rotation Functions               ######
 
 Function Invoke-PasswordRotationManager {
     <#
         .SYNOPSIS
-        Generates a Password Rotation Manager Report for a workload domain or all workload domains.
+        Generates a Password Rotation Report for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Invoke-PasswordRotationManager generates a Password Rotation Manager Report for a VMware Cloud Foundation instance.
+        The Invoke-PasswordRotationManager generates a Password Rotation Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
         Invoke-PasswordRotationManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains
@@ -169,7 +169,7 @@ Function Invoke-PasswordRotationManager {
                     $commandSwitch = $commandSwitch + " -json"
                     Write-LogMessage -Type INFO -Message "Starting the process of generating the password rotation JSON for $workflowMessage." -Colour Yellow
                 } else {
-                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Rotation Manager Report for $workflowMessage." -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Rotation Report for $workflowMessage." -Colour Yellow
                     Write-LogMessage -Type INFO -Message "Setting up the log file to path $logfile."
                     Write-LogMessage -Type INFO -Message "Setting up report folder and report $reportName."
                 }
@@ -242,40 +242,40 @@ Function Invoke-PasswordRotationManager {
                     }
 
                     # Version Information: Build Password Rotation Object
-                    $vcfVersion = New-Object -TypeName psobject
-                    $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
+                    $vcfVersion = New-Object -TypeName PSObject
+                    $vcfVersion | Add-Member -NotePropertyName 'vcfVersion' -NotePropertyValue $version
 
                     # Platform Resources: Build Password Rotation Object
                     if ($PsBoundParameters.ContainsKey('allDomains')) {
                         $allWorkloadDomains = Get-VCFWorkloadDomain
                         foreach ($domain in $allWorkloadDomains) {
                             if ($domain.type -eq 'MANAGEMENT') {
-                                $sddcManagerPasswordRotationObj = New-Object -TypeName psobject
-                                $sddcManagerPasswordRotationObj | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
+                                $sddcManagerPasswordRotationObj = New-Object -TypeName PSObject
+                                $sddcManagerPasswordRotationObj | Add-Member -NotePropertyName 'sddcManager' -NotePropertyValue $sddcManagerPasswordRotation
 
-                                $ssoPasswordRotationObj = New-Object -TypeName psobject
-                                $ssoPasswordRotationObj | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordRotation
+                                $ssoPasswordRotationObj = New-Object -TypeName PSObject
+                                $ssoPasswordRotationObj | Add-Member -NotePropertyName 'sso' -NotePropertyValue $ssoPasswordRotation
                             }
                         }
                     } elseif ($PsBoundParameters.ContainsKey('workloadDomain')) {
                         $domain = Get-VCFWorkloadDomain | Where-Object { $_.name -eq $workloadDomain }
                         if ($domain.type -eq 'MANAGEMENT') {
-                            $sddcManagerPasswordRotationObj = New-Object -TypeName psobject
-                            $sddcManagerPasswordRotationObj | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordRotation
+                            $sddcManagerPasswordRotationObj = New-Object -TypeName PSObject
+                            $sddcManagerPasswordRotationObj | Add-Member -NotePropertyName 'sddcManager' -NotePropertyValue $sddcManagerPasswordRotation
 
-                            $ssoPasswordRotationObj = New-Object -TypeName psobject
-                            $ssoPasswordRotationObj | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordRotation
+                            $ssoPasswordRotationObj = New-Object -TypeName PSObject
+                            $ssoPasswordRotationObj | Add-Member -NotePropertyName 'sso' -NotePropertyValue $ssoPasswordRotation
                         }
                     }
 
-                    $vcenterServerPasswordRotationObj = New-Object -TypeName psobject
-                    $vcenterServerPasswordRotationObj | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterServerPasswordRotation
+                    $vcenterServerPasswordRotationObj = New-Object -TypeName PSObject
+                    $vcenterServerPasswordRotationObj | Add-Member -NotePropertyName 'vcenterServer' -NotePropertyValue $vcenterServerPasswordRotation
 
-                    $nsxManagerPasswordRotationObj = New-Object -TypeName psobject
-                    $nsxManagerPasswordRotationObj | Add-Member -notepropertyname 'nsxManager' -notepropertyvalue $nsxManagerPasswordRotation
+                    $nsxManagerPasswordRotationObj = New-Object -TypeName PSObject
+                    $nsxManagerPasswordRotationObj | Add-Member -NotePropertyName 'nsxManager' -NotePropertyValue $nsxManagerPasswordRotation
 
-                    $nsxEdgePasswordRotationObj = New-Object -TypeName psobject
-                    $nsxEdgePasswordRotationObj | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordRotation
+                    $nsxEdgePasswordRotationObj = New-Object -TypeName PSObject
+                    $nsxEdgePasswordRotationObj | Add-Member -NotePropertyName 'nsxEdge' -NotePropertyValue $nsxEdgePasswordRotation
 
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
                         if (Get-VCFAriaLifecycle) {
@@ -296,8 +296,8 @@ Function Invoke-PasswordRotationManager {
                                 if ($isEnabled) {
                                     $variableName = "${resource}PasswordRotation"
                                     if (Get-Variable -Name $variableName -ValueOnly) {
-                                        $ariaPasswordRotationObj = New-Object -TypeName psobject
-                                        $ariaPasswordRotationObj | Add-Member -notepropertyname $resourceTitleCase -notepropertyvalue (Get-Variable -Name $variableName -ValueOnly)
+                                        $ariaPasswordRotationObj = New-Object -TypeName PSObject
+                                        $ariaPasswordRotationObj | Add-Member -NotePropertyName $resourceTitleCase -NotePropertyValue (Get-Variable -Name $variableName -ValueOnly)
                                         Set-Variable -Name "${resource}PasswordRotationObj" -Value $ariaPasswordRotationObj
                                     }
                                 }
@@ -306,8 +306,8 @@ Function Invoke-PasswordRotationManager {
                     }
 
                     # Combine Password Rotation Data
-                    $outputJsonObject = New-Object -TypeName psobject
-                    $outputJsonObject | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
+                    $outputJsonObject = New-Object -TypeName PSObject
+                    $outputJsonObject | Add-Member -NotePropertyName 'vcf' -NotePropertyValue $vcfVersion
 
                     # Platform Resources: Combine Password Rotation Data
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
@@ -325,7 +325,7 @@ Function Invoke-PasswordRotationManager {
                                 'nsxManager' { 'NSX Manager' }
                                 'nsxEdge' { 'NSX Edge' }
                             }
-                            $outputJsonObject | Add-Member -notepropertyname $resourceTitleCase -notepropertyvalue (Get-Variable -Name $variableName -ValueOnly)
+                            $outputJsonObject | Add-Member -NotePropertyName $resourceTitleCase -NotePropertyValue (Get-Variable -Name $variableName -ValueOnly)
                         }
                     }
 
@@ -350,7 +350,7 @@ Function Invoke-PasswordRotationManager {
                                             'ariaAutomation' { 'Aria Automation' }
                                             'workspaceOneAccess' { 'Workspace OME Access' }
                                         }
-                                        $outputJsonObject | Add-Member -notepropertyname $resourceTitleCase -notepropertyvalue (Get-Variable -Name $variableName -ValueOnly)
+                                        $outputJsonObject | Add-Member -NotePropertyName $resourceTitleCase -NotePropertyValue (Get-Variable -Name $variableName -ValueOnly)
                                     }
                                 }
                             }
@@ -506,19 +506,19 @@ Function Invoke-PasswordRotationManager {
 }
 Export-ModuleMember -Function Invoke-PasswordRotationManager
 
-#EndRegion  End Password Rotation Manager Functions                 ######
+#EndRegion  End Password Rotation Functions                 ######
 ##########################################################################
 
 ##########################################################################
-#Region     Begin Password Policy Manager Functions                 ######
+#Region     Begin Password Policy Functions                 ######
 
 Function Invoke-PasswordPolicyManager {
     <#
         .SYNOPSIS
-        Generates a Password Policy Manager Report for a workload domain or all workload domains.
+        Generates a Password Policy Report for a workload domain or all workload domains.
 
         .DESCRIPTION
-        The Invoke-PasswordPolicyManager generates a Password Policy Manager Report for a VMware Cloud Foundation instance.
+        The Invoke-PasswordPolicyManager generates a Password Policy Report for a VMware Cloud Foundation instance.
 
         .EXAMPLE
         Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains
@@ -638,9 +638,9 @@ Function Invoke-PasswordPolicyManager {
 
                 if ($PsBoundParameters.ContainsKey("json")) {
                     $commandSwitch = $commandSwitch + " -json"
-                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Policy Manager Config Drift JSON for $workflowMessage." -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Policy Config Drift JSON for $workflowMessage." -Colour Yellow
                 } else {
-                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Policy Manager Report for $workflowMessage." -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Starting the Process of Generating Password Policy Report for $workflowMessage." -Colour Yellow
                     Write-LogMessage -Type INFO -Message "Setting up the log file to path $logfile."
                     Write-LogMessage -Type INFO -Message "Setting up report folder and report $reportName."
                 }
@@ -684,7 +684,7 @@ Function Invoke-PasswordPolicyManager {
                 $ariaAccountLockout = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
 
                 if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
-                    Write-LogMessage -Type INFO -Message "Collecting Workspace ONE Access Local Directory Password Policies for $workflowMessage."
+                    Write-LogMessage -Type INFO -Message "Collecting Workspace ONE Access Directory Password Policies for $workflowMessage."
                     $wsaDirectoryPasswordExpiration = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy PasswordExpiration $($commandSwitch)"
                     $wsaDirectoryPasswordComplexity = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy PasswordComplexity $($commandSwitch)"
                     $wsaDirectoryAccountLockout = Invoke-Expression "Publish-WsaDirectoryPasswordPolicy -server $wsaFqdn -user admin -pass $wsaAdminPass -policy AccountLockout $($commandSwitch)"
@@ -697,62 +697,62 @@ Function Invoke-PasswordPolicyManager {
 
                 if ($PsBoundParameters.ContainsKey("json")) {
                     # Add VCF version into JSON file
-                    $vcfVersion = New-Object -TypeName psobject
-                    $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
-                    $sddcManagerPasswordPolicy = New-Object -TypeName psobject
-                    $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $sddcManagerPasswordExpiration
-                    $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $sddcManagerPasswordComplexity
-                    $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $sddcManagerAccountLockout
-                    $ssoPasswordPolicy = New-Object -TypeName psobject
-                    $ssoPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $ssoPasswordExpiration
-                    $ssoPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $ssoPasswordComplexity
-                    $ssoPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $ssoAccountLockout
-                    $vcenterPasswordPolicy = New-Object -TypeName psobject
-                    $vcenterPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vcenterPasswordExpiration
-                    $vcenterLocalPasswordPolicy = New-Object -TypeName psobject
-                    $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vcenterLocalPasswordExpiration
-                    $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vcenterLocalPasswordComplexity
-                    $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vcenterLocalAccountLockout
-                    $nsxManagerPasswordPolicy = New-Object -TypeName psobject
-                    $nsxManagerPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $nsxManagerPasswordExpiration
-                    $nsxManagerPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $nsxManagerPasswordComplexity
-                    $nsxManagerPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $nsxManagerAccountLockout
-                    $nsxEdgePasswordPolicy = New-Object -TypeName psobject
-                    $nsxEdgePasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $nsxEdgePasswordExpiration
-                    $nsxEdgePasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $nsxEdgePasswordComplexity
-                    $nsxEdgePasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $nsxEdgeAccountLockout
-                    $esxiPasswordPolicy = New-Object -TypeName psobject
-                    $esxiPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $esxiPasswordExpiration
-                    $esxiPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $esxiPasswordComplexity
-                    $esxiPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $esxiAccountLockout
-                    $ariaPasswordPolicy = New-Object -TypeName psobject
-                    $ariaPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $ariaPasswordExpiration
-                    $ariaPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $ariaPasswordComplexity
-                    $ariaPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $ariaAccountLockout
+                    $vcfVersion = New-Object -TypeName PSObject
+                    $vcfVersion | Add-Member -NotePropertyName 'vcfVersion' -NotePropertyValue $version
+                    $sddcManagerPasswordPolicy = New-Object -TypeName PSObject
+                    $sddcManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $sddcManagerPasswordExpiration
+                    $sddcManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $sddcManagerPasswordComplexity
+                    $sddcManagerPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $sddcManagerAccountLockout
+                    $ssoPasswordPolicy = New-Object -TypeName PSObject
+                    $ssoPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $ssoPasswordExpiration
+                    $ssoPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $ssoPasswordComplexity
+                    $ssoPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $ssoAccountLockout
+                    $vcenterPasswordPolicy = New-Object -TypeName PSObject
+                    $vcenterPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vcenterPasswordExpiration
+                    $vcenterLocalPasswordPolicy = New-Object -TypeName PSObject
+                    $vcenterLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vcenterLocalPasswordExpiration
+                    $vcenterLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vcenterLocalPasswordComplexity
+                    $vcenterLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vcenterLocalAccountLockout
+                    $nsxManagerPasswordPolicy = New-Object -TypeName PSObject
+                    $nsxManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $nsxManagerPasswordExpiration
+                    $nsxManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $nsxManagerPasswordComplexity
+                    $nsxManagerPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $nsxManagerAccountLockout
+                    $nsxEdgePasswordPolicy = New-Object -TypeName PSObject
+                    $nsxEdgePasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $nsxEdgePasswordExpiration
+                    $nsxEdgePasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $nsxEdgePasswordComplexity
+                    $nsxEdgePasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $nsxEdgeAccountLockout
+                    $esxiPasswordPolicy = New-Object -TypeName PSObject
+                    $esxiPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $esxiPasswordExpiration
+                    $esxiPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $esxiPasswordComplexity
+                    $esxiPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $esxiAccountLockout
+                    $ariaPasswordPolicy = New-Object -TypeName PSObject
+                    $ariaPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $ariaPasswordExpiration
+                    $ariaPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $ariaPasswordComplexity
+                    $ariaPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $ariaAccountLockout
                     if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
-                        $wsaDirectoryPasswordPolicy = New-Object -TypeName psobject
-                        $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $wsaDirectoryPasswordExpiration
-                        $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $wsaDirectoryPasswordComplexity
-                        $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $wsaDirectoryAccountLockout
-                        $wsaLocalPasswordPolicy = New-Object -TypeName psobject
-                        $wsaLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $wsaLocalPasswordExpiration
-                        $wsaLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $wsaLocalPasswordComplexity
-                        $wsaLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $wsaLocalAccountLockout
+                        $wsaDirectoryPasswordPolicy = New-Object -TypeName PSObject
+                        $wsaDirectoryPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $wsaDirectoryPasswordExpiration
+                        $wsaDirectoryPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $wsaDirectoryPasswordComplexity
+                        $wsaDirectoryPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $wsaDirectoryAccountLockout
+                        $wsaLocalPasswordPolicy = New-Object -TypeName PSObject
+                        $wsaLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $wsaLocalPasswordExpiration
+                        $wsaLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $wsaLocalPasswordComplexity
+                        $wsaLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $wsaLocalAccountLockout
                     }
 
                     # Build Final Default Password Policy Object
-                    $outputJsonObject = New-Object -TypeName psobject
-                    $outputJsonObject | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
-                    $outputJsonObject | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'vcenterServerLocal' -notepropertyvalue $vcenterLocalPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'nsxManager' -notepropertyvalue $nsxManagerPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'esxi' -notepropertyvalue $esxiPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'wsaDirectory' -notepropertyvalue $wsaDirectoryPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'wsaLocal' -notepropertyvalue $wsaLocalPasswordPolicy
-                    $outputJsonObject | Add-Member -notepropertyname 'ariaLocal' -notepropertyvalue $ariaPasswordPolicy
+                    $outputJsonObject = New-Object -TypeName PSObject
+                    $outputJsonObject | Add-Member -NotePropertyName 'vcf' -NotePropertyValue $vcfVersion
+                    $outputJsonObject | Add-Member -NotePropertyName 'sddcManager' -NotePropertyValue $sddcManagerPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'sso' -NotePropertyValue $ssoPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'vcenterServer' -NotePropertyValue $vcenterPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'vcenterServerLocal' -NotePropertyValue $vcenterLocalPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'nsxManager' -NotePropertyValue $nsxManagerPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'nsxEdge' -NotePropertyValue $nsxEdgePasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'esxi' -NotePropertyValue $esxiPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'wsaDirectory' -NotePropertyValue $wsaDirectoryPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'wsaLocal' -NotePropertyValue $wsaLocalPasswordPolicy
+                    $outputJsonObject | Add-Member -NotePropertyName 'ariaLocal' -NotePropertyValue $ariaPasswordPolicy
                     $jsonFile = ($reportFolder + "passwordPolicyManager" + ".json")
                     Write-LogMessage -Type INFO -Message "Generating the Final JSON and Saving to ($jsonFile)."
                     $outputJsonObject | ConvertTo-Json -Depth 25 | Out-File -FilePath $jsonFile
@@ -775,8 +775,8 @@ Function Invoke-PasswordPolicyManager {
                         $reportData += $wsaDirectoryPasswordExpiration
                         $reportData += $wsaLocalPasswordExpiration
                     } else {
-                        $reportData += ($wsaDirectoryPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-password-expiration"></a><h3>Standalone Workspace ONE Access Directory - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-password-expiration"></a><h3>Standalone Workspace ONE Access (Local Users) - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaDirectoryPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-password-expiration"></a><h3>Local Workspace ONE (Directory) - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalPasswordExpiration | ConvertTo-Html -Fragment -PreContent '<a id="local-wsa-local-password-expiration"></a><h3>Local Workspace ONE (Local) - Password Expiration</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
                     $reportData += $sddcManagerPasswordComplexity
                     $reportData += $ssoPasswordComplexity
@@ -789,8 +789,8 @@ Function Invoke-PasswordPolicyManager {
                         $reportData += $wsaDirectoryPasswordComplexity
                         $reportData += $wsaLocalPasswordComplexity
                     } else {
-                        $reportData += ($wsaDirectoryPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-password-complexity"></a><h3>Standalone Workspace ONE Access Directory - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-password-complexity"></a><h3>Standalone Workspace ONE Access (Local Users) - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaDirectoryPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-password-complexity"></a><h3>Local Workspace ONE (Directory) - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalPasswordComplexity | ConvertTo-Html -Fragment -PreContent '<a id="local-wsa-local-password-complexity"></a><h3>Local Workspace ONE (Local) - Password Complexity</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
                     $reportData += $sddcManagerAccountLockout
                     $reportData += $ssoAccountLockout
@@ -803,8 +803,8 @@ Function Invoke-PasswordPolicyManager {
                         $reportData += $wsaDirectoryAccountLockout
                         $reportData += $wsaLocalAccountLockout
                     } else {
-                        $reportData += ($wsaDirectoryAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-account-lockout"></a><h3>Standalone Workspace ONE Access Directory - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
-                        $reportData += ($wsaLocalAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-local-account-lockout"></a><h3>Standalone Workspace ONE Access (Local Users) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaDirectoryAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="standalone-wsa-directory-account-lockout"></a><h3>Local Workspace ONE (Directory) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
+                        $reportData += ($wsaLocalAccountLockout | ConvertTo-Html -Fragment -PreContent '<a id="local-wsa-local-account-lockout"></a><h3>Local Workspace ONE (Local) - Account Lockout</h3>' -PostContent '<p>Workspace ONE Access Not Requested</p>')
                     }
 
                     if ($PsBoundParameters.ContainsKey("darkMode")) {
@@ -1027,17 +1027,17 @@ Function Start-PasswordPolicyConfig {
                 # Configuring Password Policies for Workspace ONE Access
                 if ($PsBoundParameters.ContainsKey("wsaFqdn")) {
                     # Workspace ONE Access Directory Password Policies
-                    Write-LogMessage -Type INFO -Message "Configuring Password Policies for Workspace ONE Access Local Directory" -Colour Yellow
-                    Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Directory: Password Expiration Policy for instance ($($wsaFqdn))"
+                    Write-LogMessage -Type INFO -Message "Configuring Password Policies for Workspace ONE Access Directory" -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Directory: Password Expiration Policy for instance ($($wsaFqdn))"
                     $StatusMsg = Update-WsaPasswordExpiration -server $wsaFqdn -user admin -pass $wsaAdminPass -maxDays $customPolicy.wsaDirectory.passwordExpiration.passwordLifetime -warnDays $customPolicy.wsaDirectory.passwordExpiration.passwordReminder -reminderDays $customPolicy.wsaDirectory.passwordExpiration.passwordReminderFrequency -tempPasswordHours $customPolicy.wsaDirectory.passwordExpiration.temporaryPassword -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                    Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Directory: Password Complexity Policy for instance ($($wsaFqdn))"
+                    Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Directory: Password Complexity Policy for instance ($($wsaFqdn))"
                     $StatusMsg = Update-WsaPasswordComplexity -server $wsaFqdn -user admin -pass $wsaAdminPass -minLength $customPolicy.wsaDirectory.passwordComplexity.minLength -minLowercase $customPolicy.wsaDirectory.passwordComplexity.minLowercase -minUppercase $customPolicy.wsaDirectory.passwordComplexity.minUppercase -minNumeric $customPolicy.wsaDirectory.passwordComplexity.minNumerical -minSpecial $customPolicy.wsaDirectory.passwordComplexity.minSpecial -maxIdenticalAdjacent $customPolicy.wsaDirectory.passwordComplexity.maxIdenticalAdjacent -maxPreviousCharacters $customPolicy.wsaDirectory.passwordComplexity.history -history $customPolicy.wsaDirectory.passwordComplexity.history -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                    Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Local Directory: Account Lockout Policy for instance ($($wsaFqdn))"
+                    Write-LogMessage -Type INFO -Message "Configuring Workspace ONE Access Directory: Account Lockout Policy for instance ($($wsaFqdn))"
                     $StatusMsg = Update-WsaAccountLockout -server $wsaFqdn -user admin -pass $wsaAdminPass -failures $customPolicy.wsaDirectory.accountLockout.maxFailures -failureInterval $customPolicy.wsaDirectory.accountLockout.failedAttemptInterval -unlockInterval $customPolicy.wsaDirectory.accountLockout.unlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                    Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Workspace ONE Access Local Directory" -Colour Yellow
+                    Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Workspace ONE Access Directory" -Colour Yellow
 
                     # Workspace ONE Access Local User Password Policies
                     Write-LogMessage -Type INFO -Message "Configuring Password Policies for Workspace ONE Access Local Users" -Colour Yellow
@@ -1148,7 +1148,7 @@ Function Get-PasswordPolicyDefault {
 
         .DESCRIPTION
         The Get-PasswordPolicyDefault cmdlet returns the default password policy settings, it can also be used to
-        generate the base JSON file used with Password Policy Manager. Default settings for VMware products include:
+        generate the base JSON file used with Password Policy. Default settings for VMware products include:
         - VMware SDDC Manager
         - VMware ESX
         - VMware vCenter Single Sign-On
@@ -1218,342 +1218,342 @@ Function Get-PasswordPolicyDefault {
     }
 
     # Add VCF version into JSON file
-    $vcfVersion = New-Object -TypeName psobject
-    $vcfVersion | Add-Member -notepropertyname 'vcfVersion' -notepropertyvalue $version
+    $vcfVersion = New-Object -TypeName PSObject
+    $vcfVersion | Add-Member -NotePropertyName 'vcfVersion' -NotePropertyValue $version
 
     # Build Default ESX Password Policy Settings
-    $esxiPasswordExpiration = New-Object -TypeName psobject
-    $esxiPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "99999"
-    $esxiPasswordComplexity = New-Object -TypeName psobject
-    $esxiPasswordComplexity | Add-Member -notepropertyname 'policy' -notepropertyvalue "retry=3 min=disabled,disabled,disabled,7,7"
-    $esxiPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "0"
-    $esxiAccountLockout = New-Object -TypeName psobject
-    $esxiAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "5"
-    $esxiAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $esxiPasswordPolicy = New-Object -TypeName psobject
-    $esxiPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $esxiPasswordExpiration
-    $esxiPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $esxiPasswordComplexity
-    $esxiPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $esxiAccountLockout
+    $esxiPasswordExpiration = New-Object -TypeName PSObject
+    $esxiPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "99999"
+    $esxiPasswordComplexity = New-Object -TypeName PSObject
+    $esxiPasswordComplexity | Add-Member -NotePropertyName 'policy' -NotePropertyValue "retry=3 min=disabled,disabled,disabled,7,7"
+    $esxiPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "0"
+    $esxiAccountLockout = New-Object -TypeName PSObject
+    $esxiAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "5"
+    $esxiAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $esxiPasswordPolicy = New-Object -TypeName PSObject
+    $esxiPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $esxiPasswordExpiration
+    $esxiPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $esxiPasswordComplexity
+    $esxiPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $esxiAccountLockout
 
     # Build Default vCenter Single Sign-On Password Policy Settings
-    $ssoPasswordExpiration = New-Object -TypeName psobject
-    $ssoPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
-    $ssoPasswordComplexity = New-Object -TypeName psobject
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'maxLength' -notepropertyvalue "20"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'minAlphabetic' -notepropertyvalue "2"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "1"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "1"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "1"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "1"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'maxIdenticalAdjacent' -notepropertyvalue "1"
-    $ssoPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $ssoAccountLockout = New-Object -TypeName psobject
-    $ssoAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "5"
-    $ssoAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $ssoAccountLockout | Add-Member -notepropertyname 'failedAttemptInterval' -notepropertyvalue "180"
-    $ssoPasswordPolicy = New-Object -TypeName psobject
-    $ssoPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $ssoPasswordExpiration
-    $ssoPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $ssoPasswordComplexity
-    $ssoPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $ssoAccountLockout
+    $ssoPasswordExpiration = New-Object -TypeName PSObject
+    $ssoPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "90"
+    $ssoPasswordComplexity = New-Object -TypeName PSObject
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'maxLength' -NotePropertyValue "20"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'minAlphabetic' -NotePropertyValue "2"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "1"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "1"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "1"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "1"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'maxIdenticalAdjacent' -NotePropertyValue "1"
+    $ssoPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $ssoAccountLockout = New-Object -TypeName PSObject
+    $ssoAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "5"
+    $ssoAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $ssoAccountLockout | Add-Member -NotePropertyName 'failedAttemptInterval' -NotePropertyValue "180"
+    $ssoPasswordPolicy = New-Object -TypeName PSObject
+    $ssoPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $ssoPasswordExpiration
+    $ssoPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $ssoPasswordComplexity
+    $ssoPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $ssoAccountLockout
 
     # Build Default vCenter Password Policy Settings
-    $vcenterPasswordExpiration = New-Object -TypeName psobject
-    $vcenterPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
-    $vcenterPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vcenterPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vcenterPasswordPolicy = New-Object -TypeName psobject
-    $vcenterPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vcenterPasswordExpiration
+    $vcenterPasswordExpiration = New-Object -TypeName PSObject
+    $vcenterPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "90"
+    $vcenterPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vcenterPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vcenterPasswordPolicy = New-Object -TypeName PSObject
+    $vcenterPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vcenterPasswordExpiration
 
     # Build Default vCenter Local Users Password Policy Settings
-    $vcenterLocalPasswordExpiration = New-Object -TypeName psobject
-    $vcenterLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
-    $vcenterLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vcenterLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vcenterLocalPasswordExpiration | Add-Member -notepropertyname 'email' -notepropertyvalue ""
-    $vcenterLocalPasswordComplexity = New-Object -TypeName psobject
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "6"
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $vcenterLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $vcenterLocalAccountLockout = New-Object -TypeName psobject
-    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $vcenterLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "300"
-    $vcenterLocalPasswordPolicy = New-Object -TypeName psobject
-    $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vcenterLocalPasswordExpiration
-    $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vcenterLocalPasswordComplexity
-    $vcenterLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vcenterLocalAccountLockout
+    $vcenterLocalPasswordExpiration = New-Object -TypeName PSObject
+    $vcenterLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "90"
+    $vcenterLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vcenterLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vcenterLocalPasswordExpiration | Add-Member -NotePropertyName 'email' -NotePropertyValue ""
+    $vcenterLocalPasswordComplexity = New-Object -TypeName PSObject
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "6"
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $vcenterLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $vcenterLocalAccountLockout = New-Object -TypeName PSObject
+    $vcenterLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $vcenterLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $vcenterLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "300"
+    $vcenterLocalPasswordPolicy = New-Object -TypeName PSObject
+    $vcenterLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vcenterLocalPasswordExpiration
+    $vcenterLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vcenterLocalPasswordComplexity
+    $vcenterLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vcenterLocalAccountLockout
 
     # Build Default NSX Manager Local Users Password Policy Settings
-    $nsxManagerPasswordExpiration = New-Object -TypeName psobject
-    $nsxManagerPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
-    $nsxManagerPasswordComplexity = New-Object -TypeName psobject
+    $nsxManagerPasswordExpiration = New-Object -TypeName PSObject
+    $nsxManagerPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "90"
+    $nsxManagerPasswordComplexity = New-Object -TypeName PSObject
     if ($version -ge "5.0") {
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "12"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "12"
     } else {
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "15"
     }
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "0"
-    $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
+    $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "0"
+    $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
     if ($version -ge "5.0") {
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxLength' -notepropertyvalue "128"
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'maxRepeat' -notepropertyvalue "0"
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'passwordRemembrance' -notepropertyvalue "0"
-        $nsxManagerPasswordComplexity | Add-Member -notepropertyname 'hashAlgorithm' -notepropertyvalue "sha512"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'maxLength' -NotePropertyValue "128"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'maxRepeat' -NotePropertyValue "0"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'passwordRemembrance' -NotePropertyValue "0"
+        $nsxManagerPasswordComplexity | Add-Member -NotePropertyName 'hashAlgorithm' -NotePropertyValue "sha512"
     }
-    $nsxManagerAccountLockout = New-Object -TypeName psobject
-    $nsxManagerAccountLockout | Add-Member -notepropertyname 'apiMaxFailures' -notepropertyvalue "5"
-    $nsxManagerAccountLockout | Add-Member -notepropertyname 'apiUnlockInterval' -notepropertyvalue "900"
-    $nsxManagerAccountLockout | Add-Member -notepropertyname 'apiRestInterval' -notepropertyvalue "180"
-    $nsxManagerAccountLockout | Add-Member -notepropertyname 'cliMaxFailures' -notepropertyvalue "5"
-    $nsxManagerAccountLockout | Add-Member -notepropertyname 'cliUnlockInterval' -notepropertyvalue "900"
-    $nsxManagerPasswordPolicy = New-Object -TypeName psobject
-    $nsxManagerPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $nsxManagerPasswordExpiration
-    $nsxManagerPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $nsxManagerPasswordComplexity
-    $nsxManagerPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $nsxManagerAccountLockout
+    $nsxManagerAccountLockout = New-Object -TypeName PSObject
+    $nsxManagerAccountLockout | Add-Member -NotePropertyName 'apiMaxFailures' -NotePropertyValue "5"
+    $nsxManagerAccountLockout | Add-Member -NotePropertyName 'apiUnlockInterval' -NotePropertyValue "900"
+    $nsxManagerAccountLockout | Add-Member -NotePropertyName 'apiRestInterval' -NotePropertyValue "180"
+    $nsxManagerAccountLockout | Add-Member -NotePropertyName 'cliMaxFailures' -NotePropertyValue "5"
+    $nsxManagerAccountLockout | Add-Member -NotePropertyName 'cliUnlockInterval' -NotePropertyValue "900"
+    $nsxManagerPasswordPolicy = New-Object -TypeName PSObject
+    $nsxManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $nsxManagerPasswordExpiration
+    $nsxManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $nsxManagerPasswordComplexity
+    $nsxManagerPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $nsxManagerAccountLockout
 
     # Build Default NSX Edge Local Users Password Policy Settings
-    $nsxEdgePasswordExpiration = New-Object -TypeName psobject
-    $nsxEdgePasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
-    $nsxEdgePasswordComplexity = New-Object -TypeName psobject
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "0"
-    $nsxEdgePasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $nsxEdgeAccountLockout = New-Object -TypeName psobject
-    $nsxEdgeAccountLockout | Add-Member -notepropertyname 'cliMaxFailures' -notepropertyvalue "5"
-    $nsxEdgeAccountLockout | Add-Member -notepropertyname 'cliUnlockInterval' -notepropertyvalue "900"
-    $nsxEdgePasswordPolicy = New-Object -TypeName psobject
-    $nsxEdgePasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $nsxEdgePasswordExpiration
-    $nsxEdgePasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $nsxEdgePasswordComplexity
-    $nsxEdgePasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $nsxEdgeAccountLockout
+    $nsxEdgePasswordExpiration = New-Object -TypeName PSObject
+    $nsxEdgePasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "90"
+    $nsxEdgePasswordComplexity = New-Object -TypeName PSObject
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "15"
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "0"
+    $nsxEdgePasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $nsxEdgeAccountLockout = New-Object -TypeName PSObject
+    $nsxEdgeAccountLockout | Add-Member -NotePropertyName 'cliMaxFailures' -NotePropertyValue "5"
+    $nsxEdgeAccountLockout | Add-Member -NotePropertyName 'cliUnlockInterval' -NotePropertyValue "900"
+    $nsxEdgePasswordPolicy = New-Object -TypeName PSObject
+    $nsxEdgePasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $nsxEdgePasswordExpiration
+    $nsxEdgePasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $nsxEdgePasswordComplexity
+    $nsxEdgePasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $nsxEdgeAccountLockout
 
     # Build Default SDDC Manager Local Users Password Policy Settings
-    $sddcManagerPasswordExpiration = New-Object -TypeName psobject
-    $sddcManagerPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "90"
-    $sddcManagerPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $sddcManagerPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $sddcManagerPasswordComplexity = New-Object -TypeName psobject
+    $sddcManagerPasswordExpiration = New-Object -TypeName PSObject
+    $sddcManagerPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "90"
+    $sddcManagerPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $sddcManagerPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $sddcManagerPasswordComplexity = New-Object -TypeName PSObject
     if ($version -ge "5.2") {
-        $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "15"
+        $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "15"
     } elseif ($version -ge "5.1") {
-        $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "12"
+        $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "12"
     } else {
-        $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
+        $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
     }
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $sddcManagerPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $sddcManagerAccountLockout = New-Object -TypeName psobject
-    $sddcManagerAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $sddcManagerAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "86400"
-    $sddcManagerAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "300"
-    $sddcManagerPasswordPolicy = New-Object -TypeName psobject
-    $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $sddcManagerPasswordExpiration
-    $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $sddcManagerPasswordComplexity
-    $sddcManagerPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $sddcManagerAccountLockout
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'minClass' -NotePropertyValue "4"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $sddcManagerPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $sddcManagerAccountLockout = New-Object -TypeName PSObject
+    $sddcManagerAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $sddcManagerAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "86400"
+    $sddcManagerAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "300"
+    $sddcManagerPasswordPolicy = New-Object -TypeName PSObject
+    $sddcManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $sddcManagerPasswordExpiration
+    $sddcManagerPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $sddcManagerPasswordComplexity
+    $sddcManagerPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $sddcManagerAccountLockout
 
     # Build Default Workspace ONE Access Local Users Password Policy Settings
-    $wsaLocalPasswordExpiration = New-Object -TypeName psobject
-    $wsaLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "60"
-    $wsaLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $wsaLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $wsaLocalPasswordComplexity = New-Object -TypeName psobject
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "6"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "0"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "0"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "0"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "0"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'maxIdenticalAdjacent' -notepropertyvalue "0"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $wsaLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $wsaLocalAccountLockout = New-Object -TypeName psobject
-    $wsaLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $wsaLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $wsaLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
-    $wsaLocalPasswordPolicy = New-Object -TypeName psobject
-    $wsaLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $wsaLocalPasswordExpiration
-    $wsaLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $wsaLocalPasswordComplexity
-    $wsaLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $wsaLocalAccountLockout
+    $wsaLocalPasswordExpiration = New-Object -TypeName PSObject
+    $wsaLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "60"
+    $wsaLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $wsaLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $wsaLocalPasswordComplexity = New-Object -TypeName PSObject
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "6"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "0"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "0"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "0"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "0"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'maxIdenticalAdjacent' -NotePropertyValue "0"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $wsaLocalPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $wsaLocalAccountLockout = New-Object -TypeName PSObject
+    $wsaLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $wsaLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $wsaLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "900"
+    $wsaLocalPasswordPolicy = New-Object -TypeName PSObject
+    $wsaLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $wsaLocalPasswordExpiration
+    $wsaLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $wsaLocalPasswordComplexity
+    $wsaLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $wsaLocalAccountLockout
 
     # Build Default Workspace ONE Access Directory Users Password Policy Settings
-    $wsaDirectoryPasswordExpiration = New-Object -TypeName psobject
-    $wsaDirectoryPasswordExpiration | Add-Member -notepropertyname 'passwordLifetime' -notepropertyvalue "0"
-    $wsaDirectoryPasswordExpiration | Add-Member -notepropertyname 'passwordReminder' -notepropertyvalue "0"
-    $wsaDirectoryPasswordExpiration | Add-Member -notepropertyname 'passwordReminderFrequency' -notepropertyvalue "0"
-    $wsaDirectoryPasswordExpiration | Add-Member -notepropertyname 'temporaryPassword' -notepropertyvalue "168"
-    $wsaDirectoryPasswordComplexity = New-Object -TypeName psobject
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "0"
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "0"
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "0"
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "0"
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'maxIdenticalAdjacent' -notepropertyvalue "0"
-    $wsaDirectoryPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "0"
-    $wsaDirectoryAccountLockout = New-Object -TypeName psobject
-    $wsaDirectoryAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "5"
-    $wsaDirectoryAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $wsaDirectoryAccountLockout | Add-Member -notepropertyname 'failedAttemptInterval' -notepropertyvalue "900"
-    $wsaDirectoryPasswordPolicy = New-Object -TypeName psobject
-    $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $wsaDirectoryPasswordExpiration
-    $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $wsaDirectoryPasswordComplexity
-    $wsaDirectoryPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $wsaDirectoryAccountLockout
+    $wsaDirectoryPasswordExpiration = New-Object -TypeName PSObject
+    $wsaDirectoryPasswordExpiration | Add-Member -NotePropertyName 'passwordLifetime' -NotePropertyValue "0"
+    $wsaDirectoryPasswordExpiration | Add-Member -NotePropertyName 'passwordReminder' -NotePropertyValue "0"
+    $wsaDirectoryPasswordExpiration | Add-Member -NotePropertyName 'passwordReminderFrequency' -NotePropertyValue "0"
+    $wsaDirectoryPasswordExpiration | Add-Member -NotePropertyName 'temporaryPassword' -NotePropertyValue "168"
+    $wsaDirectoryPasswordComplexity = New-Object -TypeName PSObject
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "0"
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "0"
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "0"
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "0"
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'maxIdenticalAdjacent' -NotePropertyValue "0"
+    $wsaDirectoryPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "0"
+    $wsaDirectoryAccountLockout = New-Object -TypeName PSObject
+    $wsaDirectoryAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "5"
+    $wsaDirectoryAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $wsaDirectoryAccountLockout | Add-Member -NotePropertyName 'failedAttemptInterval' -NotePropertyValue "900"
+    $wsaDirectoryPasswordPolicy = New-Object -TypeName PSObject
+    $wsaDirectoryPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $wsaDirectoryPasswordExpiration
+    $wsaDirectoryPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $wsaDirectoryPasswordComplexity
+    $wsaDirectoryPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $wsaDirectoryAccountLockout
 
     # Build Aria Automation Local Users Password Policy Settings
-    $vraLocalPasswordExpiration = New-Object -TypeName psobject
-    $vraLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vraLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
-    $vraLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vraLocalPasswordComplexity = New-Object -TypeName psobject
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-    $vraLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $vraLocalAccountLockout = New-Object -TypeName psobject
-    $vraLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vraLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "86400"
-    $vraLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "300"
-    $vraLocalPasswordPolicy = New-Object -TypeName psobject
-    $vraLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vraLocalPasswordExpiration
-    $vraLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vraLocalPasswordComplexity
-    $vraLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vraLocalAccountLockout
+    $vraLocalPasswordExpiration = New-Object -TypeName PSObject
+    $vraLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vraLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "365"
+    $vraLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vraLocalPasswordComplexity = New-Object -TypeName PSObject
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minClass' -NotePropertyValue "4"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+    $vraLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $vraLocalAccountLockout = New-Object -TypeName PSObject
+    $vraLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $vraLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "86400"
+    $vraLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "300"
+    $vraLocalPasswordPolicy = New-Object -TypeName PSObject
+    $vraLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vraLocalPasswordExpiration
+    $vraLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vraLocalPasswordComplexity
+    $vraLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vraLocalAccountLockout
 
     # Build Aria Operations Local Users Password Policy Settings
-    $vropsLocalPasswordExpiration = New-Object -TypeName psobject
-    $vropsLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vropsLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
-    $vropsLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vropsLocalPasswordComplexity = New-Object -TypeName psobject
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-    $vropsLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $vropsLocalAccountLockout = New-Object -TypeName psobject
-    $vropsLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vropsLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $vropsLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
-    $vropsLocalPasswordPolicy = New-Object -TypeName psobject
-    $vropsLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vropsLocalPasswordExpiration
-    $vropsLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vropsLocalPasswordComplexity
-    $vropsLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vropsLocalAccountLockout
+    $vropsLocalPasswordExpiration = New-Object -TypeName PSObject
+    $vropsLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vropsLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "365"
+    $vropsLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vropsLocalPasswordComplexity = New-Object -TypeName PSObject
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minClass' -NotePropertyValue "4"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+    $vropsLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $vropsLocalAccountLockout = New-Object -TypeName PSObject
+    $vropsLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $vropsLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $vropsLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "900"
+    $vropsLocalPasswordPolicy = New-Object -TypeName PSObject
+    $vropsLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vropsLocalPasswordExpiration
+    $vropsLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vropsLocalPasswordComplexity
+    $vropsLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vropsLocalAccountLockout
 
     # Build Aria Operations Logs Local Users Password Policy Settings
-    $vrliLocalPasswordExpiration = New-Object -TypeName psobject
-    $vrliLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vrliLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
-    $vrliLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vrliLocalPasswordComplexity = New-Object -TypeName psobject
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-    $vrliLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $vrliLocalAccountLockout = New-Object -TypeName psobject
-    $vrliLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vrliLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $vrliLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
-    $vrliLocalPasswordPolicy = New-Object -TypeName psobject
-    $vrliLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vrliLocalPasswordExpiration
-    $vrliLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vrliLocalPasswordComplexity
-    $vrliLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vrliLocalAccountLockout
+    $vrliLocalPasswordExpiration = New-Object -TypeName PSObject
+    $vrliLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vrliLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "365"
+    $vrliLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vrliLocalPasswordComplexity = New-Object -TypeName PSObject
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minClass' -NotePropertyValue "4"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+    $vrliLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $vrliLocalAccountLockout = New-Object -TypeName PSObject
+    $vrliLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $vrliLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $vrliLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "900"
+    $vrliLocalPasswordPolicy = New-Object -TypeName PSObject
+    $vrliLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vrliLocalPasswordExpiration
+    $vrliLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vrliLocalPasswordComplexity
+    $vrliLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vrliLocalAccountLockout
 
     # Build Aria Suite Lifecycle Local Users Password Policy Settings
-    $vrslcmLocalPasswordExpiration = New-Object -TypeName psobject
-    $vrslcmLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vrslcmLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
-    $vrslcmLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vrslcmLocalPasswordComplexity = New-Object -TypeName psobject
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-    $vrslcmLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $vrslcmLocalAccountLockout = New-Object -TypeName psobject
-    $vrslcmLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vrslcmLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $vrslcmLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
-    $vrslcmLocalPasswordPolicy = New-Object -TypeName psobject
-    $vrslcmLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vrslcmLocalPasswordExpiration
-    $vrslcmLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vrslcmLocalPasswordComplexity
-    $vrslcmLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vrslcmLocalAccountLockout
+    $vrslcmLocalPasswordExpiration = New-Object -TypeName PSObject
+    $vrslcmLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vrslcmLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "365"
+    $vrslcmLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vrslcmLocalPasswordComplexity = New-Object -TypeName PSObject
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minClass' -NotePropertyValue "4"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+    $vrslcmLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $vrslcmLocalAccountLockout = New-Object -TypeName PSObject
+    $vrslcmLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $vrslcmLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $vrslcmLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "900"
+    $vrslcmLocalPasswordPolicy = New-Object -TypeName PSObject
+    $vrslcmLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vrslcmLocalPasswordExpiration
+    $vrslcmLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vrslcmLocalPasswordComplexity
+    $vrslcmLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vrslcmLocalAccountLockout
 
     # Build Aria Operations for Networks Local Users Password Policy Settings
-    $vrniLocalPasswordExpiration = New-Object -TypeName psobject
-    $vrniLocalPasswordExpiration | Add-Member -notepropertyname 'minDays' -notepropertyvalue "0"
-    $vrniLocalPasswordExpiration | Add-Member -notepropertyname 'maxDays' -notepropertyvalue "365"
-    $vrniLocalPasswordExpiration | Add-Member -notepropertyname 'warningDays' -notepropertyvalue "7"
-    $vrniLocalPasswordComplexity = New-Object -TypeName psobject
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minNumerical' -notepropertyvalue "-1"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minUppercase' -notepropertyvalue "-1"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minLowercase' -notepropertyvalue "-1"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minUnique' -notepropertyvalue "4"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minLength' -notepropertyvalue "8"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minClass' -notepropertyvalue "4"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'minSpecial' -notepropertyvalue "-1"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'retries' -notepropertyvalue "3"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'maxSequence' -notepropertyvalue "0"
-    $vrniLocalPasswordComplexity | Add-Member -notepropertyname 'history' -notepropertyvalue "5"
-    $vrniLocalAccountLockout = New-Object -TypeName psobject
-    $vrniLocalAccountLockout | Add-Member -notepropertyname 'maxFailures' -notepropertyvalue "3"
-    $vrniLocalAccountLockout | Add-Member -notepropertyname 'unlockInterval' -notepropertyvalue "900"
-    $vrniLocalAccountLockout | Add-Member -notepropertyname 'rootUnlockInterval' -notepropertyvalue "900"
-    $vrniLocalPasswordPolicy = New-Object -TypeName psobject
-    $vrniLocalPasswordPolicy | Add-Member -notepropertyname 'passwordExpiration' -notepropertyvalue $vrniLocalPasswordExpiration
-    $vrniLocalPasswordPolicy | Add-Member -notepropertyname 'passwordComplexity' -notepropertyvalue $vrniLocalPasswordComplexity
-    $vrniLocalPasswordPolicy | Add-Member -notepropertyname 'accountLockout' -notepropertyvalue $vrniLocalAccountLockout
+    $vrniLocalPasswordExpiration = New-Object -TypeName PSObject
+    $vrniLocalPasswordExpiration | Add-Member -NotePropertyName 'minDays' -NotePropertyValue "0"
+    $vrniLocalPasswordExpiration | Add-Member -NotePropertyName 'maxDays' -NotePropertyValue "365"
+    $vrniLocalPasswordExpiration | Add-Member -NotePropertyName 'warningDays' -NotePropertyValue "7"
+    $vrniLocalPasswordComplexity = New-Object -TypeName PSObject
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minNumerical' -NotePropertyValue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minUppercase' -NotePropertyValue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minLowercase' -NotePropertyValue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minUnique' -NotePropertyValue "4"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minLength' -NotePropertyValue "8"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minClass' -NotePropertyValue "4"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'minSpecial' -NotePropertyValue "-1"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'retries' -NotePropertyValue "3"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'maxSequence' -NotePropertyValue "0"
+    $vrniLocalPasswordComplexity | Add-Member -NotePropertyName 'history' -NotePropertyValue "5"
+    $vrniLocalAccountLockout = New-Object -TypeName PSObject
+    $vrniLocalAccountLockout | Add-Member -NotePropertyName 'maxFailures' -NotePropertyValue "3"
+    $vrniLocalAccountLockout | Add-Member -NotePropertyName 'unlockInterval' -NotePropertyValue "900"
+    $vrniLocalAccountLockout | Add-Member -NotePropertyName 'rootUnlockInterval' -NotePropertyValue "900"
+    $vrniLocalPasswordPolicy = New-Object -TypeName PSObject
+    $vrniLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordExpiration' -NotePropertyValue $vrniLocalPasswordExpiration
+    $vrniLocalPasswordPolicy | Add-Member -NotePropertyName 'passwordComplexity' -NotePropertyValue $vrniLocalPasswordComplexity
+    $vrniLocalPasswordPolicy | Add-Member -NotePropertyName 'accountLockout' -NotePropertyValue $vrniLocalAccountLockout
 
     # Build Final Default Password Policy Object
-    $defaultConfig = New-Object -TypeName psobject
-    $defaultConfig | Add-Member -notepropertyname 'vcf' -notepropertyvalue $vcfVersion
-    $defaultConfig | Add-Member -notepropertyname 'esxi' -notepropertyvalue $esxiPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'sso' -notepropertyvalue $ssoPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'vcenterServer' -notepropertyvalue $vcenterPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'vcenterServerLocal' -notepropertyvalue $vcenterLocalPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'nsxManager' -notepropertyvalue $nsxManagerPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'nsxEdge' -notepropertyvalue $nsxEdgePasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'sddcManager' -notepropertyvalue $sddcManagerPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'wsaLocal' -notepropertyvalue $wsaLocalPasswordPolicy
-    $defaultConfig | Add-Member -notepropertyname 'wsaDirectory' -notepropertyvalue $wsaDirectoryPasswordPolicy
+    $defaultConfig = New-Object -TypeName PSObject
+    $defaultConfig | Add-Member -NotePropertyName 'vcf' -NotePropertyValue $vcfVersion
+    $defaultConfig | Add-Member -NotePropertyName 'esxi' -NotePropertyValue $esxiPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'sso' -NotePropertyValue $ssoPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'vcenterServer' -NotePropertyValue $vcenterPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'vcenterServerLocal' -NotePropertyValue $vcenterLocalPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'nsxManager' -NotePropertyValue $nsxManagerPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'nsxEdge' -NotePropertyValue $nsxEdgePasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'sddcManager' -NotePropertyValue $sddcManagerPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'wsaLocal' -NotePropertyValue $wsaLocalPasswordPolicy
+    $defaultConfig | Add-Member -NotePropertyName 'wsaDirectory' -NotePropertyValue $wsaDirectoryPasswordPolicy
     $defaultConfig | Add-Member -notepropertyName 'ariaAutomation' -notepropertyValue $vraLocalPasswordPolicy
     $defaultConfig | Add-Member -notepropertyName 'ariaLifecycle' -notepropertyValue $vrslcmLocalPasswordPolicy
     $defaultConfig | Add-Member -notepropertyName 'ariaOperations' -notepropertyValue $vropsLocalPasswordPolicy
@@ -1648,8 +1648,8 @@ Function checkEmailString {
 
 Function Test-PasswordPolicyConfig {
     Param (
-        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [psobject]$customConfig,
-        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [psobject]$version
+        [Parameter (Mandatory = $false)] [ValidateNotNullOrEmpty()] [PSObject]$customConfig,
+        [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [PSObject]$version
     )
 
     # Import default configuration JSON for compare parameters
@@ -2118,7 +2118,7 @@ Function Save-ClarityReportNavigation {
             <nav class="subnav">
             <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link active" href="">Password Policy Manager</a>
+                <a class="nav-link active" href="">Password Policy</a>
             </li>
             </ul>
         </nav>
@@ -2132,17 +2132,19 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#sddcmanager-password-expiration">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-password-expiration">vCenter Single Sign-On</a></li>
                     <li><a class="nav-link" href="#vcenter-password-expiration">vCenter</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter (Local)</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-password-expiration">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-password-expiration">ESX</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-directory-password-expiration">Standalone Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-local-password-expiration">Standalone Workspace ONE (Local)</a></li>
-                    <li><a class="nav-link" href="#vrslcm-local-password-expiration">Aria Suite Lifecycle (Local)</a></li>
-                    <li><a class="nav-link" href="#vrops-local-password-expiration">Aria Operations (Local)</a></li>
-                    <li><a class="nav-link" href="#vrli-local-password-expiration">Aria Operations for Logs (Local)</a></li>
-                    <li><a class="nav-link" href="#vrni-local-password-expiration">Aria Operations for Networks (Local)</a></li>
-                    <li><a class="nav-link" href="#vra-local-password-expiration">Aria Automation (Local)</a></li>
+                    <li><a class="nav-link" href="#esx-password-expiration">ESX</a></li>
+                    <li><a class="nav-link" href="#vrslcm-local-password-expiration">Aria Suite Lifecycle</a></li>
+                    <li><a class="nav-link" href="#vrops-local-password-expiration">Aria Operations</a></li>
+                    <li><a class="nav-link" href="#vrli-local-password-expiration">Aria Operations for Logs</a></li>
+                    <li><a class="nav-link" href="#vrni-local-password-expiration">Aria Operations for Networks</a></li>
+                    <li><a class="nav-link" href="#vra-local-password-expiration">Aria Automation</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-directory-password-expiration">Local Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#local-wsa-local-password-expiration">Local Workspace ONE (Local)</a></li>
                 </ul>
             </section>
             <section class="nav-group collapsible">
@@ -2151,17 +2153,19 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-password-complexity">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-password-complexity">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter (Local)</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-password-complexity">ESX</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-directory-password-complexity">Standalone Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-local-password-complexity">Standalone Workspace ONE (Local)</a></li>
-                    <li><a class="nav-link" href="#vrslcm-local-password-complexity">Aria Suite Lifecycle (Local)</a></li>
-                    <li><a class="nav-link" href="#vrops-local-password-complexity">Aria Operations (Local)</a></li>
-                    <li><a class="nav-link" href="#vrli-local-password-complexity">Aria Operations for Logs (Local)</a></li>
-                    <li><a class="nav-link" href="#vrni-local-password-complexity">Aria Operations for Networks (Local)</a></li>
-                    <li><a class="nav-link" href="#vra-local-password-complexity">Aria Automation (Local)</a></li>
+                    <li><a class="nav-link" href="#esx-password-complexity">ESX</a></li>
+                    <li><a class="nav-link" href="#vrslcm-local-password-complexity">Aria Suite Lifecycle</a></li>
+                    <li><a class="nav-link" href="#vrops-local-password-complexity">Aria Operations</a></li>
+                    <li><a class="nav-link" href="#vrli-local-password-complexity">Aria Operations for Logs</a></li>
+                    <li><a class="nav-link" href="#vrni-local-password-complexity">Aria Operations for Networks</a></li>
+                    <li><a class="nav-link" href="#vra-local-password-complexity">Aria Automation</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-password-complexity">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-directory-password-complexity">Local Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#local-wsa-local-password-complexity">Local Workspace ONE (Local)</a></li>
                 </ul>
             </section>
             <section class="nav-group collapsible">
@@ -2170,17 +2174,19 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-account-lockout">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-account-lockout">vCenter Single Sign-On</a></li>
-                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter (Local)</a></li>
+                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter</a></li>
                     <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
-                    <li><a class="nav-link" href="#esxi-account-lockout">ESX</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-directory-account-lockout">Standalone Workspace ONE (Directory)</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-local-account-lockout">Standalone Workspace ONE (Local)</a></li>
-                    <li><a class="nav-link" href="#vrslcm-local-account-lockout">Aria Suite Lifecycle (Local)</a></li>
-                    <li><a class="nav-link" href="#vrops-local-account-lockout">Aria Operations (Local)</a></li>
-                    <li><a class="nav-link" href="#vrli-local-account-lockout">Aria Operations for Logs (Local)</a></li>
-                    <li><a class="nav-link" href="#vrni-local-account-lockout">Aria Operations for Networks (Local)</a></li>
-                    <li><a class="nav-link" href="#vra-local-account-lockout">Aria Automation (Local)</a></li>
+                    <li><a class="nav-link" href="#esx-account-lockout">ESX</a></li>
+                    <li><a class="nav-link" href="#vrslcm-local-account-lockout">Aria Suite Lifecycle</a></li>
+                    <li><a class="nav-link" href="#vrops-local-account-lockout">Aria Operations</a></li>
+                    <li><a class="nav-link" href="#vrli-local-account-lockout">Aria Operations for Logs</a></li>
+                    <li><a class="nav-link" href="#vrni-local-account-lockout">Aria Operations for Networks</a></li>
+                    <li><a class="nav-link" href="#vra-local-account-lockout">Aria Automation</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-account-lockout">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
+                    <li><a class="nav-link" href="#standalone-wsa-directory-account-lockout">Local Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#local-wsa-local-account-lockout">Local Workspace ONE (Local)</a></li>
                 </ul>
             </section>
         </section>
@@ -2202,7 +2208,7 @@ Function Save-ClarityReportNavigationForRotation {
         <nav class="subnav">
         <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" href="">Password Rotation Manager</a>
+            <a class="nav-link active" href="">Password Rotation</a>
         </li>
         </ul>
         </nav>
@@ -2294,7 +2300,7 @@ Function Convert-CssClassStyle {
     $htmlData
 }
 
-#EndRegion  End Password Policy Manager Functions                   ######
+#EndRegion  End Password Policy Functions                   ######
 ##########################################################################
 
 ##########################################################################
@@ -3308,10 +3314,10 @@ Function Request-SsoPasswordExpiration {
                                     Write-Error $_.Exception
                                 }
                                 if ($SsoPasswordExpiration = Get-SsoPasswordPolicy -server $ssoAdminServer) {
-                                    $SsoPasswordExpirationObject = New-Object -TypeName psobject
-                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($SsoPasswordExpiration.PasswordLifetimeDays -ne $requiredConfig.maxDays) { "$($SsoPasswordExpiration.PasswordLifetimeDays) [ $($requiredConfig.maxDays) ]" } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" } } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" })
+                                    $SsoPasswordExpirationObject = New-Object -TypeName PSObject
+                                    $SsoPasswordExpirationObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $SsoPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                    $SsoPasswordExpirationObject | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($SsoPasswordExpiration.PasswordLifetimeDays -ne $requiredConfig.maxDays) { "$($SsoPasswordExpiration.PasswordLifetimeDays) [ $($requiredConfig.maxDays) ]" } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" } } else { "$($SsoPasswordExpiration.PasswordLifetimeDays)" })
                                 } else {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -3422,18 +3428,18 @@ Function Request-SsoPasswordComplexity {
                                     Write-Error $_.Exception
                                 }
                                 if ($SsoPasswordComplexity = Get-SsoPasswordPolicy -server $ssoAdminServer) {
-                                    $SsoPasswordComplexityObject = New-Object -TypeName psobject
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinLength -ne $requiredConfig.minLength) { "$($SsoPasswordComplexity.MinLength) [ $($requiredConfig.minLength) ]" } else { "$($SsoPasswordComplexity.MinLength)" } } else { "$($SsoPasswordComplexity.MinLength)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MaxLength -ne $requiredConfig.maxLength) { "$($SsoPasswordComplexity.MaxLength) [ $($requiredConfig.maxLength) ]" } else { "$($SsoPasswordComplexity.MaxLength)" } } else { "$($SsoPasswordComplexity.MaxLength)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Alphabetic" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinAlphabeticCount -ne $requiredConfig.minAlphabetic) { "$($SsoPasswordComplexity.MinAlphabeticCount) [ $($requiredConfig.minAlphabetic) ]" } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" } } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinLowercaseCount -ne $requiredConfig.minLowercase) { "$($SsoPasswordComplexity.MinLowercaseCount) [ $($requiredConfig.minLowercase) ]" } else { "$($SsoPasswordComplexity.MinLowercaseCount)" } } else { "$($SsoPasswordComplexity.MinLowercaseCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinUppercaseCount -ne $requiredConfig.minUppercase) { "$($SsoPasswordComplexity.MinUppercaseCount) [ $($requiredConfig.minUppercase) ]" } else { "$($SsoPasswordComplexity.MinUppercaseCount)" } } else { "$($SsoPasswordComplexity.MinUppercaseCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Numeric" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinNumericCount -ne $requiredConfig.minNumerical) { "$($SsoPasswordComplexity.MinNumericCount) [ $($requiredConfig.minNumerical) ]" } else { "$($SsoPasswordComplexity.MinNumericCount)" } } else { "$($SsoPasswordComplexity.MinNumericCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MinSpecialCharCount -ne $requiredConfig.minSpecial) { "$($SsoPasswordComplexity.MinSpecialCharCount) [ $($requiredConfig.minSpecial) ]" } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" } } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "Max Identical Adjacent" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" } } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" })
-                                    $SsoPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount -ne $requiredConfig.history) { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount) [ $($requiredConfig.history) ]" } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" } } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" })
+                                    $SsoPasswordComplexityObject = New-Object -TypeName PSObject
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MinLength -ne $requiredConfig.minLength) { "$($SsoPasswordComplexity.MinLength) [ $($requiredConfig.minLength) ]" } else { "$($SsoPasswordComplexity.MinLength)" } } else { "$($SsoPasswordComplexity.MinLength)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Max Length" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MaxLength -ne $requiredConfig.maxLength) { "$($SsoPasswordComplexity.MaxLength) [ $($requiredConfig.maxLength) ]" } else { "$($SsoPasswordComplexity.MaxLength)" } } else { "$($SsoPasswordComplexity.MaxLength)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Min Alphabetic" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MinAlphabeticCount -ne $requiredConfig.minAlphabetic) { "$($SsoPasswordComplexity.MinAlphabeticCount) [ $($requiredConfig.minAlphabetic) ]" } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" } } else { "$($SsoPasswordComplexity.MinAlphabeticCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MinLowercaseCount -ne $requiredConfig.minLowercase) { "$($SsoPasswordComplexity.MinLowercaseCount) [ $($requiredConfig.minLowercase) ]" } else { "$($SsoPasswordComplexity.MinLowercaseCount)" } } else { "$($SsoPasswordComplexity.MinLowercaseCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MinUppercaseCount -ne $requiredConfig.minUppercase) { "$($SsoPasswordComplexity.MinUppercaseCount) [ $($requiredConfig.minUppercase) ]" } else { "$($SsoPasswordComplexity.MinUppercaseCount)" } } else { "$($SsoPasswordComplexity.MinUppercaseCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Min Numeric" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MinNumericCount -ne $requiredConfig.minNumerical) { "$($SsoPasswordComplexity.MinNumericCount) [ $($requiredConfig.minNumerical) ]" } else { "$($SsoPasswordComplexity.MinNumericCount)" } } else { "$($SsoPasswordComplexity.MinNumericCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MinSpecialCharCount -ne $requiredConfig.minSpecial) { "$($SsoPasswordComplexity.MinSpecialCharCount) [ $($requiredConfig.minSpecial) ]" } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" } } else { "$($SsoPasswordComplexity.MinSpecialCharCount)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "Max Identical Adjacent" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" } } else { "$($SsoPasswordComplexity.MaxIdenticalAdjacentCharacters)" })
+                                    $SsoPasswordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $(if ($drift) { if ($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount -ne $requiredConfig.history) { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount) [ $($requiredConfig.history) ]" } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" } } else { "$($SsoPasswordComplexity.ProhibitedPreviousPasswordsCount)" })
                                 } else {
                                     Write-Error "Unable to retrieve password complexity policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -3544,12 +3550,12 @@ Function Request-SsoAccountLockout {
                                     Write-Error $_.Exception
                                 }
                                 if ($SsoAccountLockout = Get-SsoLockoutPolicy -server $ssoAdminServer) {
-                                    $SsoAccountLockoutObject = New-Object -TypeName psobject
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.MaxFailedAttempts -ne $requiredConfig.maxFailures) { "$($SsoAccountLockout.MaxFailedAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($SsoAccountLockout.MaxFailedAttempts)" } } else { "$($SsoAccountLockout.MaxFailedAttempts)" })
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.AutoUnlockIntervalSec -ne $requiredConfig.unlockInterval) { "$($SsoAccountLockout.AutoUnlockIntervalSec) [ $($requiredConfig.unlockInterval) ]" } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" } } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" })
-                                    $SsoAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (sec)" -notepropertyvalue $(if ($drift) { if ($SsoAccountLockout.FailedAttemptIntervalSec -ne $requiredConfig.failedAttemptInterval) { "$($SsoAccountLockout.FailedAttemptIntervalSec) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" } } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" })
+                                    $SsoAccountLockoutObject = New-Object -TypeName PSObject
+                                    $SsoAccountLockoutObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $SsoAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                    $SsoAccountLockoutObject | Add-Member -NotePropertyName "Max Failures" -NotePropertyValue $(if ($drift) { if ($SsoAccountLockout.MaxFailedAttempts -ne $requiredConfig.maxFailures) { "$($SsoAccountLockout.MaxFailedAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($SsoAccountLockout.MaxFailedAttempts)" } } else { "$($SsoAccountLockout.MaxFailedAttempts)" })
+                                    $SsoAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval (sec)" -NotePropertyValue $(if ($drift) { if ($SsoAccountLockout.AutoUnlockIntervalSec -ne $requiredConfig.unlockInterval) { "$($SsoAccountLockout.AutoUnlockIntervalSec) [ $($requiredConfig.unlockInterval) ]" } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" } } else { "$($SsoAccountLockout.AutoUnlockIntervalSec)" })
+                                    $SsoAccountLockoutObject | Add-Member -NotePropertyName "Failed Attempt Interval (sec)" -NotePropertyValue $(if ($drift) { if ($SsoAccountLockout.FailedAttemptIntervalSec -ne $requiredConfig.failedAttemptInterval) { "$($SsoAccountLockout.FailedAttemptIntervalSec) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" } } else { "$($SsoAccountLockout.FailedAttemptIntervalSec)" })
                                 } else {
                                     Write-Error "Unable to retrieve account lockout policy from vCenter Single Sign-On ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -4108,12 +4114,12 @@ Function Request-VcenterPasswordExpiration {
                         if (Test-vSphereApiConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereApiAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if ($VcenterPasswordExpiration = Get-VcenterPasswordExpiration) {
-                                    $VcenterPasswordExpirationObject = New-Object -TypeName psobject
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.min_days -ne $requiredConfig.minDays) { "$($VcenterPasswordExpiration.min_days) [ $($requiredConfig.minDays) ]" } else { "$($VcenterPasswordExpiration.min_days)" } } else { "$($VcenterPasswordExpiration.min_days)" })
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.max_days -ne $requiredConfig.maxDays) { "$($VcenterPasswordExpiration.max_days) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterPasswordExpiration.max_days)" } } else { "$($VcenterPasswordExpiration.max_days)" })
-                                    $VcenterPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterPasswordExpiration.warn_days -ne $requiredConfig.warningDays) { "$($VcenterPasswordExpiration.warn_days) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterPasswordExpiration.warn_days)" } } else { "$($VcenterPasswordExpiration.warn_days)" })
+                                    $VcenterPasswordExpirationObject = New-Object -TypeName PSObject
+                                    $VcenterPasswordExpirationObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $VcenterPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                    $VcenterPasswordExpirationObject | Add-Member -NotePropertyName "Min Days" -NotePropertyValue $(if ($drift) { if ($VcenterPasswordExpiration.min_days -ne $requiredConfig.minDays) { "$($VcenterPasswordExpiration.min_days) [ $($requiredConfig.minDays) ]" } else { "$($VcenterPasswordExpiration.min_days)" } } else { "$($VcenterPasswordExpiration.min_days)" })
+                                    $VcenterPasswordExpirationObject | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($VcenterPasswordExpiration.max_days -ne $requiredConfig.maxDays) { "$($VcenterPasswordExpiration.max_days) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterPasswordExpiration.max_days)" } } else { "$($VcenterPasswordExpiration.max_days)" })
+                                    $VcenterPasswordExpirationObject | Add-Member -NotePropertyName "Warning Days" -NotePropertyValue $(if ($drift) { if ($VcenterPasswordExpiration.warn_days -ne $requiredConfig.warningDays) { "$($VcenterPasswordExpiration.warn_days) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterPasswordExpiration.warn_days)" } } else { "$($VcenterPasswordExpiration.warn_days)" })
                                 } else {
                                     Write-Error "Unable to retrieve password expiration policy from vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -4220,69 +4226,69 @@ Function Request-VcenterPasswordComplexity {
                                     $version = Get-VCFManager -version
                                     if ($PsBoundParameters.ContainsKey('policyFile')) {
                                         $vcenterLocalPolicy = Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift -reportPath $reportPath -policyFile $policyFile
-                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName PSObject
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $vcenterLocalPolicy.'Min Length'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $vcenterLocalPolicy.'Min Lowercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $vcenterLocalPolicy.'Min Uppercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $vcenterLocalPolicy.'Min Numerical'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $vcenterLocalPolicy.'Min Special'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $vcenterLocalPolicy.'Min Unique'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $vcenterLocalPolicy.'History'
                                         if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
                                             $alert = "RED"
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthExceeds
                                         } else {
                                             $alert = "GREEN"
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthNotExceeds
                                         }
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     } else {
                                         $vcenterLocalPolicy = Get-LocalPasswordComplexity -version $version -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass -product vcenterServerLocal -drift
-                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                        $VcenterLocalPasswordComplexityObject = New-Object -TypeName PSObject
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $vcenterLocalPolicy.'Min Length'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $vcenterLocalPolicy.'Min Lowercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $vcenterLocalPolicy.'Min Uppercase'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $vcenterLocalPolicy.'Min Numerical'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $vcenterLocalPolicy.'Min Special'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $vcenterLocalPolicy.'Min Unique'
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $vcenterLocalPolicy.'History'
                                         if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
                                             $alert = "RED"
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthExceeds
                                         } else {
                                             $alert = "GREEN"
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                            $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                            $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthNotExceeds
                                         }
                                         $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                     }
                                 } else {
                                     $vcenterLocalPolicy = Get-LocalPasswordComplexity -vmName ($vcfVcenterDetails.fqdn.Split("."))[-0] -guestUser $vcfVcenterDetails.root -guestPassword $vcfVcenterDetails.rootPass
-                                    $VcenterLocalPasswordComplexityObject = New-Object -TypeName psobject
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $vcenterLocalPolicy.'Min Length'
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $vcenterLocalPolicy.'Min Lowercase'
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $vcenterLocalPolicy.'Min Uppercase'
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $vcenterLocalPolicy.'Min Numerical'
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $vcenterLocalPolicy.'Min Special'
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $vcenterLocalPolicy.'Min Unique'
-                                    $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $vcenterLocalPolicy.'History'
+                                    $VcenterLocalPasswordComplexityObject = New-Object -TypeName PSObject
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $vcenterLocalPolicy.'Min Length'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $vcenterLocalPolicy.'Min Lowercase'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $vcenterLocalPolicy.'Min Uppercase'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $vcenterLocalPolicy.'Min Numerical'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $vcenterLocalPolicy.'Min Special'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $vcenterLocalPolicy.'Min Unique'
+                                    $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $vcenterLocalPolicy.'History'
                                     if ( $vcenterLocalPolicy.minlen -gt $managedPasswordMinLength ) {
                                         $alert = "RED"
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthExceeds
                                     } else {
                                         $alert = "GREEN"
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                        $VcenterLocalPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                        $VcenterLocalPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthNotExceeds
                                     }
                                     $VcenterLocalPasswordComplexityPolicy += $VcenterLocalPasswordComplexityObject
                                 }
@@ -4778,14 +4784,14 @@ Function Request-VcenterRootPasswordExpiration {
                         if (Test-vSphereApiConnection -server $($vcfVcenterDetails.fqdn)) {
                             if (Test-vSphereApiAuthentication -server $vcfVcenterDetails.fqdn -user $vcfVcenterDetails.ssoAdmin -pass $vcfVcenterDetails.ssoAdminPass) {
                                 if ($VcenterRootPasswordExpiration = Get-VcenterRootPasswordExpiration) {
-                                    $VcenterRootPasswordExpirationObject = New-Object -TypeName psobject
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfVcenterDetails.fqdn)
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue "root"
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.min_days_between_password_change -ne $requiredConfig.minDays) { "$($VcenterRootPasswordExpiration.min_days_between_password_change) [ $($requiredConfig.minDays) ]" } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" } } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" })
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.max_days_between_password_change -ne $requiredConfig.maxDays) { "$($VcenterRootPasswordExpiration.max_days_between_password_change) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" } } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" })
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.warn_days_before_password_expiration -ne $requiredConfig.warningDays) { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" } } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" })
-                                    $VcenterRootPasswordExpirationObject | Add-Member -notepropertyname "Email" -notepropertyvalue $(if ($drift) { if ($VcenterRootPasswordExpiration.email -ne $requiredConfig.email) { "$($VcenterRootPasswordExpiration.email) [ $($requiredConfig.email) ]" } else { "$($VcenterRootPasswordExpiration.email)" } } else { "$($VcenterRootPasswordExpiration.email)" })
+                                    $VcenterRootPasswordExpirationObject = New-Object -TypeName PSObject
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfVcenterDetails.fqdn)
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "User" -NotePropertyValue "root"
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "Min Days" -NotePropertyValue $(if ($drift) { if ($VcenterRootPasswordExpiration.min_days_between_password_change -ne $requiredConfig.minDays) { "$($VcenterRootPasswordExpiration.min_days_between_password_change) [ $($requiredConfig.minDays) ]" } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" } } else { "$($VcenterRootPasswordExpiration.min_days_between_password_change)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($VcenterRootPasswordExpiration.max_days_between_password_change -ne $requiredConfig.maxDays) { "$($VcenterRootPasswordExpiration.max_days_between_password_change) [ $($requiredConfig.maxDays) ]" } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" } } else { "$($VcenterRootPasswordExpiration.max_days_between_password_change)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "Warning Days" -NotePropertyValue $(if ($drift) { if ($VcenterRootPasswordExpiration.warn_days_before_password_expiration -ne $requiredConfig.warningDays) { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration) [ $($requiredConfig.warningDays) ]" } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" } } else { "$($VcenterRootPasswordExpiration.warn_days_before_password_expiration)" })
+                                    $VcenterRootPasswordExpirationObject | Add-Member -NotePropertyName "Email" -NotePropertyValue $(if ($drift) { if ($VcenterRootPasswordExpiration.email -ne $requiredConfig.email) { "$($VcenterRootPasswordExpiration.email) [ $($requiredConfig.email) ]" } else { "$($VcenterRootPasswordExpiration.email)" } } else { "$($VcenterRootPasswordExpiration.email)" })
                                 } else {
                                     Write-Error "Unable to retrieve root password expiration policy from vCenter ($($vcfVcenterDetails.fqdn)): PRE_VALIDATION_FAILED"
                                 }
@@ -5132,7 +5138,7 @@ Function Publish-VcenterLocalPasswordExpiration {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterLocalPasswordExpirationObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterLocalPasswordExpirationObject = $vcenterLocalPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration-local"></a><h3>vCenter - Password Expiration (Local Users)</h3>' -As Table
+                    $vcenterLocalPasswordExpirationObject = $vcenterLocalPasswordExpirationObject | Sort-Object 'Workload Domain', 'System', 'User' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-expiration-local"></a><h3>vCenter - Password Expiration</h3>' -As Table
                     $vcenterLocalPasswordExpirationObject = Convert-CssClassStyle -htmldata $vcenterLocalPasswordExpirationObject
                     $vcenterLocalPasswordExpirationObject
                 }
@@ -5234,7 +5240,7 @@ Function Publish-VcenterLocalPasswordComplexity {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterLocalPasswordComplexityObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterLocalPasswordComplexityObject = $vcenterLocalPasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-complexity-local"></a><h3>vCenter - Password Complexity (Local Users)</h3>' -As Table
+                    $vcenterLocalPasswordComplexityObject = $vcenterLocalPasswordComplexityObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-password-complexity-local"></a><h3>vCenter - Password Complexity</h3>' -As Table
                     $vcenterLocalPasswordComplexityObject = Convert-CssClassStyle -htmldata $vcenterLocalPasswordComplexityObject
                     $vcenterLocalPasswordComplexityObject
                 }
@@ -5336,7 +5342,7 @@ Function Publish-VcenterLocalAccountLockout {
                 if ($PsBoundParameters.ContainsKey('json')) {
                     $vcenterLocalAccountLockoutObject | ConvertTo-Json -Depth 10
                 } else {
-                    $vcenterLocalAccountLockoutObject = $vcenterLocalAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-account-lockout-local"></a><h3>vCenter - Account Lockout (Local Users)</h3>' -As Table
+                    $vcenterLocalAccountLockoutObject = $vcenterLocalAccountLockoutObject | Sort-Object 'Workload Domain', 'System' | ConvertTo-Html -Fragment -PreContent '<a id="vcenter-account-lockout-local"></a><h3>vCenter - Account Lockout</h3>' -As Table
                     $vcenterLocalAccountLockoutObject = Convert-CssClassStyle -htmldata $vcenterLocalAccountLockoutObject
                     $vcenterLocalAccountLockoutObject
                 }
@@ -5431,11 +5437,11 @@ Function Request-NsxtManagerPasswordExpiration {
                                 $nsxtPasswordExpirationPolicy = New-Object System.Collections.ArrayList
                                 $localUsers = Get-NsxtApplianceUser
                                 foreach ($localUser in $localUsers) {
-                                    $localUserPasswordExpirationPolicy = New-Object -TypeName psobject
-                                    $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                    $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $($vcfNsxDetails.fqdn)
-                                    $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "User" -notepropertyvalue $($localUser.username)
-                                    $localUserPasswordExpirationPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" } } else { "$($localUser.password_change_frequency)" })
+                                    $localUserPasswordExpirationPolicy = New-Object -TypeName PSObject
+                                    $localUserPasswordExpirationPolicy | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                    $localUserPasswordExpirationPolicy | Add-Member -NotePropertyName "System" -NotePropertyValue $($vcfNsxDetails.fqdn)
+                                    $localUserPasswordExpirationPolicy | Add-Member -NotePropertyName "User" -NotePropertyValue $($localUser.username)
+                                    $localUserPasswordExpirationPolicy | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" } } else { "$($localUser.password_change_frequency)" })
                                     $nsxtPasswordExpirationPolicy += $localUserPasswordExpirationPolicy
                                 }
                                 Return $nsxtPasswordExpirationPolicy
@@ -5549,24 +5555,24 @@ Function Request-NsxtManagerPasswordComplexity {
                                             if (Test-NSXTAuthentication -server $nsxtManagerNode.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                                 if ($version -lt "5.0") {
                                                     if ($nsxtManagerNodePolicy = Get-LocalPasswordComplexity -vmName ($nsxtManagerNode.fqdn.Split("."))[-0] -guestUser $vcfNsxDetails.rootUser -guestPassword $vcfNsxDetails.rootPass -nsx ) {
-                                                        $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.'Min Length')" } } else { "$($nsxtManagerNodePolicy.'Min Length')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" } } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" } } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.'Min Numerical')" } } else { "$($nsxtManagerNodePolicy.'Min Numerical')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" } } else { "$($nsxtManagerNodePolicy.'Min Special')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" } } else { "$($nsxtManagerNodePolicy.'Min Unique')" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" } } else { "$($nsxtManagerNodePolicy.'Max Retries')" })
+                                                        $NsxtManagerPasswordComplexityObject = New-Object -TypeName PSObject
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($nsxtManagerNode.fqdn)
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.'Min Length')" } } else { "$($nsxtManagerNodePolicy.'Min Length')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" } } else { "$($nsxtManagerNodePolicy.'Min Lowercase')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" } } else { "$($nsxtManagerNodePolicy.'Min Uppercase')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.'Min Numerical')" } } else { "$($nsxtManagerNodePolicy.'Min Numerical')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.'Min Special')" } } else { "$($nsxtManagerNodePolicy.'Min Special')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.'Min Unique')" } } else { "$($nsxtManagerNodePolicy.'Min Unique')" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtManagerNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtManagerNodePolicy.'Max Retries')" } } else { "$($nsxtManagerNodePolicy.'Max Retries')" })
                                                         if ( $nsxtManagerNodePolicy.minimum_password_length -gt $managedPasswordMinLength ) {
                                                             $alert = "RED"
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthExceeds
                                                         } else {
                                                             $alert = "GREEN"
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthNotExceeds
                                                         }
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
@@ -5574,28 +5580,28 @@ Function Request-NsxtManagerPasswordComplexity {
                                                     }
                                                 } else {
                                                     if ($nsxtManagerNodePolicy = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn) {
-                                                        $NsxtManagerPasswordComplexityObject = New-Object -TypeName psobject
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_password_length -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.minimum_password_length) [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.minimum_password_length)" } } else { "$($nsxtManagerNodePolicy.minimum_password_length)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Length" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.maximum_password_length -ne $requiredConfig.maxLength) { "$($nsxtManagerNodePolicy.maximum_password_length) [ $($requiredConfig.maxLength) ]" } else { "$($nsxtManagerNodePolicy.maximum_password_length)" } } else { "$($nsxtManagerNodePolicy.maximum_password_length)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.lower_chars -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.lower_chars) [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.lower_chars)" } } else { "$($nsxtManagerNodePolicy.lower_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.upper_chars -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.upper_chars) [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.upper_chars)" } } else { "$($nsxtManagerNodePolicy.upper_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.digits -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.digits) [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.digits)" } } else { "$($nsxtManagerNodePolicy.digits)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.special_chars -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.special_chars) [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.special_chars)" } } else { "$($nsxtManagerNodePolicy.special_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_unique_chars -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.minimum_unique_chars) [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" } } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Repeats" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_repeats -ne $requiredConfig.maxRepeat) { "$($nsxtManagerNodePolicy.max_repeats) [ $($requiredConfig.maxRepeat) ]" } else { "$($nsxtManagerNodePolicy.max_repeats)" } } else { "$($nsxtManagerNodePolicy.max_repeats)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" } } else { "$($nsxtManagerNodePolicy.max_sequence)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" } } else { "$($nsxtManagerNodePolicy.password_remembrance)" })
-                                                        $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Hash Algorithm" -notepropertyvalue $(if ($drift) { if ($nsxtManagerNodePolicy.hash_algorithm -ne $requiredConfig.hashAlgorithm) { "$($nsxtManagerNodePolicy.hash_algorithm) [ $($requiredConfig.hashAlgorithm) ]" } else { "$($nsxtManagerNodePolicy.hash_algorithm)" } } else { "$($nsxtManagerNodePolicy.hash_algorithm)" })
+                                                        $NsxtManagerPasswordComplexityObject = New-Object -TypeName PSObject
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($nsxtManagerNode.fqdn)
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_password_length -ne $requiredConfig.minLength) { "$($nsxtManagerNodePolicy.minimum_password_length) [ $($requiredConfig.minLength) ]" } else { "$($nsxtManagerNodePolicy.minimum_password_length)" } } else { "$($nsxtManagerNodePolicy.minimum_password_length)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Max Length" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.maximum_password_length -ne $requiredConfig.maxLength) { "$($nsxtManagerNodePolicy.maximum_password_length) [ $($requiredConfig.maxLength) ]" } else { "$($nsxtManagerNodePolicy.maximum_password_length)" } } else { "$($nsxtManagerNodePolicy.maximum_password_length)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.lower_chars -ne $requiredConfig.minLowercase) { "$($nsxtManagerNodePolicy.lower_chars) [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtManagerNodePolicy.lower_chars)" } } else { "$($nsxtManagerNodePolicy.lower_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.upper_chars -ne $requiredConfig.minUppercase) { "$($nsxtManagerNodePolicy.upper_chars) [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtManagerNodePolicy.upper_chars)" } } else { "$($nsxtManagerNodePolicy.upper_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.digits -ne $requiredConfig.minNumerical) { "$($nsxtManagerNodePolicy.digits) [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtManagerNodePolicy.digits)" } } else { "$($nsxtManagerNodePolicy.digits)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.special_chars -ne $requiredConfig.minSpecial) { "$($nsxtManagerNodePolicy.special_chars) [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtManagerNodePolicy.special_chars)" } } else { "$($nsxtManagerNodePolicy.special_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.minimum_unique_chars -ne $requiredConfig.minUnique) { "$($nsxtManagerNodePolicy.minimum_unique_chars) [ $($requiredConfig.minUnique) ]" } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" } } else { "$($nsxtManagerNodePolicy.minimum_unique_chars)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Max Repeats" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.max_repeats -ne $requiredConfig.maxRepeat) { "$($nsxtManagerNodePolicy.max_repeats) [ $($requiredConfig.maxRepeat) ]" } else { "$($nsxtManagerNodePolicy.max_repeats)" } } else { "$($nsxtManagerNodePolicy.max_repeats)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Max Sequence" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.max_sequence -ne $requiredConfig.maxSequence) { "$($nsxtManagerNodePolicy.max_sequence) [ $($requiredConfig.maxSequence) ]" } else { "$($nsxtManagerNodePolicy.max_sequence)" } } else { "$($nsxtManagerNodePolicy.max_sequence)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.password_remembrance -ne $requiredConfig.passwordRemembrance) { "$($nsxtManagerNodePolicy.password_remembrance) [ $($requiredConfig.passwordRemembrance) ]" } else { "$($nsxtManagerNodePolicy.password_remembrance)" } } else { "$($nsxtManagerNodePolicy.password_remembrance)" })
+                                                        $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Hash Algorithm" -NotePropertyValue $(if ($drift) { if ($nsxtManagerNodePolicy.hash_algorithm -ne $requiredConfig.hashAlgorithm) { "$($nsxtManagerNodePolicy.hash_algorithm) [ $($requiredConfig.hashAlgorithm) ]" } else { "$($nsxtManagerNodePolicy.hash_algorithm)" } } else { "$($nsxtManagerNodePolicy.hash_algorithm)" })
                                                         if ( $nsxtManagerNodePolicy.minimum_password_length -gt $managedPasswordMinLength ) {
                                                             $alert = "RED"
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthExceeds
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthExceeds
                                                         } else {
                                                             $alert = "GREEN"
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtManagerPasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue $minLengthNotExceeds
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                            $NsxtManagerPasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue $minLengthNotExceeds
                                                         }
                                                         $nsxtPasswordComplexityPolicy += $NsxtManagerPasswordComplexityObject
                                                     } else {
@@ -5701,14 +5707,14 @@ Function Request-NsxtManagerAccountLockout {
                             if (Test-NSXTConnection -server $nsxtManagerNode.fqdn) {
                                 if (Test-NSXTAuthentication -server $nsxtManagerNode.fqdn -user $vcfNsxDetails.adminUser -pass $vcfNsxDetails.adminPass) {
                                     if ($NsxtManagerAccountLockout = Get-NsxtManagerAuthPolicy -nsxtManagerNode $nsxtManagerNode.fqdn) {
-                                        $NsxtManagerAccountLockoutObject = New-Object -TypeName psobject
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $($nsxtManagerNode.fqdn)
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "CLI Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtManagerAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" } } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "CLI Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" } } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_max_auth_failures -ne $requiredConfig.apiMaxFailures) { "$($NsxtManagerAccountLockout.api_max_auth_failures) [ $($requiredConfig.apiMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" } } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_lockout_period -ne $requiredConfig.apiUnlockInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period) [ $($requiredConfig.apiUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" } } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" })
-                                        $NsxtManagerAccountLockoutObject | Add-Member -notepropertyname "API Reset Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_reset_period -ne $requiredConfig.apiRestInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period) [ $($requiredConfig.apiRestInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" } } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" })
+                                        $NsxtManagerAccountLockoutObject = New-Object -TypeName PSObject
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $($nsxtManagerNode.fqdn)
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "CLI Max Failures" -NotePropertyValue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtManagerAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" } } else { "$($NsxtManagerAccountLockout.cli_max_auth_failures)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "CLI Unlock Interval (sec)" -NotePropertyValue $(if ($drift) { if ($NsxtManagerAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" } } else { "$($NsxtManagerAccountLockout.cli_failed_auth_lockout_period)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "API Max Failures" -NotePropertyValue $(if ($drift) { if ($NsxtManagerAccountLockout.api_max_auth_failures -ne $requiredConfig.apiMaxFailures) { "$($NsxtManagerAccountLockout.api_max_auth_failures) [ $($requiredConfig.apiMaxFailures) ]" } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" } } else { "$($NsxtManagerAccountLockout.api_max_auth_failures)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "API Unlock Interval (sec)" -NotePropertyValue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_lockout_period -ne $requiredConfig.apiUnlockInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period) [ $($requiredConfig.apiUnlockInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" } } else { "$($NsxtManagerAccountLockout.api_failed_auth_lockout_period)" })
+                                        $NsxtManagerAccountLockoutObject | Add-Member -NotePropertyName "API Reset Interval (sec)" -NotePropertyValue $(if ($drift) { if ($NsxtManagerAccountLockout.api_failed_auth_reset_period -ne $requiredConfig.apiRestInterval) { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period) [ $($requiredConfig.apiRestInterval) ]" } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" } } else { "$($NsxtManagerAccountLockout.api_failed_auth_reset_period)" })
                                         $nsxtAccountLockoutPolicy += $NsxtManagerAccountLockoutObject
                                     } else {
                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Local Manager node ($($nsxtManagerNode.fqdn)): PRE_VALIDATION_FAILED"
@@ -6541,11 +6547,11 @@ Function Request-NsxtEdgePasswordExpiration {
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                     $localUsers = Get-NsxtApplianceUser -transportNodeId $nsxtEdgeNode.transport_node_id
                                     foreach ($localUser in $localUsers) {
-                                        $nsxEdgePasswordExpirationPolicy = New-Object -TypeName psobject
-                                        $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
-                                        $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "User" -notepropertyvalue $($localUser.username)
-                                        $nsxEdgePasswordExpirationPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" } } else { "$($localUser.password_change_frequency)" })
+                                        $nsxEdgePasswordExpirationPolicy = New-Object -TypeName PSObject
+                                        $nsxEdgePasswordExpirationPolicy | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                        $nsxEdgePasswordExpirationPolicy | Add-Member -NotePropertyName "System" -NotePropertyValue $nsxtEdgeNode.display_name
+                                        $nsxEdgePasswordExpirationPolicy | Add-Member -NotePropertyName "User" -NotePropertyValue $($localUser.username)
+                                        $nsxEdgePasswordExpirationPolicy | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($localUser.password_change_frequency -ne $requiredConfig.maxDays) { "$($localUser.password_change_frequency) [ $($requiredConfig.maxDays) ]" } else { "$($localUser.password_change_frequency)" } } else { "$($localUser.password_change_frequency)" })
                                         $allNsxEdgePasswordExpirationPolicy += $nsxEdgePasswordExpirationPolicy
                                     }
                                 }
@@ -6658,24 +6664,24 @@ Function Request-NsxtEdgePasswordComplexity {
                                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                                     $nsxEdgeRootPass = (Get-VCFCredential | Where-Object { $_.resource.resourceName -eq ($nsxtEdgeNode.display_name + '.' + $vcfNsxDetails.fqdn.Split('.', 2)[-1]) -and $_.username -eq "root" }).password
                                                     if ($nsxtEdgeNodePolicy = Get-LocalPasswordComplexity -vmName $($nsxtEdgeNode.display_name) -guestUser root -guestPassword $nsxEdgeRootPass -nsx ) {
-                                                        $NsxtEdgePasswordComplexityObject = New-Object -TypeName psobject
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" } } else { "$($nsxtEdgeNodePolicy.'Min Length')" })
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" } } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
+                                                        $NsxtEdgePasswordComplexityObject = New-Object -TypeName PSObject
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $nsxtEdgeNode.display_name
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" } } else { "$($nsxtEdgeNodePolicy.'Min Length')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" } } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
                                                         if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
                                                             $alert = "RED"
-                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue ${minLengthExceeds}
                                                         } else {
                                                             $alert = "GREEN"
-                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                            $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                            $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue ${minLengthNotExceeds}
                                                         }
                                                         $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                     } else {
@@ -6684,24 +6690,24 @@ Function Request-NsxtEdgePasswordComplexity {
                                                 }
                                             } elseif ($PsBoundParameters.ContainsKey("unmanagedEdgeNode")) {
                                                 if ($nsxtEdgeNodePolicy = Get-LocalPasswordComplexity -vmName $($unmanagedEdgeNode) -guestUser root -guestPassword $unmanagedEdgeNodePass -nsx ) {
-                                                    $NsxtEdgePasswordComplexityObject = New-Object -TypeName psobject
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $unmanagedEdgeNode
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" } } else { "$($nsxtEdgeNodePolicy.'Min Length')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" } } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
-                                                    $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
+                                                    $NsxtEdgePasswordComplexityObject = New-Object -TypeName PSObject
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $unmanagedEdgeNode
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Length' -ne $requiredConfig.minLength) { "$($nsxtEdgeNodePolicy.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($nsxtEdgeNodePolicy.'Min Length')" } } else { "$($nsxtEdgeNodePolicy.'Min Length')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Lowercase' -ne $requiredConfig.minLowercase) { "$($nsxtEdgeNodePolicy.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Lowercase')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Uppercase' -ne $requiredConfig.minUppercase) { "$($nsxtEdgeNodePolicy.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" } } else { "$($nsxtEdgeNodePolicy.'Min Uppercase')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Numerical' -ne $requiredConfig.minNumerical) { "$($nsxtEdgeNodePolicy.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" } } else { "$($nsxtEdgeNodePolicy.'Min Numerical')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Special' -ne $requiredConfig.minSpecial) { "$($nsxtEdgeNodePolicy.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($nsxtEdgeNodePolicy.'Min Special')" } } else { "$($nsxtEdgeNodePolicy.'Min Special')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Min Unique' -ne $requiredConfig.minUnique) { "$($nsxtEdgeNodePolicy.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($nsxtEdgeNodePolicy.'Min Unique')" } } else { "$($nsxtEdgeNodePolicy.'Min Unique')" })
+                                                    $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" -NotePropertyValue $(if ($drift) { if ($nsxtEdgeNodePolicy.'Max Retries' -ne $requiredConfig.retries) { "$($nsxtEdgeNodePolicy.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($nsxtEdgeNodePolicy.'Max Retries')" } } else { "$($nsxtEdgeNodePolicy.'Max Retries')" })
                                                     if ( $nsxtEdgeNodePolicy.'Min Length' -gt $managedPasswordMinLength ) {
                                                         $alert = "RED"
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue ${minLengthExceeds}
                                                     } else {
                                                         $alert = "GREEN"
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                        $NsxtEdgePasswordComplexityObject | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                        $NsxtEdgePasswordComplexityObject | Add-Member -NotePropertyName "Message" -NotePropertyValue ${minLengthNotExceeds}
                                                     }
                                                     $nsxtPasswordComplexityPolicy += $NsxtEdgePasswordComplexityObject
                                                 }
@@ -6805,11 +6811,11 @@ Function Request-NsxtEdgeAccountLockout {
                                 $nsxtEdgeNodes = (Get-NsxtEdgeCluster | Where-Object { $_.member_node_type -eq "EDGE_NODE" })
                                 foreach ($nsxtEdgeNode in $nsxtEdgeNodes.members) {
                                     if ($NsxtEdgeAccountLockout = Get-NsxtEdgeNodeAuthPolicy -nsxtManager $vcfNsxDetails.fqdn -nsxtEdgeNodeID $nsxtEdgeNode.transport_node_id) {
-                                        $NsxtEdgeAccountLockoutObject = New-Object -TypeName psobject
-                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $nsxtEdgeNode.display_name
-                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "CLI Max Failures" -notepropertyvalue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtEdgeAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" } } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" })
-                                        $NsxtEdgeAccountLockoutObject | Add-Member -notepropertyname "CLI Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" } } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" })
+                                        $NsxtEdgeAccountLockoutObject = New-Object -TypeName PSObject
+                                        $NsxtEdgeAccountLockoutObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                        $NsxtEdgeAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $nsxtEdgeNode.display_name
+                                        $NsxtEdgeAccountLockoutObject | Add-Member -NotePropertyName "CLI Max Failures" -NotePropertyValue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_max_auth_failures -ne $requiredConfig.cliMaxFailures) { "$($NsxtEdgeAccountLockout.cli_max_auth_failures) [ $($requiredConfig.cliMaxFailures) ]" } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" } } else { "$($NsxtEdgeAccountLockout.cli_max_auth_failures)" })
+                                        $NsxtEdgeAccountLockoutObject | Add-Member -NotePropertyName "CLI Unlock Interval (sec)" -NotePropertyValue $(if ($drift) { if ($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period -ne $requiredConfig.cliUnlockInterval) { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period) [ $($requiredConfig.cliUnlockInterval) ]" } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" } } else { "$($NsxtEdgeAccountLockout.cli_failed_auth_lockout_period)" })
                                         $nsxtAccountLockoutPolicy += $NsxtEdgeAccountLockoutObject
                                     } else {
                                         Write-Error "Unable to retrieve Account Lockout Policy from NSX Edge node ($($nsxtEdgeNode.display_name)): PRE_VALIDATION_FAILED"
@@ -7559,11 +7565,11 @@ Function Request-EsxiPasswordExpiration {
                                         Foreach ($esxiHost in $esxiHosts) {
                                             $passwordExpire = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordMaxDays" }
                                             if ($passwordExpire) {
-                                                $nodePasswdPolicy = New-Object -TypeName psobject
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Cluster" -notepropertyvalue $cluster
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($passwordExpire.Value -ne $requiredConfig.maxdays) { "$($passwordExpire.Value) [ $($requiredConfig.maxdays) ]" } else { "$($passwordExpire.Value)" } } else { "$($passwordExpire.Value)" })
+                                                $nodePasswdPolicy = New-Object -TypeName PSObject
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Cluster" -NotePropertyValue $cluster
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "System" -NotePropertyValue $esxiHost.Name
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($passwordExpire.Value -ne $requiredConfig.maxdays) { "$($passwordExpire.Value) [ $($requiredConfig.maxdays) ]" } else { "$($passwordExpire.Value)" } } else { "$($passwordExpire.Value)" })
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
@@ -7686,20 +7692,20 @@ Function Request-EsxiPasswordComplexity {
                                             # retreving ESX Advanced Setting: Security.PasswordQualityControl
                                             $passwordQualityControl = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.PasswordQualityControl" }
                                             if ($passwordHistory -and $passwordQualityControl) {
-                                                $nodePasswdPolicy = New-Object -TypeName psobject
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Cluster" -notepropertyvalue $cluster
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Policy" -notepropertyvalue $(if ($drift) { if ($passwordQualityControl.value -ne $requiredConfig.policy) { "$($passwordQualityControl.value) [ $($requiredConfig.policy) ]" } else { "$($passwordQualityControl.value)" } } else { "$($passwordQualityControl.value)" })
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($passwordHistory.Value -ne $requiredConfig.history) { "$($passwordHistory.Value) [ $($requiredConfig.history) ]" } else { "$($passwordHistory.Value)" } } else { "$($passwordHistory.Value)" })
+                                                $nodePasswdPolicy = New-Object -TypeName PSObject
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Cluster" -NotePropertyValue $cluster
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "System" -NotePropertyValue $esxiHost.Name
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Policy" -NotePropertyValue $(if ($drift) { if ($passwordQualityControl.value -ne $requiredConfig.policy) { "$($passwordQualityControl.value) [ $($requiredConfig.policy) ]" } else { "$($passwordQualityControl.value)" } } else { "$($passwordQualityControl.value)" })
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "History" -NotePropertyValue $(if ($drift) { if ($passwordHistory.Value -ne $requiredConfig.history) { "$($passwordHistory.Value) [ $($requiredConfig.history) ]" } else { "$($passwordHistory.Value)" } } else { "$($passwordHistory.Value)" })
                                                 if ( $passwordQualityControl.Value.Trim().Split(',')[2] -ne "disabled" -and [int]$passwordQualityControl.Value.Trim().Split(',')[2] -gt $managedPasswordMinLength ) {
                                                     $alert = "Red"
-                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthExceeds}
+                                                    $nodePasswdPolicy | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                    $nodePasswdPolicy | Add-Member -NotePropertyName "Message" -NotePropertyValue ${minLengthExceeds}
                                                 } else {
                                                     $alert = "Green"
-                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Alert" -notepropertyvalue $alert
-                                                    $nodePasswdPolicy | Add-Member -notepropertyname "Message" -notepropertyvalue ${minLengthNotExceeds}
+                                                    $nodePasswdPolicy | Add-Member -NotePropertyName "Alert" -NotePropertyValue $alert
+                                                    $nodePasswdPolicy | Add-Member -NotePropertyName "Message" -NotePropertyValue ${minLengthNotExceeds}
 
                                                 }
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
@@ -7824,12 +7830,12 @@ Function Request-EsxiAccountLockout {
                                             # retreving ESX Advanced Setting: Security.PasswordQualityControl
                                             $unlockTime = Get-VMHost -name $esxiHost | Where-Object { $_.ConnectionState -eq "Connected" -or $_.ConnectionState -eq "Maintenance" } | Get-AdvancedSetting | Where-Object { $_.Name -eq "Security.AccountUnlockTime" }
                                             if ($lockFailues -and $unlockTime) {
-                                                $nodePasswdPolicy = New-Object -TypeName psobject
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Cluster" -notepropertyvalue $cluster
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "System" -notepropertyvalue $esxiHost.Name
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($lockFailues.Value -ne $requiredConfig.maxFailures) { "$($lockFailues.Value) [ $($requiredConfig.maxFailures) ]" } else { "$($lockFailues.Value)" } } else { "$($lockFailues.Value)" })
-                                                $nodePasswdPolicy | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $(if ($drift) { if ($unlockTime.value -ne $requiredConfig.unlockInterval) { "$($unlockTime.value) [ $($requiredConfig.unlockInterval) ]" } else { "$($unlockTime.value)" } } else { "$($unlockTime.value)" })
+                                                $nodePasswdPolicy = New-Object -TypeName PSObject
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Cluster" -NotePropertyValue $cluster
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "System" -NotePropertyValue $esxiHost.Name
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Max Failures" -NotePropertyValue $(if ($drift) { if ($lockFailues.Value -ne $requiredConfig.maxFailures) { "$($lockFailues.Value) [ $($requiredConfig.maxFailures) ]" } else { "$($lockFailues.Value)" } } else { "$($lockFailues.Value)" })
+                                                $nodePasswdPolicy | Add-Member -NotePropertyName "Unlock Interval (sec)" -NotePropertyValue $(if ($drift) { if ($unlockTime.value -ne $requiredConfig.unlockInterval) { "$($unlockTime.value) [ $($requiredConfig.unlockInterval) ]" } else { "$($unlockTime.value)" } } else { "$($unlockTime.value)" })
                                                 $esxiPasswdPolicy.Add($nodePasswdPolicy)
                                                 Remove-Variable -Name nodePasswdPolicy
                                             } else {
@@ -8303,9 +8309,9 @@ Function Publish-EsxiPasswordPolicy {
 
     $pass = Get-Password -username $user -password $pass
 
-    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-EsxiPasswordExpiration"; $preHtmlContent = '<a id="esxi-password-expiration"></a><h3>ESX - Password Expiration</h3>' }
-    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-EsxiPasswordComplexity"; $preHtmlContent = '<a id="esxi-password-complexity"></a><h3>ESX - Password Complexity</h3>' }
-    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-EsxiAccountLockout"; $preHtmlContent = '<a id="esxi-account-lockout"></a><h3>ESX - Account Lockout</h3>' }
+    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-EsxiPasswordExpiration"; $preHtmlContent = '<a id="esx-password-expiration"></a><h3>ESX - Password Expiration</h3>' }
+    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-EsxiPasswordComplexity"; $preHtmlContent = '<a id="esx-password-complexity"></a><h3>ESX - Password Complexity</h3>' }
+    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-EsxiAccountLockout"; $preHtmlContent = '<a id="esx-account-lockout"></a><h3>ESX - Account Lockout</h3>' }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
@@ -8432,12 +8438,12 @@ Function Request-WsaPasswordExpiration {
         if (Test-WsaConnection -server $server) {
             if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 if ($WsaPasswordExpiration = Get-WsaPasswordPolicy) {
-                    $WsaPasswordExpirationObject = New-Object -TypeName psobject
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Lifetime (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($WsaPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" } } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" })
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" } } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Temporary Password (hours)" -notepropertyvalue $(if ($drift) { if ($WsaPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($WsaPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($WsaPasswordExpiration.tempPasswordTtl)" } } else { "$($WsaPasswordExpiration.tempPasswordTtl)" })
-                    $WsaPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder Frequency (days)" -notepropertyvalue $(if ($drift) { if (($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" } } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
+                    $WsaPasswordExpirationObject = New-Object -TypeName PSObject
+                    $WsaPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue ($server.Split("."))[-0]
+                    $WsaPasswordExpirationObject | Add-Member -NotePropertyName "Password Lifetime (days)" -NotePropertyValue $(if ($drift) { if (($WsaPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($WsaPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" } } else { "$(($WsaPasswordExpiration.passwordTtlInHours / 24))" })
+                    $WsaPasswordExpirationObject | Add-Member -NotePropertyName "Password Reminder (days)" -NotePropertyValue $(if ($drift) { if (($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" } } else { "$(($WsaPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
+                    $WsaPasswordExpirationObject | Add-Member -NotePropertyName "Temporary Password (hours)" -NotePropertyValue $(if ($drift) { if ($WsaPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($WsaPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($WsaPasswordExpiration.tempPasswordTtl)" } } else { "$($WsaPasswordExpiration.tempPasswordTtl)" })
+                    $WsaPasswordExpirationObject | Add-Member -NotePropertyName "Password Reminder Frequency (days)" -NotePropertyValue $(if ($drift) { if (($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" } } else { "$(($WsaPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
@@ -8517,15 +8523,15 @@ Function Request-WsaPasswordComplexity {
         if (Test-WsaConnection -server $server) {
             if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 if ($WsaPasswordComplexity = Get-WsaPasswordPolicy) {
-                    $WsaPasswordComplexityObject = New-Object -TypeName psobject
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minLen -ne $requiredConfig.minLength) { "$($WsaPasswordComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($WsaPasswordComplexity.minLen)" } } else { "$($WsaPasswordComplexity.minLen)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minLower -ne $requiredConfig.minLowercase) { "$($WsaPasswordComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($WsaPasswordComplexity.minLower)" } } else { "$($WsaPasswordComplexity.minLower)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minUpper -ne $requiredConfig.minUppercase) { "$($WsaPasswordComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($WsaPasswordComplexity.minUpper)" } } else { "$($WsaPasswordComplexity.minUpper)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Numeric" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minDigit -ne $requiredConfig.minNumerical) { "$($WsaPasswordComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($WsaPasswordComplexity.minDigit)" } } else { "$($WsaPasswordComplexity.minDigit)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.minSpecial -ne $requiredConfig.minSpecial) { "$($WsaPasswordComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($WsaPasswordComplexity.minSpecial)" } } else { "$($WsaPasswordComplexity.minSpecial)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "Max Identical Adjacent" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" } } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" })
-                    $WsaPasswordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" } } else { "$($WsaPasswordComplexity.History)" })
+                    $WsaPasswordComplexityObject = New-Object -TypeName PSObject
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue ($server.Split("."))[-0]
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.minLen -ne $requiredConfig.minLength) { "$($WsaPasswordComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($WsaPasswordComplexity.minLen)" } } else { "$($WsaPasswordComplexity.minLen)" })
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.minLower -ne $requiredConfig.minLowercase) { "$($WsaPasswordComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($WsaPasswordComplexity.minLower)" } } else { "$($WsaPasswordComplexity.minLower)" })
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.minUpper -ne $requiredConfig.minUppercase) { "$($WsaPasswordComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($WsaPasswordComplexity.minUpper)" } } else { "$($WsaPasswordComplexity.minUpper)" })
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "Min Numeric" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.minDigit -ne $requiredConfig.minNumerical) { "$($WsaPasswordComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($WsaPasswordComplexity.minDigit)" } } else { "$($WsaPasswordComplexity.minDigit)" })
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.minSpecial -ne $requiredConfig.minSpecial) { "$($WsaPasswordComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($WsaPasswordComplexity.minSpecial)" } } else { "$($WsaPasswordComplexity.minSpecial)" })
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "Max Identical Adjacent" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters -ne $requiredConfig.maxIdenticalAdjacent) { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" } } else { "$($WsaPasswordComplexity.maxConsecutiveIdenticalCharacters)" })
+                    $WsaPasswordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $(if ($drift) { if ($WsaPasswordComplexity.History -ne $requiredConfig.history) { "$($WsaPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($WsaPasswordComplexity.History)" } } else { "$($WsaPasswordComplexity.History)" })
                 } else {
                     Write-Error "Unable to retrieve password complexity policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
@@ -8788,11 +8794,11 @@ Function Request-WsaAccountLockout {
         if (Test-WsaConnection -server $server) {
             if (Test-WsaAuthentication -server $server -user $user -pass $pass) {
                 if ($WsaAccountLockout = Get-WsaAccountLockout) {
-                    $WsaAccountLockoutObject = New-Object -TypeName psobject
-                    $WsaAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue ($server.Split("."))[-0]
-                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" } } else { "$($WsaAccountLockout.numAttempts)" })
-                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval (min)" -notepropertyvalue $WsaAccountLockout.unlockInterval
-                    $WsaAccountLockoutObject | Add-Member -notepropertyname "Failed Attempt Interval (min)" -notepropertyvalue $WsaAccountLockout.attemptInterval
+                    $WsaAccountLockoutObject = New-Object -TypeName PSObject
+                    $WsaAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue ($server.Split("."))[-0]
+                    $WsaAccountLockoutObject | Add-Member -NotePropertyName "Max Failures" -NotePropertyValue $(if ($drift) { if ($WsaAccountLockout.numAttempts -ne $requiredConfig.maxFailures) { "$($WsaAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($WsaAccountLockout.numAttempts)" } } else { "$($WsaAccountLockout.numAttempts)" })
+                    $WsaAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval (min)" -NotePropertyValue $WsaAccountLockout.unlockInterval
+                    $WsaAccountLockoutObject | Add-Member -NotePropertyName "Failed Attempt Interval (min)" -NotePropertyValue $WsaAccountLockout.attemptInterval
                 } else {
                     Write-Error "Unable to retrieve account lockout policy from Workspace ONE Access instance ($server): PRE_VALIDATION_FAILED"
                 }
@@ -9288,9 +9294,9 @@ Function Publish-WsaDirectoryPasswordPolicy {
 
     $pass = Get-Password -username $user -password $pass
 
-    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-WsaPasswordExpiration"; $preHtmlContent = '<a id="standalone-wsa-directory-password-expiration"></a><h3>Standalone Workspace ONE Access Directory - Password Expiration</h3>' }
-    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaPasswordComplexity"; $preHtmlContent = '<a id="standalone-wsa-directory-password-complexity"></a><h3>Standalone Workspace ONE Access Directory - Password Complexity</h3>' }
-    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaAccountLockout"; $preHtmlContent = '<a id="standalone-wsa-directory-account-lockout"></a><h3>Standalone Workspace ONE Access Directory - Account Lockout</h3>' }
+    if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-WsaPasswordExpiration"; $preHtmlContent = '<a id="standalone-wsa-directory-password-expiration"></a><h3>Local Workspace ONE Access Directory - Password Expiration</h3>' }
+    if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaPasswordComplexity"; $preHtmlContent = '<a id="standalone-wsa-directory-password-complexity"></a><h3>Local Workspace ONE Access Directory - Password Complexity</h3>' }
+    if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaAccountLockout"; $preHtmlContent = '<a id="standalone-wsa-directory-account-lockout"></a><h3>Local Workspace ONE Access Directory - Account Lockout</h3>' }
 
     # Define the Command Switch
     if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
@@ -9408,9 +9414,9 @@ Function Publish-WsaLocalPasswordPolicy {
                 # Define the Command Switch
                 if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
                 [Array]$localUsers = '"root","sshuser"'
-                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $preHtmlContent = '<a id="standalone-wsa-local-password-expiration"></a><h3>StandaloneWorkspace ONE Access (Local Users) - Password Expiration</h3>'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product wsaLocal -vmName $(($wsaFqdn.Split("."))[-0]) -guestUser root -guestPassword $wsaRootPass -localUser $localUsers" }
-                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="standalone-wsa-local-password-complexity"></a><h3>StandaloneWorkspace ONE Access (Local Users) - Password Complexity</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
-                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaLocalUserAccountLockout"; $preHtmlContent = '<a id="standalone-wsa-local-account-lockout"></a><h3>Standalone Workspace ONE Access (Local Users) - Account Lockout</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
+                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-LocalUserPasswordExpiration"; $preHtmlContent = '<a id="local-wsa-local-password-expiration"></a><h3>Local Workspace ONE (Local) - Password Expiration</h3>'; $customSwitch = " -domain $((Get-VCFWorkloadDomain | Where-Object {$_.type -eq "MANAGEMENT"}).name) -product wsaLocal -vmName $(($wsaFqdn.Split("."))[-0]) -guestUser root -guestPassword $wsaRootPass -localUser $localUsers" }
+                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-WsaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="local-wsa-local-password-complexity"></a><h3>Local Workspace ONE (Local) - Password Complexity</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
+                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-WsaLocalUserAccountLockout"; $preHtmlContent = '<a id="local-wsa-local-account-lockout"></a><h3>Local Workspace ONE (Local) - Account Lockout</h3>'; $customSwitch = " -wsaFqdn $wsaFqdn -wsaRootPass $wsaRootPass" }
 
                 $command = $pvsCmdlet + " -server $server -user $user -pass $pass" + $commandSwitch + $customSwitch
                 $wsaLocalPasswordPolicyObject = Invoke-Expression $command
@@ -9418,7 +9424,7 @@ Function Publish-WsaLocalPasswordPolicy {
                     $wsaLocalPasswordPolicyObject | ConvertTo-Json -Depth 10
                 } else {
                     if ($wsaLocalPasswordPolicyObject.Count -eq 0) {
-                        $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Standalone Workspace ONE Access Not Requested</p>'
+                        $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | ConvertTo-Html -Fragment -PreContent $preHtmlContent -PostContent '<p>Local Workspace ONE Access Not Requested</p>'
                     } else {
                         $wsaLocalPasswordPolicyObject = $wsaLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
                     }
@@ -9522,13 +9528,13 @@ Function Get-AriaLocalUserPasswordExpiration {
                                     $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
                                     foreach ($user in $localUser) {
                                         if ($localUserPasswordExpiration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user -sudo) {
-                                            $localUserExpirationObject = New-Object -TypeName psobject
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                            $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
-                                            $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value)
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value)
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value)
+                                            $localUserExpirationObject = New-Object -TypeName PSObject
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vmName
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "User" -NotePropertyValue $user
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Min Days" -NotePropertyValue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value)
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value)
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Warning Days" -NotePropertyValue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value)
                                             $allLocalUserExpirationObject += $localUserExpirationObject
                                         } else {
                                             Write-Error "Unable to retrieve password expiration policy for local user ($user) from Virtual Machine ($vmName): PRE_VALIDATION_FAILED"
@@ -9539,13 +9545,13 @@ Function Get-AriaLocalUserPasswordExpiration {
                                     $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
                                     foreach ($user in $localUser) {
                                         if ($localUserPasswordExpiration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user) {
-                                            $localUserExpirationObject = New-Object -TypeName psobject
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                            $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
-                                            $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value)
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value)
-                                            $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value)
+                                            $localUserExpirationObject = New-Object -TypeName PSObject
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vmName
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "User" -NotePropertyValue $user
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Min Days" -NotePropertyValue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value)
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value)
+                                            $localUserExpirationObject | Add-Member -NotePropertyName "Warning Days" -NotePropertyValue $(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value)
                                             $allLocalUserExpirationObject += $localUserExpirationObject
                                         } else {
                                             Write-Error "Unable to retrieve password expiration policy for local user ($user) from Virtual Machine ($vmName): PRE_VALIDATION_FAILED"
@@ -9665,19 +9671,19 @@ Function Get-AriaLocalUserPasswordComplexity {
             if ([regex]::Matches($output.ScriptOutput, 'remember=[-]?[0-9]+')) { $history = (([regex]::Matches($output.ScriptOutput, 'remember=[-]?[0-9]+').Value) -Split ('='))[-1] }
         }
 
-        $passwordComplexityObject = New-Object -TypeName psobject
-        $passwordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
-        if ($minNumerical) { $passwordComplexityObject | Add-Member -notepropertyname "Min Numerical" -notepropertyvalue $minNumerical }
-        if ($minUppercase) { $passwordComplexityObject | Add-Member -notepropertyname "Min Uppercase" -notepropertyvalue $minUppercase }
-        if ($minLowercase) { $passwordComplexityObject | Add-Member -notepropertyname "Min Lowercase" -notepropertyvalue $minLowercase }
-        if ($minSpecial) { $passwordComplexityObject | Add-Member -notepropertyname "Min Special" -notepropertyvalue $minSpecial }
-        if ($minLen) { $passwordComplexityObject | Add-Member -notepropertyname "Min Length" -notepropertyvalue $minLen }
-        if ($minClass) { $passwordComplexityObject | Add-Member -notepropertyname "Min Class" -notepropertyvalue $minClass }
-        if ($minUnique) { $passwordComplexityObject | Add-Member -notepropertyname "Min Unique" -notepropertyvalue $minUnique }
-        if ($maxSequence) { $passwordComplexityObject | Add-Member -notepropertyname "Max Sequence" -notepropertyvalue $maxSequence }
-        if ($maxRepeat) { $passwordComplexityObject | Add-Member -notepropertyname "Max Repeat" -notepropertyvalue $maxRepeat }
-        if ($retry) { $passwordComplexityObject | Add-Member -notepropertyname "Max Retries" -notepropertyvalue $retry }
-        if ($history) { $passwordComplexityObject | Add-Member -notepropertyname "History" -notepropertyvalue $history }
+        $passwordComplexityObject = New-Object -TypeName PSObject
+        $passwordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vmName
+        if ($minNumerical) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Numerical" -NotePropertyValue $minNumerical }
+        if ($minUppercase) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" -NotePropertyValue $minUppercase }
+        if ($minLowercase) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" -NotePropertyValue $minLowercase }
+        if ($minSpecial) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Special" -NotePropertyValue $minSpecial }
+        if ($minLen) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Length" -NotePropertyValue $minLen }
+        if ($minClass) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Class" -NotePropertyValue $minClass }
+        if ($minUnique) { $passwordComplexityObject | Add-Member -NotePropertyName "Min Unique" -NotePropertyValue $minUnique }
+        if ($maxSequence) { $passwordComplexityObject | Add-Member -NotePropertyName "Max Sequence" -NotePropertyValue $maxSequence }
+        if ($maxRepeat) { $passwordComplexityObject | Add-Member -NotePropertyName "Max Repeat" -NotePropertyValue $maxRepeat }
+        if ($retry) { $passwordComplexityObject | Add-Member -NotePropertyName "Max Retries" -NotePropertyValue $retry }
+        if ($history) { $passwordComplexityObject | Add-Member -NotePropertyName "History" -NotePropertyValue $history }
         Return $passwordComplexityObject
     } Catch {
         Write-Error $_.Exception.Message
@@ -9751,11 +9757,11 @@ Function Get-AriaLocalUserAccountLockout {
             if ([regex]::Matches($output.ScriptOutput, 'unlock_time=[-]?[0-9]+')) { $unlockInterval = (([regex]::Matches($output.ScriptOutput, 'unlock_time=[-]?[0-9]+').Value) -Split ('='))[-1] }
 
         }
-        $accountLockoutObject = New-Object -TypeName psobject
-        $accountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
-        if ($failures) { $accountLockoutObject | Add-Member -notepropertyname "Max Failures" -notepropertyvalue $failures }
-        if ($unlockInterval) { $accountLockoutObject | Add-Member -notepropertyname "Unlock Interval (sec)" -notepropertyvalue $unlockInterval }
-        if ($rootUnlockInterval) { $accountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval (sec)" -notepropertyvalue $rootUnlockInterval }
+        $accountLockoutObject = New-Object -TypeName PSObject
+        $accountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vmName
+        if ($failures) { $accountLockoutObject | Add-Member -NotePropertyName "Max Failures" -NotePropertyValue $failures }
+        if ($unlockInterval) { $accountLockoutObject | Add-Member -NotePropertyName "Unlock Interval (sec)" -NotePropertyValue $unlockInterval }
+        if ($rootUnlockInterval) { $accountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval (sec)" -NotePropertyValue $rootUnlockInterval }
         Return $accountLockoutObject
     } Catch {
         Write-Error $_.Exception.Message
@@ -9871,12 +9877,12 @@ Function Request-AriaLocalUserPasswordExpiration {
             }
             $allvrslcmPasswordExpirationObject = New-Object System.Collections.ArrayList
             if ($vrslcmPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $vcfVrslcmDetails.fqdn.split('.')[0] -guestUser $vcfVrslcmDetails.rootUser -guestPassword $vcfVrslcmDetails.rootPassword -localUser "root") {
-                $vrslcmPasswordExpirationObject = New-Object -TypeName psobject
-                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrslcmPasswordExpiration.system
-                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
-                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrslcmPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrslcmPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrslcmPasswordExpiration.'Min Days')" } } else { "$($vrslcmPasswordExpiration.'Min Days')" }) })
-                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrslcmPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrslcmPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrslcmPasswordExpiration.'Max Days')" } } else { "$($vrslcmPasswordExpiration.'Max Days')" }) })
-                $vrslcmPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrslcmPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrslcmPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrslcmPasswordExpiration.'Warning Days')" } } else { "$($vrslcmPasswordExpiration.'Warning Days')" }) })
+                $vrslcmPasswordExpirationObject = New-Object -TypeName PSObject
+                $vrslcmPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrslcmPasswordExpiration.system
+                $vrslcmPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "root"
+                $vrslcmPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vrslcmPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrslcmPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrslcmPasswordExpiration.'Min Days')" } } else { "$($vrslcmPasswordExpiration.'Min Days')" }) })
+                $vrslcmPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vrslcmPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrslcmPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrslcmPasswordExpiration.'Max Days')" } } else { "$($vrslcmPasswordExpiration.'Max Days')" }) })
+                $vrslcmPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vrslcmPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrslcmPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrslcmPasswordExpiration.'Warning Days')" } } else { "$($vrslcmPasswordExpiration.'Warning Days')" }) })
                 $allvrslcmPasswordExpirationObject += $vrslcmPasswordExpirationObject
             } else {
                 Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
@@ -9899,23 +9905,23 @@ Function Request-AriaLocalUserPasswordExpiration {
                 $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
                 if ($vropsPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password -localUser "root") {
-                    $vropsPasswordExpirationObject = New-Object -TypeName psobject
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsPasswordExpiration.system
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vropsPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vropsPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vropsPasswordExpiration.'Min Days')" } } else { "$($vropsPasswordExpiration.'Min Days')" }) })
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vropsPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vropsPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vropsPasswordExpiration.'Max Days')" } } else { "$($vropsPasswordExpiration.'Max Days')" }) })
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vropsPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
+                    $vropsPasswordExpirationObject = New-Object -TypeName PSObject
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vropsPasswordExpiration.system
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "root"
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vropsPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vropsPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vropsPasswordExpiration.'Min Days')" } } else { "$($vropsPasswordExpiration.'Min Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vropsPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vropsPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vropsPasswordExpiration.'Max Days')" } } else { "$($vropsPasswordExpiration.'Max Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vropsPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
                     $allvropsPasswordExpirationObject += $vropsPasswordExpirationObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
                 }
                 if ($vropsPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password -localUser "admin") {
-                    $vropsPasswordExpirationObject = New-Object -TypeName psobject
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsPasswordExpiration.system
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "admin"
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vropsPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vropsPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vropsPasswordExpiration.'Min Days')" } } else { "$($vropsPasswordExpiration.'Min Days')" }) })
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vropsPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vropsPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vropsPasswordExpiration.'Max Days')" } } else { "$($vropsPasswordExpiration.'Max Days')" }) })
-                    $vropsPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vropsPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
+                    $vropsPasswordExpirationObject = New-Object -TypeName PSObject
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vropsPasswordExpiration.system
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "admin"
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vropsPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vropsPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vropsPasswordExpiration.'Min Days')" } } else { "$($vropsPasswordExpiration.'Min Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vropsPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vropsPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vropsPasswordExpiration.'Max Days')" } } else { "$($vropsPasswordExpiration.'Max Days')" }) })
+                    $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vropsPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
                     $allvropsPasswordExpirationObject += $vropsPasswordExpirationObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
@@ -9938,12 +9944,12 @@ Function Request-AriaLocalUserPasswordExpiration {
             foreach ($node in $vrlinodes) {
                 $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 if ($vrliPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser root -guestPassword $vrlipassword.password -localUser "root") {
-                    $vrliPasswordExpirationObject = New-Object -TypeName psobject
-                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrliPasswordExpiration.system
-                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
-                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrliPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrliPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrliPasswordExpiration.'Min Days')" } } else { "$($vrliPasswordExpiration.'Min Days')" }) })
-                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrliPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrliPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrliPasswordExpiration.'Max Days')" } } else { "$($vrliPasswordExpiration.'Max Days')" }) })
-                    $vrliPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrliPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrliPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrliPasswordExpiration.'Warning Days')" } } else { "$($vrliPasswordExpiration.'Warning Days')" }) })
+                    $vrliPasswordExpirationObject = New-Object -TypeName PSObject
+                    $vrliPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrliPasswordExpiration.system
+                    $vrliPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "root"
+                    $vrliPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vrliPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrliPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrliPasswordExpiration.'Min Days')" } } else { "$($vrliPasswordExpiration.'Min Days')" }) })
+                    $vrliPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vrliPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrliPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrliPasswordExpiration.'Max Days')" } } else { "$($vrliPasswordExpiration.'Max Days')" }) })
+                    $vrliPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vrliPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrliPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrliPasswordExpiration.'Warning Days')" } } else { "$($vrliPasswordExpiration.'Warning Days')" }) })
                     $allvrliPasswordExpirationObject += $vrliPasswordExpirationObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
@@ -9968,23 +9974,23 @@ Function Request-AriaLocalUserPasswordExpiration {
                 $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
                 $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 if ($vrniPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.vmname -guestUser support -guestPassword $vrnipassword.password -localUser "support" -sudo) {
-                    $vrniPasswordExpirationObject = New-Object -TypeName psobject
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniPasswordExpiration.system
-                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -notepropertyvalue "support"
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrniPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrniPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrniPasswordExpiration.'Min Days')" } } else { "$($vrniPasswordExpiration.'Min Days')" }) })
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrniPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrniPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrniPasswordExpiration.'Max Days')" } } else { "$($vrniPasswordExpiration.'Max Days')" }) })
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrniPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
+                    $vrniPasswordExpirationObject = New-Object -TypeName PSObject
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrniPasswordExpiration.system
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "support"
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vrniPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrniPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrniPasswordExpiration.'Min Days')" } } else { "$($vrniPasswordExpiration.'Min Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vrniPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrniPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrniPasswordExpiration.'Max Days')" } } else { "$($vrniPasswordExpiration.'Max Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vrniPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
                     $allvrniPasswordExpirationObject += $vrniPasswordExpirationObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
                 }
                 if ($vrniPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.vmName -guestUser support -guestPassword $vrnipassword.password -localUser "consoleuser" -sudo) {
-                    $vrniPasswordExpirationObject = New-Object -TypeName psobject
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniPasswordExpiration.system
-                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -notepropertyvalue "consoleuser"
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vrniPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrniPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrniPasswordExpiration.'Min Days')" } } else { "$($vrniPasswordExpiration.'Min Days')" }) })
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vrniPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrniPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrniPasswordExpiration.'Max Days')" } } else { "$($vrniPasswordExpiration.'Max Days')" }) })
-                    $vrniPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vrniPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
+                    $vrniPasswordExpirationObject = New-Object -TypeName PSObject
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrniPasswordExpiration.system
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "consoleuser"
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vrniPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vrniPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vrniPasswordExpiration.'Min Days')" } } else { "$($vrniPasswordExpiration.'Min Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vrniPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vrniPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vrniPasswordExpiration.'Max Days')" } } else { "$($vrniPasswordExpiration.'Max Days')" }) })
+                    $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vrniPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
                     $allvrniPasswordExpirationObject += $vrniPasswordExpirationObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
@@ -10008,12 +10014,12 @@ Function Request-AriaLocalUserPasswordExpiration {
                 $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
                 if ($vraPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vrausername -guestPassword $vrapassword.password -localUser "root") {
-                    $vraPasswordExpirationObject = New-Object -TypeName psobject
-                    $vraPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vraPasswordExpiration.system
-                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Local User" -notepropertyvalue "root"
-                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Minimum (days)" $(if ($vraPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vraPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vraPasswordExpiration.'Min Days')" } } else { "$($vraPasswordExpiration.'Min Days')" }) })
-                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Maximum (days)" $(if ($vraPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vraPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vraPasswordExpiration.'Max Days')" } } else { "$($vraPasswordExpiration.'Max Days')" }) })
-                    $vraPasswordExpirationObject | Add-Member -notepropertyname "Warning (days)" $(if ($vraPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vraPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vraPasswordExpiration.'Warning Days')" } } else { "$($vraPasswordExpiration.'Warning Days')" }) })
+                    $vraPasswordExpirationObject = New-Object -TypeName PSObject
+                    $vraPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vraPasswordExpiration.system
+                    $vraPasswordExpirationObject | Add-Member -NotePropertyName "Local User" -NotePropertyValue "root"
+                    $vraPasswordExpirationObject | Add-Member -NotePropertyName "Minimum (days)" $(if ($vraPasswordExpiration.'Min Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Min Days') -ne $requiredConfig.minDays) { "$($vraPasswordExpiration.'Min Days') [ $($requiredConfig.minDays) ]" } else { "$($vraPasswordExpiration.'Min Days')" } } else { "$($vraPasswordExpiration.'Min Days')" }) })
+                    $vraPasswordExpirationObject | Add-Member -NotePropertyName "Maximum (days)" $(if ($vraPasswordExpiration.'Max Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Max Days') -ne $requiredConfig.maxDays) { "$($vraPasswordExpiration.'Max Days') [ $($requiredConfig.maxDays) ]" } else { "$($vraPasswordExpiration.'Max Days')" } } else { "$($vraPasswordExpiration.'Max Days')" }) })
+                    $vraPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($vraPasswordExpiration.'Warning Days' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vraPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vraPasswordExpiration.'Warning Days')" } } else { "$($vraPasswordExpiration.'Warning Days')" }) })
                     $allvraPasswordExpirationObject += $vraPasswordExpirationObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
@@ -10041,12 +10047,12 @@ Function Request-AriaLocalUserPasswordExpiration {
                 if (Test-WsaConnection -server $node) {
                     if (Test-WsaAuthentication -server $node -user $vidmdirectoryusername -pass $vidmdirectorypassword.password) {
                         if ($vidmPasswordExpiration = Get-WsaPasswordPolicy) {
-                            $vidmPasswordExpirationObject = New-Object -TypeName psobject
-                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue ($node.Split("."))[-0]
-                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Password Lifetime (days)" -notepropertyvalue $(if ($vidmdrift) { if (($vidmPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($vidmPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($vidmPasswordExpiration.passwordTtlInHours / 24))" } } else { "$(($vidmPasswordExpiration.passwordTtlInHours / 24))" })
-                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder (days)" -notepropertyvalue $(if ($vidmdrift) { if (($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" } } else { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
-                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Temporary Password (hours)" -notepropertyvalue $(if ($vidmdrift) { if ($vidmPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($vidmPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($vidmPasswordExpiration.tempPasswordTtl)" } } else { "$($vidmPasswordExpiration.tempPasswordTtl)" })
-                            $vidmPasswordExpirationObject | Add-Member -notepropertyname "Password Reminder Frequency (days)" -notepropertyvalue $(if ($vidmdrift) { if (($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" } } else { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
+                            $vidmPasswordExpirationObject = New-Object -TypeName PSObject
+                            $vidmPasswordExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue ($node.Split("."))[-0]
+                            $vidmPasswordExpirationObject | Add-Member -NotePropertyName "Password Lifetime (days)" -NotePropertyValue $(if ($vidmdrift) { if (($vidmPasswordExpiration.passwordTtlInHours / 24) -ne $requiredConfig.passwordLifetime) { "$(($vidmPasswordExpiration.passwordTtlInHours / 24)) [ $($requiredConfig.passwordLifetime) ]" } else { "$(($vidmPasswordExpiration.passwordTtlInHours / 24))" } } else { "$(($vidmPasswordExpiration.passwordTtlInHours / 24))" })
+                            $vidmPasswordExpirationObject | Add-Member -NotePropertyName "Password Reminder (days)" -NotePropertyValue $(if ($vidmdrift) { if (($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000) -ne $requiredConfig.passwordReminder) { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000)) [ $($requiredConfig.passwordReminder) ]" } else { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" } } else { "$(($vidmPasswordExpiration.notificationThreshold / 24 / 3600 / 1000))" })
+                            $vidmPasswordExpirationObject | Add-Member -NotePropertyName "Temporary Password (hours)" -NotePropertyValue $(if ($vidmdrift) { if ($vidmPasswordExpiration.tempPasswordTtl -ne $requiredConfig.temporaryPassword) { "$($vidmPasswordExpiration.tempPasswordTtl) [ $($requiredConfig.temporaryPassword) ]" } else { "$($vidmPasswordExpiration.tempPasswordTtl)" } } else { "$($vidmPasswordExpiration.tempPasswordTtl)" })
+                            $vidmPasswordExpirationObject | Add-Member -NotePropertyName "Password Reminder Frequency (days)" -NotePropertyValue $(if ($vidmdrift) { if (($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000) -ne $requiredConfig.temporaryPassword) { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000)) [ $($requiredConfig.temporaryPassword) ]" } else { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" } } else { "$(($vidmPasswordExpiration.notificationInterval / 24 / 3600 / 1000))" })
                             $allvidmPasswordDirectoryExpirationObject += $vidmPasswordExpirationObject
                         } else {
                             Write-Error "Unable to retrieve password expiration policy from Workspace ONE Access instance ($node): PRE_VALIDATION_FAILED"
@@ -10173,20 +10179,20 @@ Function Request-AriaLocalUserPasswordComplexity {
             }
             $allvrslcmPasswordComplexityObject = New-Object System.Collections.ArrayList
             if ($vrslcmPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $vcfVrslcmDetails.fqdn.split('.')[0] -guestUser $vcfVrslcmDetails.rootUser -guestPassword $vcfVrslcmDetails.rootPassword -product vrslcm) {
-                $vrslcmPasswordComplexityObject = New-Object -TypeName psobject
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrslcmPasswordComplexity.system
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vrslcmPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vrslcmPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrslcmPasswordComplexity.'Min Numerical')" } } else { "$($vrslcmPasswordComplexity.'Min Numerical')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vrslcmPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vrslcmPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" } } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vrslcmPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vrslcmPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrslcmPasswordComplexity.'Min Lowercase')" } } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vrslcmPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vrslcmPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrslcmPasswordComplexity.'Min Special')" } } else { "$($vrslcmPasswordComplexity.'Min Special')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vrslcmPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vrslcmPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrslcmPasswordComplexity.'Min Length')" } } else { "$($vrslcmPasswordComplexity.'Min Length')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vrslcmPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vrslcmPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrslcmPasswordComplexity.'Min Unique')" } } else { "$($vrslcmPasswordComplexity.'Min Unique')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vrslcmPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass.trim()) { "$($vrslcmPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vrslcmPasswordComplexity.'Min Class')" } } else { "$($vrslcmPasswordComplexity.'Min Class')" }) })
+                $vrslcmPasswordComplexityObject = New-Object -TypeName PSObject
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrslcmPasswordComplexity.system
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" $(if ($vrslcmPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vrslcmPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrslcmPasswordComplexity.'Min Numerical')" } } else { "$($vrslcmPasswordComplexity.'Min Numerical')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" $(if ($vrslcmPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vrslcmPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" } } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" $(if ($vrslcmPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vrslcmPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrslcmPasswordComplexity.'Min Lowercase')" } } else { "$($vrslcmPasswordComplexity.'Min Uppercase')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" $(if ($vrslcmPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vrslcmPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrslcmPasswordComplexity.'Min Special')" } } else { "$($vrslcmPasswordComplexity.'Min Special')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vrslcmPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vrslcmPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrslcmPasswordComplexity.'Min Length')" } } else { "$($vrslcmPasswordComplexity.'Min Length')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" $(if ($vrslcmPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vrslcmPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrslcmPasswordComplexity.'Min Unique')" } } else { "$($vrslcmPasswordComplexity.'Min Unique')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Min Class" $(if ($vrslcmPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass.trim()) { "$($vrslcmPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vrslcmPasswordComplexity.'Min Class')" } } else { "$($vrslcmPasswordComplexity.'Min Class')" }) })
                 if ($vrslcmPasswordComplexity -match "Max Sequence") {
-                    $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" $(if ($vrslcmPasswordComplexity.'Max Sequence' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Max Sequence').trim() -ne $requiredConfig.maxSequence.trim()) { "$($vrslcmPasswordComplexity.'Max Sequence') [ $($requiredConfig.maxSequence) ]" } else { "$($vrslcmPasswordComplexity.'Max Sequence')" } } else { "$($vrslcmPasswordComplexity.'Max Sequence')" }) })
+                    $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Max Sequence" $(if ($vrslcmPasswordComplexity.'Max Sequence' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Max Sequence').trim() -ne $requiredConfig.maxSequence.trim()) { "$($vrslcmPasswordComplexity.'Max Sequence') [ $($requiredConfig.maxSequence) ]" } else { "$($vrslcmPasswordComplexity.'Max Sequence')" } } else { "$($vrslcmPasswordComplexity.'Max Sequence')" }) })
                 }
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vrslcmPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vrslcmPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrslcmPasswordComplexity.'Max Retries')" } } else { "$($vrslcmPasswordComplexity.'Max Retries')" }) })
-                $vrslcmPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vrslcmPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrslcmPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrslcmPasswordComplexity.History)" } } else { "$($vrslcmPasswordComplexity.History)" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" $(if ($vrslcmPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vrslcmPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrslcmPasswordComplexity.'Max Retries')" } } else { "$($vrslcmPasswordComplexity.'Max Retries')" }) })
+                $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($vrslcmPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrslcmPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrslcmPasswordComplexity.History)" } } else { "$($vrslcmPasswordComplexity.History)" }) })
                 $allvrslcmPasswordComplexityObject += $vrslcmPasswordComplexityObject
             } else {
                 Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
@@ -10209,18 +10215,18 @@ Function Request-AriaLocalUserPasswordComplexity {
                 $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
                 if ($vropsPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password -product vrops) {
-                    $vropsPasswordComplexityObject = New-Object -TypeName psobject
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsPasswordComplexity.system
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vropsPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vropsPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vropsPasswordComplexity.'Min Numerical')" } } else { "$($vropsPasswordComplexity.'Min Numerical')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vropsPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vropsPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vropsPasswordComplexity.'Min Uppercase')" } } else { "$($vropsPasswordComplexity.'Min Uppercase')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vropsPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vropsPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vropsPasswordComplexity.'Min Lowercase')" } } else { "$($vropsPasswordComplexity.'Min Uppercase')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vropsPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vropsPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vropsPasswordComplexity.'Min Special')" } } else { "$($vropsPasswordComplexity.'Min Special')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vropsPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vropsPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vropsPasswordComplexity.'Min Length')" } } else { "$($vropsPasswordComplexity.'Min Length')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vropsPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass.trim()) { "$($vropsPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vropsPasswordComplexity.'Min Class')" } } else { "$($vropsPasswordComplexity.'Min Class')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vropsPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vropsPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vropsPasswordComplexity.'Min Unique')" } } else { "$($vropsPasswordComplexity.'Min Unique')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vropsPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vropsPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vropsPasswordComplexity.'Max Retries')" } } else { "$($vropsPasswordComplexity.'Max Retries')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "Max Repeat" $(if ($vropsPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Max Repeat') -ne $requiredConfig.maxRepeat) { "$($vropsPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxSequence) ]" } else { "$($vropsPasswordComplexity.'Max Repeat')" } } else { "$($vropsPasswordComplexity.'Max Repeat')" }) })
-                    $vropsPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vropsPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vropsPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vropsPasswordComplexity.History)" } } else { "$($vropsPasswordComplexity.History)" }) })
+                    $vropsPasswordComplexityObject = New-Object -TypeName PSObject
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vropsPasswordComplexity.system
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" $(if ($vropsPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vropsPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vropsPasswordComplexity.'Min Numerical')" } } else { "$($vropsPasswordComplexity.'Min Numerical')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" $(if ($vropsPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vropsPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vropsPasswordComplexity.'Min Uppercase')" } } else { "$($vropsPasswordComplexity.'Min Uppercase')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" $(if ($vropsPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vropsPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vropsPasswordComplexity.'Min Lowercase')" } } else { "$($vropsPasswordComplexity.'Min Uppercase')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" $(if ($vropsPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vropsPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vropsPasswordComplexity.'Min Special')" } } else { "$($vropsPasswordComplexity.'Min Special')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vropsPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vropsPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vropsPasswordComplexity.'Min Length')" } } else { "$($vropsPasswordComplexity.'Min Length')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Class" $(if ($vropsPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass.trim()) { "$($vropsPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vropsPasswordComplexity.'Min Class')" } } else { "$($vropsPasswordComplexity.'Min Class')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" $(if ($vropsPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vropsPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vropsPasswordComplexity.'Min Unique')" } } else { "$($vropsPasswordComplexity.'Min Unique')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" $(if ($vropsPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vropsPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vropsPasswordComplexity.'Max Retries')" } } else { "$($vropsPasswordComplexity.'Max Retries')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "Max Repeat" $(if ($vropsPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.'Max Repeat') -ne $requiredConfig.maxRepeat) { "$($vropsPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxSequence) ]" } else { "$($vropsPasswordComplexity.'Max Repeat')" } } else { "$($vropsPasswordComplexity.'Max Repeat')" }) })
+                    $vropsPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($vropsPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vropsPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vropsPasswordComplexity.History)" } } else { "$($vropsPasswordComplexity.History)" }) })
                     $allvropsPasswordComplexityObject += $vropsPasswordComplexityObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
@@ -10243,18 +10249,18 @@ Function Request-AriaLocalUserPasswordComplexity {
             foreach ($node in $vrlinodes) {
                 $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 if ($vrliPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser root -guestPassword $vrlipassword.password -product vrli) {
-                    $vrliPasswordComplexityObject = New-Object -TypeName psobject
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrliPasswordComplexity.system
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vrliPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vrliPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrliPasswordComplexity.'Min Numerical')" } } else { "$($vrliPasswordComplexity.'Min Numerical')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vrliPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vrliPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrliPasswordComplexity.'Min Uppercase')" } } else { "$($vrliPasswordComplexity.'Min Uppercase')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vrliPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vrliPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrliPasswordComplexity.'Min Lowercase')" } } else { "$($vrliPasswordComplexity.'Min Uppercase')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vrliPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vrliPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrliPasswordComplexity.'Min Special')" } } else { "$($vrliPasswordComplexity.'Min Special')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vrliPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vrliPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrliPasswordComplexity.'Min Length')" } } else { "$($vrliPasswordComplexity.'Min Length')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vrliPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass.trim()) { "$($vrliPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vrliPasswordComplexity.'Min Class')" } } else { "$($vrliPasswordComplexity.'Min Class')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vrliPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vrliPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrliPasswordComplexity.'Min Unique')" } } else { "$($vrliPasswordComplexity.'Min Unique')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vrliPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vrliPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrliPasswordComplexity.'Max Retries')" } } else { "$($vrliPasswordComplexity.'Max Retries')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "Max Repeat" $(if ($vrliPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Max Repeat').trim() -ne $requiredConfig.maxSequence.trim()) { "$($vrliPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxSequence) ]" } else { "$($vrliPasswordComplexity.'Max Repeat')" } } else { "$($vrliPasswordComplexity.'Max Repeat')" }) })
-                    $vrliPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vrliPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrliPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrliPasswordComplexity.History)" } } else { "$($vrliPasswordComplexity.History)" }) })
+                    $vrliPasswordComplexityObject = New-Object -TypeName PSObject
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrliPasswordComplexity.system
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" $(if ($vrliPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vrliPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrliPasswordComplexity.'Min Numerical')" } } else { "$($vrliPasswordComplexity.'Min Numerical')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" $(if ($vrliPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vrliPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrliPasswordComplexity.'Min Uppercase')" } } else { "$($vrliPasswordComplexity.'Min Uppercase')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" $(if ($vrliPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vrliPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrliPasswordComplexity.'Min Lowercase')" } } else { "$($vrliPasswordComplexity.'Min Uppercase')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" $(if ($vrliPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vrliPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrliPasswordComplexity.'Min Special')" } } else { "$($vrliPasswordComplexity.'Min Special')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vrliPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vrliPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrliPasswordComplexity.'Min Length')" } } else { "$($vrliPasswordComplexity.'Min Length')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Class" $(if ($vrliPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass.trim()) { "$($vrliPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vrliPasswordComplexity.'Min Class')" } } else { "$($vrliPasswordComplexity.'Min Class')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" $(if ($vrliPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vrliPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrliPasswordComplexity.'Min Unique')" } } else { "$($vrliPasswordComplexity.'Min Unique')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" $(if ($vrliPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vrliPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrliPasswordComplexity.'Max Retries')" } } else { "$($vrliPasswordComplexity.'Max Retries')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "Max Repeat" $(if ($vrliPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.'Max Repeat').trim() -ne $requiredConfig.maxSequence.trim()) { "$($vrliPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxSequence) ]" } else { "$($vrliPasswordComplexity.'Max Repeat')" } } else { "$($vrliPasswordComplexity.'Max Repeat')" }) })
+                    $vrliPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($vrliPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrliPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrliPasswordComplexity.History)" } } else { "$($vrliPasswordComplexity.History)" }) })
                     $allvrliPasswordComplexityObject += $vrliPasswordComplexityObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
@@ -10279,16 +10285,16 @@ Function Request-AriaLocalUserPasswordComplexity {
                 $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
                 $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 if ($vrniPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.vmname -guestUser support -guestPassword $vrnipassword.password -product vrni) {
-                    $vrniPasswordComplexityObject = New-Object -TypeName psobject
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrniPasswordComplexity.system
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vrniPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vrniPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrniPasswordComplexity.'Min Numerical')" } } else { "$($vrniPasswordComplexity.'Min Numerical')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vrniPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vrniPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrniPasswordComplexity.'Min Uppercase')" } } else { "$($vrniPasswordComplexity.'Min Uppercase')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vrniPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vrniPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrniPasswordComplexity.'Min Lowercase')" } } else { "$($vrniPasswordComplexity.'Min Uppercase')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vrniPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vrniPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrniPasswordComplexity.'Min Special')" } } else { "$($vrniPasswordComplexity.'Min Special')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vrniPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vrniPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrniPasswordComplexity.'Min Length')" } } else { "$($vrniPasswordComplexity.'Min Length')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vrniPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vrniPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrniPasswordComplexity.'Min Unique')" } } else { "$($vrniPasswordComplexity.'Min Unique')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vrniPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vrniPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrniPasswordComplexity.'Max Retries')" } } else { "$($vrniPasswordComplexity.'Max Retries')" }) })
-                    $vrniPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vrniPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrniPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrniPasswordComplexity.History)" } } else { "$($vrniPasswordComplexity.History)" }) })
+                    $vrniPasswordComplexityObject = New-Object -TypeName PSObject
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrniPasswordComplexity.system
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" $(if ($vrniPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical.trim()) { "$($vrniPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vrniPasswordComplexity.'Min Numerical')" } } else { "$($vrniPasswordComplexity.'Min Numerical')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" $(if ($vrniPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase.trim()) { "$($vrniPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vrniPasswordComplexity.'Min Uppercase')" } } else { "$($vrniPasswordComplexity.'Min Uppercase')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" $(if ($vrniPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase.trim()) { "$($vrniPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vrniPasswordComplexity.'Min Lowercase')" } } else { "$($vrniPasswordComplexity.'Min Uppercase')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" $(if ($vrniPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial.trim()) { "$($vrniPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vrniPasswordComplexity.'Min Special')" } } else { "$($vrniPasswordComplexity.'Min Special')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vrniPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength.trim()) { "$($vrniPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vrniPasswordComplexity.'Min Length')" } } else { "$($vrniPasswordComplexity.'Min Length')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" $(if ($vrniPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique.trim()) { "$($vrniPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vrniPasswordComplexity.'Min Unique')" } } else { "$($vrniPasswordComplexity.'Min Unique')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" $(if ($vrniPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries.trim()) { "$($vrniPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vrniPasswordComplexity.'Max Retries')" } } else { "$($vrniPasswordComplexity.'Max Retries')" }) })
+                    $vrniPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($vrniPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrniPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrniPasswordComplexity.History)" } } else { "$($vrniPasswordComplexity.History)" }) })
                     $allvrniPasswordComplexityObject += $vrniPasswordComplexityObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
@@ -10312,22 +10318,22 @@ Function Request-AriaLocalUserPasswordComplexity {
                 $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
                 if ($vraPasswordComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser $vrausername -guestPassword $vrapassword.password -product vra) {
-                    $vraPasswordComplexityObject = New-Object -TypeName psobject
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vraPasswordComplexity.system
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vraPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical) { "$($vraPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vraPasswordComplexity.'Min Numerical')" } } else { "$($vraPasswordComplexity.'Min Numerical')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vraPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase) { "$($vraPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vraPasswordComplexity.'Min Uppercase')" } } else { "$($vraPasswordComplexity.'Min Uppercase')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vraPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase) { "$($vraPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vraPasswordComplexity.'Min Lowercase')" } } else { "$($vraPasswordComplexity.'Min Uppercase')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Unique" $(if ($vraPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique) { "$($vraPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vraPasswordComplexity.'Min Unique')" } } else { "$($vraPasswordComplexity.'Min Unique')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vraPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength) { "$($vraPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vraPasswordComplexity.'Min Length')" } } else { "$($vraPasswordComplexity.'Min Length')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Class" $(if ($vraPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass) { "$($vraPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vraPasswordComplexity.'Min Class')" } } else { "$($vraPasswordComplexity.'Min Class')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vraPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial) { "$($vraPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vraPasswordComplexity.'Min Special')" } } else { "$($vraPasswordComplexity.'Min Special')" }) })
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vraPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries) { "$($vraPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vraPasswordComplexity.'Max Retries')" } } else { "$($vraPasswordComplexity.'Max Retries')" }) })
+                    $vraPasswordComplexityObject = New-Object -TypeName PSObject
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vraPasswordComplexity.system
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Numerical" $(if ($vraPasswordComplexity.'Min Numerical' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Numerical').trim() -ne $requiredConfig.minNumerical) { "$($vraPasswordComplexity.'Min Numerical') [ $($requiredConfig.minNumerical) ]" } else { "$($vraPasswordComplexity.'Min Numerical')" } } else { "$($vraPasswordComplexity.'Min Numerical')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Uppercase" $(if ($vraPasswordComplexity.'Min Uppercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Uppercase').trim() -ne $requiredConfig.minUppercase) { "$($vraPasswordComplexity.'Min Uppercase') [ $($requiredConfig.minUppercase) ]" } else { "$($vraPasswordComplexity.'Min Uppercase')" } } else { "$($vraPasswordComplexity.'Min Uppercase')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Lowercase" $(if ($vraPasswordComplexity.'Min Lowercase' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Lowercase').trim() -ne $requiredConfig.minLowercase) { "$($vraPasswordComplexity.'Min Lowercase') [ $($requiredConfig.minLowercase) ]" } else { "$($vraPasswordComplexity.'Min Lowercase')" } } else { "$($vraPasswordComplexity.'Min Uppercase')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Unique" $(if ($vraPasswordComplexity.'Min Unique' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Unique').trim() -ne $requiredConfig.minUnique) { "$($vraPasswordComplexity.'Min Unique') [ $($requiredConfig.minUnique) ]" } else { "$($vraPasswordComplexity.'Min Unique')" } } else { "$($vraPasswordComplexity.'Min Unique')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vraPasswordComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Length').trim() -ne $requiredConfig.minLength) { "$($vraPasswordComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vraPasswordComplexity.'Min Length')" } } else { "$($vraPasswordComplexity.'Min Length')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Class" $(if ($vraPasswordComplexity.'Min Class' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Class').trim() -ne $requiredConfig.minClass) { "$($vraPasswordComplexity.'Min Class') [ $($requiredConfig.minClass) ]" } else { "$($vraPasswordComplexity.'Min Class')" } } else { "$($vraPasswordComplexity.'Min Class')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Min Special" $(if ($vraPasswordComplexity.'Min Special' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Min Special').trim() -ne $requiredConfig.minSpecial) { "$($vraPasswordComplexity.'Min Special') [ $($requiredConfig.minSpecial) ]" } else { "$($vraPasswordComplexity.'Min Special')" } } else { "$($vraPasswordComplexity.'Min Special')" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "Max Retries" $(if ($vraPasswordComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Retries').trim() -ne $requiredConfig.retries) { "$($vraPasswordComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vraPasswordComplexity.'Max Retries')" } } else { "$($vraPasswordComplexity.'Max Retries')" }) })
                     if ($vraPasswordComplexity -match "Max Repeat") {
-                        $vraPasswordComplexityObject | Add-Member -notepropertyname "Max Repeat" $(if ($vraPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Repeat').trim() -ne $requiredConfig.maxRepeat) { "$($vraPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxRepeat) ]" } else { "$($vraPasswordComplexity.'Max Repeat')" } } else { "$($vraPasswordComplexity.'Max Repeat')" }) })
+                        $vraPasswordComplexityObject | Add-Member -NotePropertyName "Max Repeat" $(if ($vraPasswordComplexity.'Max Repeat' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Repeat').trim() -ne $requiredConfig.maxRepeat) { "$($vraPasswordComplexity.'Max Repeat') [ $($requiredConfig.maxRepeat) ]" } else { "$($vraPasswordComplexity.'Max Repeat')" } } else { "$($vraPasswordComplexity.'Max Repeat')" }) })
                     } else {
-                        $vraPasswordComplexityObject | Add-Member -notepropertyname "Max Sequence" $(if ($vraPasswordComplexity.'Max Sequence' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Sequence').trim() -ne $requiredConfig.maxSequence) { "$($vraPasswordComplexity.'Max Sequence') [ $($requiredConfig.maxSequence) ]" } else { "$($vraPasswordComplexity.'Max Sequence')" } } else { "$($vraPasswordComplexity.'Max Sequence')" }) })
+                        $vraPasswordComplexityObject | Add-Member -NotePropertyName "Max Sequence" $(if ($vraPasswordComplexity.'Max Sequence' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.'Max Sequence').trim() -ne $requiredConfig.maxSequence) { "$($vraPasswordComplexity.'Max Sequence') [ $($requiredConfig.maxSequence) ]" } else { "$($vraPasswordComplexity.'Max Sequence')" } } else { "$($vraPasswordComplexity.'Max Sequence')" }) })
                     }
-                    $vraPasswordComplexityObject | Add-Member -notepropertyname "History" $(if ($vraPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.History).trim() -ne $requiredConfig.history) { "$($vraPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vraPasswordComplexity.History)" } } else { "$($vraPasswordComplexity.History)" }) })
+                    $vraPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($vraPasswordComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.History).trim() -ne $requiredConfig.history) { "$($vraPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vraPasswordComplexity.History)" } } else { "$($vraPasswordComplexity.History)" }) })
                     $allvraPasswordComplexityObject += $vraPasswordComplexityObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
@@ -10357,15 +10363,15 @@ Function Request-AriaLocalUserPasswordComplexity {
                     if (Test-WsaConnection -server $node) {
                         if (Test-WsaAuthentication -server $node -user $vidmdirectoryusername -pass $vidmdirectorypassword.password ) {
                             if ($vidmPasswordDirectoryComplexity = Get-WsaPasswordPolicy) {
-                                $vidmPasswordDirectoryComplexityObject = New-Object -TypeName psobject
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $node.Split('.')[0]
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Numerical" $(if ($vidmPasswordDirectoryComplexity.minDigit -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minDigit) -ne $requiredConfig.minNumerical) { "$($vidmPasswordDirectoryComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($vidmPasswordDirectoryComplexity.minDigit)" } } else { "$($vidmPasswordDirectoryComplexity.minDigit)" }) })
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Uppercase" $(if ($vidmPasswordDirectoryComplexity.minUpper -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minUpper) -ne $requiredConfig.minUppercase) { "$($vidmPasswordDirectoryComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($vidmPasswordDirectoryComplexity.minUpper)" } } else { "$($vidmPasswordDirectoryComplexity.minUpper)" }) })
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Lowercase" $(if ($vidmPasswordDirectoryComplexity.minLower -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minLower) -ne $requiredConfig.minLowercase) { "$($vidmPasswordDirectoryComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($vidmPasswordDirectoryComplexity.minLower)" } } else { "$($vidmPasswordDirectoryComplexity.minLower)" }) })
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Max Indentical Characters" $(if ($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters -eq $null) { Write-Output "Max Indentical Characters" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters) -ne $requiredConfig.maxIdenticalAdjacent) { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters)" } } else { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters)" }) })
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vidmPasswordDirectoryComplexity.minLen -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minLen) -ne $requiredConfig.minLength) { "$($vidmPasswordDirectoryComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($vidmPasswordDirectoryComplexity.minLen)" } } else { "$($vidmPasswordDirectoryComplexity.minLen)" }) })
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "Min Special" $(if ($vidmPasswordDirectoryComplexity.minSpecial -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minSpecial) -ne $requiredConfig.minSpecial) { "$($vidmPasswordDirectoryComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($vidmPasswordDirectoryComplexity.minSpecial)" } } else { "$($vidmPasswordDirectoryComplexity.minSpecial)" }) })
-                                $vidmPasswordDirectoryComplexityObject | Add-Member -notepropertyname "History" $(if ($vidmPasswordDirectoryComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.History) -ne $requiredConfig.history) { "$($vidmPasswordDirectoryComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vidmPasswordDirectoryComplexity.History)" } } else { "$($vidmPasswordDirectoryComplexity.History)" }) })
+                                $vidmPasswordDirectoryComplexityObject = New-Object -TypeName PSObject
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $node.Split('.')[0]
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "Min Numerical" $(if ($vidmPasswordDirectoryComplexity.minDigit -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minDigit) -ne $requiredConfig.minNumerical) { "$($vidmPasswordDirectoryComplexity.minDigit) [ $($requiredConfig.minNumerical) ]" } else { "$($vidmPasswordDirectoryComplexity.minDigit)" } } else { "$($vidmPasswordDirectoryComplexity.minDigit)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "Min Uppercase" $(if ($vidmPasswordDirectoryComplexity.minUpper -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minUpper) -ne $requiredConfig.minUppercase) { "$($vidmPasswordDirectoryComplexity.minUpper) [ $($requiredConfig.minUppercase) ]" } else { "$($vidmPasswordDirectoryComplexity.minUpper)" } } else { "$($vidmPasswordDirectoryComplexity.minUpper)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "Min Lowercase" $(if ($vidmPasswordDirectoryComplexity.minLower -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minLower) -ne $requiredConfig.minLowercase) { "$($vidmPasswordDirectoryComplexity.minLower) [ $($requiredConfig.minLowercase) ]" } else { "$($vidmPasswordDirectoryComplexity.minLower)" } } else { "$($vidmPasswordDirectoryComplexity.minLower)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "Max Indentical Characters" $(if ($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters -eq $null) { Write-Output "Max Indentical Characters" } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters) -ne $requiredConfig.maxIdenticalAdjacent) { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters) [ $($requiredConfig.maxIdenticalAdjacent) ]" } else { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters)" } } else { "$($vidmPasswordDirectoryComplexity.maxConsecutiveIdenticalCharacters)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vidmPasswordDirectoryComplexity.minLen -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minLen) -ne $requiredConfig.minLength) { "$($vidmPasswordDirectoryComplexity.minLen) [ $($requiredConfig.minLength) ]" } else { "$($vidmPasswordDirectoryComplexity.minLen)" } } else { "$($vidmPasswordDirectoryComplexity.minLen)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "Min Special" $(if ($vidmPasswordDirectoryComplexity.minSpecial -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.minSpecial) -ne $requiredConfig.minSpecial) { "$($vidmPasswordDirectoryComplexity.minSpecial) [ $($requiredConfig.minSpecial) ]" } else { "$($vidmPasswordDirectoryComplexity.minSpecial)" } } else { "$($vidmPasswordDirectoryComplexity.minSpecial)" }) })
+                                $vidmPasswordDirectoryComplexityObject | Add-Member -NotePropertyName "History" $(if ($vidmPasswordDirectoryComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordDirectoryComplexity.History) -ne $requiredConfig.history) { "$($vidmPasswordDirectoryComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vidmPasswordDirectoryComplexity.History)" } } else { "$($vidmPasswordDirectoryComplexity.History)" }) })
                                 $allvidmPasswordDirectoryComplexityObject += $vidmPasswordDirectoryComplexityObject
                             }
                         }
@@ -10390,11 +10396,11 @@ Function Request-AriaLocalUserPasswordComplexity {
                     $vidmlocalvmid = $vidmlocalnodedata.vidmRootPassword.Split(':')[2]
                     $vidmlocalpassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmlocalvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                     if ($vidmPasswordLocalComplexity = Get-AriaLocalUserPasswordComplexity -vmName $node.split('.')[0] -guestUser root -guestPassword $vidmlocalpassword.password) {
-                        $vidmPasswordLocalComplexityObject = New-Object -TypeName psobject
-                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "System" -notepropertyvalue $vidmPasswordLocalComplexity.system
-                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "Min Length" $(if ($vidmPasswordLocalComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vidmPasswordLocalComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vidmPasswordLocalComplexity.'Min Length')" } } else { "$($vidmPasswordLocalComplexity.'Min Length')" }) })
-                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "History" $(if ($vidmPasswordLocalComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.History) -ne $requiredConfig.history) { "$($vidmPasswordLocalComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vidmPasswordLocalComplexity.History)" } } else { "$($vidmPasswordLocalComplexity.History)" }) })
-                        $vidmPasswordLocalComplexityObject | Add-Member -notepropertyname "Max Retries" $(if ($vidmPasswordLocalComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vidmPasswordLocalComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vidmPasswordLocalComplexity.'Max Retries')" } } else { "$($vidmPasswordLocalComplexity.'Max Retries')" }) })
+                        $vidmPasswordLocalComplexityObject = New-Object -TypeName PSObject
+                        $vidmPasswordLocalComplexityObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vidmPasswordLocalComplexity.system
+                        $vidmPasswordLocalComplexityObject | Add-Member -NotePropertyName "Min Length" $(if ($vidmPasswordLocalComplexity.'Min Length' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.'Min Length') -ne $requiredConfig.minLength) { "$($vidmPasswordLocalComplexity.'Min Length') [ $($requiredConfig.minLength) ]" } else { "$($vidmPasswordLocalComplexity.'Min Length')" } } else { "$($vidmPasswordLocalComplexity.'Min Length')" }) })
+                        $vidmPasswordLocalComplexityObject | Add-Member -NotePropertyName "History" $(if ($vidmPasswordLocalComplexity.History -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.History) -ne $requiredConfig.history) { "$($vidmPasswordLocalComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vidmPasswordLocalComplexity.History)" } } else { "$($vidmPasswordLocalComplexity.History)" }) })
+                        $vidmPasswordLocalComplexityObject | Add-Member -NotePropertyName "Max Retries" $(if ($vidmPasswordLocalComplexity.'Max Retries' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmPasswordLocalComplexity.'Max Retries') -ne $requiredConfig.retries) { "$($vidmPasswordLocalComplexity.'Max Retries') [ $($requiredConfig.retries) ]" } else { "$($vidmPasswordLocalComplexity.'Max Retries')" } } else { "$($vidmPasswordLocalComplexity.'Max Retries')" }) })
                         $allvidmPasswordLocalComplexityObject += $vidmPasswordLocalComplexityObject
                     }
                 }
@@ -10517,11 +10523,11 @@ Function Request-AriaLocalUserAccountLockout {
             }
             $allvrslcmAccountLockoutObject = New-Object System.Collections.ArrayList
             if ($vrslcmAccountLockout = Get-AriaLocalUserAccountLockout -vmName $vcfVrslcmDetails.fqdn.split('.')[0] -guestUser $vcfVrslcmDetails.rootUser -guestPassword $vcfVrslcmDetails.rootPassword ) {
-                $vrslcmAccountLockoutObject = New-Object -TypeName psobject
-                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrslcmAccountLockout.system
-                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vrslcmAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vrslcmAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrslcmAccountLockout.'Max Failures')" } } else { "$($vrslcmAccountLockout.'Max Failures')" }) })
-                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vrslcmAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vrslcmAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrslcmAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Unlock Interval (sec)')" }) })
-                $vrslcmAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vrslcmAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" }) })
+                $vrslcmAccountLockoutObject = New-Object -TypeName PSObject
+                $vrslcmAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrslcmAccountLockout.system
+                $vrslcmAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" $(if ($vrslcmAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vrslcmAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrslcmAccountLockout.'Max Failures')" } } else { "$($vrslcmAccountLockout.'Max Failures')" }) })
+                $vrslcmAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" $(if ($vrslcmAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vrslcmAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrslcmAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Unlock Interval (sec)')" }) })
+                $vrslcmAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($vrslcmAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" }) })
                 $allvrslcmAccountLockoutObject += $vrslcmAccountLockoutObject
             } else {
                 Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($vcfVrslcmDetails.fqdn): PRE_VALIDATION_FAILED"
@@ -10544,11 +10550,11 @@ Function Request-AriaLocalUserAccountLockout {
                 $vropspassword = (Get-vRSLCMProductPassword -productId vrops -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 $vropsusername = (Get-vRSLCMLockerPassword -vmid $vropspassword.passwordvmid).userName
                 if ($vropsAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password ) {
-                    $vropsAccountLockoutObject = New-Object -TypeName psobject
-                    $vropsAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vropsAccountLockout.system
-                    $vropsAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vropsAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vropsAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vropsAccountLockout.'Max Failures')" } } else { "$($vropsAccountLockout.'Max Failures')" }) })
-                    $vropsAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vropsAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vropsAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vropsAccountLockout.'Unlock Interval (sec)')" } } else { "$($vropsAccountLockout.'Unlock Interval (sec)')" }) })
-                    $vropsAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vropsAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vropsAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vropsAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vropsAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $vropsAccountLockoutObject = New-Object -TypeName PSObject
+                    $vropsAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vropsAccountLockout.system
+                    $vropsAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" $(if ($vropsAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vropsAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vropsAccountLockout.'Max Failures')" } } else { "$($vropsAccountLockout.'Max Failures')" }) })
+                    $vropsAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" $(if ($vropsAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vropsAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vropsAccountLockout.'Unlock Interval (sec)')" } } else { "$($vropsAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vropsAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($vropsAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vropsAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vropsAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vropsAccountLockout.'Root Unlock Interval (sec)')" }) })
                     $allvropsAccountLockoutObject += $vropsAccountLockoutObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from Aria Operations ($node): PRE_VALIDATION_FAILED"
@@ -10571,11 +10577,11 @@ Function Request-AriaLocalUserAccountLockout {
             foreach ($node in $vrlinodes) {
                 $vrlipassword = (Get-vRSLCMProductPassword -productId vrli -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 if ($vrliAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser root -guestPassword $vrlipassword.password ) {
-                    $vrliAccountLockoutObject = New-Object -TypeName psobject
-                    $vrliAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vrliAccountLockout.system
-                    $vrliAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vrliAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vrliAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrliAccountLockout.'Max Failures')" } } else { "$($vrliAccountLockout.'Max Failures')" }) })
-                    $vrliAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vrliAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vrliAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrliAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrliAccountLockout.'Unlock Interval (sec)')" }) })
-                    $vrliAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vrliAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vrliAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrliAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrliAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $vrliAccountLockoutObject = New-Object -TypeName PSObject
+                    $vrliAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrliAccountLockout.system
+                    $vrliAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" $(if ($vrliAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vrliAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrliAccountLockout.'Max Failures')" } } else { "$($vrliAccountLockout.'Max Failures')" }) })
+                    $vrliAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" $(if ($vrliAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vrliAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrliAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrliAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vrliAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($vrliAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vrliAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrliAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrliAccountLockout.'Root Unlock Interval (sec)')" }) })
                     $allvrliAccountLockoutObject += $vrliAccountLockoutObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
@@ -10600,7 +10606,7 @@ Function Request-AriaLocalUserAccountLockout {
                 $vrnivmid = $vrninodedata.supportPassword.Split(':')[2]
                 $vrnipassword = (Get-vRSLCMProductPassword -productId vrni -vmid $vrnivmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 if ($vrniAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.vmname -guestUser support -guestPassword $vrnipassword.password -product vrni ) {
-                    $vrniAccountLockoutObject = New-Object -TypeName psobject
+                    $vrniAccountLockoutObject = New-Object -TypeName PSObject
                     $vrniAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vrniAccountLockout.System
                     $vrniAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" -NotePropertyValue $(if ($vrniAccountLockout.'Max Failures' -eq $null) { "Not configured." } else { $(if ($drift) { if (($vrniAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vrniAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vrniAccountLockout.'Max Failures')" } } else { "$($vrniAccountLockout.'Max Failures')" }) })
                     $vrniAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" -NotePropertyValue $(if ($vrniAccountLockout.'Unlock Interval (sec)' -eq $null) { "Not configured." } else { $(if ($drift) { if (($vrniAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vrniAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrniAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrniAccountLockout.'Unlock Interval (sec)')" }) })
@@ -10627,11 +10633,11 @@ Function Request-AriaLocalUserAccountLockout {
                 $vrapassword = (Get-vRSLCMProductPassword -productId vra -nodeFqdn $node -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                 $vrausername = (Get-vRSLCMLockerPassword -vmid $vrapassword.passwordvmid).userName
                 if ($vraAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser $vrausername -guestPassword $vrapassword.password ) {
-                    $vraAccountLockoutObject = New-Object -TypeName psobject
-                    $vraAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vraAccountLockout.system
-                    $vraAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vraAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vraAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vraAccountLockout.'Max Failures')" } } else { "$($vraAccountLockout.'Max Failures')" }) })
-                    $vraAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vraAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vraAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vraAccountLockout.'Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Unlock Interval (sec)')" }) })
-                    $vraAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vraAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vraAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" }) })
+                    $vraAccountLockoutObject = New-Object -TypeName PSObject
+                    $vraAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vraAccountLockout.system
+                    $vraAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" $(if ($vraAccountLockout.'Max Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Max Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vraAccountLockout.'Max Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vraAccountLockout.'Max Failures')" } } else { "$($vraAccountLockout.'Max Failures')" }) })
+                    $vraAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" $(if ($vraAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vraAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vraAccountLockout.'Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Unlock Interval (sec)')" }) })
+                    $vraAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($vraAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vraAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" }) })
                     $allvraAccountLockoutObject += $vraAccountLockoutObject
                 } else {
                     Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
@@ -10661,11 +10667,11 @@ Function Request-AriaLocalUserAccountLockout {
                     if (Test-WsaConnection -server $node) {
                         if (Test-WsaAuthentication -server $node -user $vidmdirectoryusername -pass $vidmdirectorypassword.password ) {
                             if ($vidmDirectoryAccountLockout = Get-WsaAccountLockout) {
-                                $vidmDirectoryAccountLockoutObject = New-Object -TypeName psobject
-                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $node.Split('.')[0]
-                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vidmDirectoryAccountLockout.numAttempts -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.numAttempts).trim() -ne $requiredConfig.maxFailures.trim()) { "$($vidmDirectoryAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($vidmDirectoryAccountLockout.numAttempts)" } } else { "$($vidmDirectoryAccountLockout.numAttempts)" }) })
-                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "Attempt Interval" $(if ($vidmDirectoryAccountLockout.attemptInterval -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.attemptInterval).trim() -ne $requiredConfig.failedAttemptInterval.trim()) { "$($vidmDirectoryAccountLockout.attemptInterval) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($vidmDirectoryAccountLockout.attemptInterval)" } } else { "$($vidmDirectoryAccountLockout.attemptInterval)" }) })
-                                $vidmDirectoryAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vidmDirectoryAccountLockout.unlockInterval -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.unlockInterval).trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vidmDirectoryAccountLockout.unlockInterval) [ $($requiredConfig.unlockInterval) ]" } else { "$($vidmDirectoryAccountLockout.unlockInterval)" } } else { "$($vidmDirectoryAccountLockout.unlockInterval)" }) })
+                                $vidmDirectoryAccountLockoutObject = New-Object -TypeName PSObject
+                                $vidmDirectoryAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $node.Split('.')[0]
+                                $vidmDirectoryAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" $(if ($vidmDirectoryAccountLockout.numAttempts -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.numAttempts).trim() -ne $requiredConfig.maxFailures.trim()) { "$($vidmDirectoryAccountLockout.numAttempts) [ $($requiredConfig.maxFailures) ]" } else { "$($vidmDirectoryAccountLockout.numAttempts)" } } else { "$($vidmDirectoryAccountLockout.numAttempts)" }) })
+                                $vidmDirectoryAccountLockoutObject | Add-Member -NotePropertyName "Attempt Interval" $(if ($vidmDirectoryAccountLockout.attemptInterval -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.attemptInterval).trim() -ne $requiredConfig.failedAttemptInterval.trim()) { "$($vidmDirectoryAccountLockout.attemptInterval) [ $($requiredConfig.failedAttemptInterval) ]" } else { "$($vidmDirectoryAccountLockout.attemptInterval)" } } else { "$($vidmDirectoryAccountLockout.attemptInterval)" }) })
+                                $vidmDirectoryAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" $(if ($vidmDirectoryAccountLockout.unlockInterval -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmDirectoryAccountLockout.unlockInterval).trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vidmDirectoryAccountLockout.unlockInterval) [ $($requiredConfig.unlockInterval) ]" } else { "$($vidmDirectoryAccountLockout.unlockInterval)" } } else { "$($vidmDirectoryAccountLockout.unlockInterval)" }) })
                                 $allvidmDirectoryAccountLockoutObject += $vidmDirectoryAccountLockoutObject
                             }
                         }
@@ -10690,11 +10696,11 @@ Function Request-AriaLocalUserAccountLockout {
                     $vidmlocalvmid = $vidmlocalnodedata.vidmRootPassword.Split(':')[2]
                     $vidmlocalpassword = (Get-vRSLCMProductPassword -productId vidm -vmid $vidmlocalvmid -vrslcmRootPass $vcfVrslcmDetails.rootPassword)
                     if ($vidmLocalAccountLockout = Get-AriaLocalUserAccountLockout -vmName $node.split('.')[0] -guestUser root -guestPassword $vidmlocalpassword.password) {
-                        $vidmLocalAccountLockoutObject = New-Object -TypeName psobject
-                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "System" -notepropertyvalue $vidmLocalAccountLockout.system
-                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "Maximum Failures" $(if ($vidmLocalAccountLockout.'Maximum Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Maximum Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vidmLocalAccountLockout.'Maximum Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vidmLocalAccountLockout.'Maximum Failures')" } } else { "$($vrliAccountLockout.'Maximum Failures')" }) })
-                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "Unlock Interval" $(if ($vidmLocalAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vidmLocalAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vidmLocalAccountLockout.'Unlock Interval (sec)')" } } else { "$($vidmLocalAccountLockout.'Unlock Interval (sec)')" }) })
-                        $vidmLocalAccountLockoutObject | Add-Member -notepropertyname "Root Unlock Interval" $(if ($vidmLocalAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)')" }) })
+                        $vidmLocalAccountLockoutObject = New-Object -TypeName PSObject
+                        $vidmLocalAccountLockoutObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vidmLocalAccountLockout.system
+                        $vidmLocalAccountLockoutObject | Add-Member -NotePropertyName "Maximum Failures" $(if ($vidmLocalAccountLockout.'Maximum Failures' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Maximum Failures').trim() -ne $requiredConfig.maxFailures.trim()) { "$($vidmLocalAccountLockout.'Maximum Failures') [ $($requiredConfig.maxFailures) ]" } else { "$($vidmLocalAccountLockout.'Maximum Failures')" } } else { "$($vrliAccountLockout.'Maximum Failures')" }) })
+                        $vidmLocalAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" $(if ($vidmLocalAccountLockout.'Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vidmLocalAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vidmLocalAccountLockout.'Unlock Interval (sec)')" } } else { "$($vidmLocalAccountLockout.'Unlock Interval (sec)')" }) })
+                        $vidmLocalAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($vidmLocalAccountLockout.'Root Unlock Interval (sec)' -eq $null) { Write-Output "Not configured." } else { $(if ($vidmdrift) { if (($vidmLocalAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vidmLocalAccountLockout.'Root Unlock Interval (sec)')" }) })
                         $allvidmLocalAccountLockoutObject += $vidmLocalAccountLockoutObject
                     }
                 }
@@ -10807,103 +10813,103 @@ Function Publish-AriaLocalUserPasswordPolicy {
                             # VMware Aria Suite Lifecycle
                             if ($resourceTitleCase -eq "Aria Suite Lifecycle") {
                                 if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrslcm-local-password-complexity"></a><h3>Aria Suite Lifecycle (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
-                                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrslcm-local-password-expiration"></a><h3>VMware Aria Suite Lifecycle (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
-                                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrslcm-local-account-lockout"></a><h3>VMware Aria Suite Lifecycle (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrslcm-local-password-complexity"></a><h3>Aria Suite Lifecycle - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrslcm-local-password-expiration"></a><h3>VMware Aria Suite Lifecycle - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrslcm-local-account-lockout"></a><h3>VMware Aria Suite Lifecycle - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
                                 $command = $pvsCmdlet + $commandSwitch + $customSwitch
                                 $vrslcmLocalPasswordPolicyObject = Invoke-Expression $command
-                                $allvrslcmLocalPasswordPolicyObject += $vrslcmLocalPasswordPolicyObject
-                                $allvrslcmLocalPasswordPolicyObject = $allvrslcmLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                                $allvrslcmLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvrslcmLocalPasswordPolicyObject
-                                $allvrslcmLocalPasswordPolicyObject
+                                $allVrslcmLocalPasswordPolicyObject += $vrslcmLocalPasswordPolicyObject
+                                $allVrslcmLocalPasswordPolicyObject = $allVrslcmLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                                $allVrslcmLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allVrslcmLocalPasswordPolicyObject
+                                $allVrslcmLocalPasswordPolicyObject
                             }
                         }
 
                         # VMware Aria Operations
-                        $notvcfenabledvrops = Get-vRSLCMProductDetails -productId vrops
-                        if ($notvcfenabledvrops) {
+                        $notVcfEnabledVrops = Get-vRSLCMProductDetails -productId vrops
+                        if ($notVcfEnabledVrops) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrops-local-password-complexity"></a><h3>VMware Aria Operations (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrops-local-password-expiration"></a><h3>VMware Aria Operations (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops" }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrops-local-account-lockout"></a><h3>VMware Aria Operations (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrops-local-password-complexity"></a><h3>VMware Aria Operations - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrops-local-password-expiration"></a><h3>VMware Aria Operations - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops" }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrops-local-account-lockout"></a><h3>VMware Aria Operations - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vropsLocalPasswordPolicyObject = Invoke-Expression $command
-                            $allvropsLocalPasswordPolicyObject += $vropsLocalPasswordPolicyObject
-                            $allvropsLocalPasswordPolicyObject = $allvropsLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                            $allvropsLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvropsLocalPasswordPolicyObject
-                            $allvropsLocalPasswordPolicyObject
+                            $allVropsLocalPasswordPolicyObject += $vropsLocalPasswordPolicyObject
+                            $allVropsLocalPasswordPolicyObject = $allVropsLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allVropsLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allVropsLocalPasswordPolicyObject
+                            $allVropsLocalPasswordPolicyObject
                         }
 
                         # VMware Aria Operations for Logs
-                        $notvcfenabledvrli = Get-vRSLCMProductDetails -productId vrli
-                        if ($notvcfenabledvrli) {
+                        $notVcfEnabledVrli = Get-vRSLCMProductDetails -productId vrli
+                        if ($notVcfEnabledVrli) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrli-local-password-complexity"></a><h3>VMware Aria Operations for Logs (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrli-local-password-expiration"></a><h3>VMware Aria Operations for Logs (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrli-local-account-lockout"></a><h3>VMware Aria Operations for Logs (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrli-local-password-complexity"></a><h3>VMware Aria Operations for Logs - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrli-local-password-expiration"></a><h3>VMware Aria Operations for Logs - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrli-local-account-lockout"></a><h3>VMware Aria Operations for Logs - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vrliLocalPasswordPolicyObject = Invoke-Expression $command
-                            $allvrliLocalPasswordPolicyObject += $vrliLocalPasswordPolicyObject
-                            $allvrliLocalPasswordPolicyObject = $allvrliLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                            $allvrliLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvrliLocalPasswordPolicyObject
-                            $allvrliLocalPasswordPolicyObject
+                            $allVrliLocalPasswordPolicyObject += $vrliLocalPasswordPolicyObject
+                            $allVrliLocalPasswordPolicyObject = $allVrliLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allVrliLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allVrliLocalPasswordPolicyObject
+                            $allVrliLocalPasswordPolicyObject
                         }
 
-                        # VMware Aria Operations for Netowrks
-                        $notvcfenabledvrni = Get-vRSLCMProductDetails -productId vrni
-                        if ($null -ne $notvcfenabledvrni) {
+                        # VMware Aria Operations for Networks
+                        $notVcfEnabledVrni = Get-vRSLCMProductDetails -productId vrni
+                        if ($null -ne $notVcfEnabledVrni) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrni-local-password-complexity"></a><h3>VMware Aria Operations for Networks (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrni-local-password-expiration"></a><h3>VMware Aria Operations for Networks (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrni-local-account-lockout"></a><h3>VMware Aria Operations for Networks (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrni-local-password-complexity"></a><h3>VMware Aria Operations for Networks - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrni-local-password-expiration"></a><h3>VMware Aria Operations for Networks - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrni-local-account-lockout"></a><h3>VMware Aria Operations for Networks - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vrniLocalPasswordPolicyObject = Invoke-Expression $command
-                            $allvrniLocalPasswordPolicyObject += $vrniLocalPasswordPolicyObject
-                            $allvrniLocalPasswordPolicyObject = $allvrniLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                            $allvrniLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvrniLocalPasswordPolicyObject
-                            $allvrniLocalPasswordPolicyObject
+                            $allVrniLocalPasswordPolicyObject += $vrniLocalPasswordPolicyObject
+                            $allVrniLocalPasswordPolicyObject = $allVrniLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allVrniLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allVrniLocalPasswordPolicyObject
+                            $allVrniLocalPasswordPolicyObject
                         }
 
                         # VMware Aria Automation
-                        $notvcfenabledvra = Get-vRSLCMProductDetails -productid vra
-                        if ($notvcfenabledvra) {
+                        $notVcfEnabledVra = Get-vRSLCMProductDetails -productid vra
+                        if ($notVcfEnabledVra) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vra-local-password-complexity"></a><h3>VMware Aria Automation (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vra-local-password-expiration"></a><h3>VMware Aria Automation (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vra-local-account-lockout"></a><h3>VMware Aria Automation (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vra-local-password-complexity"></a><h3>VMware Aria Automation - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vra-local-password-expiration"></a><h3>VMware Aria Automation - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vra-local-account-lockout"></a><h3>VMware Aria Automation - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vraLocalPasswordPolicyObject = Invoke-Expression $command
-                            $allvraLocalPasswordPolicyObject += $vraLocalPasswordPolicyObject
-                            $allvraLocalPasswordPolicyObject = $allvraLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                            $allvraLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvraLocalPasswordPolicyObject
-                            $allvraLocalPasswordPolicyObject
+                            $allVraLocalPasswordPolicyObject += $vraLocalPasswordPolicyObject
+                            $allVraLocalPasswordPolicyObject = $allVraLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allVraLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allVraLocalPasswordPolicyObject
+                            $allVraLocalPasswordPolicyObject
                         }
 
                         # Workspace ONE Access
-                        $notvcfenabledvidm = Get-vRSLCMProductDetails -productid vidm
-                        if ($notvcfenabledvidm) {
+                        $notVcfEnabledWsa = Get-vRSLCMProductDetails -productid vidm
+                        if ($notVcfEnabledWsa) {
                             # Runs Workspace ONE Access Directory password policy
                             if ($PsBoundParameters.ContainsKey('vidmdrift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -vidmdrift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -vidmdrift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vidm-directory-password-complexity"></a><h3>Workspace ONE Access (Directory) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings directory  " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vidm-directory-password-expiration"></a><h3>Workspace ONE Access (Directory) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vidm-directory-account-lockout"></a><h3>Workspace ONE Access (Directory) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings directory " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="wsa-directory-password-complexity"></a><h3>Workspace ONE (Directory) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings directory  " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="wsa-directory-password-expiration"></a><h3>Workspace ONE (Directory) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="wsa-directory-account-lockout"></a><h3>Workspace ONE (Directory) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings directory " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
-                            $vidmDirectoryPasswordPolicyObject = Invoke-Expression $command
-                            $allvidmDirectoryPasswordPolicyObject += $vidmDirectoryPasswordPolicyObject
-                            $allvidmDirectoryPasswordPolicyObject = $allvidmDirectoryPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                            $allvidmDirectoryPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvidmDirectoryPasswordPolicyObject
-                            $allvidmDirectoryPasswordPolicyObject
+                            $wsaDirectoryPasswordPolicyObject = Invoke-Expression $command
+                            $allWsaDirectoryPasswordPolicyObject += $wsaDirectoryPasswordPolicyObject
+                            $allWsaDirectoryPasswordPolicyObject = $allWsaDirectoryPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allWsaDirectoryPasswordPolicyObject = Convert-CssClassStyle -htmldata $allWsaDirectoryPasswordPolicyObject
+                            $allWsaDirectoryPasswordPolicyObject
                             # Runs Workspace ONE Access Local password policy
                             if ($PsBoundParameters.ContainsKey('vidmdrift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -vidmdrift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -vidmdrift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vidm-local-password-expiration"></a><h3>Workspace ONE Access (Local Users) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm " }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vidm-local-password-complexity"></a><h3>Workspace ONE Access (Local Users) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings localuser " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vidm-local-account-lockout"></a><h3>Workspace ONE Access (Local Users) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings localuser " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="wsa-local-password-expiration"></a><h3>Workspace ONE (Local) - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="wsa-local-password-complexity"></a><h3>Workspace ONE (Local) - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings localuser " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="wsa-local-account-lockout"></a><h3>Workspace ONE (Local) - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -vidm -settings localuser " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
-                            $vidmLocalPasswordPolicyObject = Invoke-Expression $command
-                            $allvidmLocalPasswordPolicyObject += $vidmLocalPasswordPolicyObject
-                            $allvidmLocalPasswordPolicyObject = $allvidmLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
-                            $allvidmLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allvidmLocalPasswordPolicyObject
-                            $allvidmLocalPasswordPolicyObject
+                            $wsaLocalPasswordPolicyObject = Invoke-Expression $command
+                            $allWsaLocalPasswordPolicyObject +=$wsaLocalPasswordPolicyObject
+                            $allWsaLocalPasswordPolicyObject = $allWsaLocalPasswordPolicyObject | Sort-Object 'System' | ConvertTo-Html -Fragment -PreContent $preHtmlContent -As Table
+                            $allWsaLocalPasswordPolicyObject = Convert-CssClassStyle -htmldata $allWsaLocalPasswordPolicyObject
+                            $allWsaLocalPasswordPolicyObject
                         }
                     }
                 }
@@ -15592,13 +15598,13 @@ Function Request-LocalUserPasswordExpiration {
                                 $allLocalUserExpirationObject = New-Object System.Collections.ArrayList
                                 foreach ($user in $localUser) {
                                     if ($localUserPasswordExpiration = Get-LocalUserPasswordExpiration -vmName $vmName -guestUser $guestUser -guestPassword $guestPassword -localUser $user) {
-                                        $localUserExpirationObject = New-Object -TypeName psobject
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Workload Domain" -notepropertyvalue $domain
-                                        $localUserExpirationObject | Add-Member -notepropertyname "System" -notepropertyvalue $vmName
-                                        $localUserExpirationObject | Add-Member -notepropertyname "User" -notepropertyvalue $user
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Min Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Max Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
-                                        $localUserExpirationObject | Add-Member -notepropertyname "Warning Days" -notepropertyvalue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
+                                        $localUserExpirationObject = New-Object -TypeName PSObject
+                                        $localUserExpirationObject | Add-Member -NotePropertyName "Workload Domain" -NotePropertyValue $domain
+                                        $localUserExpirationObject | Add-Member -NotePropertyName "System" -NotePropertyValue $vmName
+                                        $localUserExpirationObject | Add-Member -NotePropertyName "User" -NotePropertyValue $user
+                                        $localUserExpirationObject | Add-Member -NotePropertyName "Min Days" -NotePropertyValue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Minimum number of days between password change" }).Value.Trim()) -ne $requiredConfig.minDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim()) [ $($requiredConfig.minDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Minimum number of days between password change"}).Value.Trim())" })
+                                        $localUserExpirationObject | Add-Member -NotePropertyName "Max Days" -NotePropertyValue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Maximum number of days between password change" }).Value.Trim()) -ne $requiredConfig.maxDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim()) [ $($requiredConfig.maxDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Maximum number of days between password change"}).Value.Trim())" })
+                                        $localUserExpirationObject | Add-Member -NotePropertyName "Warning Days" -NotePropertyValue $(if ($drift) { if ($(($localUserPasswordExpiration | Where-Object { $_.Setting -match "Number of days of warning before password expires" }).Value.Trim()) -ne $requiredConfig.warningDays) { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim()) [ $($requiredConfig.warningDays) ]" } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" } } else { "$(($localUserPasswordExpiration | Where-Object {$_.Setting -match "Number of days of warning before password expires"}).Value.Trim())" })
                                         $allLocalUserExpirationObject += $localUserExpirationObject
                                     } else {
                                         Write-Error "Unable to retrieve password expiration policy for local user ($user) from Virtual Machine ($vmName): PRE_VALIDATION_FAILED"
