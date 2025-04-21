@@ -207,7 +207,7 @@ Function Invoke-PasswordRotationManager {
                     Write-LogMessage -Type INFO -Message "Collecting NSX Edge password rotation policy for $workflowMessage."
                     $nsxEdgePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxEdge' $($commandSwitch)" | ConvertFrom-Json
 
-                    # VMware Aria Suite Resources: Build Password Rotation Object
+                    # Aria Suite Resources: Build Password Rotation Object
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
                         if (Get-VCFAriaLifecycle) {
@@ -329,7 +329,7 @@ Function Invoke-PasswordRotationManager {
                         }
                     }
 
-                    # VMware Aria Suite Resources: Combine Password Rotation Data
+                    # Aria Suite Resources: Combine Password Rotation Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
                         if (Get-VCFAriaLifecycle) {
@@ -394,7 +394,7 @@ Function Invoke-PasswordRotationManager {
                     Write-LogMessage -Type INFO -Message "Collecting NSX Edge password rotation policy for $workflowMessage."
                     $nsxEdgePasswordRotation = Invoke-Expression "Publish-PasswordRotationPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -resource 'nsxEdge' $($commandSwitch)"
 
-                    # VMware Aria Suite Resources: Collect Password Rotation Settings Data
+                    # Aria Suite Resources: Collect Password Rotation Settings Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
                         if (Get-VCFAriaLifecycle) {
@@ -453,7 +453,7 @@ Function Invoke-PasswordRotationManager {
                         $reportData += $nsxEdgePasswordRotation
                     }
 
-                    # VMware Aria Suite Resources: Combine Password Rotation Data
+                    # Aria Suite Resources: Combine Password Rotation Data
                     # If Aria Suite Lifecycle is enabled and in the SDDC Manager inventory, include it and any other enabled Aria Suite components.
                     if ($PsBoundParameters.ContainsKey('allDomains') -or ($PsBoundParameters.ContainsKey('workloadDomain') -and $workloadDomain -eq $managementDomain.name)) {
                         if ($ariaLifecyclePasswordRotation) {
@@ -678,7 +678,7 @@ Function Invoke-PasswordPolicyManager {
                 $esxiPasswordComplexity = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
                 $esxiAccountLockout = Invoke-Expression "Publish-EsxiPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
 
-                Write-LogMessage -Type INFO -Message "Collecting VMware Aria Suite Password Policies for $workflowMessage."
+                Write-LogMessage -Type INFO -Message "Collecting Aria Suite Password Policies for $workflowMessage."
                 $ariaPasswordExpiration = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordExpiration $($commandSwitch)"
                 $ariaPasswordComplexity = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy PasswordComplexity $($commandSwitch)"
                 $ariaAccountLockout = Invoke-Expression "Publish-AriaLocalUserPasswordPolicy -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -policy AccountLockout $($commandSwitch)"
@@ -1056,82 +1056,82 @@ Function Start-PasswordPolicyConfig {
                     Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Workspace ONE Access Local Users" -Colour Yellow
                 }
 
-                # Configuring Password Policies for VMware Aria Suite Lifecycle
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Suite Lifecycle"
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Suite Lifecycle Local Users: Password Expiration Policy for each instance"
+                # Configuring Password Policies for Aria Suite Lifecycle
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for Aria Suite Lifecycle"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Suite Lifecycle Local Users: Password Expiration Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrslcm' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaLifecycle.passwordExpiration.minDays -maxDays $customPolicy.ariaLifecycle.passwordExpiration.maxDays -warnDays $customPolicy.ariaLifecycle.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Suite Lifecycle Local Users: Password Complexity Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Suite Lifecycle Local Users: Password Complexity Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrslcm' -minLength $customPolicy.ariaLifecycle.passwordComplexity.minLength -uppercase $customPolicy.ariaLifecycle.passwordComplexity.minUppercase -lowercase $customPolicy.ariaLifecycle.passwordComplexity.minLowercase -numerical $customPolicy.ariaLifecycle.passwordComplexity.minNumerical -special $customPolicy.ariaLifecycle.passwordComplexity.minSpecial -sequence $customPolicy.ariaLifecycle.passwordComplexity.maxSequence -unique $customPolicy.ariaLifecycle.passwordComplexity.minUnique -class $customPolicy.ariaLifecycle.passwordComplexity.minClass -history $customPolicy.ariaLifecycle.passwordComplexity.history -retry $customPolicy.ariaLifecycle.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Suite Lifecycle Local Users: Account Lockout Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Suite Lifecycle Local Users: Account Lockout Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrslcm' -failures $customPolicy.ariaLifecycle.accountLockout.maxFailures -unlockInterval $customPolicy.ariaLifecycle.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaLifecycle.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Suite Lifecycle Local Users"
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Aria Suite Lifecycle Local Users"
 
-                # Configuring Password Policies for VMware Aria Operations
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Operations"
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations Local Users: Password Expiration Policy for each instance"
+                # Configuring Password Policies for Aria Operations
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for Aria Operations"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations Local Users: Password Expiration Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrops' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaOperations.passwordExpiration.minDays -maxDays $customPolicy.ariaOperations.passwordExpiration.maxDays -warnDays $customPolicy.ariaOperations.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations Local Users: Password Complexity Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations Local Users: Password Complexity Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrops' -minLength $customPolicy.ariaOperations.passwordComplexity.minLength -uppercase $customPolicy.ariaOperations.passwordComplexity.minUppercase -lowercase $customPolicy.ariaOperations.passwordComplexity.minLowercase -numerical $customPolicy.ariaOperations.passwordComplexity.minNumerical -special $customPolicy.ariaOperations.passwordComplexity.minSpecial -sequence $customPolicy.ariaOperations.passwordComplexity.maxSequence -unique $customPolicy.ariaOperations.passwordComplexity.minUnique -class $customPolicy.ariaOperations.passwordComplexity.minClass -history $customPolicy.ariaOperations.passwordComplexity.history -retry $customPolicy.ariaOperations.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations Local Users: Account Lockout Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations Local Users: Account Lockout Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrops' -failures $customPolicy.ariaOperations.accountLockout.maxFailures -unlockInterval $customPolicy.ariaOperations.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaOperations.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Operations Local Users"
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Aria Operations Local Users"
 
-                # Configuring Password Policies for VMware Aria Operations for Logs
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Operations for Logs"
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Logs Local Users: Password Expiration Policy for each instance"
+                # Configuring Password Policies for Aria Operations for Logs
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for Aria Operations for Logs"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations for Logs Local Users: Password Expiration Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrli' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaOperationsLogs.passwordExpiration.minDays -maxDays $customPolicy.ariaOperationsLogs.passwordExpiration.maxDays -warnDays $customPolicy.ariaOperationsLogs.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Logs Local Users: Password Complexity Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations for Logs Local Users: Password Complexity Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrli' -minLength $customPolicy.ariaOperationsLogs.passwordComplexity.minLength -uppercase $customPolicy.ariaOperationsLogs.passwordComplexity.minUppercase -lowercase $customPolicy.ariaOperationsLogs.passwordComplexity.minLowercase -numerical $customPolicy.ariaOperationsLogs.passwordComplexity.minNumerical -special $customPolicy.ariaOperationsLogs.passwordComplexity.minSpecial -sequence $customPolicy.ariaOperationsLogs.passwordComplexity.maxSequence -unique $customPolicy.ariaOperationsLogs.passwordComplexity.minUnique -class $customPolicy.ariaOperationsLogs.passwordComplexity.minClass -history $customPolicy.ariaOperationsLogs.passwordComplexity.history -retry $customPolicy.ariaOperationsLogs.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Logs Local Users: Account Lockout Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations for Logs Local Users: Account Lockout Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrli' -failures $customPolicy.ariaOperationsLogs.accountLockout.maxFailures -unlockInterval $customPolicy.ariaOperationsLogs.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaOperationsLogs.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Operations for Logs Local Users"
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Aria Operations for Logs Local Users"
 
-                # Configuring Password Policies for VMware Aria Operations for Networks
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Operations for Networks"
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Networks Local Users: Password Expiration Policy for each instance"
+                # Configuring Password Policies for Aria Operations for Networks
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for Aria Operations for Networks"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations for Networks Local Users: Password Expiration Policy for each instance"
                 $localUsers = @("support", "consoleuser")
                 foreach ($localUser in $localUsers) {
                     $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrni' -policyPath $reportPath -policyFile $policyFile -localUser $localUser -minDays $customPolicy.ariaOperationsNetworks.passwordExpiration.minDays -maxDays $customPolicy.ariaOperationsNetworks.passwordExpiration.maxDays -warnDays $customPolicy.ariaOperationsNetworks.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                     if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
                 }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Networks Local Users: Password Complexity Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations for Networks Local Users: Password Complexity Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrni' -minLength $customPolicy.ariaOperationsNetworks.passwordComplexity.minLength -uppercase $customPolicy.ariaOperationsNetworks.passwordComplexity.minUppercase -lowercase $customPolicy.ariaOperationsNetworks.passwordComplexity.minLowercase -numerical $customPolicy.ariaOperationsNetworks.passwordComplexity.minNumerical -special $customPolicy.ariaOperationsNetworks.passwordComplexity.minSpecial -sequence $customPolicy.ariaOperationsNetworks.passwordComplexity.maxSequence -unique $customPolicy.ariaOperationsNetworks.passwordComplexity.minUnique -class $customPolicy.ariaOperationsNetworks.passwordComplexity.minClass -history $customPolicy.ariaOperationsNetworks.passwordComplexity.history -retry $customPolicy.ariaOperationsNetworks.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Operations for Networks Local Users: Account Lockout Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Operations for Networks Local Users: Account Lockout Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vrni' -failures $customPolicy.ariaOperationsNetworks.accountLockout.maxFailures -unlockInterval $customPolicy.ariaOperationsNetworks.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaOperationsNetworks.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Operations for Networks Local Users"
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Aria Operations for Networks Local Users"
 
-                # Configuring Password Policies for VMware Aria Automation
-                Write-LogMessage -Type INFO -Message "Configuring Password Policies for VMware Aria Automation"
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Automation Local Users: Password Expiration Policy for each instance"
+                # Configuring Password Policies for Aria Automation
+                Write-LogMessage -Type INFO -Message "Configuring Password Policies for Aria Automation"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Automation Local Users: Password Expiration Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordExpiration -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vra' -policyPath $reportPath -policyFile $policyFile -localUser 'root' -minDays $customPolicy.ariaAutomation.passwordExpiration.minDays -maxDays $customPolicy.ariaAutomation.passwordExpiration.maxDays -warnDays $customPolicy.ariaAutomation.passwordExpiration.warningDays -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Automation Local Users: Password Complexity Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Automation Local Users: Password Complexity Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordComplexity -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vra' -minLength $customPolicy.ariaAutomation.passwordComplexity.minLength -uppercase $customPolicy.ariaAutomation.passwordComplexity.minUppercase -lowercase $customPolicy.ariaAutomation.passwordComplexity.minLowercase -numerical $customPolicy.ariaAutomation.passwordComplexity.minNumerical -special $customPolicy.ariaAutomation.passwordComplexity.minSpecial -sequence $customPolicy.ariaAutomation.passwordComplexity.maxSequence -unique $customPolicy.ariaAutomation.passwordComplexity.minUnique -class $customPolicy.ariaAutomation.passwordComplexity.minClass -history $customPolicy.ariaAutomation.passwordComplexity.history -retry $customPolicy.ariaAutomation.passwordComplexity.retries -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
 
-                Write-LogMessage -Type INFO -Message "Configuring VMware Aria Automation Local Users: Account Lockout Policy for each instance"
+                Write-LogMessage -Type INFO -Message "Configuring Aria Automation Local Users: Account Lockout Policy for each instance"
                 $StatusMsg = Update-AriaLocalUserPasswordAccountLockout -server $sddcManagerFqdn -user $sddcManagerUser -pass $sddcManagerPass -product 'vra' -failures $customPolicy.ariaAutomation.accountLockout.maxFailures -unlockInterval $customPolicy.ariaAutomation.accountLockout.unlockInterval -rootUnlockInterval $customPolicy.ariaAutomation.accountLockout.rootUnlockInterval -WarningAction SilentlyContinue -ErrorAction SilentlyContinue -WarningVariable WarnMsg -ErrorVariable ErrorMsg
                 if ( $StatusMsg ) { Write-LogMessage -Type INFO -Message "$StatusMsg" } if ( $WarnMsg ) { Write-LogMessage -Type WARNING -Message $WarnMsg -Colour Magenta } if ( $ErrorMsg ) { Write-LogMessage -Type ERROR -Message $ErrorMsg -Colour Red }
-                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for VMware Aria Automation Local Users"
+                Write-LogMessage -Type INFO -Message "Completed Configuring Password Policies for Aria Automation Local Users"
 
             }
         }
@@ -1156,11 +1156,11 @@ Function Get-PasswordPolicyDefault {
         - VMware NSX Manager
         - VMware NSX Edge
         - VMware Workspace ONE Access
-        - VMware Aria Suite Lifecycle
-        - VMware Aria Operations
-        - VMware Aria Operations for Logs
-        - VMware Aria Operations for Networks
-        - VMware Aria Automation.
+        - Aria Suite Lifecycle
+        - Aria Operations
+        - Aria Operations for Logs
+        - Aria Operations for Networks
+        - Aria Automation.
 
         .EXAMPLE
         Get-PasswordPolicyDefault -version '5.0.0.0'
@@ -2143,7 +2143,7 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#vra-local-password-expiration">Aria Automation</a></li>
                     <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-directory-password-expiration">Local Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#local-wsa-directory-password-expiration">Local Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#local-wsa-local-password-expiration">Local Workspace ONE (Local)</a></li>
                 </ul>
             </section>
@@ -2164,7 +2164,7 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#vra-local-password-complexity">Aria Automation</a></li>
                     <li><a class="nav-link" href="#wsa-directory-password-complexity">Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-directory-password-complexity">Local Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#local-wsa-directory-password-complexity">Local Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#local-wsa-local-password-complexity">Local Workspace ONE (Local)</a></li>
                 </ul>
             </section>
@@ -2185,7 +2185,7 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#vra-local-account-lockout">Aria Automation</a></li>
                     <li><a class="nav-link" href="#wsa-directory-account-lockout">Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
-                    <li><a class="nav-link" href="#standalone-wsa-directory-account-lockout">Local Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#local-wsa-directory-account-lockout">Local Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#local-wsa-local-account-lockout">Local Workspace ONE (Local)</a></li>
                 </ul>
             </section>
@@ -9453,7 +9453,7 @@ Function Get-AriaLocalUserPasswordExpiration {
 
         .EXAMPLE
         Get-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username]
-        This example retrieves the global password expiration policy for a VMware Aria Automation instance.
+        This example retrieves the global password expiration policy for a Aria Automation instance.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -9580,19 +9580,19 @@ Function Get-AriaLocalUserPasswordComplexity {
 
         .EXAMPLE
         Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrli
-        This example retrieves the password complexity from a VMware Aria Operations for Logs appliance.
+        This example retrieves the password complexity from a Aria Operations for Logs appliance.
 
         .EXAMPLE
         Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrops
-        This example retrieves the password complexity from a VMware Aria Operations appliance.
+        This example retrieves the password complexity from a Aria Operations appliance.
 
         .EXAMPLE
         Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser support -guestPassword [guest_password] -product vrni
-        This example retrieves the password complexity from a VMware Aria Operations for Networks appliance.
+        This example retrieves the password complexity from a Aria Operations for Networks appliance.
 
         .EXAMPLE
         Get-AriaLocalUserPasswordComplexity -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vra
-        This example retrieves the password complexity from a VMware Aria Automation appliance.
+        This example retrieves the password complexity from a Aria Automation appliance.
 
         .PARAMETER vmName
         The virtual machine name.
@@ -9694,19 +9694,19 @@ Function Get-AriaLocalUserAccountLockout {
 
         .EXAMPLE
         Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrli
-        This example retrieves the account lockout from a VMware Aria Operations for Logs appliance.
+        This example retrieves the account lockout from a Aria Operations for Logs appliance.
 
         .EXAMPLE
         Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vrops
-        This example retrieves the account lockout from a VMware Aria Operations appliance.
+        This example retrieves the account lockout from a Aria Operations appliance.
 
         .EXAMPLE
         Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser support -guestPassword [guest_password] -product vrni
-        This example retrieves the account lockout from a VMware Aria Operations for Networks appliance.
+        This example retrieves the account lockout from a Aria Operations for Networks appliance.
 
         .EXAMPLE
         Get-AriaLocalUserAccountLockout -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -product vra
-        This example retrieves the account lockout from a VMware Aria Automation appliance.
+        This example retrieves the account lockout from a Aria Automation appliance.
 
         .PARAMETER vmName
         The virtual machine name.
@@ -9765,25 +9765,25 @@ Function Get-AriaLocalUserAccountLockout {
 Function Request-AriaLocalUserPasswordExpiration {
     <#
         .SYNOPSIS
-        Retrieves the VMware Aria product password expiration.
+        Retrieves the Aria product password expiration.
 
         .DESCRIPTION
-        The Request-AriaLocalUserPasswordExpiration cmdlet retrieves the VMware Aria Automation password expiration policy.
+        The Request-AriaLocalUserPasswordExpiration cmdlet retrieves the Aria Automation password expiration policy.
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle
+        - Validates that network connectivity and authentication is possible to Aria Suite Lifecycle
         - Retrieves the password expiration policy.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra
-        This example retrieves the password expiration policy for VMware Aria Automation instances.
+        This example retrieves the password expiration policy for Aria Automation instances.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift -reportPath [report_path] -policyFile [policy_file].json
-        This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the password expiration policy for Aria Automation instances and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift
-        This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
+        This example retrieves the password expiration policy for Aria Automation instances and compares the configuration against the product defaults.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory
@@ -9860,7 +9860,7 @@ Function Request-AriaLocalUserPasswordExpiration {
     }
 
     Try {
-        # VMware Aria Suite Lifecycle
+        # Aria Suite Lifecycle
         if ($product -eq 'vrslcm') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -9879,12 +9879,12 @@ Function Request-AriaLocalUserPasswordExpiration {
                 $vrslcmPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vrslcmPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrslcmPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrslcmPasswordExpiration.'Warning Days')" } } else { "$($vrslcmPasswordExpiration.'Warning Days')" }) })
                 $allvrslcmPasswordExpirationObject += $vrslcmPasswordExpirationObject
             } else {
-                Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
+                Write-Error "Unable to retrieve password expiration policy from Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
             }
             return $allvrslcmPasswordExpirationObject
         }
 
-        # VMware Aria Operation
+        # Aria Operation
         if ($product -eq 'vrops') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -9907,7 +9907,7 @@ Function Request-AriaLocalUserPasswordExpiration {
                     $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vropsPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
                     $allvropsPasswordExpirationObject += $vropsPasswordExpirationObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations ($node): PRE_VALIDATION_FAILED"
                 }
                 if ($vropsPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.split('.')[0] -guestUser $vropsusername -guestPassword $vropspassword.password -localUser "admin") {
                     $vropsPasswordExpirationObject = New-Object -TypeName PSObject
@@ -9918,13 +9918,13 @@ Function Request-AriaLocalUserPasswordExpiration {
                     $vropsPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vropsPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vropsPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vropsPasswordExpiration.'Warning Days')" } } else { "$($vropsPasswordExpiration.'Warning Days')" }) })
                     $allvropsPasswordExpirationObject += $vropsPasswordExpirationObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvropsPasswordExpirationObject
         }
 
-        # VMware Aria Operatons for Logs
+        # Aria Operatons for Logs
         if ($product -eq 'vrli') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -9946,13 +9946,13 @@ Function Request-AriaLocalUserPasswordExpiration {
                     $vrliPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vrliPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrliPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrliPasswordExpiration.'Warning Days')" } } else { "$($vrliPasswordExpiration.'Warning Days')" }) })
                     $allvrliPasswordExpirationObject += $vrliPasswordExpirationObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvrliPasswordExpirationObject
         }
 
-        # VMware Aria Operations for Networks
+        # Aria Operations for Networks
         if ($product -eq 'vrni') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -9976,7 +9976,7 @@ Function Request-AriaLocalUserPasswordExpiration {
                     $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vrniPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
                     $allvrniPasswordExpirationObject += $vrniPasswordExpirationObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
                 }
                 if ($vrniPasswordExpiration = Get-AriaLocalUserPasswordExpiration -server $server -user $user -pass $pass -domain $domain.name -vmName $node.vmName -guestUser support -guestPassword $vrnipassword.password -localUser "consoleuser" -sudo) {
                     $vrniPasswordExpirationObject = New-Object -TypeName PSObject
@@ -9987,13 +9987,13 @@ Function Request-AriaLocalUserPasswordExpiration {
                     $vrniPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vrniPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vrniPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vrniPasswordExpiration.'Warning Days')" } } else { "$($vrniPasswordExpiration.'Warning Days')" }) })
                     $allvrniPasswordExpirationObject += $vrniPasswordExpirationObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvrniPasswordExpirationObject
         }
 
-        # VMware Aria Automation
+        # Aria Automation
         if ($product -eq 'vra') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10016,7 +10016,7 @@ Function Request-AriaLocalUserPasswordExpiration {
                     $vraPasswordExpirationObject | Add-Member -NotePropertyName "Warning (days)" $(if ($null -eq $vraPasswordExpiration.'Warning Days') { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordExpiration.'Warning Days') -ne $requiredConfig.warningDays) { "$($vraPasswordExpiration.'Warning Days') [ $($requiredConfig.warningDays) ]" } else { "$($vraPasswordExpiration.'Warning Days')" } } else { "$($vraPasswordExpiration.'Warning Days')" }) })
                     $allvraPasswordExpirationObject += $vraPasswordExpirationObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Automation ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvraPasswordExpirationObject
@@ -10066,25 +10066,25 @@ Export-ModuleMember -Function Request-AriaLocalUserPasswordExpiration
 Function Request-AriaLocalUserPasswordComplexity {
     <#
         .SYNOPSIS
-        Retrieves the VMware Aria product password complexity.
+        Retrieves the Aria product password complexity.
 
         .DESCRIPTION
-        The Request-AriaLocalUserPasswordComplexity cmdlet retrieves the VMware Aria Automation password expiration policy.
+        The Request-AriaLocalUserPasswordComplexity cmdlet retrieves the Aria Automation password expiration policy.
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle
+        - Validates that network connectivity and authentication is possible to Aria Suite Lifecycle
         - Retrieves the password complexity policy.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra
-        This example retrieves the password complexity policy for VMware Aria Automation instances.
+        This example retrieves the password complexity policy for Aria Automation instances.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift -reportPath [report_path] -policyFile [policy_file].json
-        This example retrieves the password complexity policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the password complexity policy for Aria Automation instances and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift
-        This example retrieves the password complexity policy for VMware Aria Automation instances and compares the configuration against the product defaults.
+        This example retrieves the password complexity policy for Aria Automation instances and compares the configuration against the product defaults.
 
         .EXAMPLE
         Request-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory.
@@ -10162,7 +10162,7 @@ Function Request-AriaLocalUserPasswordComplexity {
     }
 
     Try {
-        # VMware Aria Suite Lifecycle
+        # Aria Suite Lifecycle
         if ($product -eq 'vrslcm') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10189,12 +10189,12 @@ Function Request-AriaLocalUserPasswordComplexity {
                 $vrslcmPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($null -eq $vrslcmPasswordComplexity.History) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrslcmPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrslcmPasswordComplexity.History)" } } else { "$($vrslcmPasswordComplexity.History)" }) })
                 $allvrslcmPasswordComplexityObject += $vrslcmPasswordComplexityObject
             } else {
-                Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
+                Write-Error "Unable to retrieve password expiration policy from Aria Suite Lifecycle ($node): PRE_VALIDATION_FAILED"
             }
             return $allvrslcmPasswordComplexityObject
         }
 
-        # VMware Aria Operations
+        # Aria Operations
         if ($product -eq 'vrops') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10223,13 +10223,13 @@ Function Request-AriaLocalUserPasswordComplexity {
                     $vropsPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($null -eq $vropsPasswordComplexity.History) { Write-Output "Not configured." } else { $(if ($drift) { if (($vropsPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vropsPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vropsPasswordComplexity.History)" } } else { "$($vropsPasswordComplexity.History)" }) })
                     $allvropsPasswordComplexityObject += $vropsPasswordComplexityObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvropsPasswordComplexityObject
         }
 
-        # VMware Aria Operatons for Logs
+        # Aria Operatons for Logs
         if ($product -eq 'vrli') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10257,13 +10257,13 @@ Function Request-AriaLocalUserPasswordComplexity {
                     $vrliPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($null -eq $vrliPasswordComplexity.History) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrliPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrliPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrliPasswordComplexity.History)" } } else { "$($vrliPasswordComplexity.History)" }) })
                     $allvrliPasswordComplexityObject += $vrliPasswordComplexityObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Logs ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvrliPasswordComplexityObject
         }
 
-        # VMware Aria Operations for Networks
+        # Aria Operations for Networks
         if ($product -eq 'vrni') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10291,13 +10291,13 @@ Function Request-AriaLocalUserPasswordComplexity {
                     $vrniPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($null -eq $vrniPasswordComplexity.History) { Write-Output "Not configured." } else { $(if ($drift) { if (($vrniPasswordComplexity.History).trim() -ne $requiredConfig.history.trim()) { "$($vrniPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vrniPasswordComplexity.History)" } } else { "$($vrniPasswordComplexity.History)" }) })
                     $allvrniPasswordComplexityObject += $vrniPasswordComplexityObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvrniPasswordComplexityObject
         }
 
-        # VMware Aria Automation
+        # Aria Automation
         if ($product -eq 'vra') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10330,7 +10330,7 @@ Function Request-AriaLocalUserPasswordComplexity {
                     $vraPasswordComplexityObject | Add-Member -NotePropertyName "History" $(if ($null -eq $vraPasswordComplexity.History) { Write-Output "Not configured." } else { $(if ($drift) { if (($vraPasswordComplexity.History).trim() -ne $requiredConfig.history) { "$($vraPasswordComplexity.History) [ $($requiredConfig.history) ]" } else { "$($vraPasswordComplexity.History)" } } else { "$($vraPasswordComplexity.History)" }) })
                     $allvraPasswordComplexityObject += $vraPasswordComplexityObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Automation ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvraPasswordComplexityObject
@@ -10410,25 +10410,25 @@ Export-ModuleMember -Function Request-AriaLocalUserPasswordComplexity
 Function Request-AriaLocalUserAccountLockout {
     <#
         .SYNOPSIS
-        Retrieves the VMware Aria product password account lockout.
+        Retrieves the Aria product password account lockout.
 
         .DESCRIPTION
-        The Request-AriaLocalUserAccountLockout cmdlet retrieves the VMware Aria Automation password expiration policy.
+        The Request-AriaLocalUserAccountLockout cmdlet retrieves the Aria Automation password expiration policy.
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates that network connectivity and authentication is possible to VMware Aria Suite Lifecycle
+        - Validates that network connectivity and authentication is possible to Aria Suite Lifecycle
         - Retrieves the password account lockout policy.
 
         .EXAMPLE
         Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra
-        This example retrieves the password expiration policy for VMware Aria Automation instances.
+        This example retrieves the password expiration policy for Aria Automation instances.
 
         .EXAMPLE
         Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift -reportPath [report_path] -policyFile [policy_file].json
-        This example retrieves the password expiration policy for VMware Aria Automation instances and checks the configuration drift using the provided configuration JSON.
+        This example retrieves the password expiration policy for Aria Automation instances and checks the configuration drift using the provided configuration JSON.
 
         .EXAMPLE
         Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -drift
-        This example retrieves the password expiration policy for VMware Aria Automation instances and compares the configuration against the product defaults.
+        This example retrieves the password expiration policy for Aria Automation instances and compares the configuration against the product defaults.
 
         .EXAMPLE
         Request-AriaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -vidm -settings directory
@@ -10506,7 +10506,7 @@ Function Request-AriaLocalUserAccountLockout {
     }
 
     Try {
-        # VMware Aria Suite Lifecycle
+        # Aria Suite Lifecycle
         if ($product -eq 'vrslcm') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10524,12 +10524,12 @@ Function Request-AriaLocalUserAccountLockout {
                 $vrslcmAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($null -eq $vrslcmAccountLockout.'Root Unlock Interval (sec)') { Write-Output "Not configured." } else { $(if ($drift) { if (($vrslcmAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vrslcmAccountLockout.'Root Unlock Interval (sec)')" }) })
                 $allvrslcmAccountLockoutObject += $vrslcmAccountLockoutObject
             } else {
-                Write-Error "Unable to retrieve password expiration policy from VMware Aria Suite Lifecycle ($vcfVrslcmDetails.fqdn): PRE_VALIDATION_FAILED"
+                Write-Error "Unable to retrieve password expiration policy from Aria Suite Lifecycle ($vcfVrslcmDetails.fqdn): PRE_VALIDATION_FAILED"
             }
             return $allvrslcmAccountLockoutObject
         }
 
-        # VMware Aria Operations
+        # Aria Operations
         if ($product -eq 'vrops') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10557,7 +10557,7 @@ Function Request-AriaLocalUserAccountLockout {
             return $allvropsAccountLockoutObject
         }
 
-        # VMware Aria Operatons for Logs
+        # Aria Operatons for Logs
         if ($product -eq 'vrli') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10584,7 +10584,7 @@ Function Request-AriaLocalUserAccountLockout {
             return $allvrliAccountLockoutObject
         }
 
-        # VMware Aria Operations for Networks
+        # Aria Operations for Networks
         if ($product -eq 'vrni') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10606,13 +10606,13 @@ Function Request-AriaLocalUserAccountLockout {
                     $vrniAccountLockoutObject | Add-Member -NotePropertyName "Unlock Interval" -NotePropertyValue $(if ($null -eq $vrniAccountLockout.'Unlock Interval (sec)') { "Not configured." } else { $(if ($drift) { if (($vrniAccountLockout.'Unlock Interval (sec)').trim() -ne $requiredConfig.unlockInterval.trim()) { "$($vrniAccountLockout.'Unlock Interval (sec)') [ $($requiredConfig.unlockInterval) ]" } else { "$($vrniAccountLockout.'Unlock Interval (sec)')" } } else { "$($vrniAccountLockout.'Unlock Interval (sec)')" }) })
                     $allvrniAccountLockoutObject += $vrniAccountLockoutObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Operations for Networks ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvrniAccountLockoutObject
         }
 
-        # VMware Aria Automation
+        # Aria Automation
         if ($product -eq 'vra') {
             if ($drift) {
                 if ($PsBoundParameters.ContainsKey("policyFile")) {
@@ -10634,7 +10634,7 @@ Function Request-AriaLocalUserAccountLockout {
                     $vraAccountLockoutObject | Add-Member -NotePropertyName "Root Unlock Interval" $(if ($null -eq $vraAccountLockout.'Root Unlock Interval (sec)') { Write-Output "Not configured." } else { $(if ($drift) { if (($vraAccountLockout.'Root Unlock Interval (sec)').trim() -ne $requiredConfig.rootUnlockInterval.trim()) { "$($vraAccountLockout.'Root Unlock Interval (sec)') [ $($requiredConfig.rootUnlockInterval) ]" } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" } } else { "$($vraAccountLockout.'Root Unlock Interval (sec)')" }) })
                     $allvraAccountLockoutObject += $vraAccountLockoutObject
                 } else {
-                    Write-Error "Unable to retrieve password expiration policy from VMware Aria Automation ($node): PRE_VALIDATION_FAILED"
+                    Write-Error "Unable to retrieve password expiration policy from Aria Automation ($node): PRE_VALIDATION_FAILED"
                 }
             }
             return $allvraAccountLockoutObject
@@ -10713,33 +10713,33 @@ Function Publish-AriaLocalUserPasswordPolicy {
         Publishes the password policies for Aria product local users.
 
         .DESCRIPTION
-        Publish-AriaLocalUserPasswordPolicy cmdlet retrieves the requested password policy for all VVMware Aria products and converts the output to HTML.
+        Publish-AriaLocalUserPasswordPolicy cmdlet retrieves the requested password policy for all VAria products and converts the output to HTML.
         - Validates that network connectivity and authentication is possible to SDDC Manager
-        - Validates which VMware Aria products are installed.
+        - Validates which Aria products are installed.
 
         .EXAMPLE
         Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
-        This example returns password expiration policy for all VMware Aria products for all domains.
+        This example returns password expiration policy for all Aria products for all domains.
 
         .EXAMPLE
         Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
-        This example returns password expiration policy for all VMware Aria products for the management domain.
+        This example returns password expiration policy for all Aria products for the management domain.
 
         .EXAMPLE
         Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
-        This example returns password complexity policy for all VMware Aria products for all domains.
+        This example returns password complexity policy for all Aria products for all domains.
 
         .EXAMPLE
         Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
-        This example returns password complexity policy for all VMware Aria products for the management domain.
+        This example returns password complexity policy for all Aria products for the management domain.
 
         .EXAMPLE
         Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
-        This example returns password account lockout policy for all VMware Aria products for all domains.
+        This example returns password account lockout policy for all Aria products for all domains.
 
         .EXAMPLE
         Publish-AriaLocalUserPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
-        This example returns password account lockout policy for all VMware Aria products for the management domain.
+        This example returns password account lockout policy for all Aria products for the management domain.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -10804,12 +10804,12 @@ Function Publish-AriaLocalUserPasswordPolicy {
 
                         # Checks for VNware Aria Suite Lifecycle in VMware Cloud Foundation mode.
                         if ($isEnabled) {
-                            # VMware Aria Suite Lifecycle
+                            # Aria Suite Lifecycle
                             if ($resourceTitleCase -eq "Aria Suite Lifecycle") {
                                 if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
                                 if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrslcm-local-password-complexity"></a><h3>Aria Suite Lifecycle - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
-                                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrslcm-local-password-expiration"></a><h3>VMware Aria Suite Lifecycle - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
-                                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrslcm-local-account-lockout"></a><h3>VMware Aria Suite Lifecycle - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrslcm-local-password-expiration"></a><h3>Aria Suite Lifecycle - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
+                                if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrslcm-local-account-lockout"></a><h3>Aria Suite Lifecycle - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrslcm " }
                                 $command = $pvsCmdlet + $commandSwitch + $customSwitch
                                 $vrslcmLocalPasswordPolicyObject = Invoke-Expression $command
                                 $allVrslcmLocalPasswordPolicyObject += $vrslcmLocalPasswordPolicyObject
@@ -10819,13 +10819,13 @@ Function Publish-AriaLocalUserPasswordPolicy {
                             }
                         }
 
-                        # VMware Aria Operations
+                        # Aria Operations
                         $notVcfEnabledVrops = Get-vRSLCMProductDetails -productId vrops
                         if ($notVcfEnabledVrops) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrops-local-password-complexity"></a><h3>VMware Aria Operations - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrops-local-password-expiration"></a><h3>VMware Aria Operations - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops" }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrops-local-account-lockout"></a><h3>VMware Aria Operations - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrops-local-password-complexity"></a><h3>Aria Operations - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrops-local-password-expiration"></a><h3>VAria Operations - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops" }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrops-local-account-lockout"></a><h3>Aria Operations - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrops " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vropsLocalPasswordPolicyObject = Invoke-Expression $command
                             $allVropsLocalPasswordPolicyObject += $vropsLocalPasswordPolicyObject
@@ -10834,13 +10834,13 @@ Function Publish-AriaLocalUserPasswordPolicy {
                             $allVropsLocalPasswordPolicyObject
                         }
 
-                        # VMware Aria Operations for Logs
+                        # Aria Operations for Logs
                         $notVcfEnabledVrli = Get-vRSLCMProductDetails -productId vrli
                         if ($notVcfEnabledVrli) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrli-local-password-complexity"></a><h3>VMware Aria Operations for Logs - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrli-local-password-expiration"></a><h3>VMware Aria Operations for Logs - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrli-local-account-lockout"></a><h3>VMware Aria Operations for Logs - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrli-local-password-complexity"></a><h3>Aria Operations for Logs - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrli-local-password-expiration"></a><h3>Aria Operations for Logs - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrli-local-account-lockout"></a><h3>Aria Operations for Logs - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrli " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vrliLocalPasswordPolicyObject = Invoke-Expression $command
                             $allVrliLocalPasswordPolicyObject += $vrliLocalPasswordPolicyObject
@@ -10849,13 +10849,13 @@ Function Publish-AriaLocalUserPasswordPolicy {
                             $allVrliLocalPasswordPolicyObject
                         }
 
-                        # VMware Aria Operations for Networks
+                        # Aria Operations for Networks
                         $notVcfEnabledVrni = Get-vRSLCMProductDetails -productId vrni
                         if ($null -ne $notVcfEnabledVrni) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrni-local-password-complexity"></a><h3>VMware Aria Operations for Networks - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrni-local-password-expiration"></a><h3>VMware Aria Operations for Networks - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrni-local-account-lockout"></a><h3>VMware Aria Operations for Networks - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vrni-local-password-complexity"></a><h3>Aria Operations for Networks - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vrni-local-password-expiration"></a><h3>Aria Operations for Networks - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vrni-local-account-lockout"></a><h3>Aria Operations for Networks - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vrni " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vrniLocalPasswordPolicyObject = Invoke-Expression $command
                             $allVrniLocalPasswordPolicyObject += $vrniLocalPasswordPolicyObject
@@ -10864,13 +10864,13 @@ Function Publish-AriaLocalUserPasswordPolicy {
                             $allVrniLocalPasswordPolicyObject
                         }
 
-                        # VMware Aria Automation
+                        # Aria Automation
                         $notVcfEnabledVra = Get-vRSLCMProductDetails -productid vra
                         if ($notVcfEnabledVra) {
                             if ($PsBoundParameters.ContainsKey('drift')) { if ($PsBoundParameters.ContainsKey('policyFile')) { $commandSwitch = " -drift -reportPath '$reportPath' -policyFile '$policyFile'" } else { $commandSwitch = " -drift" } } else { $commandSwitch = "" }
-                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vra-local-password-complexity"></a><h3>VMware Aria Automation - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
-                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vra-local-password-expiration"></a><h3>VMware Aria Automation - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
-                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vra-local-account-lockout"></a><h3>VMware Aria Automation - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "PasswordComplexity") { $pvsCmdlet = "Request-AriaLocalUserPasswordComplexity"; $preHtmlContent = '<a id="vra-local-password-complexity"></a><h3>Aria Automation - Password Complexity</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "PasswordExpiration") { $pvsCmdlet = "Request-AriaLocalUserPasswordExpiration"; $preHtmlContent = '<a id="vra-local-password-expiration"></a><h3>Aria Automation - Password Expiration</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
+                            if ($policy -eq "AccountLockout") { $pvsCmdlet = "Request-AriaLocalUserAccountLockout"; $preHtmlContent = '<a id="vra-local-account-lockout"></a><h3>Aria Automation - Account Lockout</h3>'; $customSwitch = " -server $server -user $user -pass $pass -product vra " }
                             $command = $pvsCmdlet + $commandSwitch + $customSwitch
                             $vraLocalPasswordPolicyObject = Invoke-Expression $command
                             $allVraLocalPasswordPolicyObject += $vraLocalPasswordPolicyObject
@@ -10925,11 +10925,11 @@ Function Update-AriaLocalUserPasswordExpiration {
 
         .EXAMPLE
         Update-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -localuser [local_username] -maxdays 90 -mindays 7 -warndays 7
-        This example updates the VMware Aria Automation nodes with new values for each element.
+        This example updates the Aria Automation nodes with new values for each element.
 
         .EXAMPLE.
         Update-AriaLocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
-        This example updates the VMware Aria Automation nodes using the JSON file values.
+        This example updates the Aria Automation nodes using the JSON file values.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -11000,7 +11000,7 @@ Function Update-AriaLocalUserPasswordExpiration {
         if ($PsBoundParameters.ContainsKey("json")) {
             $version = Get-VCFManager -version
             if ($PsBoundParameters.ContainsKey("policyFile")) {
-                # VMware Aria Suite Lifecycle
+                # Aria Suite Lifecycle
                 if ($product -eq "vrslcm") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaLifecycle.passwordExpiration
                     $scriptCheck = "cat /etc/passwd"
@@ -11025,7 +11025,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                     }
                 }
 
-                # VMware Aria Operations
+                # Aria Operations
                 if ($product -eq "vrops") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperations.passwordExpiration
                     $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
@@ -11056,7 +11056,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                     }
                 }
 
-                # VMware Aria Operatons for Logs
+                # Aria Operatons for Logs
                 if ($product -eq 'vrli') {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperationsLogs.passwordExpiration
                     $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
@@ -11085,7 +11085,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                     }
                 }
 
-                # VMware Aria Operations for Networks
+                # Aria Operations for Networks
                 if ($product -eq "vrni") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).ariaOperationsNetworks.passwordExpiration
                     $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
@@ -11116,7 +11116,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                     }
                 }
 
-                # VMware Aria Automation
+                # Aria Automation
                 if ($product -eq "vra") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaAutomation.passwordExpiration
                     $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
@@ -11150,7 +11150,7 @@ Function Update-AriaLocalUserPasswordExpiration {
         }
 
         if (-not($PsBoundParameters.ContainsKey("json"))) {
-            # VMware Aria Suite Lifecycle
+            # Aria Suite Lifecycle
             if ($product -eq "vrslcm") {
                 $scriptCheck = "cat /etc/passwd"
                 $checkKeys = Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCheck -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
@@ -11176,7 +11176,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                 }
             }
 
-            # VMware Aria Operations
+            # Aria Operations
             if ($product -eq "vrops") {
                 $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
                 $scriptCheck = "cat /etc/passwd"
@@ -11207,7 +11207,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                 }
             }
 
-            # VMware Aria Operations for Logs
+            # Aria Operations for Logs
             if ($product -eq "vrli") {
                 $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
                 $scriptCheck = "cat /etc/passwd"
@@ -11237,7 +11237,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                 }
             }
 
-            # VMware Aria Operations for Networks
+            # Aria Operations for Networks
             if ($product -eq "vrni") {
                 $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
                 $scriptCheck = "sudo cat /etc/passwd"
@@ -11269,7 +11269,7 @@ Function Update-AriaLocalUserPasswordExpiration {
                 }
             }
 
-            # VMware Aria Automation
+            # Aria Automation
             if ($product -eq 'vra') {
                 $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
                 $scriptCheck = "cat /etc/passwd"
@@ -11316,11 +11316,11 @@ Function Update-AriaLocalUserPasswordComplexity {
 
         .EXAMPLE
         Update-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -minLength 7 -uppercase 1 -lowercase 1 -numerical 1 -special 1 -unique 5 -history 3 -retry 3 -class 3 -sequence 3
-        This example updates the VMware Aria Automation nodes with new values for each element.
+        This example updates the Aria Automation nodes with new values for each element.
 
         .EXAMPLE
         Update-AriaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
-        This example updates VMware Aria Automation using the JSON file values.
+        This example updates Aria Automation using the JSON file values.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -11416,7 +11416,7 @@ Function Update-AriaLocalUserPasswordComplexity {
         if ($PsBoundParameters.ContainsKey("json")) {
             $version = Get-VCFManager -version
             if ($PsBoundParameters.ContainsKey("policyFile")) {
-                # VMware Aria Suite Lifecycle
+                # Aria Suite Lifecycle
                 if ($product -eq "vrslcm") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaLifecycle.passwordComplexity
                     $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
@@ -11718,7 +11718,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                     }
                 }
 
-                # VMware Aria Operations
+                # Aria Operations
                 if ($product -eq "vrops") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperations.passwordComplexity
                     $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
@@ -12087,7 +12087,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                     }
                 }
 
-                # VMware Aria Operatons for Logs
+                # Aria Operatons for Logs
                 if ($product -eq 'vrli') {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperationsLogs.passwordComplexity
                     $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
@@ -12453,7 +12453,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                     }
                 }
 
-                # VMware Aria Operations for Networks
+                # Aria Operations for Networks
                 if ($product -eq "vrni") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).ariaOperationsNetworks.passwordComplexity
                     $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
@@ -12544,7 +12544,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                     }
                 }
 
-                # VMware Aria Automation
+                # Aria Automation
                 if ($product -eq "vra") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaAutomation.passwordComplexity
                     $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
@@ -12931,7 +12931,7 @@ Function Update-AriaLocalUserPasswordComplexity {
         }
 
         if (-not($PsBoundParameters.ContainsKey("json"))) {
-            # VMware Aria Suite Lifecycle
+            # Aria Suite Lifecycle
             if ($product -eq "vrslcm") {
                 $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
 
@@ -13242,7 +13242,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                 }
             }
 
-            # VMware Aria Operations
+            # Aria Operations
             if ($product -eq "vrops") {
                 $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
                 foreach ($node in $vropsnodes) {
@@ -13620,7 +13620,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                 }
             }
 
-            # VMware Aria Operations for Logs
+            # Aria Operations for Logs
             if ($product -eq "vrli") {
                 $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
                 foreach ($node in $vrlinodes) {
@@ -13997,7 +13997,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                 }
             }
 
-            # VMware Aria Operations for Networks
+            # Aria Operations for Networks
             if ($product -eq "vrni") {
                 $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
                 $scriptCommand = $null
@@ -14096,7 +14096,7 @@ Function Update-AriaLocalUserPasswordComplexity {
                 }
             }
 
-            # VMware Aria Automation
+            # Aria Automation
             if ($product -eq 'vra') {
                 $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
                 foreach ($node in $vranodes) {
@@ -14499,11 +14499,11 @@ Function Update-AriaLocalUserPasswordAccountLockout {
 
         .EXAMPLE
         Update-AriaLocalUserPasswordAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -failures 5 -unlockInterval 900 -rootUnlockInterval 900
-        This example updates the VMware Aria Automation nodes with new values for each element.
+        This example updates the Aria Automation nodes with new values for each element.
 
         .EXAMPLE
         Update-AriaLocalUserPasswordAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -product vra -json -reportPath [report_path] -policyFile [policy_file].json
-        This example updates VMware Aria Automation nodes using the JSON file values.
+        This example updates Aria Automation nodes using the JSON file values.
 
         .PARAMETER server
         The fully qualified domain name of the SDDC Manager instance.
@@ -14571,7 +14571,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
             $version = Get-VCFManager -version
             if ($PsBoundParameters.ContainsKey("policyFile")) {
 
-                # VMware Aria Suite Lifecycle
+                # Aria Suite Lifecycle
                 if ($product -eq "vrslcm") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaLifecycle.accountLockout
                     $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
@@ -14664,7 +14664,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                     Invoke-VMScript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $scriptCommand -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword -Confirm:$false | Out-Null
                 }
 
-                # VMware Aria Operations
+                # Aria Operations
                 if ($product -eq "vrops") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperations.accountLockout
                     $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
@@ -14760,7 +14760,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                     }
                 }
 
-                # VMware Aria Operatons for Logs
+                # Aria Operatons for Logs
                 if ($product -eq 'vrli') {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaOperationsLogs.accountLockout
                     $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
@@ -14857,7 +14857,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                     }
                 }
 
-                # VMware Aria Operations for Networks
+                # Aria Operations for Networks
                 if ($product -eq "vrni") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).ariaOperationsNetworks.accountLockout
                     $scriptCommand = $null
@@ -14912,7 +14912,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                     }
                 }
 
-                # VMware Aria Automation
+                # Aria Automation
                 if ($product -eq "vra") {
                     $requiredConfig = (Get-PasswordPolicyConfig -version $version -reportPath $policyPath -policyFile $policyFile ).AriaAutomation.accountLockout
                     $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
@@ -15009,7 +15009,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
         }
 
         if (-not($PsBoundParameters.ContainsKey("json"))) {
-            # VMware Aria Suite Lifecycle
+            # Aria Suite Lifecycle
             if ($product -eq "vrslcm") {
                 $photonRelease = Invoke-VMscript -VM $vcfVrslcmDetails.fqdn.split('.')[0] -ScriptText $photonScript -GuestUser $vcfVrslcmDetails.rootUser -GuestPassword $vcfVrslcmDetails.rootPassword
 
@@ -15103,7 +15103,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                 }
             }
 
-            # VMware Aria Operations
+            # Aria Operations
             if ($product -eq "vrops") {
                 $vropsnodes = ((Get-vRSLCMProductDetails -productid vrops).nodes).properties.hostName
                 foreach ($node in $vropsnodes) {
@@ -15203,7 +15203,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                 }
             }
 
-            # VMware Aria Operations for Logs
+            # Aria Operations for Logs
             if ($product -eq "vrli") {
                 $vrlinodes = ((Get-vRSLCMProductDetails -productid vrli).nodes).properties.hostName
                 foreach ($node in $vrlinodes) {
@@ -15304,7 +15304,7 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                 }
             }
 
-            # VMware Aria Operations for Networks
+            # Aria Operations for Networks
             if ($product -eq "vrni") {
                 $vrninodes = ((Get-vRSLCMProductDetails -productid vrni).nodes | Select-Object type -ExpandProperty properties)
                 $scriptCommand = $null
@@ -15362,12 +15362,12 @@ Function Update-AriaLocalUserPasswordAccountLockout {
                     }
 
                     if ($PsBoundParameters.ContainsKey("rootUnlockInterval")) {
-                        Write-Output "The root unlock interval is not supported for VMware Aria Operations for Networks."
+                        Write-Output "The root unlock interval is not supported for Aria Operations for Networks."
                     }
                 }
             }
 
-            # VMware Aria Automation
+            # Aria Automation
             if ($product -eq 'vra') {
                 $vranodes = ((Get-vRSLCMProductDetails -productid vra).nodes).properties.hostName
                 foreach ($node in $vranodes) {
