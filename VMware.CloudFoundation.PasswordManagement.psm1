@@ -1885,7 +1885,7 @@ Function Set-CreateReportDirectory {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn
     )
 
-    $fileTimestamp = Get-Date -Format "MM-dd-yyyy_hh_mm_ss"
+    $fileTimestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
     $Global:reportFolder = $path + '\PasswordPolicyManager\'
     if ($PSEdition -eq "Core" -and ($PSVersionTable.OS).Split(' ')[0] -eq "Linux") {
         $reportFolder = ($reportFolder).split('\') -join '/' | Split-Path -NoQualifier
@@ -1903,7 +1903,7 @@ Function Set-CreateReportDirectoryRotation {
         [Parameter (Mandatory = $true)] [ValidateNotNullOrEmpty()] [String]$sddcManagerFqdn
     )
 
-    $fileTimestamp = Get-Date -Format "MM-dd-yyyy_hh_mm_ss"
+    $fileTimestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
     $Global:reportFolder = join-path -Path $path -ChildPath 'PasswordRotationManager\'
     if ($PSEdition -eq "Core" -and ($PSVersionTable.OS).Split(' ')[0] -eq "Linux") {
         $reportFolder = ($reportFolder).split('\') -join '/' | Split-Path -NoQualifier
