@@ -73,7 +73,7 @@ Set-Variable -Name "minLengthNotExceeds" -Value "SDDC Manager is able to rotate 
 ##########################################################################
 
 ##########################################################################
-#Region     Begin Password Rotation Functions               ######
+#Region     Begin Password Rotation Functions                       ######
 
 Function Invoke-PasswordRotationManager {
     <#
@@ -506,11 +506,11 @@ Function Invoke-PasswordRotationManager {
 }
 Export-ModuleMember -Function Invoke-PasswordRotationManager
 
-#EndRegion  End Password Rotation Functions                 ######
+#EndRegion  End Password Rotation Functions                         ######
 ##########################################################################
 
 ##########################################################################
-#Region     Begin Password Policy Functions                 ######
+#Region     Begin Password Policy Functions                         ######
 
 Function Invoke-PasswordPolicyManager {
     <#
@@ -2300,7 +2300,7 @@ Function Convert-CssClassStyle {
     $htmlData
 }
 
-#EndRegion  End Password Policy Functions                   ######
+#EndRegion  End Password Policy Functions                           ######
 ##########################################################################
 
 ##########################################################################
@@ -15563,10 +15563,10 @@ Function Request-LocalUserPasswordExpiration {
                 if ($drift) {
                     if ($PsBoundParameters.ContainsKey('policyFile')) {
                         $version = Get-VCFManager -version
-                        $command = '(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).' + $product + '.passwordExpiration'
+                        $command = "(Get-PasswordPolicyConfig -version $version -reportPath $reportPath -policyFile $policyFile ).$product.passwordExpiration"
                     } else {
                         $version = Get-VCFManager -version
-                        $command = '(Get-PasswordPolicyConfig -version $version).' + $product + '.passwordExpiration'
+                        $command = "(Get-PasswordPolicyConfig -version $version).$product.passwordExpiration"
                     }
                     $requiredConfig = Invoke-Expression $command
                 }

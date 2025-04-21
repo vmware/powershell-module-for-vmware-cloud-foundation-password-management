@@ -11,7 +11,7 @@
     RootModule        = '.\VMware.CloudFoundation.PasswordManagement.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.9.0.1005'
+    ModuleVersion     = '1.9.0.1006'
 
     # ID used to uniquely identify this module
     GUID              = '34e5a0c7-6e6e-4f72-8b3c-1c28248f8ac9'
