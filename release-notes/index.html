@@ -5175,12 +5175,29 @@
 <h1 id="release-history">Release History<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h1>
 <h2 id="v190">v1.9.0<a class="headerlink" href="#v190" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>Release Date: Not Released</p>
+<p>Release Date: 2025-04-21</p>
 </blockquote>
+<p>Documentation:</p>
+<ul>
+<li>Updated documentation to use example context. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/226">#226</a>,
+  <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/227">#227</a>,
+  <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/228">#228</a>,
+  <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/229">#229</a>,
+  <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/232">#232</a></li>
+</ul>
 <p>Chore:</p>
 <ul>
-<li>Updated <code>VMware.PowerCLI</code> module dependency from v13.2.1 to v13.3.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/225">GH-225</a></li>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.11.1 to v2.12.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/225">GH-225</a></li>
+<li>Updated <code>VMware.PowerCLI</code> module dependency from v13.2.1 to v13.3.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/225">#225</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.11.1 to v2.12.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/225">#225</a></li>
+</ul>
+<p>Refactor:</p>
+<ul>
+<li>Refactored to use an ISO 8601 style timestamp format for the file output. This format is sortable,
+  unambiguous, and compatible with most filesystems. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/238">#238</a></li>
+<li>Removed assigned but unused variables. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/234">#234</a></li>
+<li>Corrected placement of <code>$null</code> to be on the left side of equality comparisons. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/235">#235</a></li>
+<li>Corrected <code>$version</code> variable to be inside the string, not just assign it and then use its value
+  in a string literal. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/236">#236</a></li>
 </ul>
 <h2 id="v183">v1.8.3<a class="headerlink" href="#v183" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5188,13 +5205,13 @@
 </blockquote>
 <p>Bug Fix:</p>
 <ul>
-<li>Updates the <code>Update-AriaLocalUserPasswordComplexity</code> function for VMware Aria Operations for Networks history setting. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213">GH-213</a></li>
-<li>Updates the <code>Get-AriaLocalUserPasswordComplexity</code> function for VMware Aria Operations for Networks. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213">GH-213</a></li>
+<li>Updates the <code>Update-AriaLocalUserPasswordComplexity</code> function for VMware Aria Operations for Networks history setting. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213">#213</a></li>
+<li>Updates the <code>Get-AriaLocalUserPasswordComplexity</code> function for VMware Aria Operations for Networks. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/213">#213</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Added Pester tests for VMware Aria components. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/211">GH-211</a></li>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.11.0 to v2.11.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/214">GH-214</a></li>
+<li>Added Pester tests for VMware Aria components. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/211">#211</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.11.0 to v2.11.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/214">#214</a></li>
 </ul>
 <p>Refactor:</p>
 <ul>
@@ -5206,12 +5223,12 @@
 </blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Enhanced to support Photon OS 4.0 and 5.0 based appliances. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/202">GH-202</a></li>
-<li>Enhanced <code>Get-PasswordPolicyDefault</code> to support VMware Cloud Foundation 5.2. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/204">GH-204</a>, <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/206">GH-206</a></li>
+<li>Enhanced to support Photon OS 4.0 and 5.0 based appliances. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/202">#202</a></li>
+<li>Enhanced <code>Get-PasswordPolicyDefault</code> to support VMware Cloud Foundation 5.2. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/204">#204</a>, <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/206">#206</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.10.0 to v2.11.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/207">GH-207</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.10.0 to v2.11.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/207">#207</a></li>
 </ul>
 <h2 id="v181">v1.8.1<a class="headerlink" href="#v181" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5219,16 +5236,16 @@
 </blockquote>
 <p>Bugfix:</p>
 <ul>
-<li>Updated all <code>Publish-*</code> cmdlets to correctly output as JSON with using the <code>-json</code> parameter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/194">GH-194</a></li>
+<li>Updated all <code>Publish-*</code> cmdlets to correctly output as JSON with using the <code>-json</code> parameter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/194">#194</a></li>
 </ul>
 <p>Documentation:</p>
 <ul>
-<li>Updated documentation for <code>Request-AriaLocal*</code>, <code>Publish-AriaLocal*</code>, and <code>Update-AriaLocal*</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">GH-192</a></li>
-<li>Removed documentation for non-exported <code>Get-AriaLocal*</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">GH-192</a></li>
+<li>Updated documentation for <code>Request-AriaLocal*</code>, <code>Publish-AriaLocal*</code>, and <code>Update-AriaLocal*</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">#192</a></li>
+<li>Removed documentation for non-exported <code>Get-AriaLocal*</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">#192</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.9.0 to v2.10.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/195">GH-195</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.9.0 to v2.10.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/195">#195</a></li>
 </ul>
 <h2 id="v180">v1.8.0<a class="headerlink" href="#v180" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5236,21 +5253,21 @@
 </blockquote>
 <p>Breaking Change:</p>
 <ul>
-<li>Removed support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159">GH-159</a></li>
+<li>Removed support for Microsoft Windows PowerShell 5.1. Please use Microsoft PowerShell 7.2.0 or later. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/159">#159</a></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
-<li>Fixed missing account lockout policy data for SDDC Manager and vCenter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160">GH-160</a></li>
-<li>Fixed <code>VMware.PowerCLI</code> module name not being added in the required modules list of the manifest file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170">GH-170</a></li>
-<li>Fixed <code>Test-VcfPasswordManagementPrereq</code> not working while multiple module versions were present. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174">GH-174</a></li>
-<li>Fixed <code>Update-VcenterRootPasswordExpiration</code> to handle empty email string. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/177">GH-177</a></li>
+<li>Fixed missing account lockout policy data for SDDC Manager and vCenter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/160">#160</a></li>
+<li>Fixed <code>VMware.PowerCLI</code> module name not being added in the required modules list of the manifest file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/170">#170</a></li>
+<li>Fixed <code>Test-VcfPasswordManagementPrereq</code> not working while multiple module versions were present. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/174">#174</a></li>
+<li>Fixed <code>Update-VcenterRootPasswordExpiration</code> to handle empty email string. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/177">#177</a></li>
 </ul>
 <p>Enhancement:</p>
 <ul>
-<li>Added <code>5.1.1.0</code> to <code>Get-PasswordPolicyDefault</code> and <code>Get-PasswordPolicyConfig</code> to support VMware Cloud Foundation 5.1.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164">GH-164</a></li>
-<li>Added <code>PasswordRotationTestsuite</code> with sample testcase for NSX Edge Password Rotation. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/185">GH-185</a></li>
-<li>Enhanced <code>Get-PasswordPolicyDefault</code> to show summary in easily readable format. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/178">GH-178</a></li>
-<li>Added functions to retrieve password policies for each available VMware Aria product deployed in a VMware Cloud Foundation instance. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/166">GH-166</a></li>
+<li>Added <code>5.1.1.0</code> to <code>Get-PasswordPolicyDefault</code> and <code>Get-PasswordPolicyConfig</code> to support VMware Cloud Foundation 5.1.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/164">#164</a></li>
+<li>Added <code>PasswordRotationTestsuite</code> with sample testcase for NSX Edge Password Rotation. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/185">#185</a></li>
+<li>Enhanced <code>Get-PasswordPolicyDefault</code> to show summary in easily readable format. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/178">#178</a></li>
+<li>Added functions to retrieve password policies for each available VMware Aria product deployed in a VMware Cloud Foundation instance. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/166">#166</a></li>
 <li><code>Get-AriaLocalUserAccountLockout</code> cmdlet to retrieve the password account lockout for the VMware Aria product appliances local users.</li>
 <li><code>Get-AriaLocalUserPasswordComplexity</code> cmdlet to retrieve the password complexity for the VMware Aria product appliances local users.</li>
 <li><code>Get-AriaLocalUserPasswordExpiration</code> cmdlet to retrieve the password expiration policy for the specified Aria product appliances local user.</li>
@@ -5264,10 +5281,10 @@
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Added Pester tests for password rotation. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/185">GH-185</a></li>
-<li>Updated <code>VMware.PowerCLI</code> module dependency from v13.1.0 to v13.2.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179">GH-179</a></li>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.8.0 to v2.9.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179">GH-179</a></li>
-<li>Updated documentation to add products. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">GH-192</a></li>
+<li>Added Pester tests for password rotation. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/185">#185</a></li>
+<li>Updated <code>VMware.PowerCLI</code> module dependency from v13.1.0 to v13.2.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179">#179</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.8.0 to v2.9.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/179">#179</a></li>
+<li>Updated documentation to add products. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/192">#192</a></li>
 </ul>
 <h2 id="v171">v1.7.1<a class="headerlink" href="#v171" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5275,17 +5292,17 @@
 </blockquote>
 <p>Bugfix:</p>
 <ul>
-<li>Fixed returning of the object in <code>Request-VcenterPasswordComplexity</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/157">GH-157</a></li>
+<li>Fixed returning of the object in <code>Request-VcenterPasswordComplexity</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/157">#157</a></li>
 </ul>
 <p>Enhancements:</p>
 <ul>
-<li>Added support in <code>Request-NsxtEdgePasswordComplexity</code> to retrieve the password complexity policy from an non-managed NSX Edge Node. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148">GH-148</a></li>
-<li>Added support to check if the minimum length exceeds the maximum length used in a password rotation by SDDC Manager for NSX Local Managers, NSX Edges, vCenter, and ESX. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/150">GH-150</a></li>
+<li>Added support in <code>Request-NsxtEdgePasswordComplexity</code> to retrieve the password complexity policy from an non-managed NSX Edge Node. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/148">#148</a></li>
+<li>Added support to check if the minimum length exceeds the maximum length used in a password rotation by SDDC Manager for NSX Local Managers, NSX Edges, vCenter, and ESX. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/150">#150</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Updated <code>PowerVCF</code> module dependency from v2.4.0 to v2.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/154">GH-154</a></li>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.7.0 to v2.8.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/153">GH-153</a></li>
+<li>Updated <code>PowerVCF</code> module dependency from v2.4.0 to v2.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/154">#154</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.7.0 to v2.8.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/153">#153</a></li>
 </ul>
 <h2 id="v170">v1.7.0<a class="headerlink" href="#v170" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5293,7 +5310,7 @@
 </blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Added support for use of secure strings for sensitive parameters. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/139">GH-139</a></li>
+<li>Added support for use of secure strings for sensitive parameters. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/139">#139</a></li>
 </ul>
 <h2 id="v160">v1.6.0<a class="headerlink" href="#v160" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5301,17 +5318,17 @@
 </blockquote>
 <p>Bugfix:</p>
 <ul>
-<li>Updated <code>Request-WsaLocalUserPasswordComplexity</code>, and <code>Request-WsaLocalUserAccountLockout</code> to pass a version with the <code>-drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/135">GH-135</a></li>
-<li>Updated <code>Request-WsaPasswordExpiration</code>, <code>Request-WsaPasswordComplexity</code>, and <code>Request-WsaAccountLockout</code> to pass a version with the <code>-drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/131">GH-131</a></li>
+<li>Updated <code>Request-WsaLocalUserPasswordComplexity</code>, and <code>Request-WsaLocalUserAccountLockout</code> to pass a version with the <code>-drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/135">#135</a></li>
+<li>Updated <code>Request-WsaPasswordExpiration</code>, <code>Request-WsaPasswordComplexity</code>, and <code>Request-WsaAccountLockout</code> to pass a version with the <code>-drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/131">#131</a></li>
 </ul>
 <p>Enhancement:</p>
 <ul>
-<li>Added 5.1.0.0 to <code>Get-PasswordPolicyDefault</code> and <code>Get-PasswordPolicyConfig</code> to support VMware Cloud Foundation 5.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130">GH-130</a></li>
-<li>Updated <code>Update-SddcManagerPasswordComplexity</code>, <code>Update-SddcManagerAccountLockout</code>, and <code>Update-vCenterAccountLockout</code> cmdlet to support VMware Cloud Foundation 5.1 by addressing changes in Photon OS 4 for vCenter 8.0.2 and SDDC Manager 5.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130">GH-130</a></li>
+<li>Added 5.1.0.0 to <code>Get-PasswordPolicyDefault</code> and <code>Get-PasswordPolicyConfig</code> to support VMware Cloud Foundation 5.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130">#130</a></li>
+<li>Updated <code>Update-SddcManagerPasswordComplexity</code>, <code>Update-SddcManagerAccountLockout</code>, and <code>Update-vCenterAccountLockout</code> cmdlet to support VMware Cloud Foundation 5.1 by addressing changes in Photon OS 4 for vCenter 8.0.2 and SDDC Manager 5.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/130">#130</a></li>
 </ul>
 <p>Documentation:</p>
 <ul>
-<li>Updated example <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/128">GH-128</a></li>
+<li>Updated example <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/128">#128</a></li>
 </ul>
 <h2 id="v150">v1.5.0<a class="headerlink" href="#v150" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5319,13 +5336,13 @@
 </blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Added <code>Invoke-PasswordRotationManager</code>, <code>Save-ClarityReportNavigationForRotation</code> and <code>Set-CreateReportDirectoryRotation</code> cmdlets and updated <code>Publish-PasswordRotationPolicy</code> cmdlet to generate report for password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122">GH-122</a></li>
-<li>Updated <code>Invoke-PasswordPolicyManager</code>, <code>Get-PasswordPolicyDefault</code>, <code>Get-PasswordPolicyConfig</code>, <code>Request-SddcManagerPasswordComplexity</code>, <code>Request-SddcManagerAccountLockout</code>, <code>Request-SsoAccountLockout</code>, <code>Request-VcenterPasswordExpiration</code>, <code>Request-VcenterPasswordComplexity</code>, <code>Request-VcenterAccountLockout</code>, <code>Request-VcenterRootPasswordExpiration</code>, <code>Request-NsxtManagerPasswordExpiration</code>, <code>Request-NsxtManagerPasswordComplexity</code>, <code>Request-NsxtManagerAccountLockout</code>, <code>Request-NsxtEdgePasswordExpiration</code>, <code>Request-NsxtEdgePasswordComplexity</code>, <code>Request-NsxtEdgeAccountLockout</code>, <code>Request-EsxiPasswordExpiration</code>, <code>Request-EsxiPasswordComplexity</code>, <code>Request-EsxiAccountLockout</code> and <code>Request-LocalUserPasswordExpiration</code> cmdlet to simplify the logic for reading version information. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122">GH-122</a></li>
-<li>Added Update-PasswordRotationPolicy cmdlet to update the password rotation settings for credentials managed by SDDC Manager. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108">GH-108</a></li>
+<li>Added <code>Invoke-PasswordRotationManager</code>, <code>Save-ClarityReportNavigationForRotation</code> and <code>Set-CreateReportDirectoryRotation</code> cmdlets and updated <code>Publish-PasswordRotationPolicy</code> cmdlet to generate report for password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122">#122</a></li>
+<li>Updated <code>Invoke-PasswordPolicyManager</code>, <code>Get-PasswordPolicyDefault</code>, <code>Get-PasswordPolicyConfig</code>, <code>Request-SddcManagerPasswordComplexity</code>, <code>Request-SddcManagerAccountLockout</code>, <code>Request-SsoAccountLockout</code>, <code>Request-VcenterPasswordExpiration</code>, <code>Request-VcenterPasswordComplexity</code>, <code>Request-VcenterAccountLockout</code>, <code>Request-VcenterRootPasswordExpiration</code>, <code>Request-NsxtManagerPasswordExpiration</code>, <code>Request-NsxtManagerPasswordComplexity</code>, <code>Request-NsxtManagerAccountLockout</code>, <code>Request-NsxtEdgePasswordExpiration</code>, <code>Request-NsxtEdgePasswordComplexity</code>, <code>Request-NsxtEdgeAccountLockout</code>, <code>Request-EsxiPasswordExpiration</code>, <code>Request-EsxiPasswordComplexity</code>, <code>Request-EsxiAccountLockout</code> and <code>Request-LocalUserPasswordExpiration</code> cmdlet to simplify the logic for reading version information. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/122">#122</a></li>
+<li>Added Update-PasswordRotationPolicy cmdlet to update the password rotation settings for credentials managed by SDDC Manager. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108">#108</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Updated <code>PowerVCF</code> module dependency from v2.3.0 to v2.4.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108">GH-108</a></li>
+<li>Updated <code>PowerVCF</code> module dependency from v2.3.0 to v2.4.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/108">#108</a></li>
 </ul>
 <h2 id="v140">v1.4.0<a class="headerlink" href="#v140" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5333,22 +5350,22 @@
 </blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Added <code>Request-SddcManagerPasswordExpiration</code> cmdlet to retrieve the password expiration policy for the default local users on an SDDC Manager appliance. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97">GH-97</a></li>
-<li>Added <code>Update-SddcManagerPasswordExpiration</code> cmdlet to update the password expiration policy for the default local users on an SDDC Manager appliance. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97">GH-97</a></li>
-<li>Added <code>Request-PasswordRotationPolicy</code> cmdlet to retrieve the password rotation settings for accounts managed by SDDC Manager. Results can be filtered by resource type or workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100">GH-100</a></li>
-<li>Added <code>Publish-PasswordRotationPolicy</code> cmdlet to publish the password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by resource type or workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100">GH-100</a></li>
+<li>Added <code>Request-SddcManagerPasswordExpiration</code> cmdlet to retrieve the password expiration policy for the default local users on an SDDC Manager appliance. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97">#97</a></li>
+<li>Added <code>Update-SddcManagerPasswordExpiration</code> cmdlet to update the password expiration policy for the default local users on an SDDC Manager appliance. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/97">#97</a></li>
+<li>Added <code>Request-PasswordRotationPolicy</code> cmdlet to retrieve the password rotation settings for accounts managed by SDDC Manager. Results can be filtered by resource type or workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100">#100</a></li>
+<li>Added <code>Publish-PasswordRotationPolicy</code> cmdlet to publish the password rotation settings for accounts managed by SDDC Manager in HTML or JSON format. Results can be filtered by resource type or workload domain. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/100">#100</a></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
-<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for VMware Cloud Foundation 4.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95">GH-95</a></li>
-<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for VMware Cloud Foundation 4.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95">GH-95</a></li>
-<li>Updated <code>Invoke-PasswordPolicyManager</code>, <code>Start-PasswordPolicyConfig</code>, and <code>Get-PasswordPolicyConfig</code> to better handle use of <code>Test-Path</code> and <code>Get-Content</code> cmdlets when verifing and consuming the password policy configuration JSON file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/98">GH-98</a></li>
-<li>Updated <code>Test-PasswordPolicyConfig</code> to better handle validation of ESX host password complexity policy in the password policy configuration JSON file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/99">GH-99</a></li>
+<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for VMware Cloud Foundation 4.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95">#95</a></li>
+<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for VMware Cloud Foundation 4.4.1. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/95">#95</a></li>
+<li>Updated <code>Invoke-PasswordPolicyManager</code>, <code>Start-PasswordPolicyConfig</code>, and <code>Get-PasswordPolicyConfig</code> to better handle use of <code>Test-Path</code> and <code>Get-Content</code> cmdlets when verifing and consuming the password policy configuration JSON file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/98">#98</a></li>
+<li>Updated <code>Test-PasswordPolicyConfig</code> to better handle validation of ESX host password complexity policy in the password policy configuration JSON file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/99">#99</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Updated <code>VMware.PowerCLI</code> module dependency from v13.0.0 to v13.1.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102">GH-102</a></li>
-<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.5.0 to v2.6.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102">GH-102</a></li>
+<li>Updated <code>VMware.PowerCLI</code> module dependency from v13.0.0 to v13.1.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102">#102</a></li>
+<li>Updated <code>PowerValidatedSolutions</code> module dependency from v2.5.0 to v2.6.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/102">#102</a></li>
 </ul>
 <h2 id="v130">v1.3.0<a class="headerlink" href="#v130" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5356,30 +5373,30 @@
 </blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Added the <code>RequiredModules</code> key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
-<li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
+<li>Added the <code>RequiredModules</code> key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">#63</a></li>
+<li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">#63</a></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
-<li>Updated <code>Request-SsoPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Request-SsoAccountLockout</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Request-EsxiPasswordExpiration</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Request-EsxiPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Request-EsxiAccountLockout</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Update-EsxiPasswordExpiration</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">GH-62</a></li>
-<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for VMware Cloud Foundation 4.5.2. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91">GH-91</a></li>
-<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for VMware Cloud Foundation 4.5.2. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91">GH-91</a></li>
-<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for VMware Cloud Foundation 4.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
-<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for VMware Cloud Foundation 4.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
-<li>Updated <code>Invoke-PasswordPolicyManager</code> to address version support updates and JSON file depth handling. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">GH-71</a></li>
-<li>Updated <code>Request-NsxtEdgePasswordExpiration</code> to pass the <code>-transportNodeId</code> parameter to <code>Get-NsxtApplianceUser</code> to retrieve the NSX Edge node ID. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76">GH-76</a></li>
-<li>Updated <code>Update-NsxtEdgePasswordExpiration</code> to pass the <code>-transportNodeId</code> parameter to <code>Get-NsxtApplianceUser</code> and <code>Set-NsxtApplianceUserExpirationPolicy</code> to retrieve the NSX Edge node ID. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76">GH-76</a></li>
+<li>Updated <code>Request-SsoPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">#62</a></li>
+<li>Updated <code>Request-SsoAccountLockout</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">#62</a></li>
+<li>Updated <code>Request-EsxiPasswordExpiration</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">#62</a></li>
+<li>Updated <code>Request-EsxiPasswordComplexity</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">#62</a></li>
+<li>Updated <code>Request-EsxiAccountLockout</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">#62</a></li>
+<li>Updated <code>Update-EsxiPasswordExpiration</code> to use <code>Test-VCFConnection</code> instead of <code>Test-Connection</code> to check the connection. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/62">#62</a></li>
+<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for VMware Cloud Foundation 4.5.2. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91">#91</a></li>
+<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for VMware Cloud Foundation 4.5.2. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/91">#91</a></li>
+<li>Updated <code>Get-PasswordPolicyDefault</code> to include support for VMware Cloud Foundation 4.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">#71</a></li>
+<li>Updated <code>Get-PasswordPolicyConfig</code> to include support for VMware Cloud Foundation 4.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">#71</a></li>
+<li>Updated <code>Invoke-PasswordPolicyManager</code> to address version support updates and JSON file depth handling. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/71">#71</a></li>
+<li>Updated <code>Request-NsxtEdgePasswordExpiration</code> to pass the <code>-transportNodeId</code> parameter to <code>Get-NsxtApplianceUser</code> to retrieve the NSX Edge node ID. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76">#76</a></li>
+<li>Updated <code>Update-NsxtEdgePasswordExpiration</code> to pass the <code>-transportNodeId</code> parameter to <code>Get-NsxtApplianceUser</code> and <code>Set-NsxtApplianceUserExpirationPolicy</code> to retrieve the NSX Edge node ID. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/76">#76</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Added the <code>RequiredModules</code> key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
-<li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
-<li>Updated <code>PowerValidatedSolution</code> module dependency from v2.4.0 to v2.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">GH-63</a></li>
+<li>Added the <code>RequiredModules</code> key to the module manifest to specify the minimum dependencies required to install and run the PowerShell module. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">#63</a></li>
+<li>Updated <code>Test-VcfPasswordManagementPrereq</code> to verify that the minimum dependencies are met to run the PowerShell module based on the module's manifest. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">#63</a></li>
+<li>Updated <code>PowerValidatedSolution</code> module dependency from v2.4.0 to v2.5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/63">#63</a></li>
 </ul>
 <h2 id="v120">v1.2.0<a class="headerlink" href="#v120" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5387,65 +5404,65 @@
 </blockquote>
 <p>Enhancement:</p>
 <ul>
-<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> to handle VMware Cloud Foundation 5.0 and NSX 4.x changes. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Get-PasswordPolicyDefault</code> to handle VMware Cloud Foundation versions as defaults are changing accordingly. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Get-PasswordPolicyConfig</code> to handled version parameter as it internally calls <code>Get-PasswordPolicyDefault</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Test-PasswordPolicyConfig</code> to check if right version of the json file is used for comparison. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SddcManagerPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SddcManagerAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SsoPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SsoPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SsoAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-VcenterPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-VcenterPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-VcenterAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-VcenterRootPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> to handle password complexity policies to be read from API than static file for VCF5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-NsxtManagerAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> mainly, where all new parameters added with reference to NSX 4.X, are handled and also API is used to get all configurations than static common-password file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-NsxtEdgePasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-NsxtEdgePasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-NsxtEdgeAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-EsxiPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-EsxiPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-EsxiAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-LocalUserPasswordExpirationt</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-LocalUserPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-WsaLocalUserAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-WsaLocalUserPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-WsaLocalUserPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Publish-EsxiPasswordPolicy</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-EsxiAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-EsxiPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-EsxiPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-NsxtEdgePasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-VcenterAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-SsoPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-SsoPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-SsoAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SsoAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SsoPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Request-SsoPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Update-SddcManagerPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">GH-42</a></li>
-<li>Enhanced <code>Get-PasswordPolicyConfig</code> as there is no significance of default value while parameter is mandatory. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-45</a></li>
-<li>Enhanced <code>Get-PasswordPolicyDefault</code> as there is no significance of default value while parameter is mandatory. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-45</a></li>
-<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> cmdlet to handle connection to management domain vCenter instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Enhanced <code>Request-LocalUserPasswordExpiration</code> cmdlet to handle connection to management domain vCenter instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Enhanced <code>Update-LocalUserPasswordComplexity</code> cmdlet to handle connection to management domain vCenter instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Enhanced <code>Get-PasswordPolicyConfig</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Enhanced <code>Get-PasswordPolicyDefault</code> cmdlet to handle <code>jsonFile</code> parameter cleanly. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51">GH-51</a></li>
-<li>Enhanced <code>Publish-SSO*</code> cmdlet to handle isolated workload domain in VMware Cloud Foundation 5.0 environment. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51">GH-51</a></li>
-<li>Enhanced <code>Get-PasswordPolicyDefault</code> cmdlet to handle existing JSON file overriding using <code>force</code> parameter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/52">GH-52</a></li>
-<li>Enhanced <code>Update-SsoPasswordComplexity</code> cmdlet to add validation on parameter values. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">GH-56</a></li>
+<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> to handle VMware Cloud Foundation 5.0 and NSX 4.x changes. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Get-PasswordPolicyDefault</code> to handle VMware Cloud Foundation versions as defaults are changing accordingly. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Get-PasswordPolicyConfig</code> to handled version parameter as it internally calls <code>Get-PasswordPolicyDefault</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Test-PasswordPolicyConfig</code> to check if right version of the json file is used for comparison. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SddcManagerPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SddcManagerAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SsoPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SsoPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SsoAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-VcenterPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-VcenterPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-VcenterAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-VcenterRootPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> to handle password complexity policies to be read from API than static file for VCF5.0. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-NsxtManagerAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> mainly, where all new parameters added with reference to NSX 4.X, are handled and also API is used to get all configurations than static common-password file. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-NsxtEdgePasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-NsxtEdgePasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-NsxtEdgeAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-EsxiPasswordExpiration</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-EsxiPasswordComplexity</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-EsxiAccountLockout</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-LocalUserPasswordExpirationt</code> to handle VMware Cloud Foundation version specific JSON file during drift option. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-LocalUserPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-WsaLocalUserAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-WsaLocalUserPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-WsaLocalUserPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Publish-EsxiPasswordPolicy</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-EsxiAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-EsxiPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-EsxiPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-NsxtEdgePasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-VcenterAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-SsoPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-SsoPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-SsoAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SsoAccountLockout</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SsoPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Request-SsoPasswordExpiration</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Update-SddcManagerPasswordComplexity</code> to handle disconnects gracefully. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/42">#42</a></li>
+<li>Enhanced <code>Get-PasswordPolicyConfig</code> as there is no significance of default value while parameter is mandatory. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">#45</a></li>
+<li>Enhanced <code>Get-PasswordPolicyDefault</code> as there is no significance of default value while parameter is mandatory. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">#45</a></li>
+<li>Enhanced <code>Update-NsxtManagerPasswordComplexity</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Enhanced <code>Request-NsxtManagerPasswordComplexity</code> cmdlet to handle connection to management domain vCenter instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Enhanced <code>Request-LocalUserPasswordExpiration</code> cmdlet to handle connection to management domain vCenter instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Enhanced <code>Update-LocalUserPasswordComplexity</code> cmdlet to handle connection to management domain vCenter instance as NSX Manager virtual machines are placed on the management network. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Enhanced <code>Get-PasswordPolicyConfig</code> cmdlet to handle <code>hash_algorithm</code> parameter for NSX 4.x. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Enhanced <code>Get-PasswordPolicyDefault</code> cmdlet to handle <code>jsonFile</code> parameter cleanly. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51">#51</a></li>
+<li>Enhanced <code>Publish-SSO*</code> cmdlet to handle isolated workload domain in VMware Cloud Foundation 5.0 environment. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/51">#51</a></li>
+<li>Enhanced <code>Get-PasswordPolicyDefault</code> cmdlet to handle existing JSON file overriding using <code>force</code> parameter. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/52">#52</a></li>
+<li>Enhanced <code>Update-SsoPasswordComplexity</code> cmdlet to add validation on parameter values. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">#56</a></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
-<li>Fixed default values for <code>unlockInterval</code> and <code>rootUnlockInterval</code> for <code>VcenterLocalAccountLockout</code> setting in <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">GH-47</a></li>
-<li>Fixed <code>Request-LocalUserPasswordExpiration</code> cmdlet to display the value for <code>minDays</code> while <code>drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">GH-49</a></li>
-<li>Fixed small typo in <code>Request-SsoPasswordComplexity</code> and <code>Request-WsaPasswordComplexity</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">GH-56</a></li>
+<li>Fixed default values for <code>unlockInterval</code> and <code>rootUnlockInterval</code> for <code>VcenterLocalAccountLockout</code> setting in <code>Get-PasswordPolicyDefault</code> cmdlet. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/45">#47</a></li>
+<li>Fixed <code>Request-LocalUserPasswordExpiration</code> cmdlet to display the value for <code>minDays</code> while <code>drift</code> option is used. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/49">#49</a></li>
+<li>Fixed small typo in <code>Request-SsoPasswordComplexity</code> and <code>Request-WsaPasswordComplexity</code> cmdlets. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/56">#56</a></li>
 </ul>
 <h2 id="v110">v1.1.0<a class="headerlink" href="#v110" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -5453,36 +5470,36 @@
 </blockquote>
 <p>Bugfix:</p>
 <ul>
-<li>Fixed the placement for the use of <code>Disconnect-SSOserver</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/26">GH-26</a></li>
-<li>Fixed drift option error for <code>Request-VcenterAccountLockout</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32">GH-32</a></li>
-<li>Exported <code>Get-PasswordPolicyConfig</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32">GH-32</a></li>
-<li>Fixed drift option error for <code>Publish-VcenterLocalAccountLockout</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34">GH-34</a></li>
-<li>Fixed drift option error for <code>Publish-VcenterLocalPasswordExpiration</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34">GH-34</a></li>
-<li>Fixed drift option error for <code>Publish-VcenterLocalPasswordComplexity</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34">GH-34</a></li>
-<li>Handled empty email string values and "0" value for WSADirectory feilds coming from JSON file <code>Test-PasswordPolicyConfig</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36">GH-36</a></li>
-<li>Corrected Description in <code>Start-PasswordPolicyConfig</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36">GH-36</a></li>
+<li>Fixed the placement for the use of <code>Disconnect-SSOserver</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/26">#26</a></li>
+<li>Fixed drift option error for <code>Request-VcenterAccountLockout</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32">#32</a></li>
+<li>Exported <code>Get-PasswordPolicyConfig</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/32">#32</a></li>
+<li>Fixed drift option error for <code>Publish-VcenterLocalAccountLockout</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34">#34</a></li>
+<li>Fixed drift option error for <code>Publish-VcenterLocalPasswordExpiration</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34">#34</a></li>
+<li>Fixed drift option error for <code>Publish-VcenterLocalPasswordComplexity</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/34">#34</a></li>
+<li>Handled empty email string values and "0" value for WSADirectory feilds coming from JSON file <code>Test-PasswordPolicyConfig</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36">#36</a></li>
+<li>Corrected Description in <code>Start-PasswordPolicyConfig</code>. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/36">#36</a></li>
 </ul>
 <p>Enhancement:</p>
 <ul>
-<li>Updated <code>Update-SDDCManagerPasswordComplexity</code> to handle all structural changes of the common-password file on SDDC Manager. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/28">GH-28</a></li>
-<li>Updated <code>Update-VcenterAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">GH-29</a></li>
-<li>Updated <code>Request-VcenterPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">GH-29</a></li>
-<li>Updated <code>Request-VcenterAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">GH-29</a></li>
-<li>Updated <code>Update-VcenterPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">GH-29</a></li>
-<li>Updated <code>Update-SsoPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">GH-30</a></li>
-<li>Updated <code>Update-SsoAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">GH-30</a></li>
-<li>Updated <code>Update-SsoPasswordExpiration</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">GH-30</a></li>
-<li>Updated <code>Request-SsoAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">GH-30</a></li>
-<li>Updated <code>Request-SsoPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">GH-30</a></li>
-<li>Updated <code>Request-SsoPasswordExpiration</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">GH-30</a></li>
+<li>Updated <code>Update-SDDCManagerPasswordComplexity</code> to handle all structural changes of the common-password file on SDDC Manager. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/28">#28</a></li>
+<li>Updated <code>Update-VcenterAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">#29</a></li>
+<li>Updated <code>Request-VcenterPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">#29</a></li>
+<li>Updated <code>Request-VcenterAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">#29</a></li>
+<li>Updated <code>Update-VcenterPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/29">#29</a></li>
+<li>Updated <code>Update-SsoPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">#30</a></li>
+<li>Updated <code>Update-SsoAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">#30</a></li>
+<li>Updated <code>Update-SsoPasswordExpiration</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">#30</a></li>
+<li>Updated <code>Request-SsoAccountLockout</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">#30</a></li>
+<li>Updated <code>Request-SsoPasswordComplexity</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">#30</a></li>
+<li>Updated <code>Request-SsoPasswordExpiration</code> to handle isolated VI Workload Domains. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/30">#30</a></li>
 </ul>
 <p>Chore:</p>
 <ul>
-<li>Added <code>.PARAMETER</code> entries for user-facing functions. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/37">GH-37</a></li>
+<li>Added <code>.PARAMETER</code> entries for user-facing functions. <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/pull/37">#37</a></li>
 </ul>
 <blockquote>
 <p><strong>Note</strong></p>
-<p>Whilst this release will support VMware Cloud Foundation 5.0, it does not support password complexity for NSX 4.x. Please use the NSX 4.x product documentation to configure password complexity. Reference: <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues/38">GH-38</a></p>
+<p>Whilst this release will support VMware Cloud Foundation 5.0, it does not support password complexity for NSX 4.x. Please use the NSX 4.x product documentation to configure password complexity. Reference: <a href="https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-password-management/issues/38">#38</a></p>
 </blockquote>
 <h2 id="v100">v1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h2>
 <blockquote>
