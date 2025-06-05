@@ -59,16 +59,22 @@ The module provides coverage for the following:
 
 ## Requirements
 
-### Platforms
+### VMware Cloud Foundation
 
-The following table lists the supported platforms for this module.
+The following table lists the supported releases for this module.
 
 Platform                                                     | Support                             | Reference
 -------------------------------------------------------------|-------------------------------------|--------------------------------------------------------------------------------------
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.2 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-2]
 :fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.1 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-1]
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-0]
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-4-5]
+
+???+ tip "Support for Newer Major Releases"
+
+    This module will **only** be sustained for supported versions of the VMware Cloud Foundation releases listed above to address critical issues. You can find general details on supported versions in the [Broadcom Product Lifecycle](https://support.broadcom.com/group/ecx/productlifecycle).
+
+    Please note that this module **will not** provide support or new enhancements for future major releases of VMware Cloud Foundation. If you're planning to upgrade to those newer releases, we encourage you to explore alternative in-product or custom automation solutions.
+
+    We truly appreciate your reliance on and support of this module. Thank you for your understanding as we transition to sustaining the module for these specific major versions.
 
 ### PowerShell
 
@@ -91,8 +97,6 @@ PowerShell Module                                    | Version   | Publisher | R
 
 [docs-vmware-cloud-foundation-ppm-5-2]: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-operations-5-2.html
 [docs-vmware-cloud-foundation-ppm-5-1]: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-1/vmware-cloud-foundation-operations-5-1.html
-[docs-vmware-cloud-foundation-ppm-5-0]: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-0/vmware-cloud-foundation-operations-5-0.html
-[docs-vmware-cloud-foundation-ppm-4-5]: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/4-5/vmware-cloud-foundation-operations-4-5.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
 [psgallery-module-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [psgallery-module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF

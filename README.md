@@ -24,9 +24,11 @@ workload domain.
 - Update password policies seamlessly using a password policy configuration file.
 - Create comprehensive password rotation reports for all accounts managed by SDDC Manager.
 
+For details on specific VMware Cloud Foundation versions supported by this module, please refer to the [documentation][docs-module].
+
 ## Documentation
 
-For detailed instructions on using this module, refer to the [official documentation][docs-module].
+For detailed instructions on using this module, refer to the [documentation][docs-module].
 
 ## Contributing
 
