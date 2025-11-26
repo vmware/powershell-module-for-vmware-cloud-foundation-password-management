@@ -2118,7 +2118,11 @@ Function Save-ClarityReportNavigation {
             <nav class="subnav">
             <ul class="nav">
             <li class="nav-item">
+<<<<<<< HEAD
                 <a class="nav-link active" href="">Password Policy</a>
+=======
+                <a class="nav-link active" href="">Password Policy Manager</a>
+>>>>>>> origin/main
             </li>
             </ul>
         </nav>
@@ -2131,6 +2135,7 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-password-expiration">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-password-expiration">vCenter Single Sign-On</a></li>
+<<<<<<< HEAD
                     <li><a class="nav-link" href="#vcenter-password-expiration">vCenter</a></li>
                     <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
@@ -2145,6 +2150,15 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
                     <li><a class="nav-link" href="#local-wsa-directory-password-expiration">Local Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#local-wsa-local-password-expiration">Local Workspace ONE (Local)</a></li>
+=======
+                    <li><a class="nav-link" href="#vcenter-password-expiration">vCenter Server</a></li>
+                    <li><a class="nav-link" href="#vcenter-password-expiration-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#nsxmanager-password-expiration">NSX Manager</a></li>
+                    <li><a class="nav-link" href="#nsxedge-password-expiration">NSX  Edge</a></li>
+                    <li><a class="nav-link" href="#esxi-password-expiration">ESXi</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-password-expiration">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-password-expiration">Workspace ONE (Local)</a></li>
+>>>>>>> origin/main
                 </ul>
             </section>
             <section class="nav-group collapsible">
@@ -2153,6 +2167,7 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-password-complexity">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-password-complexity">vCenter Single Sign-On</a></li>
+<<<<<<< HEAD
                     <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter</a></li>
                     <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
@@ -2166,6 +2181,14 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
                     <li><a class="nav-link" href="#local-wsa-directory-password-complexity">Local Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#local-wsa-local-password-complexity">Local Workspace ONE (Local)</a></li>
+=======
+                    <li><a class="nav-link" href="#vcenter-password-complexity-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#nsxmanager-password-complexity">NSX Manager</a></li>
+                    <li><a class="nav-link" href="#nsxedge-password-complexity">NSX Edge</a></li>
+                    <li><a class="nav-link" href="#esxi-password-complexity">ESXi</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-password-complexity">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-password-complexity">Workspace ONE (Local)</a></li>
+>>>>>>> origin/main
                 </ul>
             </section>
             <section class="nav-group collapsible">
@@ -2174,6 +2197,7 @@ Function Save-ClarityReportNavigation {
                 <ul class="nav-list">
                     <li><a class="nav-link" href="#sddcmanager-account-lockout">SDDC Manager</a></li>
                     <li><a class="nav-link" href="#sso-account-lockout">vCenter Single Sign-On</a></li>
+<<<<<<< HEAD
                     <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter</a></li>
                     <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
                     <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
@@ -2187,6 +2211,14 @@ Function Save-ClarityReportNavigation {
                     <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
                     <li><a class="nav-link" href="#local-wsa-directory-account-lockout">Local Workspace ONE (Directory)</a></li>
                     <li><a class="nav-link" href="#local-wsa-local-account-lockout">Local Workspace ONE (Local)</a></li>
+=======
+                    <li><a class="nav-link" href="#vcenter-account-lockout-local">vCenter Server (Local)</a></li>
+                    <li><a class="nav-link" href="#nsxmanager-account-lockout">NSX Manager</a></li>
+                    <li><a class="nav-link" href="#nsxedge-account-lockout">NSX Edge</a></li>
+                    <li><a class="nav-link" href="#esxi-account-lockout">ESXi</a></li>
+                    <li><a class="nav-link" href="#wsa-directory-account-lockout">Workspace ONE (Directory)</a></li>
+                    <li><a class="nav-link" href="#wsa-local-account-lockout">Workspace ONE (Local)</a></li>
+>>>>>>> origin/main
                 </ul>
             </section>
         </section>
