@@ -10,7 +10,7 @@
 [<img src="https://img.shields.io/powershellgallery/v/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery">][psgallery-module]&nbsp;&nbsp;
 <img src="https://img.shields.io/powershellgallery/dt/VMware.CloudFoundation.PasswordManagement?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell Gallery Downloads">
 
-> [!Project Archived]
+> [!IMPORTANT]
 
 > `VMware.CloudFoundation.PasswordManagement` has been archived no further updates will be made.
 
