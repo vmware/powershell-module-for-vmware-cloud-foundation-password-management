@@ -24,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Request-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
 ```
 
 This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain.
@@ -32,7 +32,7 @@ This example retrieves the password expiration policy for all users for the NSX 
 ### Example 2
 
 ```powershell
-Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and checks the configuration drift using the provided configuration JSON.
@@ -40,7 +40,7 @@ This example retrieves the password expiration policy for all users for the NSX 
 ### Example 3
 
 ```powershell
-Request-NsxtEdgePasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -drift
+Request-NsxtEdgePasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -drift
 ```
 
 This example retrieves the password expiration policy for all users for the NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
@@ -161,4 +161,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

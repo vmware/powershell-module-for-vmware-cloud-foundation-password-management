@@ -1,30 +1,82 @@
 # Installing the Module
 
-Verify that your system has a [supported edition and version](/powershell-module-for-vmware-cloud-foundation-password-management/#powershell) of PowerShell installed.
+Verify that your system has a [supported edition and version](index.md#powershell) of PowerShell installed.
 
-Install the PowerShell [module dependencies](/powershell-module-for-vmware-cloud-foundation-password-management/#module-dependencies) from the PowerShell Gallery by running the following commands:
+=== ":material-pipe: &nbsp; Connected Environment"
 
-```powershell
---8<-- "./docs/snippets/install-module.ps1"
-```
+    For environments connected to the Internet, you can install the [module dependencies](index.md#module-dependencies) from the PowerShell Gallery by running the following commands in the PowerShell console:
 
-If using PowerShell Core, import the modules before proceeding:
+    ```powershell
+    --8<-- "./docs/snippets/install-module.ps1"
+    ```
 
-For example:
+    Import the modules before proceeding:
 
-```powershell
---8<-- "./docs/snippets/import-module.ps1"
-```
+    For example:
 
-To verify the module dependencies are installed, run the following commands in the PowerShell console.
+    ```powershell
+    --8<-- "./docs/snippets/import-module.ps1"
+    ```
 
-**Example**:
+    To verify the module dependencies are installed, run the following commands in the PowerShell console.
 
-```powershell
-Test-VcfPasswordManagementPrereq
-```
+    **Example**:
 
-:material-information-slab-circle: &nbsp; [Reference](/powershell-module-for-vmware-cloud-foundation-password-management/documentation/functions/Test-VcfPasswordManagementPrereq/)
+    ```powershell
+    Test-VcfPasswordManagementPrereq
+    ```
+
+=== ":material-pipe-disconnected: &nbsp; Disconnected Environment"
+
+    For environments disconnected from the Internet _(e.g., dark-site, air-gapped)_, you can save the [module dependencies](index.md#module-dependencies) from the PowerShell Gallery by running the following commands in the PowerShell console:
+
+    === ":fontawesome-brands-windows: &nbsp; Windows"
+
+        From a system with an Internet connection, save the module dependencies from the PowerShell Gallery by running the following commands in the PowerShell console:
+
+        ```powershell
+        --8<-- "./docs/snippets/save-module-local-windows.ps1"
+        ```
+
+        From the system with the Internet connection, copy the module dependencies to a target system by running the following commands in the PowerShell console:
+
+        ```powershell
+        --8<-- "./docs/snippets/copy-module-local-windows.ps1"
+        ```
+
+        On the target system, import the module dependencies by running the following commands in the PowerShell console:
+
+        ```powershell
+        --8<-- "./docs/snippets/import-module.ps1"
+        ```
+
+    === ":fontawesome-brands-linux: &nbsp; Linux"
+
+        Prerequisite for module install on Linux Machine
+
+        ```bash
+        --8<-- "./docs/snippets/pre-req-linux.sh"
+        ```
+
+        From a system with an Internet connection, save the module dependencies from the PowerShell Gallery by running the following commands in the PowerShell console:
+
+        ```powershell
+        --8<-- "./docs/snippets/save-module-local-linux.ps1"
+        ```
+
+        From the system with an Internet connection, copy the module dependencies to a target system by running the following commands in the PowerShell console:
+
+        ```bash
+        --8<-- "./docs/snippets/copy-module-local-linux.sh"
+        ```
+
+        On the target system, import the module dependencies by running the following commands in the PowerShell console:
+
+        ```powershell
+        --8<-- "./docs/snippets/import-module-local-linux.ps1"
+        ```
+
+:material-information-slab-circle: &nbsp; [Reference](./documentation/functions/Test-VcfPasswordManagementPrereq.md)
 
 Once installed, any cmdlets associated with `VMware.CloudFoundation.PasswordManagement` and the its dependencies will be available for use.
 

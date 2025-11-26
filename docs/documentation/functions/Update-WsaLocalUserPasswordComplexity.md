@@ -4,8 +4,6 @@
 
 Updates the local user password complexity policy for Workspace ONE Access.
 
---8<-- "./docs/snippets/wsa-cmdlet-tip.md"
-
 ## Syntax
 
 ```powershell
@@ -18,7 +16,7 @@ The `Update-WsaLocalUserPasswordComplexity` cmdlet configures the local user pas
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the password complexity policy
 
 ## Examples
@@ -26,7 +24,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-WsaLocalUserPasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -minLength 1 -history 5 -maxRetry 3
+Update-WsaLocalUserPasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -minLength 1 -history 5 -maxRetry 3
 ```
 
 This example configures the local user password complexity policy for Workspace ONE Access.
@@ -163,4 +161,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

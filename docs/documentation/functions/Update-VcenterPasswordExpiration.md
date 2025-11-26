@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Updates the global password expiration policy for a vCenter Server instance.
+Updates the global password expiration policy for a vCenter instance.
 
 ## Syntax
 
@@ -12,11 +12,11 @@ Update-VcenterPasswordExpiration [-server] <String> [-user] <String> [-pass] <St
 
 ## Description
 
-The `Update-VcenterPasswordExpiration` cmdlet configures the global password expiration policy of a vCenter Server.
+The `Update-VcenterPasswordExpiration` cmdlet configures the global password expiration policy of a vCenter instance.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the global password expiration policy
 
 ## Examples
@@ -24,10 +24,10 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-VcenterPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -maxDays 999 -minDays 0 -warnDays 14
+Update-VcenterPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -maxDays 999 -minDays 0 -warnDays 14
 ```
 
-This example configures the global password expiration policy for a vCenter Server instance.
+This example configures the global password expiration policy for a vCenter instance.
 
 ## Parameters
 
@@ -145,4 +145,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

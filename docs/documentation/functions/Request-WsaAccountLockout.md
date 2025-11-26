@@ -22,15 +22,15 @@ The `Request-WsaAccountLockout` cmdlet retrieves the Workspace ONE Access accoun
 ### Example 1
 
 ```powershell
-Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
+Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password]
 ```
 
-This example retrieves the account lockout policy for Workspace ONE Access instance sfo-wsa01.
+This example retrieves the account lockout policy for Workspace ONE Access instance.
 
 ### Example 2
 
 ```powershell
-Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
@@ -38,7 +38,7 @@ This example retrieves the local user password complexity policy for Workspace O
 ### Example 3
 
 ```powershell
-Request-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
+Request-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
@@ -143,4 +143,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

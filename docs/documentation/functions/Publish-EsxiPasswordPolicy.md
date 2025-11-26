@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Publishes the password policies for ESXi hosts for a workload domain or all workload domains.
+Publishes the password policies for ESX hosts for a workload domain or all workload domains.
 
 ## Syntax
 
@@ -20,78 +20,78 @@ Publish-EsxiPasswordPolicy -server <String> -user <String> -pass <String> -polic
 
 ## Description
 
-The `Publish-EsxiPasswordPolicy` cmdlet retrieves the requested password policy for all ESXi hosts and convert the output to HTML.
+The `Publish-EsxiPasswordPolicy` cmdlet retrieves the requested password policy for all ESX hosts and convert the output to HTML.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Retrieves the requested password policy for all ESXi hosts and converts to HTML
+- Validates that network connectivity and authentication is possible to vCenter
+- Retrieves the requested password policy for all ESX hosts and converts to HTML
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -allDomains
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
 ```
 
-This example returns password expiration policy for all ESXi hosts across all for a workload domain.
+This example returns password expiration policy for all ESX hosts across all for a workload domain.
 
 ### Example 2
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name]
 ```
 
-This example returns password expiration policy for all ESXi hosts for a workload domain.
+This example returns password expiration policy for all ESX hosts for a workload domain.
 
 ### Example 3
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -allDomains
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
 ```
 
-This example returns password complexity policy for all ESXi hosts across all for a workload domain.
+This example returns password complexity policy for all ESX hosts across all for a workload domain.
 
 ### Example 4
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordComplexity -workloadDomain sfo-w01
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -workloadDomain [workload_domain_name]
 ```
 
-This example returns password complexity policy for all ESXi hosts for a workload domain.
+This example returns password complexity policy for all ESX hosts for a workload domain.
 
 ### Example 5
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -allDomains
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
 ```
 
-This example returns account lockout policy for all ESXi hosts across all for a workload domain.
+This example returns account lockout policy for all ESX hosts across all for a workload domain.
 
 ### Example 6
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy AccountLockout -workloadDomain sfo-w01
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -workloadDomain [workload_domain_name]
 ```
 
-This example returns account lockout policy for all ESXi hosts for a workload domain.
+This example returns account lockout policy for all ESX hosts for a workload domain.
 
 ### Example 7
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
-This example returns password expiration policy for all ESXi hosts across all for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
+This example returns password expiration policy for all ESX hosts across all for a workload domain and compares the configuration against the policy configuration file.
 
 ### Example 8
 
 ```powershell
-Publish-EsxiPasswordPolicy -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -policy PasswordExpiration -workloadDomain sfo-w01 -drift
+Publish-EsxiPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -workloadDomain [workload_domain_name] -drift
 ```
 
-This example returns password expiration policy for all ESXi hosts across all for a workload domain and compares the configuration against the product defaults.
+This example returns password expiration policy for all ESX hosts across all for a workload domain and compares the configuration against the product defaults.
 
 ## Parameters
 
@@ -146,7 +146,7 @@ Accept wildcard characters: False
 ### -policy
 
 The policy to publish.
-One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+One of: `PasswordExpiration`, `PasswordComplexity`, `AccountLockout`.
 
 ```yaml
 Type: String
@@ -258,4 +258,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

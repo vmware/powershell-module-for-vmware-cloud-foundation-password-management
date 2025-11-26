@@ -2,9 +2,7 @@
 
 ## Synopsis
 
-Updates the password expiration policy for a Workspace ONE Access instance.
-
---8<-- "./docs/snippets/wsa-cmdlet-tip.md"
+Updates the password expiration policy for Workspace ONE Access instance.
 
 ## Syntax
 
@@ -24,7 +22,7 @@ The `Update-WsaPasswordExpiration` cmdlet configures the password expiration pol
 ### Example 1
 
 ```powershell
-Update-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
+Update-WsaPasswordExpiration -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -maxDays 999 -warnDays 14 -reminderDays 7 -tempPasswordHours 24
 ```
 
 This example configures the password expiration policy for Workspace ONE Access.
@@ -145,4 +143,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

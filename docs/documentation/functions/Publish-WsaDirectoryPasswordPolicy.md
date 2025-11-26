@@ -31,7 +31,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains
+Publish-WsaDirectoryPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains
 ```
 
 This example returns the password expiration policy for Workspace ONE Access Directory Users.
@@ -39,7 +39,7 @@ This example returns the password expiration policy for Workspace ONE Access Dir
 ### Example 2
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordComplexity -allDomains
+Publish-WsaDirectoryPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordComplexity -allDomains
 ```
 
 This example returns the password complexity policy for Workspace ONE Access Directory Users.
@@ -47,7 +47,7 @@ This example returns the password complexity policy for Workspace ONE Access Dir
 ### Example 3
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy AccountLockout -allDomains
+Publish-WsaDirectoryPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy AccountLockout -allDomains
 ```
 
 This example returns the account lockout policy for Workspace ONE Access Directory Users.
@@ -55,15 +55,15 @@ This example returns the account lockout policy for Workspace ONE Access Directo
 ### Example 4
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-WsaDirectoryPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
-This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the `passwordPolicyConfig.json` file.
+This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the policy configuration file.
 
 ### Example 5
 
 ```powershell
-Publish-WsaDirectoryPasswordPolicy -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -policy PasswordExpiration -allDomains -drift
+Publish-WsaDirectoryPasswordPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -policy PasswordExpiration -allDomains -drift
 ```
 
 This example returns the password expiration policy for Workspace ONE Access Directory Users and compares the configuration against the product defaults.
@@ -121,7 +121,7 @@ Accept wildcard characters: False
 ### -policy
 
 The policy to publish.
-One of: PasswordExpiration, PasswordComplexity, AccountLockout.
+One of: `PasswordExpiration`, `PasswordComplexity`, `AccountLockout`.
 
 ```yaml
 Type: String
@@ -233,4 +233,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

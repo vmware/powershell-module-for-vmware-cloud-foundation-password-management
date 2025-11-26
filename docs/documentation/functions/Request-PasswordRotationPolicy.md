@@ -18,14 +18,14 @@ The `Request-PasswordRotationPolicy` cmdlet retrieves the credential password ro
 The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager.
-- Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource values or all resource types for all workload domains if no values are specified.
+- Retrieves the credential password rotation settings based on the criteria specified by the -domain and -resource values or all resource types for all workload domains if no values are specified
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1!
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password]
 ```
 
 This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
@@ -33,15 +33,15 @@ This example retrieves the credential password rotation settings for all resourc
 ### Example 2
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name]
 ```
 
-This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+This example retrieves the credential password rotation settings for all resource types managed by SDDC Manager for the workload domain.
 
 ### Example 3
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -resource nsxManager
 ```
 
 This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
@@ -49,12 +49,12 @@ This example retrieves the credential password rotation settings for the NSX Man
 ### Example 4
 
 ```powershell
-Request-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -resource nsxManager
+Request-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -resource nsxManager
 ```
 
-This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+This example retrieves the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the workload domain.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 
 ### -resource
 
-The resource type to retrieve the user password rotation settings for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+The resource type to retrieve the user password rotation settings for. One of: `sso`, `vcenterServer`, `nsxManager`, `nsxEdge`, `ariaLifecycle`, `ariaOperations`, `ariaOperationsLogs`, `ariaAutomation`, `workspaceOneAccess`, `backup`.
 
 ```yaml
 Type: String
@@ -138,4 +138,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

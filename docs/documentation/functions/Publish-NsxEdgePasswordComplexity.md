@@ -24,7 +24,7 @@ The `Publish-NsxEdgePasswordComplexity` cmdlet returns password complexity polic
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Collects password complexity policy for each local user of NSX Edge nodes
 
 ## Examples
@@ -32,7 +32,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
+Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
 ```
 
 This example returns password complexity policy for each local user of NSX Edge nodes for all workload domains.
@@ -40,7 +40,7 @@ This example returns password complexity policy for each local user of NSX Edge 
 ### Example 2
 
 ```powershell
-Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01
+Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
 ```
 
 This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain.
@@ -48,15 +48,15 @@ This example returns password complexity policy for each local user of NSX Edge 
 ### Example 3
 
 ```powershell
-Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
-This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the `passwordPolicyConfig.json` file.
+This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the policy configuration file.
 
 ### Example 4
 
 ```powershell
-Publish-NsxEdgePasswordComplexity -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
+Publish-NsxEdgePasswordComplexity -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
 ```
 
 This example returns password complexity policy for each local user of NSX Edge nodes for a workload domain and compares the configuration against the product defaults.
@@ -209,4 +209,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

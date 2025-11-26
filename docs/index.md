@@ -6,27 +6,35 @@
 
 [:material-powershell: &nbsp; PowerShell Gallery][psgallery-module-password-management]{ .md-button .md-button--primary }
 
-`VMware.CloudFoundation.PasswordManagement` is a PowerShell module that supports the ability to report and configure the password policy settings across your [VMware Cloud Foundatiоn][docs-vmware-cloud-foundation] instance.
+`VMware.CloudFoundation.PasswordManagement` is a PowerShell module designed to help you report on
+and manage password policy settings within your VMware Cloud Foundation environment.
 
-With these cmdlets, you can perform the following actions on a VMware Cloud Foundation instance or a specific workload domain.
+Using this module, you can perform various tasks on a VMware Cloud Foundation instance or a specific
+workload domain.
 
 The module provides coverage for the following:
 
 === ":material-shield-check: &nbsp; Password Policies"
 
-    * Generate a password policy report for password expiration, password complexity, and account lockout.
-    * Generate a password policy report with configuration drift using a password policy configuration file.
-    * Update the password polices using a password policy configuration file.
+    1. Generate detailed password policy reports, including information on password expiration, complexity, and account lockout settings.
+    2. Identify configuration drift by generating password policy reports using a predefined configuration file.
+    3. Update password policies seamlessly using a password policy configuration file.
+    4. Create comprehensive password rotation reports for all accounts managed by SDDC Manager.
 
     Components:
 
-    * SDDC Manager
-    * vCenter Single Sign-On
-    * vCenter Server
-    * ESXi
-    * NSX Local Manager
-    * NSX Edge
-    * Workspace ONE Access (Standalone)
+    * VMware SDDC Manager
+    * VMware vCenter Single Sign-On
+    * VMware vCenter
+    * VMware ESX
+    * VMware NSX Local Manager
+    * VMware NSX Edge
+    * VMware Aria Suite Lifecycle
+    * VMware Aria Operations
+    * VMware Aria Operations for Logs
+    * VMware Aria Operations for Networks
+    * VMware Aria Automation
+    * VMware Workspace ONE Access
 
 === ":fontawesome-solid-rotate: &nbsp; Password Rotation"
 
@@ -34,75 +42,68 @@ The module provides coverage for the following:
 
     Components:
 
-    * SDDC Manager
-    * vCenter Single Sign-On
-    * vCenter Server
-    * NSX Local Manager
-    * NSX Edge
-    * Aria Suite Lifecycle
-    * Aria Operations for Logs
-    * Aria Operations
-    * Aria Automation
-    * Workspace ONE Access
+    * VMware SDDC Manager
+    * VMware vCenter Single Sign-On
+    * VMware vCenter
+    * VMware NSX Local Manager
+    * VMware NSX Edge
+    * VMware Aria Suite Lifecycle
+    * VMware Aria Operations
+    * VMware Aria Operations for Logs
+    * VMware Aria Automation
+    * VMware Workspace ONE Access
 
     ???+ note "Note"
-        - ESXi password rotation is not managed by SDDC Manager.
-        - Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
+        - VMware ESX password rotation is not managed by SDDC Manager.
+        - VMware Aria Suite password rotation is only supported if deployed in VMware Cloud Foundation mode and present in the SDDC Manager inventory.
 
 ## Requirements
 
-### Platforms
+### VMware Cloud Foundation
 
-The following table lists the supported platforms for this module.
+The following table lists the supported releases for this module.
 
 Platform                                                     | Support                             | Reference
 -------------------------------------------------------------|-------------------------------------|--------------------------------------------------------------------------------------
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.0 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-0]
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.5 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-4-5]
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.4 | :fontawesome-solid-check:{ .green } | Not Available
-:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 4.3 | :fontawesome-solid-x:{ .red }       | Not Applicable
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.2 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-2]
+:fontawesome-solid-cloud: &nbsp; VMware Cloud Foundation 5.1 | :fontawesome-solid-check:{ .green } | :fontawesome-solid-book: &nbsp; [Documentation][docs-vmware-cloud-foundation-ppm-5-1]
 
-### Operating Systems
+???+ tip "Support for Newer Major Releases"
 
-The following table lists the supported operating systems for this module.
+    This module will **only** be sustained for supported versions of the VMware Cloud Foundation releases listed above to address critical issues. You can find general details on supported versions in the [Broadcom Product Lifecycle](https://support.broadcom.com/group/ecx/productlifecycle).
 
-Operating System                                                       | Version
------------------------------------------------------------------------|-----------
-:fontawesome-brands-windows: &nbsp; Microsoft Windows Server           | 2019, 2022
-:fontawesome-brands-windows: &nbsp; Microsoft Windows                  | 10, 11
-:fontawesome-brands-linux: &nbsp; [VMware Photon OS][github-os-photon] | 3.0, 4.0
+    Please note that this module **will not** provide support or new enhancements for future major releases of VMware Cloud Foundation. If you're planning to upgrade to those newer releases, we encourage you to explore alternative in-product or custom automation solutions.
+
+    We truly appreciate your reliance on and support of this module. Thank you for your understanding as we transition to sustaining the module for these specific major versions.
 
 ### PowerShell
 
 The following table lists the supported editions and versions of PowerShell for this module.
 
-Edition                                                                           | Version
-----------------------------------------------------------------------------------|----------
-:material-powershell: &nbsp; [Microsoft Windows PowerShell][microsoft-powershell] | 5.1
-:material-powershell: &nbsp; [PowerShell Core][microsoft-powershell]              | >= 7.2.0
+Edition                                                              | Version
+---------------------------------------------------------------------|----------
+:material-powershell: &nbsp; [PowerShell Core][microsoft-powershell] | >= 7.2.0
 
 ### Module Dependencies
 
 The following table lists the required PowerShell module dependencies for this module.
 
-PowerShell Module                                    | Version   | Publisher    | Reference
------------------------------------------------------|-----------|--------------|---------------------------------------------------------------------------
-[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.1.0 | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
-[VMware.vSphere.SsoAdmin][psgallery-module-ssoadmin] | >= 1.3.9  | VMware, Inc. | :fontawesome-brands-github: &nbsp; [GitHub][github-module-ssoadmin]
-[PowerVCF][psgallery-module-powervcf]                | >= 2.4.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
-[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.6.0  | VMware, Inc. | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
+PowerShell Module                                    | Version   | Publisher | Reference
+-----------------------------------------------------|-----------|-----------|---------------------------------------------------------------------------
+[VMware.PowerCLI][psgallery-module-powercli]         | >= 13.3.0 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][developer-module-powercli]
+[VMware.vSphere.SsoAdmin][psgallery-module-ssoadmin] | >= 1.3.9  | Broadcom  | :fontawesome-brands-github: &nbsp; [GitHub][github-module-ssoadmin]
+[PowerVCF][psgallery-module-powervcf]                | >= 2.4.1  | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-powervcf]
+[PowerValidatedSolutions][psgallery-module-pvs]      | >= 2.12.1 | Broadcom  | :fontawesome-solid-book: &nbsp; [Documentation][docs-module-pvs]
 
-[docs-vmware-cloud-foundation]: https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html
-[docs-vmware-cloud-foundation-ppm-5-0]: https://docs.vmware.com/en/VMware-Cloud-Foundation/5.0/vcf-operations/GUID-18A95158-30F5-460F-AF80-33F25B6533D0.html
-[docs-vmware-cloud-foundation-ppm-4-5]: https://docs.vmware.com/en/VMware-Cloud-Foundation/4.5/vcf-operations/GUID-18A95158-30F5-460F-AF80-33F25B6533D0.html
+[docs-vmware-cloud-foundation-ppm-5-2]: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-operations-5-2.html
+[docs-vmware-cloud-foundation-ppm-5-1]: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-1/vmware-cloud-foundation-operations-5-1.html
 [microsoft-powershell]: https://docs.microsoft.com/en-us/powershell
 [psgallery-module-powercli]: https://www.powershellgallery.com/packages/VMware.PowerCLI
 [psgallery-module-powervcf]: https://www.powershellgallery.com/packages/PowerVCF
 [psgallery-module-password-management]: https://www.powershellgallery.com/packages/VMware.CloudFoundation.PasswordManagement
 [psgallery-module-pvs]: https://www.powershellgallery.com/packages/PowerValidatedSolutions
 [psgallery-module-ssoadmin]: https://www.powershellgallery.com/packages/VMware.vSphere.SsoAdmin
-[developer-module-powercli]: https://developer.vmware.com/tool/vmware-powercli
+[developer-module-powercli]: https://developer.broadcom.com/powercli
 [docs-module-powervcf]: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation
 [docs-module-pvs]: https://vmware.github.io/power-validated-solutions-for-cloud-foundation
 [github-module-ssoadmin]: https://github.com/vmware/PowerCLI-Example-Scripts/tree/master/Modules/VMware.vSphere.SsoAdmin
-[github-os-photon]: https://vmware.github.io/photon/

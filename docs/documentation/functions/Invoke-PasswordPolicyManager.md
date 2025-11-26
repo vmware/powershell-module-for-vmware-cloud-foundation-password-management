@@ -27,7 +27,7 @@ The `Invoke-PasswordPolicyManager` generates a Password Policy Manager Report fo
 ### Example 1
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance.
@@ -35,7 +35,7 @@ This example runs a password policy report for all workload domains within an SD
 ### Example 2
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -wsaAdminPass [wsa_admin_password]
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance and Workspace ONE Access.
@@ -43,7 +43,7 @@ This example runs a password policy report for all workload domains within an SD
 ### Example 3
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -workloadDomain sfo-w01
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -workloadDomain [workload_domain_name]
 ```
 
 This example runs a password policy report for a specific workload domain within an SDDC Manager instance.
@@ -51,7 +51,7 @@ This example runs a password policy report for a specific workload domain within
 ### Example 4
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains -drift -policyFile "passwordPolicyConfig.json"
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -drift -policyFile [policy_file].json
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the JSON provided.
@@ -59,7 +59,7 @@ This example runs a password policy report for all workload domains within an SD
 ### Example 5
 
 ```powershell
-Invoke-PasswordPolicyManager -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -darkMode -allDomains -drift
+Invoke-PasswordPolicyManager -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -darkMode -allDomains -drift
 ```
 
 This example runs a password policy report for all workload domains within an SDDC Manager instance and compares the configuration against the product defaults.
@@ -292,4 +292,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

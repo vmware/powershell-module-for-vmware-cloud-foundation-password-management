@@ -22,7 +22,7 @@ The `Update-WsaAccountLockout` cmdlet configures the account lockout policy for 
 ### Example 1
 
 ```powershell
-Update-WsaAccountLockout -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -failures 5 -failureInterval 180 -unlockInterval 900
+Update-WsaAccountLockout -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -failures 5 -failureInterval 180 -unlockInterval 900
 ```
 
 This example configures the account lockout policy for Workspace ONE Access.
@@ -127,4 +127,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

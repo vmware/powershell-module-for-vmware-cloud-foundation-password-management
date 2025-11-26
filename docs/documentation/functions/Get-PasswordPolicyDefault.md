@@ -25,9 +25,9 @@ The `Get-PasswordPolicyDefault` cmdlet returns the default password policy setti
 Default settings for VMware products include:
 
 - VMware SDDC Manager
-- VMware ESXi
+- VMware ESX
 - VMware vCenter Single Sign-On
-- VMware vCenter Server
+- VMware vCenter
 - VMware NSX Manager
 - VMware NSX Edge
 - VMware Workspace ONE Access
@@ -37,27 +37,28 @@ Default settings for VMware products include:
 ### Example 1
 
 ```powershell
-Get-PasswordPolicyDefault -version '5.0.0'
+Get-PasswordPolicyDefault -version '5.0.0.0'
 ```
 
-This example returns the default password policy settings for the VMware Cloud Foundation version 5.0.0.
+This example returns the default password policy settings for the VMware Cloud Foundation version.
 
 ### Example 2
 
 ```powershell
-Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0'
+Get-PasswordPolicyDefault -generateJson -jsonFile [policy_file].json -version '5.0.0.0'
 ```
 
-This example creates a JSON file named `passwordPolicyConfig.json` with the default password policy settings for the given version of VMware Cloud Foundation.
+This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
 
 ### Example 3
 
 ```powershell
-Get-PasswordPolicyDefault -generateJson -jsonFile passwordPolicyConfig.json -version '5.0.0' -force
+Get-PasswordPolicyDefault -generateJson -jsonFile [policy_file].json -version '5.0.0.0' -force
 ```
 
-This example creates a JSON file named `passwordPolicyConfig.json` with the default password policy settings for the given version of VMware Cloud Foundation.
-If `passwordPolicyConfig.json` is already present, it is overwritten due to 'force' parameter.
+This example creates a JSON file with the default password policy settings for the given version of VMware Cloud Foundation.
+
+If the policy configuration file is already present, it is overwritten due to `force` parameter.
 
 ## Parameters
 
@@ -127,4 +128,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

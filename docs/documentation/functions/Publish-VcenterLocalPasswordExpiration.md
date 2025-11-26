@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Publishes the password expiration policy for each local user of vCenter Server for a workload domain or all workload domains.
+Publishes the password expiration policy for each local user of vCenter for a workload domain or all workload domains.
 
 ## Syntax
 
@@ -24,34 +24,34 @@ The `Publish-VcenterLocalPasswordExpiration` cmdlet returns password expiration 
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
-- Collects password expiration policy for each local user of vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
+- Collects password expiration policy for each local user of vCenter
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -allDomains
+Publish-VcenterLocalPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
 ```
 
-This example returns password expiration policy for each local user of vCenter Server for all workload domains.
+This example returns password expiration policy for each local user of vCenter for all workload domains.
 
 ### Example 2
 
 ```powershell
-Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Publish-VcenterLocalPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
-This example returns password expiration policy for each local user of vCenter Server and checks the configuration drift using the provided configuration JSON.
+This example returns password expiration policy for each local user of vCenter and checks the configuration drift using the provided configuration JSON.
 
 ### Example 3
 
 ```powershell
-Publish-VcenterLocalPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user admin@local -pass VMw@re1!VMw@re1! -workloadDomain sfo-w01 -drift
+Publish-VcenterLocalPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -drift
 ```
 
-This example returns password expiration policy for each local user of vCenter Server and compares the configuration against the product defaults.
+This example returns password expiration policy for each local user of vCenter and compares the configuration against the product defaults.
 
 ## Parameters
 
@@ -201,4 +201,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

@@ -4,8 +4,6 @@
 
 Updates the password complexity policy for a Workspace ONE Access instance.
 
---8<-- "./docs/snippets/wsa-cmdlet-tip.md"
-
 ## Syntax
 
 ```powershell
@@ -24,7 +22,7 @@ The `Update-WsaPasswordComplexity` cmdlet configures the password complexity pol
 ### Example 1
 
 ```powershell
-Update-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
+Update-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -minLength 15 -minLowercase 1 -minUppercase 1 -minNumeric 1 -minSpecial 1 -maxIdenticalAdjacent 1 -maxPreviousCharacters 0 -history 5
 ```
 
 This example configures the password complexity policy for Workspace ONE Access.
@@ -209,4 +207,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

@@ -26,14 +26,14 @@ The `Publish-PasswordRotationPolicy` cmdlet retrieves the credential password ro
 The cmdlet connects to the SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager.
-- Retrives the credential password rotation settings based on the criteria specified by the -domain and -resource values or all resource types for all workload domains if no values are specified.
+- Retrieves the credential password rotation settings based on the criteria specified by the -domain and -resource values or all resource types for all workload domains if no values are specified
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains
+Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains
 ```
 
 This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains.
@@ -41,15 +41,15 @@ This example publishes the credential password rotation settings for all resourc
 ### Example 2
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01
+Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name]
 ```
 
-This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for the sfo-m01 workload domain.
+This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for the workload domain.
 
 ### Example 3
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -resource nsxManager
+Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -resource nsxManager
 ```
 
 This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for all workload domains.
@@ -57,20 +57,20 @@ This example publishes the credential password rotation settings for the NSX Man
 ### Example 4
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -workloadDomain sfo-m01 -resource nsxManager
+Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -workloadDomain [workload_domain_name] -resource nsxManager
 ```
 
-This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the sfo-m01 workload domain.
+This example publishes the credential password rotation settings for the NSX Manager accounts managed by SDDC Manager for the workload domain.
 
 ### Example 5
 
 ```powershell
-Publish-PasswordRotationPolicy -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -allDomains -json
+Publish-PasswordRotationPolicy -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -allDomains -json
 ```
 
 This example publishes the credential password rotation settings for all resource types managed by SDDC Manager for all workload domains in JSON format.
 
-## PARAMETERS
+## Parameters
 
 ### -server
 
@@ -154,7 +154,7 @@ Accept wildcard characters: False
 
 ### -resource
 
-The resource type to publish the policy for. One of: sso, vcenterServer, nsxManager, nsxEdge, ariaLifecycle, ariaOperations, ariaOperationsLogs, ariaAutomation, workspaceOneAccess, backup.
+The resource type to publish the policy for. One of: `sso`, `vcenterServer`, `nsxManager`, `nsxEdge`, `ariaLifecycle`, `ariaOperation`s, `ariaOperationsLogs`, `ariaAutomation`, `workspaceOneAccess`, `backup`.
 
 ```yaml
 Type: String
@@ -186,4 +186,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

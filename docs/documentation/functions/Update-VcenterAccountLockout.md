@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Updates the account lockout policy for a vCenter Server instance.
+Updates the account lockout policy for a vCenter instance.
 
 ## Syntax
 
@@ -12,11 +12,11 @@ Update-VcenterAccountLockout [-server] <String> [-user] <String> [-pass] <String
 
 ## Description
 
-The `Update-VcenterAccountLockout` cmdlet configures the account lockout policy of a vCenter Server.
+The `Update-VcenterAccountLockout` cmdlet configures the account lockout policy of a vCenter instance.
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
+- Validates that network connectivity and authentication is possible to vCenter
 - Configures the account lockout policy
 
 ## Examples
@@ -24,10 +24,10 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Update-VcenterAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -failures 3 -unlockInterval 900 -rootUnlockInterval 300
+Update-VcenterAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -failures 3 -unlockInterval 900 -rootUnlockInterval 300
 ```
 
-This example configures the account lockout policy for a vCenter Server instance based on the workload domain.
+This example configures the account lockout policy for a vCenter instance based on the workload domain.
 
 ## Parameters
 
@@ -145,4 +145,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

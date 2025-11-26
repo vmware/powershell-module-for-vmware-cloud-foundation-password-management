@@ -1,0 +1,83 @@
+{
+	"SDDC Manager": "vcf01-m01-sm01.example.com",
+	"SDDC Manager VM Name": "sm01",
+	"User": "administrator@vsphere.local",
+	"Password": "VMw@re1!",
+	"Root User": "root",
+	"Root Password": "VMw@re1!",
+	"Guest User": "root",
+	"Local User": "vcf",
+	"SSO Admin": "admin@local",
+	"SSO Password": "VMw@re1!VMw@re1!",
+	"Domains": [
+		"vcf01-m01",
+		"vcf01-w01"
+	],
+	"vcf01-m01": {
+		"Aria" : {
+			"Aria Suite Lifecycle": "vcf01-m01-lcm01.example.com",
+			"Aria Operations": "vcf01-m01-ops01a.example.com",
+			"Aria Operations Logs":  "vcf01-m01-logs01a.example.com",
+			"Aria Automation": "vcf01-m01-auto01a.example.com",
+			"Workspace ONE Access":  "vcf01-m01-wsa01a.example.com"
+		},
+		"ESX Hosts": [
+			"vcf01-m01-esx01.example.com",
+			"vcf01-m01-esx02.example.com",
+			"vcf01-m01-esx03.example.com",
+			"vcf01-m01-esx04.example.com"
+		],
+		"Clusters": [
+			"vcf01-m01-cl01"
+		],
+		"NSX Manager": [
+			"vcf01-m01-nsx01.example.com"
+		],
+		"NSX Manager Nodes": [
+			"vcf01-m01-nsx01a.example.com",
+			"vcf01-m01-nsx01b.example.com",
+			"vcf01-m01-nsx01c.example.com"
+		],
+		"NSX Edge Nodes": [
+			"vcf01-m01-en01",
+			"vcf01-m01-en02"
+		],
+		"NSX Edge FQDN": [
+			"vcf01-m01-en01.example.com",
+			"vcf01-m01-en02.example.com"
+		],
+		"vCenter": [
+			"vcf01-m01-vc01.example.com"
+		]
+	},
+	"vcf01-w01": {
+		"ESX Hosts": [
+			"vcf01-w01-esx01.example.com",
+			"vcf01-w01-esx02.example.com",
+			"vcf01-w01-esx03.example.com",
+			"vcf01-w01-esx04.example.com"
+		],
+		"Clusters": [
+			"vcf01-w01-cl01"
+		],
+		"NSX Manager": [
+			"vcf01-w01-nsx01.example.com"
+		],
+		"NSX Manager Nodes": [
+			"vcf01-w01-nsx01a.example.com",
+			"vcf01-w01-nsx01b.example.com",
+			"vcf01-w01-nsx01c.example.com"
+		],
+		"NSX Edge Nodes": [
+			"vcf01-w01-en01",
+			"vcf01-w01-en02"
+		],
+		"NSX Edge FQDN": [
+			"vcf01-w01-en01.example.com",
+			"vcf01-w01-en02.example.com"
+		],
+		"vCenter": [
+			"vcf01-w01-vc01.example.com"
+		]
+	}
+}

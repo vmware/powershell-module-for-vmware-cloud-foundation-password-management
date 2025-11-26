@@ -19,7 +19,7 @@ The `Start-PasswordPolicyConfig` configures the password policies across all com
 ### Example 1
 
 ```powershell
-Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Start-PasswordPolicyConfig -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This examples configures all password policies for all components across a VMware Cloud Foundation instance.
@@ -27,7 +27,7 @@ This examples configures all password policies for all components across a VMwar
 ### Example 2
 
 ```powershell
-Start-PasswordPolicyConfig -sddcManagerFqdn sfo-vcf01.sfo.rainpole.io -sddcManagerUser admin@local -sddcManagerPass VMw@re1!VMw@re1! -sddcRootPass VMw@re1! -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json" -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -wsaAdminPass VMw@re1!
+Start-PasswordPolicyConfig -sddcManagerFqdn [sddc_manager_fqdn] -sddcManagerUser [admin_username] -sddcManagerPass [admin_password] -sddcRootPass [root_password] -reportPath [report_path] -policyFile [policy_file].json -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -wsaAdminPass [wsa_admin_password]
 ```
 
 This example configures all password policies for all components across a VMware Cloud Foundation instance and a Workspace ONE Access instance.
@@ -180,4 +180,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

@@ -22,26 +22,26 @@ The `Request-WsaPasswordComplexity` cmdlet retrieves the Workspace ONE Access pa
 ### Example 1
 
 ```powershell
-Request-WsaPasswordComplexity -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1!
+Request-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password]
 ```
 
-This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01.
+This example retrieves the password complexity policy for Workspace ONE Access instance.
 
 ### Example 2
 
 ```powershell
-Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
-This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and checks the configuration drift using the provided configuration JSON.
+This example retrieves the password complexity policy for Workspace ONE Access instance and checks the configuration drift using the provided configuration JSON.
 
 ### Example 3
 
 ```powershell
-Request-WsaPasswordExpiration -server sfo-wsa01.sfo.rainpole.io -user admin -pass VMw@re1! -drift
+Request-WsaPasswordComplexity -server [wsa_fqdn] -user [admin_username] -pass [admin_password] -drift
 ```
 
-This example retrieves the password complexity policy for Workspace ONE Access instance sfo-wsa01 and compares the configuration against the product defaults.
+This example retrieves the password complexity policy for Workspace ONE Access instance and compares the configuration against the product defaults.
 
 ## Parameters
 
@@ -143,4 +143,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

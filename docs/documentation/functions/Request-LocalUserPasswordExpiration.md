@@ -16,34 +16,34 @@ The `Request-LocalUserPasswordExpiration` cmdlet retrieves a local user password
 The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` values:
 
 - Validates that network connectivity and authentication is possible to SDDC Manager
-- Validates that network connectivity and authentication is possible to vCenter Server
-Retrieves the password expiration policy for the specified local user
+- Validates that network connectivity and authentication is possible to vCenter
+- Retrieves the password expiration policy for the specified local user
 
 ## Examples
 
 ### Example 1
 
 ```powershell
-Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root"
+Request-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -product vcenterServer -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username]
 ```
 
-This example retrieves the global password expiration policy for a vCenter Server instance.
+This example retrieves the global password expiration policy for a vCenter instance.
 
 ### Example 2
 
 ```powershell
-Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -product vcenterServer -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
-This example retrieves the global password expiration policy for a vCenter Server instance and checks the configuration drift using the provided configuration JSON.
+This example retrieves the global password expiration policy for a vCenter instance and checks the configuration drift using the provided configuration JSON.
 
 ### Example 3
 
 ```powershell
-Request-LocalUserPasswordExpiration -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -domain sfo-m01 -product vcenterServer -vmName sfo-m01-vc01 -guestUser root -guestPassword VMw@re1! -localUser "root" -drift
+Request-LocalUserPasswordExpiration -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -domain [workload_domain_name] -product vcenterServer -vmName [vm_name] -guestUser [guest_username] -guestPassword [guest_password] -localUser [local_username] -drift
 ```
 
-This example retrieves the global password expiration policy for a vCenter Server instance and compares the configuration against the product defaults.
+This example retrieves the global password expiration policy for a vCenter instance and compares the configuration against the product defaults.
 
 ## Parameters
 
@@ -178,7 +178,7 @@ Accept wildcard characters: False
 ### -product
 
 The product to retrieve the password expiration policy for.
-One of: sddcManager, vcenterServer, nsxManager, nsxEdge, wsaLocal.
+One of: `sddcManager`, `vcenterServer`, `nsxManager`, `nsxEdge`, `wsaLocal`.
 
 ```yaml
 Type: String
@@ -242,4 +242,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).

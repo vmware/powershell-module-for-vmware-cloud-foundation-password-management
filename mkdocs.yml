@@ -2,7 +2,7 @@
 site_name: VMware.CloudFoundation.PasswordManagement
 site_description: PowerShell Module for VMware Cloud Foundation Password Management
 site_url: https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-password-management
-site_author: VMware, Inc.
+site_author: Broadcom
 docs_dir: docs
 site_dir: .site
 use_directory_urls: true
@@ -12,7 +12,9 @@ repo_url: https://github.com/vmware/powershell-module-for-vmware-cloud-foundatio
 edit_uri: blob/main/docs/
 
 # Copyright
-copyright: Copyright &copy; 2023 - VMware, Inc.
+copyright: |
+  Copyright &copy; 2005-2025 Broadcom. All Rights Reserved.<br/>
+  The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries.<br/><br/>
 
 # Configuration
 theme:
@@ -21,7 +23,7 @@ theme:
   logo: assets/images/icon-white.svg
   icon:
     repo: fontawesome/brands/github
-  palette:  
+  palette:
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: indigo
@@ -68,7 +70,6 @@ plugins:
     jinja_options:
       variable_start_string: "${{"
       variable_end_string: "}}"
-- git-authors
 - git-revision-date-localized:
     enabled: !ENV [CI, false]
     enable_creation_date: false
@@ -95,8 +96,8 @@ markdown_extensions:
 - footnotes
 - md_in_html
 - pymdownx.emoji:
-    emoji_index: !!python/name:materialx.emoji.twemoji
-    emoji_generator: !!python/name:materialx.emoji.to_svg
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator: !!python/name:material.extensions.emoji.to_svg
     options:
       custom_icons:
       - material/.icons
@@ -119,7 +120,7 @@ markdown_extensions:
 
 # Navigation
 nav:
-- Getting Started: 
+- Getting Started:
   - index.md
   - Installation: install.md
   - Updating: update.md
@@ -147,19 +148,19 @@ nav:
         - Publish-SsoPasswordPolicy: documentation/functions/Publish-SsoPasswordPolicy.md
         - Request-SsoAccountLockout: documentation/functions/Request-SsoAccountLockout.md
         - Update-SsoAccountLockout: documentation/functions/Update-SsoAccountLockout.md
-      - vCenter Server:
+      - vCenter:
         - Publish-VcenterLocalAccountLockout: documentation/functions/Publish-VcenterLocalAccountLockout.md
         - Request-VcenterAccountLockout: documentation/functions/Request-VcenterAccountLockout.md
         - Update-VcenterAccountLockout: documentation/functions/Update-VcenterAccountLockout.md
       - NSX Manager:
-        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md        
+        - Publish-NsxManagerAccountLockout: documentation/functions/Publish-NsxManagerAccountLockout.md
         - Request-NsxtManagerAccountLockout: documentation/functions/Request-NsxtManagerAccountLockout.md
         - Update-NsxtManagerAccountLockout: documentation/functions/Update-NsxtManagerAccountLockout.md
       - NSX Edge:
         - Publish-NsxEdgeAccountLockout: documentation/functions/Publish-NsxEdgeAccountLockout.md
         - Request-NsxtEdgeAccountLockout: documentation/functions/Request-NsxtEdgeAccountLockout.md
         - Update-NsxtEdgeAccountLockout: documentation/functions/Update-NsxtEdgeAccountLockout.md
-      - ESXi:
+      - ESX:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiAccountLockout: documentation/functions/Request-EsxiAccountLockout.md
         - Update-EsxiAccountLockout: documentation/functions/Update-EsxiAccountLockout.md
@@ -170,12 +171,16 @@ nav:
         - Request-WsaLocalUserAccountLockout: documentation/functions/Request-WsaLocalUserAccountLockout.md
         - Update-WsaAccountLockout: documentation/functions/Update-WsaAccountLockout.md
         - Update-WsaLocalUserAccountLockout: documentation/functions/Update-WsaLocalUserAccountLockout.md
+      - Aria:
+        - Publish-AriaLocalUserPasswordPolicy: documentation/functions/Publish-AriaLocalUserPasswordPolicy.md
+        - Request-AriaLocalUserAccountLockout: documentation/functions/Request-AriaLocalUserAccountLockout.md
+        - Update-AriaLocalUserAccountLockout: documentation/functions/Update-AriaLocalUserPasswordAccountLockout.md
     - Password Expiration:
       - SDDC Manager:
         - Publish-SddcManagerPasswordExpiration: documentation/functions/Publish-SddcManagerPasswordExpiration.md
         - Request-SddcManagerPasswordExpiration: documentation/functions/Request-SddcManagerPasswordExpiration.md
         - Update-SddcManagerPasswordExpiration: documentation/functions/Update-SddcManagerPasswordExpiration.md
-      - vCenter Server:
+      - vCenter:
         - Publish-VcenterLocalPasswordExpiration: documentation/functions/Publish-VcenterLocalPasswordExpiration.md
         - Publish-VcenterPasswordExpiration: documentation/functions/Publish-VcenterPasswordExpiration.md
         - Request-VcenterPasswordExpiration: documentation/functions/Request-VcenterPasswordExpiration.md
@@ -193,8 +198,8 @@ nav:
       - NSX Edge:
         - Publish-NsxEdgePasswordExpiration: documentation/functions/Publish-NsxEdgePasswordExpiration.md
         - Request-NsxtEdgePasswordExpiration: documentation/functions/Request-NsxtEdgePasswordExpiration.md
-        - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md 
-      - ESXi:
+        - Update-NsxtEdgePasswordExpiration: documentation/functions/Update-NsxtEdgePasswordExpiration.md
+      - ESX:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiPasswordExpiration: documentation/functions/Request-EsxiPasswordExpiration.md
         - Update-EsxiPasswordExpiration: documentation/functions/Update-EsxiPasswordExpiration.md
@@ -203,12 +208,16 @@ nav:
         - Publish-WsaLocalPasswordPolicy: documentation/functions/Publish-WsaLocalPasswordPolicy.md
         - Request-WsaPasswordExpiration: documentation/functions/Request-WsaPasswordExpiration.md
         - Update-WsaPasswordExpiration: documentation/functions/Update-WsaPasswordExpiration.md
+      - Aria:
+        - Publish-AriaLocalUserPasswordPolicy: documentation/functions/Publish-AriaLocalUserPasswordPolicy.md
+        - Request-AriaLocalUserPasswordExpiration: documentation/functions/Request-AriaLocalUserPasswordExpiration.md
+        - Update-AriaLocalUserPasswordExpiration: documentation/functions/Update-AriaLocalUserPasswordExpiration.md
     - Password Complexity:
       - SDDC Manager:
         - Publish-SddcManagerPasswordComplexity: documentation/functions/Publish-SddcManagerPasswordComplexity.md
         - Request-SddcManagerPasswordComplexity: documentation/functions/Request-SddcManagerPasswordComplexity.md
         - Update-SddcManagerPasswordComplexity: documentation/functions/Update-SddcManagerPasswordComplexity.md
-      - vCenter Server:
+      - vCenter:
         - Publish-VcenterLocalPasswordComplexity: documentation/functions/Publish-VcenterLocalPasswordComplexity.md
         - Request-VcenterPasswordComplexity: documentation/functions/Request-VcenterPasswordComplexity.md
         - Update-VcenterPasswordComplexity: documentation/functions/Update-VcenterPasswordComplexity.md
@@ -224,7 +233,7 @@ nav:
         - Publish-NsxEdgePasswordComplexity: documentation/functions/Publish-NsxEdgePasswordComplexity.md
         - Request-NsxtEdgePasswordComplexity: documentation/functions/Request-NsxtEdgePasswordComplexity.md
         - Update-NsxtEdgePasswordComplexity: documentation/functions/Update-NsxtEdgePasswordComplexity.md
-      - ESXi:
+      - ESX:
         - Publish-EsxiPasswordPolicy: documentation/functions/Publish-EsxiPasswordPolicy.md
         - Request-EsxiPasswordComplexity: documentation/functions/Request-EsxiPasswordComplexity.md
         - Update-EsxiPasswordComplexity: documentation/functions/Update-EsxiPasswordComplexity.md
@@ -235,10 +244,15 @@ nav:
         - Request-WsaLocalUserPasswordComplexity: documentation/functions/Request-WsaLocalUserPasswordComplexity.md
         - Update-WsaPasswordComplexity: documentation/functions/Update-WsaPasswordComplexity.md
         - Update-WsaLocalUserPasswordComplexity: documentation/functions/Update-WsaLocalUserPasswordComplexity.md
+      - Aria:
+        - Publish-AriaLocalUserPasswordPolicy: documentation/functions/Publish-AriaLocalUserPasswordPolicy.md
+        - Request-AriaLocalUserPasswordComplexity: documentation/functions/Request-AriaLocalUserPasswordComplexity.md
+        - Update-AriaLocalUserPasswordComplexity: documentation/functions/Update-AriaLocalUserPasswordComplexity.md
     - Password Rotation:
       - Publish-PasswordRotationPolicy: documentation/functions/Publish-PasswordRotationPolicy.md
       - Request-PasswordRotationPolicy: documentation/functions/Request-PasswordRotationPolicy.md
       - Update-PasswordRotationPolicy: documentation/functions/Update-PasswordRotationPolicy.md
+  - Contributor Testing: documentation/testing/index.md
 - Community:
   - community/index.md
   - Contributing: community/contributing.md

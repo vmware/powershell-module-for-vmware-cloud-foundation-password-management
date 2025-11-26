@@ -23,7 +23,7 @@ The cmdlet connects to SDDC Manager using the `-server`, `-user`, and `-pass` va
 ### Example 1
 
 ```powershell
-Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1!
+Request-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password]
 ```
 
 This example retrieves the account lockout policy for Workspace ONE Access.
@@ -31,7 +31,7 @@ This example retrieves the account lockout policy for Workspace ONE Access.
 ### Example 2
 
 ```powershell
-Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift -reportPath "F:\Reporting" -policyFile "passwordPolicyConfig.json"
+Request-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -drift -reportPath [report_path] -policyFile [policy_file].json
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and checks the configuration drift using the provided configuration JSON.
@@ -39,7 +39,7 @@ This example retrieves the local user password complexity policy for Workspace O
 ### Example 3
 
 ```powershell
-Request-WsaLocalUserAccountLockout -server sfo-vcf01.sfo.rainpole.io -user administrator@vsphere.local -pass VMw@re1! -wsaFqdn sfo-wsa01.sfo.rainpole.io -wsaRootPass VMw@re1! -drift
+Request-WsaLocalUserAccountLockout -server [sddc_manager_fqdn] -user [admin_username] -pass [admin_password] -wsaFqdn [wsa_fqdn] -wsaRootPass [wsa_root_password] -drift
 ```
 
 This example retrieves the local user password complexity policy for Workspace ONE Access and compares the configuration against the product defaults.
@@ -176,4 +176,4 @@ Accept wildcard characters: False
 
 ### Common Parameters
 
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
